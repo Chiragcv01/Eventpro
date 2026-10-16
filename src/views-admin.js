@@ -49,7 +49,7 @@ function planCard() {
 V.blocked = () => {
   const P = S.platform || DEFAULT_PLATFORM; const st = settings();
   return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex">${bizLogo(st)}<b style="font:800 21px var(--f-display)">${esc(st.bizName || S.org.name)}</b></div><h1>Access is <em>paused</em> for this business.</h1><p>Your data is safe. ${esc(P.appName)} has paused this account, usually because of a pending renewal. Contact support to restore access.</p></div></section>
-  <section class="auth-side"><div class="auth-card"><div class="card pad stack"><h2>Get access back</h2>
+  <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><div class="card pad stack"><h2>Get access back</h2>
   ${P.supportPhone ? `<div class="checkcard">${ibox('phone', '#0B9B68')}<span class="grow">${esc(P.supportName)}<div class="mono small" style="font-weight:500">${esc(P.supportPhone)}</div></span>${waBtn(`Namaste, ${st.bizName} account is paused. Please help me restore it.`, P.supportPhone, 'WhatsApp')}</div>` : ''}
   ${P.supportEmail ? `<div class="checkcard">${ibox('send', '#1F5EFF')}<span class="grow">Email<div class="small" style="font-weight:500">${esc(P.supportEmail)}</div></span><button class="btn sm" onclick="A.copy('${esc(P.supportEmail)}')">${ic('copy')}</button></div>` : ''}
   ${S.orgs.length > 1 ? `<div class="eyebrow">Your other businesses</div>${S.orgs.filter(o => o.orgId !== S.org.orgId).map(o => `<button class="btn" style="justify-content:space-between" onclick="A.switchOrg('${o.orgId}')"><span>${esc(o.name)}</span>${ic('chev')}</button>`).join('')}` : ''}
@@ -59,7 +59,7 @@ V.blocked = () => {
 /* ================= Super Admin console ================= */
 A.adminLoad = async () => {
   S.adminLoading = true;
-  try { const [orgs, users, plat] = await Promise.all([S.adapter.adminOverview(), S.adapter.adminUsers(), S.adapter.getPlatform()]); S.admin = { orgs, users, loaded: true }; S.platform = plat; }
+  try { const [orgs, users, plat] = await Promise.all([S.adapter.adminOverview(), S.adapter.adminUsers(), S.adapter.getPlatform()]); S.admin = { orgs, users, loaded: true }; S.platform = plat; A.siteLoad(); }
   catch (e) { S.admin = { orgs: [], users: [], loaded: true, error: e.message }; }
   S.adminLoading = false; if (S.view === 'admin') render();
 };
@@ -82,7 +82,8 @@ V.admin = () => {
   const expiring = live.filter(r => r.left != null && r.left <= 7);
   const paid = rows.filter(r => r.state === 'active');
   const mrr = sum(paid, r => planPrice(r.plan));
-  const tabs = `<div class="tabs">${[['biz', `Businesses (${rows.length})`], ['users', `Users (${S.admin.users.length})`], ['platform', 'Plans & support']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}</div>`;
+  const newLeads = (S.site?.leads || []).filter(l => l.status === 'new').length;
+  const tabs = `<div class="tabs">${[['biz', `Businesses (${rows.length})`], ['users', `Users (${S.admin.users.length})`], ['platform', 'Plans & support'], ['site', 'Website'], ['blog', 'Blog'], ['leads', 'Enquiries', newLeads]].map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}</div>`;
   const kp = `<div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
     ${kpi('Businesses', rows.length, `${S.admin.users.length} users in total`, '', 'store', '#1F5EFF')}
     ${kpi('Paid & active', paid.length, `Monthly value ${inr(mrr)}`, 'good', 'check', '#0B9B68')}
@@ -90,6 +91,9 @@ V.admin = () => {
     ${kpi('Expired / paused', rows.filter(r => ['expired', 'suspended'].includes(r.state)).length, 'Read-only or blocked', rows.some(r => ['expired', 'suspended'].includes(r.state)) ? 'bad' : '', 'alert', '#E0344B')}
   </div>`;
   const mfaWarn = S.adapter.mode === 'cloud' && !S.mfaOn ? `<div class="banner warn" style="margin-bottom:16px;align-items:center">${ic('shield')}<span class="grow"><b>Protect your Super Admin login.</b> Turn on the Authenticator so nobody can open the console with just your password.</span><button class="btn sm" onclick="A.mfaSheet()">Turn on</button></div>` : '';
+  if (tab === 'site') return head + mfaWarn + tabs + adminSite();
+  if (tab === 'blog') return (S.params.edit ? '' : head + mfaWarn + tabs) + adminBlog();
+  if (tab === 'leads') return head + mfaWarn + tabs + adminLeads();
   if (tab === 'users') return head + mfaWarn + kp + tabs + adminUsers();
   if (tab === 'platform') return head + mfaWarn + kp + tabs + adminPlatform();
   const f = S.filters.adm || 'All'; const q = (S.filters.admQ || '').toLowerCase();
@@ -164,7 +168,7 @@ function adminPlatform() {
 A.savePlatform = async e => {
   e.preventDefault(); const v = readForm(e.target);
   const plans = [0, 1, 2].map(i => ({ name: (v['pn' + i] || '').trim(), price: +v['pp' + i] || 0 })).filter(p => p.name);
-  const p = { appName: v.appName || 'EventPro', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
+  const p = { ...(S.platform || {}), appName: v.appName || 'EventPro', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
   try { await S.adapter.savePlatform(p); S.platform = p; toast('Platform settings saved'); render(); } catch (err) { toast(err.message, 'bad'); }
 };
 

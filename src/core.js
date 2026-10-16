@@ -81,7 +81,7 @@ const ICONS = {
   diya: 'M12 3c2 3 4 5 4 8a4 4 0 0 1-8 0c0-3 2-5 4-8zM4 17h16l-2 4H6z', store: 'M3 9l2-5h14l2 5M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8',
   grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', pulse: 'M3 12h4l3-8 4 16 3-8h4', chev: 'M9 6l6 6-6 6',
   user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', pin: 'M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12zM12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
-  arrow: 'M5 12h14M13 6l6 6-6 6', trend: 'M3 17l6-6 4 4 8-8M15 7h6v6', phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'
+  arrow: 'M5 12h14M13 6l6 6-6 6', globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z', trend: 'M3 17l6-6 4 4 8-8M15 7h6v6', phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'
 };
 const ic = (n, cls = '') => `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n] || ''}"/></svg>`;
 
@@ -258,6 +258,18 @@ const LocalDB = (() => {
       const demoOrgs = new Set(db.members.filter(m => m.role === 'owner' && demoU.has(m.userId)).map(m => m.orgId));
       db.users = db.users.filter(u => !demoU.has(u.id)); db.members = db.members.filter(m => !demoU.has(m.userId) && !demoOrgs.has(m.orgId));
       demoOrgs.forEach(id => { delete db.orgs[id]; delete db.records[id]; delete db.roles[id]; }); db.invites = db.invites.filter(i => !demoOrgs.has(i.orgId)); db.guests = db.guests.filter(g => !demoOrgs.has(g.orgId)); if (db.session && demoU.has(db.session.userId)) db.session = null; persist(); },
+    /* website: blog + enquiries (offline copies, for testing) */
+    async blogList() { return (load().blog || []).slice().sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at))); },
+    async blogGet(id) { return (load().blog || []).find(p => p.id === id) || null; },
+    async blogSave(p) { const db = load(); db.blog = db.blog || []; if ((db.blog || []).some(x => x.slug === p.slug && x.id !== p.id)) throw new Error('Another post already uses this web address (slug).');
+      const now = new Date().toISOString(); const rec = { ...p, id: p.id || uid('bp_'), updated_at: now, created_at: p.created_at || now, published_at: p.status === 'published' ? (p.published_at || now) : p.published_at || null };
+      const i = db.blog.findIndex(x => x.id === rec.id); if (i >= 0) db.blog[i] = rec; else db.blog.unshift(rec); persist(); return rec; },
+    async blogDelete(id) { const db = load(); db.blog = (db.blog || []).filter(p => p.id !== id); persist(); },
+    async uploadImage(blob) { return await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); }); },
+    async leadsList() { return (load().leads || []).slice().sort((a, b) => String(b.created_at).localeCompare(String(a.created_at))); },
+    async leadUpdate(id, patch) { const l = (load().leads || []).find(x => x.id === id); if (l) Object.assign(l, patch); persist(); },
+    async leadDelete(id) { const db = load(); db.leads = (db.leads || []).filter(x => x.id !== id); persist(); },
+    async submitEnquiry(v) { const db = load(); db.leads = db.leads || []; db.leads.unshift({ id: uid('ld_'), status: 'new', note: '', created_at: new Date().toISOString(), name: v.name, phone: v.phone, email: v.email || '', business: v.business || '', city: v.city || '', biz_type: v.bizType || '', message: v.message || '', source: v.source || 'website' }); persist(); },
     findOrgByName(name) { const db = load(); return Object.entries(db.orgs).find(([, o]) => o.name === name)?.[0]; }
   };
 })();
@@ -346,7 +358,28 @@ const CloudDB = {
   async setPasswordFor(userId, password, orgId) { return this.rpc('set_user_password', { p_user: userId, p_password: password, p_org: orgId || null }); },
   async adminCreateBusiness({ email, password, name, phone, bizName, roles, settings, plan, status, expires }) { return this.rpc('admin_create_business', { p_email: loginId(email), p_password: password, p_name: name, p_phone: phone || '', p_biz: bizName, p_roles: roles, p_settings: settings, p_plan: plan, p_status: status, p_expires: expires ? expires + 'T23:59:59+05:30' : null }); },
   async adminBlockUser(userId, block) { return this.rpc('admin_block_user', { p_user: userId, p_block: !!block }); },
-  async changeOwnPassword(password) { const { error } = await this.sb.auth.updateUser({ password }); if (error) throw this.err(error); }
+  async changeOwnPassword(password) { const { error } = await this.sb.auth.updateUser({ password }); if (error) throw this.err(error); },
+  /* website: blog + enquiries */
+  async blogList() { const { data, error } = await this.sb.from('blog_posts').select('id,slug,title,excerpt,cover_url,status,published_at,updated_at,created_at,tags,lang,author').order('updated_at', { ascending: false }).limit(500); if (error) throw this.err(error); return data; },
+  async blogGet(id) { const { data, error } = await this.sb.from('blog_posts').select('*').eq('id', id).maybeSingle(); if (error) throw this.err(error); return data; },
+  async blogSave(p) {
+    const row = { slug: p.slug, title: p.title, excerpt: p.excerpt || '', content: p.content || '', cover_url: p.cover_url || '', tags: p.tags || [], lang: p.lang || 'en', status: p.status || 'draft', seo_title: p.seo_title || '', seo_description: p.seo_description || '', author: p.author || '', published_at: p.published_at || null };
+    const q = p.id ? this.sb.from('blog_posts').update(row).eq('id', p.id) : this.sb.from('blog_posts').insert(row);
+    const { data, error } = await q.select('*').single();
+    if (error) throw new Error(/duplicate|unique/i.test(error.message) ? 'Another post already uses this web address (slug).' : /slug/i.test(error.message) ? 'The web address (slug) can use only small letters, numbers and dashes.' : error.message);
+    return data;
+  },
+  async blogDelete(id) { const { error } = await this.sb.from('blog_posts').delete().eq('id', id); if (error) throw this.err(error); },
+  async uploadImage(blob, ext = 'jpg') {
+    const path = `posts/${new Date().toISOString().slice(0, 7)}/${uid('img_')}.${ext}`;
+    const { error } = await this.sb.storage.from('blog').upload(path, blob, { contentType: blob.type || 'image/jpeg', cacheControl: '31536000', upsert: false });
+    if (error) throw this.err(error);
+    return this.sb.storage.from('blog').getPublicUrl(path).data.publicUrl;
+  },
+  async leadsList() { const { data, error } = await this.sb.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(500); if (error) throw this.err(error); return data; },
+  async leadUpdate(id, patch) { const { error } = await this.sb.from('contact_messages').update(patch).eq('id', id); if (error) throw this.err(error); },
+  async leadDelete(id) { const { error } = await this.sb.from('contact_messages').delete().eq('id', id); if (error) throw this.err(error); },
+  async submitEnquiry(v) { return this.rpc('submit_enquiry', { p: v }); }
 };
 
 /* ================= App state ================= */
@@ -469,9 +502,11 @@ function fallbackCopy(text) { modal(`${sheetHead('Copy this text')}<div class="s
 function applyTheme() { document.documentElement.setAttribute('data-theme', 'light'); }
 A.setTheme = t => { LS.set('ep3_theme', t); applyTheme(); render(); };
 
+A.toggleLang = () => { const to = I18N.lang === 'hi' ? 'en' : 'hi'; I18N.set(to); A.closeModal(); render(); toast(to === 'hi' ? 'भाषा: हिंदी' : 'Language: English'); };
+
 /* ================= Boot & session ================= */
 async function boot() {
-  applyTheme();
+  applyTheme(); I18N.start();
   const forceLocal = LS.get('ep3_mode', 'auto') === 'local';
   S.adapter = cloudReady() && !forceLocal ? CloudDB : LocalDB;
   try { await S.adapter.init(); }
@@ -479,6 +514,7 @@ async function boot() {
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   const h = location.hash.replace('#', '');
   if (h.startsWith('guest-')) { await A.openGuest(h.slice(6)); return; }
+  if (h === 'signup' || h === 'login') { S.authTab = h === 'signup' && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
   render();
 }
@@ -579,6 +615,7 @@ function shell(body) {
       <button class="avatar mobile-only" style="border:0;cursor:pointer" onclick="A.accountMenu()" aria-label="Account">${esc(initials(name))}</button>
       <div class="org grow">${isHome ? `<b class="mobile-only">Namaste, ${esc(first)}</b><b class="desk-only">${esc(bizName)}</b>` : `<b>${esc(bizName)}</b>`}<span class="tiny muted sub1">${isHome ? `<span class="mob-inline">${esc(bizName)} · </span>` : ''}${S.org ? esc(roleLabel || '') : 'All businesses'}${S.super ? ' · Super Admin' : ''}${S.adapter.mode === 'local' ? ' · Offline' : ' · Synced'}</span></div>
       ${creates.length ? `<button class="btn primary sm desk-only" onclick="A.createSheet()">${ic('plus')} Create</button>` : ''}
+      ${langSwitch()}
       <button class="icon-btn" aria-label="Alerts" onclick="A.alertsSheet()">${ic('bell')}${alerts.length ? `<span class="dot">${alerts.length}</span>` : ''}</button>
     </header>
     <main class="content fade">${planBanner()}${body}</main>
@@ -616,6 +653,7 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
+      <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
       ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
       ${can('settings') ? `<button class="tile" onclick="A.go('settings')">${ibox('gear', '#64748B')}<span>Settings</span></button>` : ''}

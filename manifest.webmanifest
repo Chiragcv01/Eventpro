@@ -2,9 +2,17 @@
   "name": "EventPro OS",
   "short_name": "EventPro",
   "description": "Tent house, catering and event management",
-  "start_url": "./",
+  "start_url": "/app",
   "display": "standalone",
   "background_color": "#F3F5FA",
   "theme_color": "#1F5EFF",
-  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "scope": "/"
 }

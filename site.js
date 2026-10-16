@@ -1,0 +1,73 @@
+/* EventPro website: language switch, menu, contact form */
+(function () {
+  var KEY = 'ep_lang';
+  function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function put(v) { try { localStorage.setItem(KEY, v); } catch (e) { } }
+  var param = new URLSearchParams(location.search).get('lang');
+  if (param === 'hi' || param === 'en') put(param);
+  var lang = get() === 'hi' ? 'hi' : 'en';
+
+  function apply(l) {
+    lang = l;
+    document.querySelectorAll('[data-hi]').forEach(function (el) {
+      if (el.dataset.en === undefined) el.dataset.en = el.innerHTML;
+      el.innerHTML = l === 'hi' && el.dataset.hi ? el.dataset.hi : el.dataset.en;
+    });
+    document.documentElement.lang = l === 'hi' ? 'hi' : 'en';
+    var t = document.body.dataset.hiTitle; if (t) { if (!document.body.dataset.enTitle) document.body.dataset.enTitle = document.title; document.title = l === 'hi' ? t : document.body.dataset.enTitle; }
+    document.querySelectorAll('#langBtn [data-l]').forEach(function (s) { s.classList.toggle('on', s.dataset.l === l); });
+  }
+  if (lang === 'hi') apply('hi');
+  var lb = document.getElementById('langBtn');
+  if (lb) lb.addEventListener('click', function () { var n = lang === 'hi' ? 'en' : 'hi'; put(n); apply(n); });
+
+  /* already logged in? show "Open app" */
+  try {
+    var logged = Object.keys(localStorage).some(function (k) { return /^sb-.*-auth-token$/.test(k) && localStorage.getItem(k); });
+    if (logged) document.querySelectorAll('[data-app-link]').forEach(function (a) { a.dataset.hi = 'App खोलें'; a.dataset.en = 'Open app'; a.innerHTML = lang === 'hi' ? 'App खोलें' : 'Open app'; });
+  } catch (e) { }
+
+  /* header + mobile menu */
+  var top = document.getElementById('top');
+  var onScroll = function () { if (top) top.classList.toggle('scrolled', window.scrollY > 8); };
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  var mb = document.getElementById('menuBtn'), nav = document.getElementById('nav');
+  if (mb && nav) {
+    mb.addEventListener('click', function () { var o = nav.classList.toggle('open'); mb.setAttribute('aria-expanded', o ? 'true' : 'false'); });
+    nav.addEventListener('click', function (e) { if (e.target.closest('a')) { nav.classList.remove('open'); mb.setAttribute('aria-expanded', 'false'); } });
+  }
+
+  /* copy link */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-copy]'); if (!b) return;
+    var url = b.getAttribute('data-copy');
+    var done = function () { var s = b.querySelector('span'); if (s) { var old = s.innerHTML; s.innerHTML = lang === 'hi' ? 'Copy हो गया' : 'Copied'; setTimeout(function () { s.innerHTML = old; }, 1800); } };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { prompt('Copy', url); }); else prompt('Copy', url);
+  });
+
+  /* contact form → Supabase */
+  var f = document.getElementById('enqForm'); if (!f || !window.SITE) return;
+  var msg = document.getElementById('enqMsg');
+  function say(text, ok) { msg.hidden = false; msg.className = 'msg ' + (ok ? 'ok' : 'bad'); msg.textContent = text; }
+  var T = {
+    name: ['Please enter your name.', 'कृपया अपना नाम डालें।'],
+    phone: ['Please enter a 10-digit mobile number.', 'कृपया 10 अंकों का mobile नंबर डालें।'],
+    sent: ['Thank you! We will call you soon.', 'धन्यवाद! हम जल्द ही आपको call करेंगे।'],
+    fail: ['Could not send. Please try again or message us on WhatsApp.', 'नहीं भेजा जा सका। फिर से कोशिश करें या WhatsApp पर message करें।']
+  };
+  var tr = function (k) { return T[k][lang === 'hi' ? 1 : 0]; };
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = {}; new FormData(f).forEach(function (v, k) { d[k] = String(v).trim(); });
+    if (d.website) { say(tr('sent'), true); f.reset(); return; }
+    if (!d.name) { say(tr('name'), false); f.name.focus(); return; }
+    if (d.phone.replace(/\D/g, '').length < 10) { say(tr('phone'), false); f.phone.focus(); return; }
+    var btn = f.querySelector('button[type=submit]'); btn.disabled = true;
+    fetch(SITE.url + '/rest/v1/rpc/submit_enquiry', { method: 'POST', headers: { apikey: SITE.key, Authorization: 'Bearer ' + SITE.key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p: { name: d.name, phone: d.phone, business: d.business, city: d.city, bizType: d.bizType, message: d.message, source: 'website' + (lang === 'hi' ? ' (hi)' : '') } }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (x) { if (x.ok) { say(tr('sent'), true); f.reset(); } else say((x.j && x.j.message) || tr('fail'), false); })
+      .catch(function () { say(tr('fail'), false); })
+      .then(function () { btn.disabled = false; });
+  });
+})();

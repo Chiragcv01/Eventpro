@@ -1,10 +1,66 @@
 {
   "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/site?view=home"
+    },
+    {
+      "source": "/blog",
+      "destination": "/api/site?view=blog"
+    },
+    {
+      "source": "/blog/rss.xml",
+      "destination": "/api/site?view=rss"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/api/site?view=post&slug=:slug"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/api/site?view=privacy"
+    },
+    {
+      "source": "/terms",
+      "destination": "/api/site?view=terms"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/site?view=sitemap"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/api/site?view=robots"
+    }
+  ],
   "headers": [
-    { "source": "/(.*)", "headers": [
-      { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-      { "key": "X-Frame-Options", "value": "DENY" }
-    ] }
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
+      ]
+    },
+    {
+      "source": "/img/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    }
   ]
 }

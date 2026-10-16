@@ -35,6 +35,7 @@ V.auth = () => {
     <div class="showcase">${showcase.map(([l, i, c]) => `<div class="sc">${ibox(i, c, 'lg')}<span>${l}</span></div>`).join('')}</div>
   </div></section>
   <section class="auth-side"><div class="auth-card">
+    <div class="auth-top"><a href="/" class="linkbtn">${ic('back')} Home</a>${langSwitch()}</div>
     <div class="seg" role="tablist" style="width:100%">${tabs.map(([v, l]) => `<button role="tab" style="flex:1" class="${tab === v ? 'on' : ''}" onclick="A.authTab('${v}')">${l}</button>`).join('')}</div>
     <div class="card pad">${forms[tab]}</div>
     ${S.platform?.supportPhone ? `<p class="small" style="text-align:center">Need help? ${waBtn('Namaste, I need help with ' + (S.platform.appName || 'EventPro') + '.', S.platform.supportPhone, (S.platform.supportName || 'Support') + ' on WhatsApp', 'linkbtn')}</p>` : ''}
@@ -80,7 +81,7 @@ A.forgotModal = () => {
 A.newPasswordModal = () => formModal({ title: 'Set a new password', fields: [{ name: 'p', label: 'New password', type: 'password', required: true, minlength: 6 }], submit: 'Update password', onSubmit: async v => { if (v.p.length < 6) throw new Error('Use at least 6 characters'); await S.adapter.changeOwnPassword(v.p); toast('Password updated'); } });
 
 V.noOrg = () => `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${ic('tent')}</div><b style="font:800 21px var(--f-display)">EventPro</b></div><h1>Namaste, <em>${esc((S.user.name || '').split(' ')[0] || 'ji')}</em>!</h1><p>Your login works, but you are not part of any business yet. Start your own business, or ask your employer to add you from their Team & Access screen.</p></div></section>
-<section class="auth-side"><div class="auth-card"><div class="card pad stack"><h2>Get started</h2>
+<section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><div class="card pad stack"><h2>Get started</h2>
 <button class="checkcard" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span class="grow" style="text-align:left">Create my business<div class="tiny muted" style="font-weight:500">You become the Owner</div></span>${ic('chev')}</button>
 <button class="btn ghost block" onclick="A.logout()">${ic('logout')} Log out</button></div></div></section></div>`;
 A.newOrgModal = () => formModal({
@@ -114,7 +115,7 @@ V.guest = () => {
   const days = [...new Set((e.schedule || []).map(s => s.day || 'Day 1'))];
   const reviewed = (g.reviews || []).some(r => r.source === 'guest');
   return `<div class="stripe"></div><div class="content" style="max-width:760px;padding-bottom:40px">
-  <div class="row-flex" style="justify-content:space-between;margin-bottom:14px"><div class="row-flex">${bizLogo(st)}<div><b style="font:800 16px var(--f-display)">${esc(st.bizName || 'Your event team')}</b><div class="tiny muted">${esc(st.phone || '')}</div></div></div><button class="btn sm ghost" onclick="A.exitGuest()">Exit</button></div>
+  <div class="row-flex" style="justify-content:space-between;margin-bottom:14px"><div class="row-flex">${bizLogo(st)}<div><b style="font:800 16px var(--f-display)">${esc(st.bizName || 'Your event team')}</b><div class="tiny muted">${esc(st.phone || '')}</div></div></div><div class="row-flex" style="gap:8px">${langSwitch()}<button class="btn sm ghost" onclick="A.exitGuest()">Exit</button></div></div>
   <div class="evc evhead" style="--c:${evStyle(e)[1]}"><div class="top">${datebox(e.date)}<div style="min-width:0;flex:1;position:relative;z-index:1"><span class="tiny">${esc(e.type || 'Event')}</span><b>${esc(e.title)}</b></div><span style="position:relative;z-index:1">${stagePill(e.stage)}</span></div><div class="bot"><div class="meta"><span>${ic('calendar')}${fmtDay(e.date)}${e.endDate && e.endDate !== e.date ? ' – ' + fmtDay(e.endDate) : ''}</span><span>${ic('pin')}${esc(e.venue || '')}</span><span>${ic('users')}${num(e.pax)} guests</span></div></div></div>
   <div class="card pad stack" style="margin-bottom:14px;margin-top:-2px"><div class="stepper">${STAGES.slice(0, 6).map((s, i) => `<div class="step ${i < si ? 'done' : i === si ? 'cur' : ''}"><i></i>${s}</div>`).join('')}</div>
   ${pct != null ? `<div><div class="row-flex" style="justify-content:space-between"><b>Setup progress</b><b class="num">${pct}%</b></div>${prog(pct)}<div class="stack-sm" style="margin-top:10px">${tasks.map(t => `<div class="row-flex small" style="justify-content:space-between"><span>${esc(t.title)}</span><span class="num muted">${t.progress}%</span></div>`).join('')}</div></div>` : ''}</div>
@@ -135,7 +136,7 @@ A.guestReview = e => { const v = formVals(e); if (!v) return; withBtn(e, async (
 V.mfa = () => {
   const P = S.platform || DEFAULT_PLATFORM;
   return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${ic('tent')}</div><b style="font:800 21px var(--f-display)">${esc(P.appName || 'EventPro')}</b></div><h1>One more <em>step</em>.</h1><p>Your account is protected with an Authenticator app. Open Google Authenticator (or Microsoft Authenticator) on your phone and type the 6-digit code for ${esc(P.appName || 'EventPro')}.</p></div></section>
-  <section class="auth-side"><div class="auth-card"><form class="card pad stack" onsubmit="A.doMfa(event)">${ibox('shield', '#0B9B68', 'lg')}<h2>Enter your 6-digit code</h2>
+  <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><form class="card pad stack" onsubmit="A.doMfa(event)">${ibox('shield', '#0B9B68', 'lg')}<h2>Enter your 6-digit code</h2>
     <p class="small muted">Logging in as <b>${esc(displayId(S.mfaPending?.email || ''))}</b></p>
     <input id="f_code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required placeholder="123 456" style="font:700 28px var(--f-mono);letter-spacing:.3em;text-align:center">
     <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">Verify and continue</button>

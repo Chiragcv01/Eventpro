@@ -2,7 +2,8 @@
 
 Management app for tent houses, caterers and event managers: bookings, godown stock, catering ration, GST invoices, payments, vendors, staff, live setup tracker, reports, client portal, and a Super Admin console for the platform owner.
 
-- **Live app:** https://eventpro-os.vercel.app
+- **Website:** https://eventpro-os.vercel.app (home, About, Contact, pricing, FAQ, blog)
+- **App:** https://eventpro-os.vercel.app/app
 - **Database:** Supabase project `eventpro` (Mumbai, `uregwtavhkjowiltukiq`)
 - **Hosting:** Vercel, auto-deploys every push to `main`
 
@@ -18,6 +19,18 @@ Management app for tent houses, caterers and event managers: bookings, godown st
 Login ID can be an email or a 10-digit mobile number. Accounts are created already-confirmed, so no verification email is needed.
 
 **Authenticator (2-step login):** anyone can turn it on from the account menu → *Authenticator* (Google Authenticator / Microsoft Authenticator, scan QR, enter code). After that every login asks for the 6-digit code. The database itself refuses all data until the code is entered, so a stolen password alone is not enough. Lost phone: the owner (for employees) or Super Admin (for anyone) uses *Reset authenticator*.
+
+## Hindi / English
+
+Everyone can switch the app between Hindi and English (the **हिं | EN** switch on the login screen, the top bar and the client page; also in the account menu). Everyday words people say in English (Booking, Invoice, GST, Payment, Login…) stay in English. Bills, challans and receipts always print in English. All translations live in `src/i18n.js` (one `English | हिंदी` line each).
+
+## Website and blog
+
+- `/` home page with features, pricing (from *Plans & support*), About us, FAQ and a contact form. `/blog`, `/blog/<post>`, `/privacy`, `/terms`, `/sitemap.xml`, `/robots.txt` and `/blog/rss.xml`.
+- Pages are rendered by `api/site.js` (a Vercel function) so Google and WhatsApp previews see the real text. Edits show within about a minute.
+- **Super Admin → Website:** brand name, headline, About us (English and Hindi), phone, WhatsApp, email, address, hours, map and social links, show/hide prices.
+- **Super Admin → Blog:** write posts with headings, lists, quotes, links and pictures, cover image, tags, language, Google title/description. Save as draft or publish.
+- **Super Admin → Enquiries:** every contact-form request, with Call and WhatsApp buttons and a status (New / Contacted / Closed).
 
 ## Access control
 
@@ -35,17 +48,19 @@ Businesses (plan, expiry, team size, bookings, last activity, notes) · Add busi
 
 | Path | What it is |
 |---|---|
-| `index.html` | The built app (single file, served by Vercel). |
+| `app.html` | The built app (single file), served at `/app`. |
+| `api/site.js`, `site.css`, `site.js`, `img/` | The public website and blog. |
 | `src/` | Source: `core.js` (data + auth), `auth.js` (login, client portal), `views-*.js` (screens), `app.css`, `head.html` (config). |
-| `build.py` | Builds `dist/index.html` from `src/`. Copy it to the repo root before pushing. |
+| `build.py` | Builds `app.html` from `src/`. |
 | `supabase/schema.sql` | Tables, Row Level Security, permission and business functions. |
 | `supabase/auth_admin.sql` | Login management: sign-up, employee logins, password resets, block, Super Admin. |
+| `supabase/website.sql` | Blog posts, website enquiries and the image bucket. |
+| `src/i18n.js` | Hindi translations. |
 
 ## Changing the app
 
 ```bash
-python3 build.py          # builds dist/index.html
-cp dist/index.html .      # Vercel serves the root index.html
+python3 build.py          # builds app.html (served at /app)
 git commit -am "..." && git push
 ```
 
