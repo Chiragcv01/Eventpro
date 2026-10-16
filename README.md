@@ -34,10 +34,12 @@ Everyone can switch the app between Hindi and English (the **हिं | EN** sw
 
 ## Android app (Google Play)
 
-The Play Store app is this same web app inside a Trusted Web Activity, so website updates reach the app without a new Play release.
-- Ready: PNG icons, `manifest.webmanifest`, service worker `sw.js` with `offline.html`, in-app and web account deletion (`/delete-account`).
-- `play-store/` holds the listing text (English and Hindi), icon, feature graphic, screenshots and the Data safety answers.
-- Still needed: final domain and package name, then the signed `.aab` and `/.well-known/assetlinks.json`.
+Package `com.sabmanage.app`. The app is this same web app inside a Trusted Web Activity, so website updates reach the app without a new Play release.
+- `android/twa-manifest.json` describes the app. Pushing a change there runs `.github/workflows/android.yml`, which builds an **unsigned** `.aab`/`.apk` onto the `android-build` branch.
+- The owner signs it with the private upload key (`jarsigner` for the `.aab`, `apksigner.jar` from that branch for the `.apk`). The key never goes to GitHub.
+- For a new version, raise `appVersionCode` (and `appVersionName`) in `android/twa-manifest.json`.
+- `/.well-known/assetlinks.json` lists the upload key fingerprint. After the first Play upload, add the **App signing key** SHA-256 from Play Console → App integrity, or the Play-installed app shows a browser bar.
+- `play-store/` holds the listing text (English and Hindi), icon, feature graphic, screenshots and Data safety answers.
 - Run `supabase/account_deletion.sql` once in Supabase so Super Admin can erase accounts.
 
 ## Access control
