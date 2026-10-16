@@ -1,0 +1,58 @@
+# Builds the SabManage Android app (Trusted Web Activity) as an UNSIGNED .aab/.apk
+# and pushes the files to the "android-build" branch. Signing happens on the
+# owner's side with the private upload key, which never goes to GitHub.
+name: Android app
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['android/**', '.github/workflows/android.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build
+        run: |
+          set -o pipefail
+          mkdir -p out
+          {
+            echo "== SDK"
+            SDKM=$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager
+            yes | $SDKM --licenses > /dev/null || true
+            $SDKM "platforms;android-36" "build-tools;36.0.0" | tail -2
+            echo "== Generate"
+            cd android && npm init -y > /dev/null && npm i @bubblewrap/core@1 > /dev/null && node generate.js
+            cd project
+            echo "== Target Android 16 (API 36)"
+            sed -i -E 's/(compileSdkVersion|targetSdkVersion|compileSdk|targetSdk)([ =]+)[0-9]+/\1\236/' app/build.gradle
+            grep -nE "compileSdk|targetSdk|minSdk|versionCode|versionName|applicationId" app/build.gradle
+            echo "android.suppressUnsupportedCompileSdk=36" >> gradle.properties
+            chmod +x gradlew
+            echo "== Gradle"
+            ./gradlew --no-daemon -q bundleRelease assembleRelease
+            BT=$ANDROID_HOME/build-tools/36.0.0
+            $BT/zipalign -p -f 4 app/build/outputs/apk/release/app-release-unsigned.apk ../../out/sabmanage-unsigned-aligned.apk
+            cp app/build/outputs/bundle/release/app-release.aab ../../out/sabmanage-unsigned.aab
+            cp $BT/lib/apksigner.jar ../../out/apksigner.jar
+            echo "== Done"; ls -la ../../out
+          } 2>&1 | tee out/build-log.txt
+      - name: Push results to android-build branch
+        if: always()
+        run: |
+          cd out
+          git init -q -b android-build
+          git config user.name "android-build"
+          git config user.email "actions@github.com"
+          echo "Built from ${GITHUB_SHA} on $(date -u)" > BUILD.txt
+          git add -A && git commit -qm "Android build ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" android-build

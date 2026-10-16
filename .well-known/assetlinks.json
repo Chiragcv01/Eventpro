@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sabmanage.app",
+      "sha256_cert_fingerprints": [
+        "5B:C1:89:CA:AB:4B:92:11:71:AB:35:49:AF:39:E7:31:CF:12:E1:1F:9A:C9:4B:DB:14:B2:8F:5D:9B:3B:62:3F"
+      ]
+    }
+  }
+]
