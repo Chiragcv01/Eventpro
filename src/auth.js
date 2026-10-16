@@ -45,7 +45,7 @@ A.authTab = t => { S.authTab = t; render(); };
 function formVals(e) { e.preventDefault(); const f = e.target; if (!f.checkValidity()) { f.reportValidity(); return null; } return readForm(f); }
 async function withBtn(e, fn) { const b = e.target.querySelector('button[type=submit]'); if (b) b.disabled = true; try { await fn(); } catch (err) { toast(err.message || String(err), 'bad'); } finally { if (b) b.disabled = false; } }
 
-A.doLogin = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { S.user = await S.adapter.signIn(loginId(v.email), v.password); await afterLogin(); toast('Welcome back, ' + (S.me?.name || S.user.name).split(' ')[0]); }); };
+A.doLogin = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { const u = await S.adapter.signIn(loginId(v.email), v.password); if (await needsMfa()) { S.mfaPending = u; render(); setTimeout(() => $('#f_code')?.focus(), 50); return; } S.user = u; await afterLogin(); toast('Welcome back, ' + (S.me?.name || S.user.name).split(' ')[0]); }); };
 A.doSignup = e => {
   const v = formVals(e); if (!v) return;
   if (!v.bizTypes?.length) { toast('Pick at least one business type', 'bad'); return; }
@@ -73,6 +73,7 @@ A.forgotModal = () => {
   modal(`${sheetHead('Forgot password?')}<div class="sheet-b stack">
     <div class="checkcard">${ibox('users', '#0D9488')}<span class="grow">Staff / employee<div class="small muted" style="font-weight:500">Ask your business owner. They can set a new password for you from Team & Access.</div></span></div>
     <div class="checkcard">${ibox('shield', '#0F172A')}<span class="grow">Business owner<div class="small muted" style="font-weight:500">Contact ${esc(P.supportName || 'Super Admin')}. For your safety, only the Super Admin can reset an owner's password.</div></span></div>
+    <p class="small muted">Lost the phone with your Authenticator app? The same people can switch it off for you, then you can set it up again.</p>
     ${P.supportPhone ? `<div class="row-flex" style="justify-content:center">${waBtn('Namaste, I forgot my ' + (P.appName || 'EventPro') + ' password. My login ID is: ', P.supportPhone, 'WhatsApp ' + (P.supportName || 'Super Admin'), 'btn wa')}<span class="mono small">${esc(P.supportPhone)}</span></div>` : ''}
     ${P.supportEmail ? `<p class="small muted" style="text-align:center">Email: <span class="mono">${esc(P.supportEmail)}</span></p>` : ''}</div>`);
 };
@@ -129,3 +130,42 @@ V.guest = () => {
 };
 A.guestReview = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.guestReview(S.guest.token, { stars: +v.stars, client: v.client, comment: v.comment }); S.guest = { token: S.guest.token, ...(await S.adapter.guestView(S.guest.token)) }; render(); toast('Thank you! Review submitted.'); }); };
 
+
+/* ---------- Authenticator (2-step login) ---------- */
+V.mfa = () => {
+  const P = S.platform || DEFAULT_PLATFORM;
+  return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${ic('tent')}</div><b style="font:800 21px var(--f-display)">${esc(P.appName || 'EventPro')}</b></div><h1>One more <em>step</em>.</h1><p>Your account is protected with an Authenticator app. Open Google Authenticator (or Microsoft Authenticator) on your phone and type the 6-digit code for ${esc(P.appName || 'EventPro')}.</p></div></section>
+  <section class="auth-side"><div class="auth-card"><form class="card pad stack" onsubmit="A.doMfa(event)">${ibox('shield', '#0B9B68', 'lg')}<h2>Enter your 6-digit code</h2>
+    <p class="small muted">Logging in as <b>${esc(displayId(S.mfaPending?.email || ''))}</b></p>
+    <input id="f_code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required placeholder="123 456" style="font:700 28px var(--f-mono);letter-spacing:.3em;text-align:center">
+    <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">Verify and continue</button>
+    <p class="tiny muted">Lost your phone? Employees: ask your business owner. Owners: contact ${esc(P.supportName || 'Super Admin')}${P.supportPhone ? ' on ' + esc(P.supportPhone) : ''}.</p>
+    <button type="button" class="btn ghost block" onclick="A.logout()">${ic('logout')} Use a different login</button></form></div></section></div>`;
+};
+A.doMfa = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.mfaLoginVerify(v.code); S.user = S.mfaPending; S.mfaPending = null; await afterLogin(); toast('Welcome back, ' + ((S.me?.name || S.user.name) || '').split(' ')[0]); }); };
+A.mfaSheet = async () => {
+  if (S.adapter.mode !== 'cloud') { toast('Authenticator works only in the live app', 'warn'); return; }
+  let on = false; try { on = await S.adapter.mfaIsOn(); } catch (e) { }
+  S.mfaOn = on;
+  if (on) {
+    modal(`${sheetHead('Authenticator', 'Two-step login')}<div class="sheet-b stack"><div class="banner good">${ic('check')}<span><b>On.</b> Every login asks for the 6-digit code from your Authenticator app. Even if someone learns your password, they cannot open your account.</span></div>
+      <button class="btn danger" onclick="A.mfaOff()">${ic('x')} Turn off authenticator</button></div>`);
+    return;
+  }
+  modal(`${sheetHead('Authenticator', 'Protect your login with a 6-digit code')}<div class="sheet-b stack" id="mfaBox">
+    <div class="stack-sm small"><div class="row-flex" style="flex-wrap:nowrap">${ibox('download', '#1F5EFF', 'sm')}<span>1. Install <b>Google Authenticator</b> or <b>Microsoft Authenticator</b> from Play Store / App Store.</span></div>
+    <div class="row-flex" style="flex-wrap:nowrap">${ibox('eye', '#7C3AED', 'sm')}<span>2. Tap Start below and scan the QR code with that app.</span></div>
+    <div class="row-flex" style="flex-wrap:nowrap">${ibox('key', '#0B9B68', 'sm')}<span>3. Type the 6-digit code it shows. Done.</span></div></div>
+    <button class="btn primary block" onclick="A.mfaStart()">${ic('shield')} Start setup</button></div>`);
+};
+A.mfaStart = async () => {
+  try {
+    const f = await S.adapter.mfaEnroll(); S.mfaEnrolling = f.id;
+    $('#mfaBox').innerHTML = `<div style="display:grid;place-items:center"><img src="${esc(f.qr)}" alt="QR code" style="width:210px;height:210px;background:#fff;border-radius:16px;padding:8px;border:1px solid var(--line)"></div>
+      <div class="small muted" style="text-align:center">Can't scan? Type this key in the app:<div class="mono" style="font-size:14px;color:var(--ink);overflow-wrap:anywhere;margin-top:4px">${esc(f.secret)}</div><button class="linkbtn" onclick="A.copy('${esc(f.secret)}')">${ic('copy')} Copy key</button></div>
+      <form class="stack-sm" onsubmit="A.mfaConfirm(event)"><input id="f_code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required placeholder="6-digit code" style="font:700 24px var(--f-mono);letter-spacing:.25em;text-align:center"><button class="btn primary block" type="submit">Verify and turn on</button></form>`;
+  } catch (e) { toast(e.message, 'bad'); }
+};
+A.mfaConfirm = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.mfaVerify(S.mfaEnrolling, v.code); S.mfaOn = true; A.closeModal(); toast('Authenticator is on. You will need the code at every login.'); render(); }); };
+A.mfaOff = () => confirmBox('Turn off authenticator?', 'Your login will need only the password again. You can turn it back on any time.', 'Turn off', async () => { await S.adapter.mfaDisable(); S.mfaOn = false; toast('Authenticator turned off'); render(); });
+A.resetMfa = (userId, orgId, name) => confirmBox('Reset authenticator?', `${name || 'This person'} will log in with just the password next time, and can set up the authenticator again on their new phone.`, 'Reset authenticator', async () => { const n = await S.adapter.resetUserMfa(userId, orgId); toast(n ? 'Authenticator reset' : 'They did not have an authenticator on'); if (S.view === 'admin') await A.adminLoad(); }, 'primary');

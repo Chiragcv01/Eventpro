@@ -186,3 +186,91 @@ grant execute on function public.admin_block_user(uuid, boolean) to authenticate
 -- select id, true from auth.users where email = 'you@yourmail.com'
 -- on conflict (user_id) do update set active = true;
 -- =====================================================================
+
+-- =====================================================================
+-- Authenticator (2-step login, TOTP)
+-- A user who has a verified authenticator gets NO data until their session
+-- passed the 6-digit code (JWT aal = aal2). Enforced in every policy via perm()/my_role().
+-- =====================================================================
+create or replace function public.mfa_ok() returns boolean
+language sql stable security definer set search_path = public as $$
+  select coalesce(auth.jwt()->>'aal', 'aal1') = 'aal2'
+      or not exists (select 1 from auth.mfa_factors f where f.user_id = auth.uid() and f.status = 'verified')
+$$;
+
+create or replace function public.is_super_admin() returns boolean
+language sql stable security definer set search_path = public as $$
+  select public.mfa_ok() and exists (select 1 from platform_admins where user_id = auth.uid() and active)
+$$;
+
+create or replace function public.my_role(p_org uuid) returns text
+language sql stable security definer set search_path = public as $$
+  select role from org_members where org_id = p_org and user_id = auth.uid() and public.mfa_ok()
+$$;
+
+create or replace function public.perm(p_org uuid, p_module text) returns int
+language sql stable security definer set search_path = public as $$
+  select case when public.mfa_ok() then public.perm_for(auth.uid(), p_org, p_module) end
+$$;
+
+create or replace function public._can_manage_login(p_user uuid, p_org uuid) returns void
+language plpgsql stable security definer set search_path = public as $$
+begin
+  if auth.uid() is null then raise exception 'Please log in first'; end if;
+  if is_super_admin() then return; end if;
+  if p_org is null or coalesce(perm(p_org, 'team'), 0) < 2 then
+    raise exception 'Only the business owner or Super Admin can do this.';
+  end if;
+  if p_user = auth.uid() then raise exception 'Use your account menu to change your own login.'; end if;
+  if not exists (select 1 from org_members where org_id = p_org and user_id = p_user and role <> 'owner') then
+    raise exception 'You can only manage logins of your own employees. Owners must contact Super Admin.';
+  end if;
+  if exists (select 1 from org_members where user_id = p_user and org_id <> p_org) then
+    raise exception 'This person also works with another business. Ask Super Admin.';
+  end if;
+end $$;
+
+create or replace function public.set_user_password(p_user uuid, p_password text, p_org uuid)
+returns void language plpgsql security definer set search_path = public, extensions as $$
+begin
+  if length(coalesce(p_password, '')) < 6 then raise exception 'Password must be at least 6 characters'; end if;
+  perform _can_manage_login(p_user, p_org);
+  update auth.users set encrypted_password = extensions.crypt(p_password, extensions.gen_salt('bf')), updated_at = now()
+   where id = p_user;
+  if not found then raise exception 'Login not found'; end if;
+end $$;
+
+-- Switch off someone's authenticator when they lost their phone.
+create or replace function public.reset_user_mfa(p_user uuid, p_org uuid)
+returns int language plpgsql security definer set search_path = public as $$
+declare n int;
+begin
+  perform _can_manage_login(p_user, p_org);
+  update auth.mfa_factors set status = 'unverified', updated_at = now()
+   where user_id = p_user and status = 'verified';
+  get diagnostics n = row_count;
+  return n;
+end $$;
+
+-- create_member now uses perm() so it also requires a verified session.
+create or replace function public.create_member(p_org uuid, p_name text, p_email text, p_password text,
+                                                p_role text, p_perms jsonb, p_staff text)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare v_uid uuid;
+begin
+  if auth.uid() is null then raise exception 'Please log in first'; end if;
+  if coalesce(perm(p_org, 'team'), 0) < 2 then raise exception 'You do not have permission to add employees.'; end if;
+  if p_role = 'owner' or not exists (select 1 from org_roles where org_id = p_org and role = p_role) then
+    raise exception 'Choose a valid role';
+  end if;
+  if coalesce(trim(p_name), '') = '' then raise exception 'Name is required'; end if;
+  v_uid := _new_auth_user(p_email, p_password, p_name, '');
+  insert into org_members(org_id, user_id, role, display_name, email, perms, staff_id)
+    values (p_org, v_uid, p_role, p_name, lower(trim(p_email)), p_perms, nullif(p_staff, ''));
+  return v_uid;
+end $$;
+
+revoke all on function public._can_manage_login(uuid, uuid) from public, anon, authenticated;
+revoke all on function public.reset_user_mfa(uuid, uuid) from public, anon;
+grant execute on function public.reset_user_mfa(uuid, uuid) to authenticated;
+grant execute on function public.mfa_ok() to anon, authenticated;

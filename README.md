@@ -17,6 +17,8 @@ Management app for tent houses, caterers and event managers: bookings, godown st
 
 Login ID can be an email or a 10-digit mobile number. Accounts are created already-confirmed, so no verification email is needed.
 
+**Authenticator (2-step login):** anyone can turn it on from the account menu → *Authenticator* (Google Authenticator / Microsoft Authenticator, scan QR, enter code). After that every login asks for the 6-digit code. The database itself refuses all data until the code is entered, so a stolen password alone is not enough. Lost phone: the owner (for employees) or Super Admin (for anyone) uses *Reset authenticator*.
+
 ## Access control
 
 - Every section has 4 levels: No access, View, Edit, Full (Full can also delete).

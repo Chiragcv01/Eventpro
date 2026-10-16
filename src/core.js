@@ -177,6 +177,9 @@ const LocalDB = (() => {
     async current() { const db = load(); if (!db.session) return null; const u = db.users.find(x => x.id === db.session.userId); return u ? { id: u.id, email: u.email, name: u.name } : null; },
     async myOrgs(userId) { const db = load(); return db.members.filter(m => m.userId === userId).map(m => ({ orgId: m.orgId, name: db.orgs[m.orgId]?.name || 'Business', role: m.role, perms: m.perms, ...this.orgMeta(m.orgId) })); },
     orgMeta(id) { const o = load().orgs[id] || {}; return { status: o.status || 'active', plan: o.plan || 'Pro', expires: o.expires || '', notes: o.notes || '' }; },
+    async mfaState() { return null; }, async mfaIsOn() { return false; },
+    async mfaEnroll() { throw new Error('Authenticator works only in the live (cloud) app.'); },
+    async resetUserMfa() { throw new Error('Authenticator works only in the live (cloud) app.'); },
     async isSuperAdmin(userId) { const u = load().users.find(x => x.id === userId); return !!(u && (u.superAdmin || superEmails().includes(u.email))); },
     async adminOverview() {
       const db = load();
@@ -318,6 +321,19 @@ const CloudDB = {
   async createGuest(orgId, eventId, days) { const token = guestToken(); const { error } = await this.sb.from('guest_links').insert({ token, org_id: orgId, event_id: eventId, expires_at: new Date(Date.now() + days * 864e5).toISOString() }); if (error) throw this.err(error); return token; },
   async guestView(token) { const { data, error } = await this.sb.rpc('guest_view', { p_token: String(token).trim().toLowerCase() }); if (error) throw this.err(error); if (!data) throw new Error('This guest code is invalid or has expired.'); return data; },
   async guestReview(token, review) { const { error } = await this.sb.rpc('guest_review', { p_token: String(token).trim().toLowerCase(), p_review: review }); if (error) throw this.err(error); },
+  async mfaState() { try { const { data, error } = await this.sb.auth.mfa.getAuthenticatorAssuranceLevel(); return error ? null : data; } catch (e) { return null; } },
+  async mfaFactors() { const { data, error } = await this.sb.auth.mfa.listFactors(); if (error) throw this.err(error); return data; },
+  async mfaIsOn() { const f = await this.mfaFactors(); return (f.totp || []).length > 0; },
+  async mfaEnroll() {
+    const f = await this.mfaFactors();
+    for (const x of (f.all || []).filter(x => x.factor_type === 'totp' && x.status !== 'verified')) await this.sb.auth.mfa.unenroll({ factorId: x.id });
+    const { data, error } = await this.sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'EventPro ' + new Date().toISOString().slice(0, 16), issuer: S.platform?.appName || 'EventPro' });
+    if (error) throw this.err(error); return { id: data.id, qr: data.totp.qr_code, secret: data.totp.secret };
+  },
+  async mfaVerify(factorId, code) { const { error } = await this.sb.auth.mfa.challengeAndVerify({ factorId, code: String(code).replace(/\D/g, '') }); if (error) throw new Error(/invalid|expired|code/i.test(error.message) ? 'Wrong or expired code. Type the latest 6-digit code from your app.' : error.message); },
+  async mfaLoginVerify(code) { const f = await this.mfaFactors(); const t = (f.totp || [])[0]; if (!t) throw new Error('No authenticator found for this login.'); return this.mfaVerify(t.id, code); },
+  async mfaDisable() { const f = await this.mfaFactors(); for (const x of f.totp || []) { const { error } = await this.sb.auth.mfa.unenroll({ factorId: x.id }); if (error) throw this.err(error); } await this.sb.auth.refreshSession(); },
+  async resetUserMfa(userId, orgId) { return this.rpc('reset_user_mfa', { p_user: userId, p_org: orgId || null }); },
   async rpc(fn, args) { const { data, error } = await this.sb.rpc(fn, args); if (error) throw this.err(error); return data; },
   async signUpBusiness({ email, password, name, phone, bizName, roles, settings }) { return this.rpc('public_signup', { p_email: email, p_password: password, p_name: name, p_phone: phone || '', p_biz: bizName, p_roles: roles, p_settings: settings }); },
   async createMember(orgId, { name, email, password, role, perms, staffId }) {
@@ -460,11 +476,13 @@ async function boot() {
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   const h = location.hash.replace('#', '');
   if (h.startsWith('guest-')) { await A.openGuest(h.slice(6)); return; }
-  try { const u = await S.adapter.current(); if (u) { S.user = u; await afterLogin(); return; } } catch (e) { }
+  try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
   render();
 }
+async function needsMfa() { const a = await S.adapter.mfaState?.(); return !!(a && a.nextLevel === 'aal2' && a.currentLevel !== 'aal2'); }
 async function afterLogin() {
   S.super = await S.adapter.isSuperAdmin(S.user.id).catch(() => false);
+  S.mfaOn = await S.adapter.mfaIsOn().catch(() => false);
   S.orgs = await S.adapter.myOrgs(S.user.id);
   const pend = LS.get('ep3_pending', null);
   if (pend && pend.email === S.user.email) {
@@ -496,7 +514,7 @@ async function openOrg(orgId, override) {
 A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
   A.closeModal(); await S.adapter.signOut();
-  Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login' });
+  Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login', mfaPending: null, mfaOn: false });
   if (LS.get('ep3_mode', 'auto') === 'local' && cloudReady()) { LS.set('ep3_mode', 'auto'); S.adapter = CloudDB; try { await CloudDB.init(); } catch (e) { S.adapter = LocalDB; } }
   render();
 };
@@ -513,6 +531,7 @@ A.setF = (k, v) => { S.filters[k] = v; render(); };
 function render() {
   const root = $('#app');
   if (S.guest) { root.innerHTML = V.guest(); return; }
+  if (S.mfaPending) { root.innerHTML = V.mfa(); return; }
   if (!S.user) { root.innerHTML = V.auth(); return; }
   if (!S.org) { if (S.super) { S.view = 'admin'; } else { root.innerHTML = V.noOrg(); return; } }
   else if (orgState(S.org) === 'suspended' && !S.super) { root.innerHTML = V.blocked(); return; }
@@ -594,7 +613,8 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
-      <button class="tile" onclick="A.newPasswordModal()">${ibox('shield', '#0D9488')}<span>Change password</span></button>
+      <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
+      ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
       ${can('settings') ? `<button class="tile" onclick="A.go('settings')">${ibox('gear', '#64748B')}<span>Settings</span></button>` : ''}
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>

@@ -89,8 +89,9 @@ V.admin = () => {
     ${kpi('On free trial', rows.filter(r => r.state === 'trial').length, `${expiring.length} expire within 7 days`, expiring.length ? 'accent' : '', 'clock', '#D97706')}
     ${kpi('Expired / paused', rows.filter(r => ['expired', 'suspended'].includes(r.state)).length, 'Read-only or blocked', rows.some(r => ['expired', 'suspended'].includes(r.state)) ? 'bad' : '', 'alert', '#E0344B')}
   </div>`;
-  if (tab === 'users') return head + kp + tabs + adminUsers();
-  if (tab === 'platform') return head + kp + tabs + adminPlatform();
+  const mfaWarn = S.adapter.mode === 'cloud' && !S.mfaOn ? `<div class="banner warn" style="margin-bottom:16px;align-items:center">${ic('shield')}<span class="grow"><b>Protect your Super Admin login.</b> Turn on the Authenticator so nobody can open the console with just your password.</span><button class="btn sm" onclick="A.mfaSheet()">Turn on</button></div>` : '';
+  if (tab === 'users') return head + mfaWarn + kp + tabs + adminUsers();
+  if (tab === 'platform') return head + mfaWarn + kp + tabs + adminPlatform();
   const f = S.filters.adm || 'All'; const q = (S.filters.admQ || '').toLowerCase();
   let list = rows;
   if (f === 'Trial') list = list.filter(r => r.state === 'trial');
@@ -99,7 +100,7 @@ V.admin = () => {
   if (f === 'Expired') list = list.filter(r => r.state === 'expired');
   if (f === 'Suspended') list = list.filter(r => r.state === 'suspended');
   if (q) list = list.filter(r => [r.name, r.ownerName, r.ownerEmail, r.ownerPhone, r.city].join(' ').toLowerCase().includes(q));
-  return head + kp + tabs + `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search business, owner, phone or city" value="${esc(S.filters.admQ || '')}" onchange="A.setF('admQ',this.value)"></div></div>
+  return head + mfaWarn + kp + tabs + `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search business, owner, phone or city" value="${esc(S.filters.admQ || '')}" onchange="A.setF('admQ',this.value)"></div></div>
   <div class="chips" style="margin-bottom:14px">${['All', 'Trial', 'Paid', 'Expiring soon', 'Expired', 'Suspended'].map(c => `<button class="chip ${f === c ? 'on' : ''}" onclick="A.setF('adm','${c}')">${c}</button>`).join('')}</div>
   <div class="grid g-auto">${list.map(adminOrgCard).join('') || `<div class="card">${empty('No businesses here', 'Try another filter. New sign-ups appear here automatically.', '', 'store', '#94A3B8')}</div>`}</div>`;
 };
@@ -145,7 +146,7 @@ function adminUsers() {
   const list = S.admin.users.filter(u => !q || [u.name, u.email, ...(u.orgs || []).map(o => o.name)].join(' ').toLowerCase().includes(q)).sort((a, b) => (b.created || 0) - (a.created || 0));
   return `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search name, email, mobile or business" value="${esc(S.filters.admU || '')}" onchange="A.setF('admU',this.value)"></div><button class="btn primary" onclick="A.addSuperForm()">${ic('shield')} Add Super Admin</button></div>
   <div class="card"><div class="rows">${list.map(u => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(u.name))}</div><div class="main-col" style="min-width:180px"><b>${esc(u.name || '—')}${u.userId === S.user.id ? ' (you)' : ''}</b><div class="sub">${esc(displayId(u.email))}${u.lastLogin ? ' · last login ' + new Date(u.lastLogin).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : ' · never logged in'}</div><div class="row-flex" style="gap:5px;margin-top:5px">${(u.orgs || []).map(o => `<span class="pill">${esc(o.name)} · ${esc(o.role)}</span>`).join('') || '<span class="tiny muted">Not in any business</span>'}</div></div>
-    <div class="row-flex" style="gap:6px">${u.blocked ? pill('Blocked', 'bad') : ''}${u.super ? pill('Super Admin', 'primary') : ''}<button class="btn sm" onclick="A.adminResetPw('${u.userId}')">${ic('key')} Reset password</button>${u.userId !== S.user.id ? `<button class="btn sm ${u.super ? 'ghost danger' : ''}" onclick="A.toggleSuper('${esc(u.email)}',${!u.super})">${u.super ? 'Remove Super Admin' : 'Make Super Admin'}</button><button class="btn sm ${u.blocked ? '' : 'ghost danger'}" onclick="A.adminBlock('${u.userId}',${!u.blocked})">${u.blocked ? 'Unblock' : 'Block login'}</button>` : ''}</div></div>`).join('') || empty('No users found', '')}</div></div>`;
+    <div class="row-flex" style="gap:6px">${u.mfa ? pill('Authenticator on', 'good') : ''}${u.blocked ? pill('Blocked', 'bad') : ''}${u.super ? pill('Super Admin', 'primary') : ''}<button class="btn sm" onclick="A.adminResetPw('${u.userId}')">${ic('key')} Reset password</button>${u.mfa && u.userId !== S.user.id ? `<button class="btn sm" onclick="A.resetMfa('${u.userId}', null, ${esc(JSON.stringify(u.name || ''))})">${ic('shield')} Reset authenticator</button>` : ''}${u.userId !== S.user.id ? `<button class="btn sm ${u.super ? 'ghost danger' : ''}" onclick="A.toggleSuper('${esc(u.email)}',${!u.super})">${u.super ? 'Remove Super Admin' : 'Make Super Admin'}</button><button class="btn sm ${u.blocked ? '' : 'ghost danger'}" onclick="A.adminBlock('${u.userId}',${!u.blocked})">${u.blocked ? 'Unblock' : 'Block login'}</button>` : ''}</div></div>`).join('') || empty('No users found', '')}</div></div>`;
 }
 A.toggleSuper = (email, on) => confirmBox(on ? 'Give Super Admin access?' : 'Remove Super Admin access?', on ? `${displayId(email)} will see and change every business on the platform.` : `${displayId(email)} will lose access to the Super Admin console.`, on ? 'Make Super Admin' : 'Remove', async () => { await S.adapter.adminSetSuper(email, on); await A.adminLoad(); toast('Updated'); }, on ? 'primary' : 'danger');
 A.addSuperForm = () => formModal({ title: 'Add a Super Admin', sub: 'They must have signed up already.', fields: [{ name: 'email', label: 'Their email or mobile number', required: true, full: true }], submit: 'Give access', onSubmit: async v => { await S.adapter.adminSetSuper(v.email, true); await A.adminLoad(); toast('Super Admin added'); } });
@@ -177,7 +178,7 @@ A.memberMore = uidv => {
     { name: 'staffId', label: 'Link to crew record (for “My tasks”)', type: 'select', options: [['', '— Not linked —'], ...col('staff').map(s => [s.id, s.name])], value: m.staffId || '' },
     { name: 'pass', label: 'Set a new password (leave empty to keep)', type: 'text', full: true, autocomplete: 'new-password', hint: 'Use this when they forget their password. Then share it with them.' },
     { type: 'html', full: true, html: matrix }],
-    left: `<button type="button" class="btn danger" onclick="A.removeMember('${uidv}')">${ic('trash')} Remove</button>`,
+    left: `<button type="button" class="btn danger" onclick="A.removeMember('${uidv}')">${ic('trash')} Remove</button>${S.adapter.mode === 'cloud' ? `<button type="button" class="btn" onclick="A.resetMfa('${uidv}','${S.org.orgId}',${esc(JSON.stringify(m.name || ''))})">${ic('shield')} Reset authenticator</button>` : ''}`,
     onSubmit: async v => {
       need('team', 3); const perms = {};
       MODULES.forEach(md => { const x = v['p_' + md.key]; if (x !== '' && x != null) perms[md.key] = +x; });

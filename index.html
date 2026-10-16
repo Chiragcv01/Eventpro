@@ -618,6 +618,9 @@ const LocalDB = (() => {
     async current() { const db = load(); if (!db.session) return null; const u = db.users.find(x => x.id === db.session.userId); return u ? { id: u.id, email: u.email, name: u.name } : null; },
     async myOrgs(userId) { const db = load(); return db.members.filter(m => m.userId === userId).map(m => ({ orgId: m.orgId, name: db.orgs[m.orgId]?.name || 'Business', role: m.role, perms: m.perms, ...this.orgMeta(m.orgId) })); },
     orgMeta(id) { const o = load().orgs[id] || {}; return { status: o.status || 'active', plan: o.plan || 'Pro', expires: o.expires || '', notes: o.notes || '' }; },
+    async mfaState() { return null; }, async mfaIsOn() { return false; },
+    async mfaEnroll() { throw new Error('Authenticator works only in the live (cloud) app.'); },
+    async resetUserMfa() { throw new Error('Authenticator works only in the live (cloud) app.'); },
     async isSuperAdmin(userId) { const u = load().users.find(x => x.id === userId); return !!(u && (u.superAdmin || superEmails().includes(u.email))); },
     async adminOverview() {
       const db = load();
@@ -759,6 +762,19 @@ const CloudDB = {
   async createGuest(orgId, eventId, days) { const token = guestToken(); const { error } = await this.sb.from('guest_links').insert({ token, org_id: orgId, event_id: eventId, expires_at: new Date(Date.now() + days * 864e5).toISOString() }); if (error) throw this.err(error); return token; },
   async guestView(token) { const { data, error } = await this.sb.rpc('guest_view', { p_token: String(token).trim().toLowerCase() }); if (error) throw this.err(error); if (!data) throw new Error('This guest code is invalid or has expired.'); return data; },
   async guestReview(token, review) { const { error } = await this.sb.rpc('guest_review', { p_token: String(token).trim().toLowerCase(), p_review: review }); if (error) throw this.err(error); },
+  async mfaState() { try { const { data, error } = await this.sb.auth.mfa.getAuthenticatorAssuranceLevel(); return error ? null : data; } catch (e) { return null; } },
+  async mfaFactors() { const { data, error } = await this.sb.auth.mfa.listFactors(); if (error) throw this.err(error); return data; },
+  async mfaIsOn() { const f = await this.mfaFactors(); return (f.totp || []).length > 0; },
+  async mfaEnroll() {
+    const f = await this.mfaFactors();
+    for (const x of (f.all || []).filter(x => x.factor_type === 'totp' && x.status !== 'verified')) await this.sb.auth.mfa.unenroll({ factorId: x.id });
+    const { data, error } = await this.sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'EventPro ' + new Date().toISOString().slice(0, 16), issuer: S.platform?.appName || 'EventPro' });
+    if (error) throw this.err(error); return { id: data.id, qr: data.totp.qr_code, secret: data.totp.secret };
+  },
+  async mfaVerify(factorId, code) { const { error } = await this.sb.auth.mfa.challengeAndVerify({ factorId, code: String(code).replace(/\D/g, '') }); if (error) throw new Error(/invalid|expired|code/i.test(error.message) ? 'Wrong or expired code. Type the latest 6-digit code from your app.' : error.message); },
+  async mfaLoginVerify(code) { const f = await this.mfaFactors(); const t = (f.totp || [])[0]; if (!t) throw new Error('No authenticator found for this login.'); return this.mfaVerify(t.id, code); },
+  async mfaDisable() { const f = await this.mfaFactors(); for (const x of f.totp || []) { const { error } = await this.sb.auth.mfa.unenroll({ factorId: x.id }); if (error) throw this.err(error); } await this.sb.auth.refreshSession(); },
+  async resetUserMfa(userId, orgId) { return this.rpc('reset_user_mfa', { p_user: userId, p_org: orgId || null }); },
   async rpc(fn, args) { const { data, error } = await this.sb.rpc(fn, args); if (error) throw this.err(error); return data; },
   async signUpBusiness({ email, password, name, phone, bizName, roles, settings }) { return this.rpc('public_signup', { p_email: email, p_password: password, p_name: name, p_phone: phone || '', p_biz: bizName, p_roles: roles, p_settings: settings }); },
   async createMember(orgId, { name, email, password, role, perms, staffId }) {
@@ -901,11 +917,13 @@ async function boot() {
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   const h = location.hash.replace('#', '');
   if (h.startsWith('guest-')) { await A.openGuest(h.slice(6)); return; }
-  try { const u = await S.adapter.current(); if (u) { S.user = u; await afterLogin(); return; } } catch (e) { }
+  try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
   render();
 }
+async function needsMfa() { const a = await S.adapter.mfaState?.(); return !!(a && a.nextLevel === 'aal2' && a.currentLevel !== 'aal2'); }
 async function afterLogin() {
   S.super = await S.adapter.isSuperAdmin(S.user.id).catch(() => false);
+  S.mfaOn = await S.adapter.mfaIsOn().catch(() => false);
   S.orgs = await S.adapter.myOrgs(S.user.id);
   const pend = LS.get('ep3_pending', null);
   if (pend && pend.email === S.user.email) {
@@ -937,7 +955,7 @@ async function openOrg(orgId, override) {
 A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
   A.closeModal(); await S.adapter.signOut();
-  Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login' });
+  Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login', mfaPending: null, mfaOn: false });
   if (LS.get('ep3_mode', 'auto') === 'local' && cloudReady()) { LS.set('ep3_mode', 'auto'); S.adapter = CloudDB; try { await CloudDB.init(); } catch (e) { S.adapter = LocalDB; } }
   render();
 };
@@ -954,6 +972,7 @@ A.setF = (k, v) => { S.filters[k] = v; render(); };
 function render() {
   const root = $('#app');
   if (S.guest) { root.innerHTML = V.guest(); return; }
+  if (S.mfaPending) { root.innerHTML = V.mfa(); return; }
   if (!S.user) { root.innerHTML = V.auth(); return; }
   if (!S.org) { if (S.super) { S.view = 'admin'; } else { root.innerHTML = V.noOrg(); return; } }
   else if (orgState(S.org) === 'suspended' && !S.super) { root.innerHTML = V.blocked(); return; }
@@ -1035,7 +1054,8 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
-      <button class="tile" onclick="A.newPasswordModal()">${ibox('shield', '#0D9488')}<span>Change password</span></button>
+      <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
+      ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
       ${can('settings') ? `<button class="tile" onclick="A.go('settings')">${ibox('gear', '#64748B')}<span>Settings</span></button>` : ''}
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>
@@ -1166,7 +1186,7 @@ A.authTab = t => { S.authTab = t; render(); };
 function formVals(e) { e.preventDefault(); const f = e.target; if (!f.checkValidity()) { f.reportValidity(); return null; } return readForm(f); }
 async function withBtn(e, fn) { const b = e.target.querySelector('button[type=submit]'); if (b) b.disabled = true; try { await fn(); } catch (err) { toast(err.message || String(err), 'bad'); } finally { if (b) b.disabled = false; } }
 
-A.doLogin = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { S.user = await S.adapter.signIn(loginId(v.email), v.password); await afterLogin(); toast('Welcome back, ' + (S.me?.name || S.user.name).split(' ')[0]); }); };
+A.doLogin = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { const u = await S.adapter.signIn(loginId(v.email), v.password); if (await needsMfa()) { S.mfaPending = u; render(); setTimeout(() => $('#f_code')?.focus(), 50); return; } S.user = u; await afterLogin(); toast('Welcome back, ' + (S.me?.name || S.user.name).split(' ')[0]); }); };
 A.doSignup = e => {
   const v = formVals(e); if (!v) return;
   if (!v.bizTypes?.length) { toast('Pick at least one business type', 'bad'); return; }
@@ -1194,6 +1214,7 @@ A.forgotModal = () => {
   modal(`${sheetHead('Forgot password?')}<div class="sheet-b stack">
     <div class="checkcard">${ibox('users', '#0D9488')}<span class="grow">Staff / employee<div class="small muted" style="font-weight:500">Ask your business owner. They can set a new password for you from Team & Access.</div></span></div>
     <div class="checkcard">${ibox('shield', '#0F172A')}<span class="grow">Business owner<div class="small muted" style="font-weight:500">Contact ${esc(P.supportName || 'Super Admin')}. For your safety, only the Super Admin can reset an owner's password.</div></span></div>
+    <p class="small muted">Lost the phone with your Authenticator app? The same people can switch it off for you, then you can set it up again.</p>
     ${P.supportPhone ? `<div class="row-flex" style="justify-content:center">${waBtn('Namaste, I forgot my ' + (P.appName || 'EventPro') + ' password. My login ID is: ', P.supportPhone, 'WhatsApp ' + (P.supportName || 'Super Admin'), 'btn wa')}<span class="mono small">${esc(P.supportPhone)}</span></div>` : ''}
     ${P.supportEmail ? `<p class="small muted" style="text-align:center">Email: <span class="mono">${esc(P.supportEmail)}</span></p>` : ''}</div>`);
 };
@@ -1250,6 +1271,45 @@ V.guest = () => {
 };
 A.guestReview = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.guestReview(S.guest.token, { stars: +v.stars, client: v.client, comment: v.comment }); S.guest = { token: S.guest.token, ...(await S.adapter.guestView(S.guest.token)) }; render(); toast('Thank you! Review submitted.'); }); };
 
+
+/* ---------- Authenticator (2-step login) ---------- */
+V.mfa = () => {
+  const P = S.platform || DEFAULT_PLATFORM;
+  return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${ic('tent')}</div><b style="font:800 21px var(--f-display)">${esc(P.appName || 'EventPro')}</b></div><h1>One more <em>step</em>.</h1><p>Your account is protected with an Authenticator app. Open Google Authenticator (or Microsoft Authenticator) on your phone and type the 6-digit code for ${esc(P.appName || 'EventPro')}.</p></div></section>
+  <section class="auth-side"><div class="auth-card"><form class="card pad stack" onsubmit="A.doMfa(event)">${ibox('shield', '#0B9B68', 'lg')}<h2>Enter your 6-digit code</h2>
+    <p class="small muted">Logging in as <b>${esc(displayId(S.mfaPending?.email || ''))}</b></p>
+    <input id="f_code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required placeholder="123 456" style="font:700 28px var(--f-mono);letter-spacing:.3em;text-align:center">
+    <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">Verify and continue</button>
+    <p class="tiny muted">Lost your phone? Employees: ask your business owner. Owners: contact ${esc(P.supportName || 'Super Admin')}${P.supportPhone ? ' on ' + esc(P.supportPhone) : ''}.</p>
+    <button type="button" class="btn ghost block" onclick="A.logout()">${ic('logout')} Use a different login</button></form></div></section></div>`;
+};
+A.doMfa = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.mfaLoginVerify(v.code); S.user = S.mfaPending; S.mfaPending = null; await afterLogin(); toast('Welcome back, ' + ((S.me?.name || S.user.name) || '').split(' ')[0]); }); };
+A.mfaSheet = async () => {
+  if (S.adapter.mode !== 'cloud') { toast('Authenticator works only in the live app', 'warn'); return; }
+  let on = false; try { on = await S.adapter.mfaIsOn(); } catch (e) { }
+  S.mfaOn = on;
+  if (on) {
+    modal(`${sheetHead('Authenticator', 'Two-step login')}<div class="sheet-b stack"><div class="banner good">${ic('check')}<span><b>On.</b> Every login asks for the 6-digit code from your Authenticator app. Even if someone learns your password, they cannot open your account.</span></div>
+      <button class="btn danger" onclick="A.mfaOff()">${ic('x')} Turn off authenticator</button></div>`);
+    return;
+  }
+  modal(`${sheetHead('Authenticator', 'Protect your login with a 6-digit code')}<div class="sheet-b stack" id="mfaBox">
+    <div class="stack-sm small"><div class="row-flex" style="flex-wrap:nowrap">${ibox('download', '#1F5EFF', 'sm')}<span>1. Install <b>Google Authenticator</b> or <b>Microsoft Authenticator</b> from Play Store / App Store.</span></div>
+    <div class="row-flex" style="flex-wrap:nowrap">${ibox('eye', '#7C3AED', 'sm')}<span>2. Tap Start below and scan the QR code with that app.</span></div>
+    <div class="row-flex" style="flex-wrap:nowrap">${ibox('key', '#0B9B68', 'sm')}<span>3. Type the 6-digit code it shows. Done.</span></div></div>
+    <button class="btn primary block" onclick="A.mfaStart()">${ic('shield')} Start setup</button></div>`);
+};
+A.mfaStart = async () => {
+  try {
+    const f = await S.adapter.mfaEnroll(); S.mfaEnrolling = f.id;
+    $('#mfaBox').innerHTML = `<div style="display:grid;place-items:center"><img src="${esc(f.qr)}" alt="QR code" style="width:210px;height:210px;background:#fff;border-radius:16px;padding:8px;border:1px solid var(--line)"></div>
+      <div class="small muted" style="text-align:center">Can't scan? Type this key in the app:<div class="mono" style="font-size:14px;color:var(--ink);overflow-wrap:anywhere;margin-top:4px">${esc(f.secret)}</div><button class="linkbtn" onclick="A.copy('${esc(f.secret)}')">${ic('copy')} Copy key</button></div>
+      <form class="stack-sm" onsubmit="A.mfaConfirm(event)"><input id="f_code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required placeholder="6-digit code" style="font:700 24px var(--f-mono);letter-spacing:.25em;text-align:center"><button class="btn primary block" type="submit">Verify and turn on</button></form>`;
+  } catch (e) { toast(e.message, 'bad'); }
+};
+A.mfaConfirm = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.mfaVerify(S.mfaEnrolling, v.code); S.mfaOn = true; A.closeModal(); toast('Authenticator is on. You will need the code at every login.'); render(); }); };
+A.mfaOff = () => confirmBox('Turn off authenticator?', 'Your login will need only the password again. You can turn it back on any time.', 'Turn off', async () => { await S.adapter.mfaDisable(); S.mfaOn = false; toast('Authenticator turned off'); render(); });
+A.resetMfa = (userId, orgId, name) => confirmBox('Reset authenticator?', `${name || 'This person'} will log in with just the password next time, and can set up the authenticator again on their new phone.`, 'Reset authenticator', async () => { const n = await S.adapter.resetUserMfa(userId, orgId); toast(n ? 'Authenticator reset' : 'They did not have an authenticator on'); if (S.view === 'admin') await A.adminLoad(); }, 'primary');
 
 const DISH_STYLE = { 'Welcome Drinks & Chaat': ['sparkle', '#F59E0B'], 'Starters & Live Counters': ['diya', '#EA580C'], 'Main Course': ['pot', '#16A34A'], 'Breads & Rice': ['utensils', '#D97706'], 'Sweets': ['cake', '#DB2777'] };
 /* ================= Dashboard ================= */
@@ -2105,8 +2165,9 @@ V.admin = () => {
     ${kpi('On free trial', rows.filter(r => r.state === 'trial').length, `${expiring.length} expire within 7 days`, expiring.length ? 'accent' : '', 'clock', '#D97706')}
     ${kpi('Expired / paused', rows.filter(r => ['expired', 'suspended'].includes(r.state)).length, 'Read-only or blocked', rows.some(r => ['expired', 'suspended'].includes(r.state)) ? 'bad' : '', 'alert', '#E0344B')}
   </div>`;
-  if (tab === 'users') return head + kp + tabs + adminUsers();
-  if (tab === 'platform') return head + kp + tabs + adminPlatform();
+  const mfaWarn = S.adapter.mode === 'cloud' && !S.mfaOn ? `<div class="banner warn" style="margin-bottom:16px;align-items:center">${ic('shield')}<span class="grow"><b>Protect your Super Admin login.</b> Turn on the Authenticator so nobody can open the console with just your password.</span><button class="btn sm" onclick="A.mfaSheet()">Turn on</button></div>` : '';
+  if (tab === 'users') return head + mfaWarn + kp + tabs + adminUsers();
+  if (tab === 'platform') return head + mfaWarn + kp + tabs + adminPlatform();
   const f = S.filters.adm || 'All'; const q = (S.filters.admQ || '').toLowerCase();
   let list = rows;
   if (f === 'Trial') list = list.filter(r => r.state === 'trial');
@@ -2115,7 +2176,7 @@ V.admin = () => {
   if (f === 'Expired') list = list.filter(r => r.state === 'expired');
   if (f === 'Suspended') list = list.filter(r => r.state === 'suspended');
   if (q) list = list.filter(r => [r.name, r.ownerName, r.ownerEmail, r.ownerPhone, r.city].join(' ').toLowerCase().includes(q));
-  return head + kp + tabs + `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search business, owner, phone or city" value="${esc(S.filters.admQ || '')}" onchange="A.setF('admQ',this.value)"></div></div>
+  return head + mfaWarn + kp + tabs + `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search business, owner, phone or city" value="${esc(S.filters.admQ || '')}" onchange="A.setF('admQ',this.value)"></div></div>
   <div class="chips" style="margin-bottom:14px">${['All', 'Trial', 'Paid', 'Expiring soon', 'Expired', 'Suspended'].map(c => `<button class="chip ${f === c ? 'on' : ''}" onclick="A.setF('adm','${c}')">${c}</button>`).join('')}</div>
   <div class="grid g-auto">${list.map(adminOrgCard).join('') || `<div class="card">${empty('No businesses here', 'Try another filter. New sign-ups appear here automatically.', '', 'store', '#94A3B8')}</div>`}</div>`;
 };
@@ -2161,7 +2222,7 @@ function adminUsers() {
   const list = S.admin.users.filter(u => !q || [u.name, u.email, ...(u.orgs || []).map(o => o.name)].join(' ').toLowerCase().includes(q)).sort((a, b) => (b.created || 0) - (a.created || 0));
   return `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search name, email, mobile or business" value="${esc(S.filters.admU || '')}" onchange="A.setF('admU',this.value)"></div><button class="btn primary" onclick="A.addSuperForm()">${ic('shield')} Add Super Admin</button></div>
   <div class="card"><div class="rows">${list.map(u => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(u.name))}</div><div class="main-col" style="min-width:180px"><b>${esc(u.name || '—')}${u.userId === S.user.id ? ' (you)' : ''}</b><div class="sub">${esc(displayId(u.email))}${u.lastLogin ? ' · last login ' + new Date(u.lastLogin).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : ' · never logged in'}</div><div class="row-flex" style="gap:5px;margin-top:5px">${(u.orgs || []).map(o => `<span class="pill">${esc(o.name)} · ${esc(o.role)}</span>`).join('') || '<span class="tiny muted">Not in any business</span>'}</div></div>
-    <div class="row-flex" style="gap:6px">${u.blocked ? pill('Blocked', 'bad') : ''}${u.super ? pill('Super Admin', 'primary') : ''}<button class="btn sm" onclick="A.adminResetPw('${u.userId}')">${ic('key')} Reset password</button>${u.userId !== S.user.id ? `<button class="btn sm ${u.super ? 'ghost danger' : ''}" onclick="A.toggleSuper('${esc(u.email)}',${!u.super})">${u.super ? 'Remove Super Admin' : 'Make Super Admin'}</button><button class="btn sm ${u.blocked ? '' : 'ghost danger'}" onclick="A.adminBlock('${u.userId}',${!u.blocked})">${u.blocked ? 'Unblock' : 'Block login'}</button>` : ''}</div></div>`).join('') || empty('No users found', '')}</div></div>`;
+    <div class="row-flex" style="gap:6px">${u.mfa ? pill('Authenticator on', 'good') : ''}${u.blocked ? pill('Blocked', 'bad') : ''}${u.super ? pill('Super Admin', 'primary') : ''}<button class="btn sm" onclick="A.adminResetPw('${u.userId}')">${ic('key')} Reset password</button>${u.mfa && u.userId !== S.user.id ? `<button class="btn sm" onclick="A.resetMfa('${u.userId}', null, ${esc(JSON.stringify(u.name || ''))})">${ic('shield')} Reset authenticator</button>` : ''}${u.userId !== S.user.id ? `<button class="btn sm ${u.super ? 'ghost danger' : ''}" onclick="A.toggleSuper('${esc(u.email)}',${!u.super})">${u.super ? 'Remove Super Admin' : 'Make Super Admin'}</button><button class="btn sm ${u.blocked ? '' : 'ghost danger'}" onclick="A.adminBlock('${u.userId}',${!u.blocked})">${u.blocked ? 'Unblock' : 'Block login'}</button>` : ''}</div></div>`).join('') || empty('No users found', '')}</div></div>`;
 }
 A.toggleSuper = (email, on) => confirmBox(on ? 'Give Super Admin access?' : 'Remove Super Admin access?', on ? `${displayId(email)} will see and change every business on the platform.` : `${displayId(email)} will lose access to the Super Admin console.`, on ? 'Make Super Admin' : 'Remove', async () => { await S.adapter.adminSetSuper(email, on); await A.adminLoad(); toast('Updated'); }, on ? 'primary' : 'danger');
 A.addSuperForm = () => formModal({ title: 'Add a Super Admin', sub: 'They must have signed up already.', fields: [{ name: 'email', label: 'Their email or mobile number', required: true, full: true }], submit: 'Give access', onSubmit: async v => { await S.adapter.adminSetSuper(v.email, true); await A.adminLoad(); toast('Super Admin added'); } });
@@ -2193,7 +2254,7 @@ A.memberMore = uidv => {
     { name: 'staffId', label: 'Link to crew record (for “My tasks”)', type: 'select', options: [['', '— Not linked —'], ...col('staff').map(s => [s.id, s.name])], value: m.staffId || '' },
     { name: 'pass', label: 'Set a new password (leave empty to keep)', type: 'text', full: true, autocomplete: 'new-password', hint: 'Use this when they forget their password. Then share it with them.' },
     { type: 'html', full: true, html: matrix }],
-    left: `<button type="button" class="btn danger" onclick="A.removeMember('${uidv}')">${ic('trash')} Remove</button>`,
+    left: `<button type="button" class="btn danger" onclick="A.removeMember('${uidv}')">${ic('trash')} Remove</button>${S.adapter.mode === 'cloud' ? `<button type="button" class="btn" onclick="A.resetMfa('${uidv}','${S.org.orgId}',${esc(JSON.stringify(m.name || ''))})">${ic('shield')} Reset authenticator</button>` : ''}`,
     onSubmit: async v => {
       need('team', 3); const perms = {};
       MODULES.forEach(md => { const x = v['p_' + md.key]; if (x !== '' && x != null) perms[md.key] = +x; });
