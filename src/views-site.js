@@ -13,6 +13,7 @@ A.siteLoad = async (what = ['posts', 'leads']) => {
   try {
     if (what.includes('posts')) S.site.posts = await S.adapter.blogList();
     if (what.includes('leads')) S.site.leads = await S.adapter.leadsList();
+    if (what.includes('leads')) S.site.dels = await S.adapter.deletionsList();
     S.site.error = '';
   } catch (e) { S.site.error = e.message; }
   S.site.loaded = true; S.site.loading = false; if (S.view === 'admin') render();
@@ -229,3 +230,61 @@ A.leadEdit = id => {
     submit: 'Save', onSubmit: async v => { await S.adapter.leadUpdate(id, { status: v.status, note: v.note }); Object.assign(l, { status: v.status, note: v.note }); toast('Updated'); render(); } });
 };
 A.leadDel = id => confirmBox('Delete this enquiry?', 'It will be removed permanently.', 'Delete', async () => { await S.adapter.leadDelete(id); S.site.leads = S.site.leads.filter(x => x.id !== id); toast('Deleted'); render(); });
+
+/* ================= Account deletion (Google Play requirement) ================= */
+A.deleteAccountSheet = async () => {
+  let pend = null; try { pend = await S.adapter.myDeletion(); } catch (e) { }
+  if (pend) {
+    modal(`${sheetHead('Delete my account')}<div class="sheet-b stack"><div class="banner warn">${ic('clock')}<span>We received your request on ${fmtDate(String(pend.created_at).slice(0, 10))}. The ${esc(S.platform?.appName || 'EventPro')} team will confirm with you and erase the account within 7 days.</span></div><p class="small muted">Changed your mind? Contact support before it is processed.</p></div>`);
+    return;
+  }
+  const owner = S.org && S.role === 'owner' && !S.org.viewAs;
+  const biz = S.org ? (settings().bizName || S.org.name) : '';
+  FORM_CB = async v => {
+    if (!v.sure) throw new Error('Tick the box to confirm');
+    await S.adapter.requestDeletion(v.reason || '');
+    toast('Request sent. We will contact you before erasing.');
+  };
+  modal(`<form class="form" onsubmit="A.submitForm(event)" novalidate>${sheetHead('Delete my account', displayId(S.user.email))}<div class="sheet-b stack">
+    <div class="banner bad">${ic('alert')}<span>${owner ? `Your login and the business <b>${esc(biz)}</b> with all its bookings, bills, stock, staff logins and records will be erased permanently.` : 'Your login will be erased. The business data you worked on stays with the business owner.'} This cannot be undone.</span></div>
+    ${owner && can('settings') ? `<button type="button" class="btn" onclick="A.exportBackup()">${ic('download')} Download a backup first</button>` : ''}
+    ${fieldHTML({ name: 'reason', label: 'Why are you leaving? (optional)', type: 'textarea', rows: 2, full: true })}
+    ${fieldHTML({ name: 'sure', label: 'I understand my account and data will be erased', type: 'checkbox', full: true })}
+    <p class="tiny muted">Your request goes to the ${esc(S.platform?.appName || 'EventPro')} team. We confirm with you and erase within 7 days. Some invoice records may be kept where the law requires.</p>
+  </div><footer class="sheet-f"><span class="grow"></span><button type="button" class="btn ghost" onclick="A.closeModal()">Cancel</button><button class="btn danger" type="submit">Request deletion</button></footer></form>`);
+};
+
+function adminDeletions() {
+  if (!siteReady()) return `<div class="card">${empty('Loading…', '', '', 'trash', '#E0344B')}</div>`;
+  const all = S.site.dels || []; const f = S.filters.delF || 'pending';
+  const list = f === 'all' ? all : all.filter(d => d.status === f);
+  const users = S.admin?.users || [];
+  const match = d => users.find(u => u.userId === d.user_id) || users.find(u => u.email === loginId(d.login_id));
+  const row = d => { const u = match(d); const ph = String(d.phone || (String(d.login_id).endsWith('@' + MOBILE_DOMAIN) ? d.login_id.split('@')[0] : '')).replace(/\D/g, '').slice(-10);
+    const tone = d.status === 'done' ? 'good' : d.status === 'rejected' ? '' : 'warn';
+    return `<div class="card pad stack-sm"><div class="row-flex" style="flex-wrap:nowrap;align-items:flex-start"><div class="avatar" style="background:#FDECEE;color:#E0344B">${ic('trash')}</div><div style="min-width:0;flex:1"><b style="display:block">${esc(d.name || displayId(d.login_id))}</b><span class="tiny muted">${esc(displayId(d.login_id))}${d.business ? ' · ' + esc(d.business) : ''}</span></div>${pill(d.status === 'done' ? 'Erased' : d.status === 'rejected' ? 'Rejected' : 'Pending', tone)}</div>
+      <div class="small muted">${d.source === 'web' ? 'From the website form' : 'From inside the app'} · ${new Date(d.created_at).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}${d.phone ? ' · ' + esc(d.phone) : ''}</div>
+      ${d.reason ? `<p class="small" style="background:var(--surface2);border-radius:12px;padding:10px 12px">${esc(d.reason)}</p>` : ''}
+      ${d.status === 'pending' ? (u ? `<div class="small">${ic('user')} Matches login <b>${esc(u.name || '')}</b> · ${esc((u.orgs || []).map(o => o.name + ' (' + o.role + ')').join(', ') || 'no business')}</div>` : `<div class="small" style="color:var(--bad)">${ic('alert')} No login found with this ID. Confirm with the person, or mark as done.</div>`) : ''}
+      ${d.note ? `<div class="tiny muted">${ic('edit')} ${esc(d.note)}</div>` : ''}
+      ${d.status === 'pending' ? `<div class="row-flex" style="gap:6px">${ph ? `<a class="btn sm" href="tel:+91${ph}">${ic('phone')} Call</a>` : ''}${u && u.userId !== S.user.id ? `<button class="btn sm danger" onclick="A.eraseAccount('${d.id}','${u.userId}')">${ic('trash')} Erase account</button>` : `<button class="btn sm" onclick="A.delMark('${d.id}','done')">Mark done</button>`}<button class="btn sm ghost" onclick="A.delMark('${d.id}','rejected')">Reject</button></div>` : ''}</div>`; };
+  const cnt = k => all.filter(d => d.status === k).length;
+  return `<div class="banner" style="margin-bottom:14px">${ic('shield')}<span>Google Play requires a way to delete accounts. People ask from the app (Account → Delete my account) or the website page <a href="/delete-account" target="_blank" rel="noopener">/delete-account</a>. Call them to confirm, then erase.</span></div>
+  <div class="chips" style="margin-bottom:14px">${[['pending', `Pending (${cnt('pending')})`], ['done', `Erased (${cnt('done')})`], ['rejected', `Rejected (${cnt('rejected')})`], ['all', `All (${all.length})`]].map(([k, l]) => `<button class="chip ${f === k ? 'on' : ''}" onclick="A.setF('delF','${k}')">${l}</button>`).join('')}</div>
+  ${list.length ? `<div class="grid g-auto">${list.map(row).join('')}</div>` : `<div class="card">${empty('No requests here', 'Account deletion requests appear here.', '', 'check', '#0B9B68')}</div>`}`;
+}
+A.eraseAccount = (reqId, userId) => {
+  const u = (S.admin?.users || []).find(x => x.userId === userId);
+  const owned = (u?.orgs || []).filter(o => o.role === 'owner').map(o => o.name);
+  formModal({ title: 'Erase this account?', sub: `${u?.name || ''} · ${displayId(u?.email || '')}`, fields: [
+    { type: 'html', full: true, html: `<div class="banner bad">${ic('alert')}<span>The login is removed${owned.length ? ` and these businesses are erased with all their data: <b>${owned.map(esc).join(', ')}</b> (unless another owner exists)` : ''}. This cannot be undone.</span></div>` },
+    { name: 'confirm', label: 'Type ERASE to confirm', required: true, full: true, autocomplete: 'off' }],
+    submit: 'Erase permanently', onSubmit: async v => {
+      if (String(v.confirm).trim().toUpperCase() !== 'ERASE') throw new Error('Type ERASE to confirm');
+      const r = await S.adapter.adminDeleteAccount(userId, reqId);
+      toast(`Erased ${displayId(r.login)}${r.businesses ? ` and ${r.businesses} business` : ''}`);
+      await A.adminLoad();
+    } });
+};
+A.delMark = (id, status) => formModal({ title: status === 'done' ? 'Mark as done' : 'Reject request', fields: [{ name: 'note', label: 'Note (only Super Admins see this)', type: 'textarea', full: true, placeholder: status === 'rejected' ? 'e.g. Owner asked to keep the account' : 'e.g. Confirmed on call, no login existed' }],
+  submit: 'Save', onSubmit: async v => { await S.adapter.deletionUpdate(id, { status, note: v.note || '', done_at: new Date().toISOString() }); const d = S.site.dels.find(x => x.id === id); Object.assign(d, { status, note: v.note }); toast('Updated'); render(); } });

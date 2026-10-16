@@ -99,6 +99,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image">` : '<meta name="twitter:card" content="summary">'}
 <meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="${esc(brand)} blog" href="${esc(origin)}/blog/rss.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -134,7 +135,7 @@ ${body}
       ${s.email ? `<li><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>` : ''}
       ${s.address ? `<li style="color:var(--ink2)">${esc(s.address)}</li>` : ''}
     </ul></div>
-    <div class="legal"><span>© ${new Date().getFullYear()} ${esc(s.legalName || brand)}</span><span><a href="/privacy"${hi('Privacy policy')}>Privacy policy</a> &nbsp; <a href="/terms"${hi('नियम और शर्तें')}>Terms of use</a></span></div>
+    <div class="legal"><span>© ${new Date().getFullYear()} ${esc(s.legalName || brand)}</span><span><a href="/privacy"${hi('Privacy policy')}>Privacy policy</a> &nbsp; <a href="/terms"${hi('नियम और शर्तें')}>Terms of use</a> &nbsp; <a href="/delete-account"${hi('Account delete करें')}>Delete account</a></span></div>
   </div>
 </footer>
 ${waN ? `<a class="wa-float" href="${esc(wa(waN, 'Namaste, I want to know more about ' + brand + '.'))}" target="_blank" rel="noopener" aria-label="WhatsApp">${ic('wa')}</a>` : ''}
@@ -322,7 +323,7 @@ function legalPage(kind, { s }) {
   <h2>How we use it</h2><ul><li>To run the app for you and your team.</li><li>To contact you about your account, renewals and support requests.</li><li>To keep the service secure and fix problems.</li></ul><p>We do not sell your data. Your business data is visible only to people you give access to, and to our support team when you ask for help.</p>
   <h2>Your clients’ information</h2><p>You control the client details you enter. A client link shows that client only their own event and bill.</p>
   <h2>Storage and security</h2><p>Data is stored with our cloud database provider and protected by access rules for every business. Logins can be protected with an Authenticator code.</p>
-  <h2>Your choices</h2><p>You can ask us for a copy of your data or to delete your account. Some records may be kept where the law requires it, such as invoices.</p>
+  <h2>Your choices</h2><p>You can download a backup of your business data from Settings at any time. To delete your account, use “Delete my account” in the app’s account menu or the form on our <a href="/delete-account">account deletion page</a>. We confirm with you and delete within 7 days. Some invoice records may be kept where tax law requires it.</p>
   <h2>Contact</h2><p>For privacy questions, ${contact}.</p></div>`;
   return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1>Terms of use</h1><p>Last updated ${updated}</p>
   <p>These terms apply when you use ${brand}, provided by ${org}.</p>
@@ -333,6 +334,34 @@ function legalPage(kind, { s }) {
   <h2>Bills and tax</h2><p>The app helps you prepare invoices. You remain responsible for the accuracy of your bills and your tax filings.</p>
   <h2>Changes and availability</h2><p>We work to keep the service available but cannot promise it will never be interrupted. We may update these terms and will show the new date here.</p>
   <h2>Contact</h2><p>Questions about these terms: ${contact}.</p></div>`;
+}
+
+
+/* ---------- account deletion (Google Play) ---------- */
+function deletePage({ s }) {
+  const brand = esc(s.brandName || 'EventPro');
+  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext">
+  <h1${hi('Account delete करें')}>Delete your account</h1>
+  <p${hi(`आप ${brand} का अपना account और उससे जुड़ा data हटाने के लिए कह सकते हैं।`)}>You can ask us to delete your ${brand} account and the data linked to it.</p>
+  <h2${hi('App से')}>From the app</h2>
+  <p${hi('Login करें, ऊपर अपने नाम पर tap करें, फिर नीचे "Delete my account" दबाएं।')}>Log in, tap your name at the top, then tap “Delete my account” at the bottom.</p>
+  <h2${hi('या यह form भरें')}>Or use this form</h2>
+  <form class="cform" id="delForm" novalidate style="margin-top:12px">
+    <label class="full"><span${hi('Login ID (mobile नंबर या email)')}>Login ID (mobile number or email)</span><input name="login" required maxlength="160" autocomplete="username"></label>
+    <label><span${hi('आपका नाम')}>Your name</span><input name="name" maxlength="120" autocomplete="name"></label>
+    <label><span${hi('Call के लिए mobile नंबर')}>Mobile number to call you</span><input name="phone" type="tel" required maxlength="16" inputmode="tel" autocomplete="tel"></label>
+    <label class="full"><span${hi('Business का नाम')}>Business name</span><input name="business" maxlength="160"></label>
+    <label class="full"><span${hi('कारण (ज़रूरी नहीं)')}>Reason (optional)</span><textarea name="reason" rows="2" maxlength="1000"></textarea></label>
+    <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('Delete करने का request भेजें')}>Send deletion request</button></div>
+    <div class="msg" id="delMsg" hidden role="status"></div>
+  </form>
+  <h2${hi('क्या हटाया जाता है')}>What is deleted</h2>
+  <ul><li${hi('आपका login, नाम, mobile नंबर और email।')}>Your login, name, mobile number and email.</li>
+  <li${hi('अगर आप business के अकेले owner हैं: उस business की bookings, clients, stock, menu, invoices, payments, vendors, staff, हाज़िरी और सभी staff logins।')}>If you are the only owner of a business: its bookings, clients, stock, menus, invoices, payments, vendors, staff, attendance and all staff logins.</li>
+  <li${hi('अगर आप कर्मचारी हैं: सिर्फ़ आपका login। Business का data owner के पास रहता है।')}>If you are an employee: only your login. The business data stays with the owner.</li></ul>
+  <h2${hi('कितना समय लगता है')}>How long it takes</h2>
+  <p${hi('हम आपको call करके पुष्टि करते हैं और 7 दिन के अंदर account हटा देते हैं। कानून के हिसाब से ज़रूरी कुछ बिल रिकॉर्ड 8 साल तक रखे जा सकते हैं।')}>We call you to confirm and delete the account within 7 days. Some invoice records may be kept for up to 8 years where tax law requires it.</p>
+  </div>`;
 }
 
 /* ---------- main handler ---------- */
@@ -348,7 +377,7 @@ module.exports = async (req, res) => {
     if (page === 'sitemap' || page === 'rss') {
       const posts = await loadPosts({ limit: 1000 });
       if (page === 'rss') return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>${esc(brand)} blog</title><link>${origin}/blog</link><description>${esc(s.tagline)}</description>${posts.slice(0, 30).map(p => `<item><title>${esc(p.title)}</title><link>${origin}/blog/${esc(p.slug)}</link><guid>${origin}/blog/${esc(p.slug)}</guid><pubDate>${new Date(p.published_at).toUTCString()}</pubDate><description>${esc(p.excerpt)}</description></item>`).join('')}</channel></rss>`, 'application/rss+xml; charset=utf-8');
-      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/privacy', ''], ['/terms', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
+      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
       return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(([u, d]) => `<url><loc>${esc(origin + u)}</loc>${d ? `<lastmod>${String(d).slice(0, 10)}</lastmod>` : ''}</url>`).join('')}</urlset>`, 'application/xml; charset=utf-8');
     }
     const base = { s, plat, origin };
@@ -376,6 +405,7 @@ module.exports = async (req, res) => {
       const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: desc, datePublished: p.published_at, dateModified: p.updated_at || p.published_at, inLanguage: p.lang === 'hi' ? 'hi-IN' : 'en-IN', mainEntityOfPage: origin + '/blog/' + p.slug, ...(p.cover_url ? { image: [p.cover_url] } : {}), author: { '@type': p.author ? 'Person' : 'Organization', name: p.author || brand }, publisher: { '@type': 'Organization', name: brand } };
       return send(200, shell({ ...base, path: '/blog/' + p.slug, title: `${p.seo_title || p.title} | ${brand}`, desc, image: p.cover_url || origin + '/img/og.jpg', type: 'article', jsonld: [ld], body: postPage({ ...base, p, related: more }) }));
     }
+    if (page === 'delete') return send(200, shell({ ...base, path: '/delete-account', title: `Delete your account | ${brand}`, desc: `How to delete your ${brand} account and data.`, body: deletePage(base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     if (page === 'privacy' || page === 'terms') return send(200, shell({ ...base, path: '/' + page, title: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} | ${brand}`, desc: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} for ${brand}.`, body: legalPage(page, base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     return send(404, shell({ ...base, path: '/' + page, title: `Page not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह page नहीं मिला')}>This page is not here</h1><p${hi('Link शायद पुराना है।')}>The link may be old.</p><a class="btn primary" href="/"${hi('Home पर जाएं')}>Go to home</a></div>` }), 'text/html; charset=utf-8', 's-maxage=60');
   } catch (e) {

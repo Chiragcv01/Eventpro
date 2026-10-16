@@ -270,6 +270,14 @@ const LocalDB = (() => {
     async leadUpdate(id, patch) { const l = (load().leads || []).find(x => x.id === id); if (l) Object.assign(l, patch); persist(); },
     async leadDelete(id) { const db = load(); db.leads = (db.leads || []).filter(x => x.id !== id); persist(); },
     async submitEnquiry(v) { const db = load(); db.leads = db.leads || []; db.leads.unshift({ id: uid('ld_'), status: 'new', note: '', created_at: new Date().toISOString(), name: v.name, phone: v.phone, email: v.email || '', business: v.business || '', city: v.city || '', biz_type: v.bizType || '', message: v.message || '', source: v.source || 'website' }); persist(); },
+    async requestDeletion(reason) { const db = load(); const u = db.users.find(x => x.id === db.session?.userId); db.deletions = db.deletions || []; if (db.deletions.some(d => d.user_id === u.id && d.status === 'pending')) return; db.deletions.unshift({ id: uid('dl_'), user_id: u.id, login_id: u.email, name: u.name, business: db.members.filter(m => m.userId === u.id).map(m => db.orgs[m.orgId]?.name).join(', '), phone: u.phone || '', reason, source: 'app', status: 'pending', created_at: new Date().toISOString() }); persist(); },
+    async myDeletion() { const db = load(); return (db.deletions || []).find(d => d.user_id === db.session?.userId && d.status === 'pending') || null; },
+    async deletionsList() { return (load().deletions || []).slice(); },
+    async deletionUpdate(id, patch) { const d = (load().deletions || []).find(x => x.id === id); if (d) Object.assign(d, patch); persist(); },
+    async adminDeleteAccount(userId, reqId) { const db = load(); const u = db.users.find(x => x.id === userId); if (!u) throw new Error('Login not found');
+      const owned = db.members.filter(m => m.userId === userId && m.role === 'owner').map(m => m.orgId).filter(o => !db.members.some(m => m.orgId === o && m.role === 'owner' && m.userId !== userId));
+      owned.forEach(id => { delete db.orgs[id]; delete db.records[id]; delete db.roles[id]; }); db.members = db.members.filter(m => m.userId !== userId && !owned.includes(m.orgId)); db.users = db.users.filter(x => x.id !== userId);
+      (db.deletions || []).forEach(d => { if ((d.id === reqId || d.user_id === userId) && d.status === 'pending') Object.assign(d, { status: 'done', done_at: new Date().toISOString(), user_id: null }); }); persist(); return { businesses: owned.length, login: u.email }; },
     findOrgByName(name) { const db = load(); return Object.entries(db.orgs).find(([, o]) => o.name === name)?.[0]; }
   };
 })();
@@ -379,7 +387,15 @@ const CloudDB = {
   async leadsList() { const { data, error } = await this.sb.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(500); if (error) throw this.err(error); return data; },
   async leadUpdate(id, patch) { const { error } = await this.sb.from('contact_messages').update(patch).eq('id', id); if (error) throw this.err(error); },
   async leadDelete(id) { const { error } = await this.sb.from('contact_messages').delete().eq('id', id); if (error) throw this.err(error); },
-  async submitEnquiry(v) { return this.rpc('submit_enquiry', { p: v }); }
+  async submitEnquiry(v) { return this.rpc('submit_enquiry', { p: v }); },
+  async requestDeletion(reason) { return this.rpc('request_account_deletion', { p_reason: reason || '' }); },
+  async myDeletion() { const { data } = await this.sb.from('account_deletions').select('id,created_at,status').eq('status', 'pending').limit(1).maybeSingle(); return data || null; },
+  async deletionsList() { const { data, error } = await this.sb.from('account_deletions').select('*').order('created_at', { ascending: false }).limit(300); if (error) throw this.err(error); return data; },
+  async deletionUpdate(id, patch) { const { error } = await this.sb.from('account_deletions').update(patch).eq('id', id); if (error) throw this.err(error); },
+  async adminDeleteAccount(userId, reqId) {
+    try { return await this.rpc('admin_delete_account', { p_user: userId, p_request: reqId || null }); }
+    catch (e) { if (/could not find the function|does not exist/i.test(e.message)) throw new Error('Account erase is not switched on in the database yet. Run supabase/account_deletion.sql once in Supabase.'); throw e; }
+  }
 };
 
 /* ================= App state ================= */
@@ -507,6 +523,7 @@ A.toggleLang = () => { const to = I18N.lang === 'hi' ? 'en' : 'hi'; I18N.set(to)
 /* ================= Boot & session ================= */
 async function boot() {
   applyTheme(); I18N.start();
+  try { if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js'); } catch (e) { }
   const forceLocal = LS.get('ep3_mode', 'auto') === 'local';
   S.adapter = cloudReady() && !forceLocal ? CloudDB : LocalDB;
   try { await S.adapter.init(); }
@@ -659,6 +676,7 @@ A.accountMenu = () => {
       ${can('settings') ? `<button class="tile" onclick="A.go('settings')">${ibox('gear', '#64748B')}<span>Settings</span></button>` : ''}
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>
+    <button class="linkbtn" style="align-self:center;color:var(--muted);font-weight:600" onclick="A.deleteAccountSheet()">${ic('trash')} Delete my account</button>
     <p class="tiny muted" style="text-align:center">EventPro OS v${APP_VERSION} · ${S.adapter.mode === 'local' ? 'Offline mode: data is saved on this device only.' : 'Cloud sync is on.'}</p></div>`);
 };
 const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'] };

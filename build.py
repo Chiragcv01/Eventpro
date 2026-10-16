@@ -10,7 +10,7 @@ fragment = f'{head}<style>\n{css}\n</style>\n{body}'
 (root / 'dist').mkdir(exist_ok=True)
 full = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-        '<link rel="manifest" href="manifest.webmanifest">\n<link rel="icon" href="icon.svg" type="image/svg+xml">\n'
+        '<link rel="manifest" href="/manifest.webmanifest">\n<link rel="icon" href="/icon.svg" type="image/svg+xml">\n<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">\n'
         f'{head}<style>\n:root{{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}\n[hidden]{{display:none!important}}\n{css}\n</style>\n</head>\n<body>\n{body}</body>\n</html>\n')
 (root / 'dist' / 'index.html').write_text(full)
 (root / 'app.html').write_text(full)  # Vercel serves this at /app

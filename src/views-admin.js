@@ -83,7 +83,7 @@ V.admin = () => {
   const paid = rows.filter(r => r.state === 'active');
   const mrr = sum(paid, r => planPrice(r.plan));
   const newLeads = (S.site?.leads || []).filter(l => l.status === 'new').length;
-  const tabs = `<div class="tabs">${[['biz', `Businesses (${rows.length})`], ['users', `Users (${S.admin.users.length})`], ['platform', 'Plans & support'], ['site', 'Website'], ['blog', 'Blog'], ['leads', 'Enquiries', newLeads]].map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}</div>`;
+  const tabs = `<div class="tabs">${[['biz', `Businesses (${rows.length})`], ['users', `Users (${S.admin.users.length})`], ['platform', 'Plans & support'], ['site', 'Website'], ['blog', 'Blog'], ['leads', 'Enquiries', newLeads], ['deletions', 'Account deletion', (S.site?.dels || []).filter(d => d.status === 'pending').length]].map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}</div>`;
   const kp = `<div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
     ${kpi('Businesses', rows.length, `${S.admin.users.length} users in total`, '', 'store', '#1F5EFF')}
     ${kpi('Paid & active', paid.length, `Monthly value ${inr(mrr)}`, 'good', 'check', '#0B9B68')}
@@ -94,6 +94,7 @@ V.admin = () => {
   if (tab === 'site') return head + mfaWarn + tabs + adminSite();
   if (tab === 'blog') return (S.params.edit ? '' : head + mfaWarn + tabs) + adminBlog();
   if (tab === 'leads') return head + mfaWarn + tabs + adminLeads();
+  if (tab === 'deletions') return head + mfaWarn + tabs + adminDeletions();
   if (tab === 'users') return head + mfaWarn + kp + tabs + adminUsers();
   if (tab === 'platform') return head + mfaWarn + kp + tabs + adminPlatform();
   const f = S.filters.adm || 'All'; const q = (S.filters.admQ || '').toLowerCase();

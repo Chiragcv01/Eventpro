@@ -1,5 +1,6 @@
 /* EventPro website: language switch, menu, contact form */
 (function () {
+  try { if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js'); } catch (e) { }
   var KEY = 'ep_lang';
   function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
   function put(v) { try { localStorage.setItem(KEY, v); } catch (e) { } }
@@ -70,4 +71,23 @@
       .catch(function () { say(tr('fail'), false); })
       .then(function () { btn.disabled = false; });
   });
+
+  /* account deletion request → Supabase */
+  var df = document.getElementById('delForm');
+  if (df && window.SITE) {
+    var dm = document.getElementById('delMsg');
+    var dsay = function (text, ok) { dm.hidden = false; dm.className = 'msg ' + (ok ? 'ok' : 'bad'); dm.textContent = text; };
+    df.addEventListener('submit', function (e) {
+      e.preventDefault(); var d = {}; new FormData(df).forEach(function (v, k) { d[k] = String(v).trim(); });
+      if (!d.login) { dsay(lang === 'hi' ? 'Login ID डालें।' : 'Enter the login ID.', false); return; }
+      if (d.phone.replace(/\D/g, '').length < 10) { dsay(lang === 'hi' ? '10 अंकों का mobile नंबर डालें।' : 'Enter a 10-digit mobile number.', false); return; }
+      var btn = df.querySelector('button[type=submit]'); btn.disabled = true;
+      var login = d.login.indexOf('@') > -1 ? d.login.toLowerCase() : (d.login.replace(/\D/g, '').slice(-10) + '@mobile.eventpro.app');
+      fetch(SITE.url + '/rest/v1/rpc/request_account_deletion_web', { method: 'POST', headers: { apikey: SITE.key, Authorization: 'Bearer ' + SITE.key, 'Content-Type': 'application/json' }, body: JSON.stringify({ p: { login: login, name: d.name, phone: d.phone, business: d.business, reason: d.reason } }) })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (x) { if (x.ok) { dsay(lang === 'hi' ? 'Request मिल गया। हम call करके पुष्टि करेंगे और 7 दिन में account हटा देंगे।' : 'Request received. We will call to confirm and delete the account within 7 days.', true); df.reset(); } else dsay((x.j && x.j.message) || 'Could not send. Please try again.', false); })
+        .catch(function () { dsay('Could not send. Please try again.', false); })
+        .then(function () { btn.disabled = false; });
+    });
+  }
 })();

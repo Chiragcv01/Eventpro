@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>No internet | EventPro</title>
+<meta name="theme-color" content="#FFFFFF">
+<style>
+:root{--ink:#121831;--ink2:#38405C;--blue:#1F5EFF;--line:#E5E8F1}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;display:grid;place-items:center;background:#F3F5FA;color:var(--ink);font:400 17px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif;padding:24px}
+.card{width:min(420px,100%);background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px 26px;text-align:center;box-shadow:0 10px 30px rgba(18,24,49,.06)}
+.ic{width:64px;height:64px;border-radius:20px;background:#FFF1F2;color:#E0344B;display:grid;place-items:center;margin:0 auto 16px}
+h1{font-size:23px;margin:0 0 8px}
+p{color:var(--ink2);margin:0 0 6px}
+.hi{font-size:16px}
+button{margin-top:20px;width:100%;min-height:50px;border:0;border-radius:14px;background:var(--blue);color:#fff;font:700 17px system-ui,sans-serif;cursor:pointer}
+</style>
+</head>
+<body>
+<main class="card" role="alert">
+  <div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.6a10 10 0 0 1 14 0M8.5 16.4a5 5 0 0 1 7 0M12 20h.01M3 3l18 18"/></svg></div>
+  <h1>No internet connection</h1>
+  <p>EventPro needs internet to load your bookings and bills. Check your mobile data or Wi-Fi.</p>
+  <p class="hi" lang="hi">इंटरनेट नहीं है। अपना mobile data या Wi-Fi चालू करें, फिर दोबारा कोशिश करें।</p>
+  <button type="button" onclick="location.reload()">Try again · फिर से कोशिश करें</button>
+</main>
+<script>window.addEventListener('online', function () { location.reload(); });</script>
+</body>
+</html>

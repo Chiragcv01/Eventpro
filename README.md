@@ -32,6 +32,14 @@ Everyone can switch the app between Hindi and English (the **हिं | EN** sw
 - **Super Admin → Blog:** write posts with headings, lists, quotes, links and pictures, cover image, tags, language, Google title/description. Save as draft or publish.
 - **Super Admin → Enquiries:** every contact-form request, with Call and WhatsApp buttons and a status (New / Contacted / Closed).
 
+## Android app (Google Play)
+
+The Play Store app is this same web app inside a Trusted Web Activity, so website updates reach the app without a new Play release.
+- Ready: PNG icons, `manifest.webmanifest`, service worker `sw.js` with `offline.html`, in-app and web account deletion (`/delete-account`).
+- `play-store/` holds the listing text (English and Hindi), icon, feature graphic, screenshots and the Data safety answers.
+- Still needed: final domain and package name, then the signed `.aab` and `/.well-known/assetlinks.json`.
+- Run `supabase/account_deletion.sql` once in Supabase so Super Admin can erase accounts.
+
 ## Access control
 
 - Every section has 4 levels: No access, View, Edit, Full (Full can also delete).

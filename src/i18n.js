@@ -1572,3 +1572,47 @@ e.g. Called on 18 Oct, demo fixed for Monday | जैसे: 18 Oct को call 
 Delete this enquiry? | यह enquiry delete करें?
 It will be removed permanently. | यह हमेशा के लिए हट जाएगी।
 `);
+I18N.load(`
+# ---------- account deletion ----------
+Delete my account | मेरा account delete करें
+Account deletion | Account delete
+Why are you leaving? (optional) | आप क्यों छोड़ रहे हैं? (ज़रूरी नहीं)
+I understand my account and data will be erased | मैं समझता हूं कि मेरा account और data हमेशा के लिए हट जाएगा
+Request deletion | Delete का request भेजें
+Download a backup first | पहले backup download करें
+Tick the box to confirm | पक्का करने के लिए box पर tick करें
+Request sent. We will contact you before erasing. | Request भेज दिया। हटाने से पहले हम आपसे बात करेंगे।
+Your login will be erased. The business data you worked on stays with the business owner. | आपका login हट जाएगा। जिस business में आपने काम किया, उसका data owner के पास रहेगा।
+This cannot be undone. | यह वापस नहीं होगा।
+Your login and the business | आपका login और business
+with all its bookings, bills, stock, staff logins and records will be erased permanently. | की सभी bookings, bills, stock, staff logins और records हमेशा के लिए हट जाएंगे।
+Your request goes to the {} team. We confirm with you and erase within 7 days. Some invoice records may be kept where the law requires. | आपका request {1} team के पास जाएगा। हम आपसे पुष्टि करके 7 दिन में हटा देंगे। कानून के हिसाब से कुछ bill records रखे जा सकते हैं।
+We received your request on {}. The {} team will confirm with you and erase the account within 7 days. | आपका request {1} को मिला। {2} team आपसे पुष्टि करके 7 दिन में account हटा देगी।
+Changed your mind? Contact support before it is processed. | मन बदल गया? Request पूरा होने से पहले support से बात करें।
+Pending | बाकी
+Erased | हटाया गया
+Rejected | मना किया
+Pending ({}) | बाकी ({1})
+Erased ({}) | हटाए गए ({1})
+Rejected ({}) | मना किए ({1})
+From the website form | Website के form से
+From inside the app | App के अंदर से
+Matches login | यह login मिला:
+No login found with this ID. Confirm with the person, or mark as done. | इस ID का कोई login नहीं मिला। व्यक्ति से पुष्टि करें, या done mark करें।
+Erase account | Account हटाएं
+Mark done | Done mark करें
+Reject | मना करें
+Reject request | Request मना करें
+Mark as done | Done mark करें
+Erase this account? | यह account हटाएं?
+Type ERASE to confirm | पक्का करने के लिए ERASE लिखें
+Erase permanently | हमेशा के लिए हटाएं
+Note (only Super Admins see this) | Note (सिर्फ़ Super Admin को दिखेगा)
+No requests here | यहां कोई request नहीं
+Account deletion requests appear here. | Account delete के requests यहां दिखेंगे।
+Account erase is not switched on in the database yet. Run supabase/account_deletion.sql once in Supabase. | Database में account हटाने की सुविधा अभी चालू नहीं है। Supabase में supabase/account_deletion.sql एक बार चलाएं।
+with all its bookings, bills, stock, staff logins and records will be erased permanently. This cannot be undone. | की सभी bookings, bills, stock, staff logins और records हमेशा के लिए हट जाएंगे। यह वापस नहीं होगा।
+Your login will be erased. The business data you worked on stays with the business owner. This cannot be undone. | आपका login हट जाएगा। जिस business में आपने काम किया, उसका data owner के पास रहेगा। यह वापस नहीं होगा।
+Google Play requires a way to delete accounts. People ask from the app (Account → Delete my account) or the website page | Google Play के नियम से account delete करने का तरीका होना चाहिए। लोग app से (Account → मेरा account delete करें) या website के इस page से request भेजते हैं:
+. Call them to confirm, then erase. | । उन्हें call करके पुष्टि करें, फिर हटाएं।
+`);

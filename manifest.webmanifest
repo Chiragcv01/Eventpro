@@ -1,18 +1,43 @@
 {
-  "name": "EventPro OS",
+  "id": "/app",
+  "name": "EventPro: Tent, Catering & Events",
   "short_name": "EventPro",
-  "description": "Tent house, catering and event management",
+  "description": "Bookings, godown stock, catering ration, GST bills, payments and crew for tent houses, caterers and event managers.",
+  "lang": "en-IN",
+  "dir": "ltr",
   "start_url": "/app",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#F3F5FA",
-  "theme_color": "#1F5EFF",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "categories": [
+    "business",
+    "productivity"
+  ],
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/img/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/img/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ],
-  "scope": "/"
+  ]
 }
