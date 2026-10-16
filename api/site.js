@@ -15,7 +15,7 @@ const waNum = s => { const d = digits(s); return d.length === 10 ? '91' + d : d;
 const wa = (num, text) => `https://wa.me/${waNum(num)}?text=${encodeURIComponent(text)}`;
 const fmtDate = s => s ? new Date(s).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }) : '';
 const safeUrl = u => /^https?:\/\/[^\s"'<>]+$/i.test(String(u || '').trim()) ? String(u).trim() : '';
-const strip = h => String(h || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+const strip = h => String(h || '').replace(/<(script|style)\b[\s\S]*?<\/\1\s*>/gi, ' ').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 const decodeEnt = s => String(s).replace(/&#(\d+);?/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);?/gi, (_, n) => String.fromCodePoint(parseInt(n, 16))).replace(/&(amp|lt|gt|quot|apos|colon|tab|newline);/gi, (_, n) => ({ amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", colon: ':', tab: '', newline: '' }[n.toLowerCase()]));
 
 async function sb(path, { timeout = 3500 } = {}) {

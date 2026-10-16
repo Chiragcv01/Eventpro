@@ -513,7 +513,7 @@ async function boot() {
   catch (e) { if (S.adapter === CloudDB) { $('#app').innerHTML = `<div class="auth"><section class="auth-side"><div class="auth-card"><div class="card pad stack">${ibox('alert', '#E0344B', 'lg')}<h2>Cannot connect</h2><p class="muted">Check your internet connection and try again.</p><button class="btn primary" onclick="location.reload()">Try again</button></div></div></section></div>`; return; } }
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   const h = location.hash.replace('#', '');
-  if (h.startsWith('guest-')) { await A.openGuest(h.slice(6)); return; }
+  if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup' || h === 'login') { S.authTab = h === 'signup' && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
   render();

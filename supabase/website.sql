@@ -124,6 +124,9 @@ do $$ begin
   if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'blog_admin_update') then
     create policy blog_admin_update on storage.objects for update to authenticated using (bucket_id = 'blog' and public.is_super_admin());
   end if;
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'blog_admin_select') then
+    create policy blog_admin_select on storage.objects for select to authenticated using (bucket_id = 'blog' and public.is_super_admin());
+  end if;
   if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'blog_admin_delete') then
     create policy blog_admin_delete on storage.objects for delete to authenticated using (bucket_id = 'blog' and public.is_super_admin());
   end if;
