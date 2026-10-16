@@ -1,7 +1,7 @@
 {
   "id": "/app",
-  "name": "EventPro: Tent, Catering & Events",
-  "short_name": "EventPro",
+  "name": "SabManage: Tent, Catering & Events",
+  "short_name": "SabManage",
   "description": "Bookings, godown stock, catering ration, GST bills, payments and crew for tent houses, caterers and event managers.",
   "lang": "en-IN",
   "dir": "ltr",

@@ -1,4 +1,4 @@
-/* EventPro website: language switch, menu, contact form */
+/* SabManage website: language switch, menu, contact form */
 (function () {
   try { if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('/sw.js'); } catch (e) { }
   var KEY = 'ep_lang';

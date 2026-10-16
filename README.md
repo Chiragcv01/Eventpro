@@ -1,9 +1,9 @@
-# EventPro OS
+# SabManage
 
 Management app for tent houses, caterers and event managers: bookings, godown stock, catering ration, GST invoices, payments, vendors, staff, live setup tracker, reports, client portal, and a Super Admin console for the platform owner.
 
-- **Website:** https://eventpro-os.vercel.app (home, About, Contact, pricing, FAQ, blog)
-- **App:** https://eventpro-os.vercel.app/app
+- **Website:** https://sabmanage.com (home, About, Contact, pricing, FAQ, blog)
+- **App:** https://sabmanage.com/app
 - **Database:** Supabase project `eventpro` (Mumbai, `uregwtavhkjowiltukiq`)
 - **Hosting:** Vercel, auto-deploys every push to `main`
 

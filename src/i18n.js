@@ -433,7 +433,7 @@ Your words | आपकी बात
 Food, decor, staff behaviour, timing… | खाना, सजावट, staff का व्यवहार, समय…
 Submit review | Review भेजें
 Thank you! Review submitted. | धन्यवाद! Review भेज दिया गया।
-Powered by EventPro OS | Powered by EventPro OS
+Powered by SabManage | Powered by SabManage
 ★★★★★ Excellent | ★★★★★ बहुत बढ़िया
 ★★★★ Very good | ★★★★ बहुत अच्छा
 ★★★ Okay | ★★★ ठीक-ठाक
@@ -1187,7 +1187,7 @@ Restore backup? | Backup restore करें?
 {} records from {} ({}) will be merged in. Records with the same ID are replaced. | {2} ({3}) के {1} records जुड़ जाएंगे। एक जैसी ID वाले records बदल जाएंगे।
 Backup restored | Backup restore हो गया
 Restored backup | Backup restore किया
-That file is not an EventPro backup | यह EventPro का backup file नहीं है
+That file is not an SabManage backup | यह SabManage का backup file नहीं है
 Exported data backup | Data backup निकाला
 a backup | एक backup
 Cloud sync is on. Data is stored in your Supabase project. | Cloud sync चालू है। Data आपके Supabase project में है।

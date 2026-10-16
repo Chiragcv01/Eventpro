@@ -1,4 +1,4 @@
-/* EventPro public website: home, blog, legal pages, sitemap.
+/* SabManage public website: home, blog, legal pages, sitemap.
    Rendered on the server so Google and WhatsApp link previews see real content.
    Content comes from Supabase (public, read-only data). */
 const SB_URL = process.env.SUPABASE_URL || 'https://uregwtavhkjowiltukiq.supabase.co';
@@ -69,12 +69,12 @@ const P = {
 const ic = (n, cls = 'ico') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n] || ''}"/></svg>`;
 
 /* ---------- data ---------- */
-const DEFAULT_SITE = { brandName: 'EventPro', tagline: 'Tent, catering aur event ka poora hisaab, ek app mein.', about: 'EventPro is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
+const DEFAULT_SITE = { brandName: 'SabManage', tagline: 'Tent, catering aur event ka poora hisaab, ek app mein.', about: 'SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
 async function loadSettings() {
   let plat = {};
   try { const r = await sb('platform_settings?id=eq.1&select=data'); plat = (r[0] && r[0].data) || {}; } catch (e) { }
   const site = { ...DEFAULT_SITE, phone: plat.supportPhone || '', whatsapp: plat.supportPhone || '', email: plat.supportEmail || '', ...(plat.site || {}) };
-  return { plat: { appName: 'EventPro', trialDays: 14, plans: [], ...plat }, site };
+  return { plat: { appName: 'SabManage', trialDays: 14, plans: [], ...plat }, site };
 }
 const POST_COLS = 'slug,title,excerpt,cover_url,published_at,updated_at,tags,lang,author';
 async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
@@ -83,7 +83,7 @@ async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
 
 /* ---------- page shell ---------- */
 function shell({ s, plat, origin, path, title, desc, image, body, type = 'website', jsonld = [], noindex = false, hiTitle = '' }) {
-  const brand = s.brandName || 'EventPro'; const url = origin + path;
+  const brand = s.brandName || 'SabManage'; const url = origin + path;
   const nav = [['/#features', 'Features', 'सुविधाएं'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/blog', 'Blog', 'Blog'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
   const waN = s.whatsapp || s.phone;
   const social = [['instagram', 'insta', 'Instagram'], ['facebook', 'fb', 'Facebook'], ['youtube', 'yt', 'YouTube'], ['linkedin', 'li', 'LinkedIn']].filter(([k]) => safeUrl(s[k])).map(([k, i, l]) => `<a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" aria-label="${l}">${ic(i)}</a>`).join('');
@@ -147,7 +147,7 @@ ${waN ? `<a class="wa-float" href="${esc(wa(waN, 'Namaste, I want to know more a
 
 /* ---------- home ---------- */
 function homePage({ s, plat, posts }) {
-  const brand = s.brandName || 'EventPro'; const trial = +plat.trialDays || 0; const signup = plat.allowSignup !== false;
+  const brand = s.brandName || 'SabManage'; const trial = +plat.trialDays || 0; const signup = plat.allowSignup !== false;
   const waN = s.whatsapp || s.phone;
   const startBtn = signup ? `<a class="btn primary" href="/app#signup"${hi(trial ? `${trial} दिन का free trial शुरू करें` : 'Free में शुरू करें')}>${trial ? `Start ${trial}-day free trial` : 'Start free'}</a>` : `<a class="btn primary" href="#contact"${hi('Demo लें')}>Book a demo</a>`;
   const waBtn = waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('WhatsApp पर demo')}>Demo on WhatsApp</span></a>` : `<a class="btn" href="#contact"${hi('Demo लें')}>Book a demo</a>`;
@@ -212,7 +212,7 @@ function homePage({ s, plat, posts }) {
       <ul class="facts"><li>${ic('check')}<span${hi('किसी भी phone पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('हिंदी और English')}>Hindi and English</span></li><li>${ic('check')}<span${hi('आपके logo वाले GST bill')}>GST bills with your logo</span></li></ul>
     </div>
     <div class="tagstack">
-      <div class="phone"><img src="/img/app-dashboard.webp" width="390" height="780" alt="EventPro app home screen showing money pending from clients, upcoming events and quick actions" fetchpriority="high"></div>
+      <div class="phone"><img src="/img/app-dashboard.webp" width="390" height="780" alt="SabManage app home screen showing money pending from clients, upcoming events and quick actions" fetchpriority="high"></div>
       <div class="sticker a"><i style="background:#0B9B68">${ic('rupee')}</i><span${hi('Payment मिला<small>Advance दर्ज हो गया</small>')}>Payment received<small>Advance recorded</small></span></div>
       <div class="sticker b"><i style="background:#D6246E">${ic('receipt')}</i><span${hi('GST bill तैयार<small>WhatsApp पर भेजें</small>')}>GST bill ready<small>Send on WhatsApp</small></span></div>
     </div>
@@ -306,7 +306,7 @@ function postPage({ s, plat, p, related, origin }) {
     ${p.cover_url ? `<div class="cover"><img src="${esc(p.cover_url)}" alt="" fetchpriority="high"></div>` : '<div style="height:26px"></div>'}
     <div class="post-body">${sanitize(p.content)}</div>
     <div class="share"><b${hi('Share करें')}>Share</b><a class="btn sm wa" href="https://wa.me/?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a><a class="btn sm" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}" target="_blank" rel="noopener">${ic('fb')}Facebook</a><button class="btn sm" type="button" data-copy="${esc(url)}">${ic('copy')}<span${hi('Link copy करें')}>Copy link</span></button></div>
-    <div class="cta-box"><div><h3${hi(`अपना business ${s.brandName || 'EventPro'} पर चलाएं`)}>Run your business on ${esc(s.brandName || 'EventPro')}</h3><p${hi('Bookings, stock, catering, GST bills और payments एक app में।')}>Bookings, stock, catering, GST bills and payments in one app.</p></div>${signup ? `<a class="btn primary" href="/app#signup"${hi('Free trial शुरू करें')}>Start free trial</a>` : `<a class="btn primary" href="/#contact"${hi('Demo लें')}>Book a demo</a>`}</div>
+    <div class="cta-box"><div><h3${hi(`अपना business ${s.brandName || 'SabManage'} पर चलाएं`)}>Run your business on ${esc(s.brandName || 'SabManage')}</h3><p${hi('Bookings, stock, catering, GST bills और payments एक app में।')}>Bookings, stock, catering, GST bills and payments in one app.</p></div>${signup ? `<a class="btn primary" href="/app#signup"${hi('Free trial शुरू करें')}>Start free trial</a>` : `<a class="btn primary" href="/#contact"${hi('Demo लें')}>Book a demo</a>`}</div>
   </article>
   ${related.length ? `<div style="margin-top:60px"><h2 style="font-size:30px;margin-bottom:22px"${hi('और पढ़ें')}>Read next</h2><div class="posts">${related.map(postCard).join('')}</div></div>` : ''}
   </div>`;
@@ -314,7 +314,7 @@ function postPage({ s, plat, p, related, origin }) {
 
 /* ---------- legal ---------- */
 function legalPage(kind, { s }) {
-  const org = esc(s.legalName || s.brandName || 'EventPro'); const brand = esc(s.brandName || 'EventPro');
+  const org = esc(s.legalName || s.brandName || 'SabManage'); const brand = esc(s.brandName || 'SabManage');
   const contact = [s.email && `email <a href="mailto:${esc(s.email)}">${esc(s.email)}</a>`, s.phone && `call ${esc(s.phone)}`].filter(Boolean).join(' or ') || 'use the contact form on our website';
   const updated = 'October 2026';
   if (kind === 'privacy') return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1>Privacy policy</h1><p>Last updated ${updated}</p>
@@ -339,7 +339,7 @@ function legalPage(kind, { s }) {
 
 /* ---------- account deletion (Google Play) ---------- */
 function deletePage({ s }) {
-  const brand = esc(s.brandName || 'EventPro');
+  const brand = esc(s.brandName || 'SabManage');
   return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext">
   <h1${hi('Account delete करें')}>Delete your account</h1>
   <p${hi(`आप ${brand} का अपना account और उससे जुड़ा data हटाने के लिए कह सकते हैं।`)}>You can ask us to delete your ${brand} account and the data linked to it.</p>
@@ -373,7 +373,7 @@ module.exports = async (req, res) => {
   try {
     if (page === 'robots') return send(200, `User-agent: *\nAllow: /\nDisallow: /app\nDisallow: /api/\nSitemap: ${origin}/sitemap.xml\n`, 'text/plain; charset=utf-8', 's-maxage=86400');
     const { plat, site: s } = await loadSettings();
-    const brand = s.brandName || 'EventPro';
+    const brand = s.brandName || 'SabManage';
     if (page === 'sitemap' || page === 'rss') {
       const posts = await loadPosts({ limit: 1000 });
       if (page === 'rss') return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>${esc(brand)} blog</title><link>${origin}/blog</link><description>${esc(s.tagline)}</description>${posts.slice(0, 30).map(p => `<item><title>${esc(p.title)}</title><link>${origin}/blog/${esc(p.slug)}</link><guid>${origin}/blog/${esc(p.slug)}</guid><pubDate>${new Date(p.published_at).toUTCString()}</pubDate><description>${esc(p.excerpt)}</description></item>`).join('')}</channel></rss>`, 'application/rss+xml; charset=utf-8');
@@ -410,7 +410,7 @@ module.exports = async (req, res) => {
     return send(404, shell({ ...base, path: '/' + page, title: `Page not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह page नहीं मिला')}>This page is not here</h1><p${hi('Link शायद पुराना है।')}>The link may be old.</p><a class="btn primary" href="/"${hi('Home पर जाएं')}>Go to home</a></div>` }), 'text/html; charset=utf-8', 's-maxage=60');
   } catch (e) {
     console.error(e);
-    return send(500, `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>EventPro</title><body style="font-family:system-ui;padding:40px;text-align:center"><h1>Something went wrong</h1><p>Please refresh the page, or <a href="/app">open the app</a>.</p></body>`, 'text/html; charset=utf-8', 's-maxage=5');
+    return send(500, `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SabManage</title><body style="font-family:system-ui;padding:40px;text-align:center"><h1>Something went wrong</h1><p>Please refresh the page, or <a href="/app">open the app</a>.</p></body>`, 'text/html; charset=utf-8', 's-maxage=5');
   }
 };
 module.exports.sanitize = sanitize;

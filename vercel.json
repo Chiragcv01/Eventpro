@@ -108,5 +108,18 @@
   ],
   "regions": [
     "bom1"
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "eventpro-os.vercel.app"
+        }
+      ],
+      "destination": "https://sabmanage.com/:path*",
+      "permanent": true
+    }
   ]
 }

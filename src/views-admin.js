@@ -169,7 +169,7 @@ function adminPlatform() {
 A.savePlatform = async e => {
   e.preventDefault(); const v = readForm(e.target);
   const plans = [0, 1, 2].map(i => ({ name: (v['pn' + i] || '').trim(), price: +v['pp' + i] || 0 })).filter(p => p.name);
-  const p = { ...(S.platform || {}), appName: v.appName || 'EventPro', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
+  const p = { ...(S.platform || {}), appName: v.appName || 'SabManage', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
   try { await S.adapter.savePlatform(p); S.platform = p; toast('Platform settings saved'); render(); } catch (err) { toast(err.message, 'bad'); }
 };
 
@@ -205,7 +205,7 @@ function accessSummary(m) {
 function genPass() { const w = ['Tent', 'Diya', 'Gulab', 'Kesar', 'Moti', 'Raja', 'Neem', 'Chand', 'Heera', 'Mehndi']; return w[Math.floor(Math.random() * w.length)] + '@' + (1000 + Math.floor(Math.random() * 9000)); }
 function credSheet(title, name, email, pass) {
   const url = location.href.split('#')[0]; const id = displayId(email);
-  const msg = `Namaste ${name || ''} ji!\n${S.org ? settings().bizName + ' ke ' : ''}${S.platform?.appName || 'EventPro'} app ka login:\n\nLink: ${url}\nLogin ID: ${id.replace('+91 ', '')}\nPassword: ${pass}\n\nKripya yeh password kisi aur ko na bataein.`;
+  const msg = `Namaste ${name || ''} ji!\n${S.org ? settings().bizName + ' ke ' : ''}${S.platform?.appName || 'SabManage'} app ka login:\n\nLink: ${url}\nLogin ID: ${id.replace('+91 ', '')}\nPassword: ${pass}\n\nKripya yeh password kisi aur ko na bataein.`;
   modal(`${sheetHead(title, name)}<div class="sheet-b stack">
     <div class="card pad stack-sm" style="background:var(--surface2);box-shadow:none"><div class="row-flex" style="justify-content:space-between"><span class="muted small">Link</span><span class="mono small" style="overflow-wrap:anywhere">${esc(url)}</span></div>
     <div class="row-flex" style="justify-content:space-between"><span class="muted small">Login ID</span><b class="mono">${esc(id.replace('+91 ', ''))}</b></div>

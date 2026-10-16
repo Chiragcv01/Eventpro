@@ -1,7 +1,7 @@
 /* ================= Public website: content, blog, enquiries (Super Admin) ================= */
 const SITE_DEFAULT = {
-  brandName: 'EventPro', tagline: 'Tent, catering aur event ka poora hisaab, ek app mein.',
-  about: 'EventPro is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.',
+  brandName: 'SabManage', tagline: 'Tent, catering aur event ka poora hisaab, ek app mein.',
+  about: 'SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.',
   aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm',
   mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true
 };
@@ -235,7 +235,7 @@ A.leadDel = id => confirmBox('Delete this enquiry?', 'It will be removed permane
 A.deleteAccountSheet = async () => {
   let pend = null; try { pend = await S.adapter.myDeletion(); } catch (e) { }
   if (pend) {
-    modal(`${sheetHead('Delete my account')}<div class="sheet-b stack"><div class="banner warn">${ic('clock')}<span>We received your request on ${fmtDate(String(pend.created_at).slice(0, 10))}. The ${esc(S.platform?.appName || 'EventPro')} team will confirm with you and erase the account within 7 days.</span></div><p class="small muted">Changed your mind? Contact support before it is processed.</p></div>`);
+    modal(`${sheetHead('Delete my account')}<div class="sheet-b stack"><div class="banner warn">${ic('clock')}<span>We received your request on ${fmtDate(String(pend.created_at).slice(0, 10))}. The ${esc(S.platform?.appName || 'SabManage')} team will confirm with you and erase the account within 7 days.</span></div><p class="small muted">Changed your mind? Contact support before it is processed.</p></div>`);
     return;
   }
   const owner = S.org && S.role === 'owner' && !S.org.viewAs;
@@ -250,7 +250,7 @@ A.deleteAccountSheet = async () => {
     ${owner && can('settings') ? `<button type="button" class="btn" onclick="A.exportBackup()">${ic('download')} Download a backup first</button>` : ''}
     ${fieldHTML({ name: 'reason', label: 'Why are you leaving? (optional)', type: 'textarea', rows: 2, full: true })}
     ${fieldHTML({ name: 'sure', label: 'I understand my account and data will be erased', type: 'checkbox', full: true })}
-    <p class="tiny muted">Your request goes to the ${esc(S.platform?.appName || 'EventPro')} team. We confirm with you and erase within 7 days. Some invoice records may be kept where the law requires.</p>
+    <p class="tiny muted">Your request goes to the ${esc(S.platform?.appName || 'SabManage')} team. We confirm with you and erase within 7 days. Some invoice records may be kept where the law requires.</p>
   </div><footer class="sheet-f"><span class="grow"></span><button type="button" class="btn ghost" onclick="A.closeModal()">Cancel</button><button class="btn danger" type="submit">Request deletion</button></footer></form>`);
 };
 

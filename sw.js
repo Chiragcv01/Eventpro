@@ -1,4 +1,4 @@
-/* EventPro service worker: fast repeat visits and a clear offline screen.
+/* SabManage service worker: fast repeat visits and a clear offline screen.
    App data always comes live from the server; nothing private is cached. */
 const VERSION = 'ep-2026-10-16';
 const SHELL = ['/offline.html', '/icon.svg', '/img/icons/icon-192.png', '/img/icons/icon-512.png'];

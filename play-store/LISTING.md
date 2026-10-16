@@ -1,4 +1,4 @@
-# Google Play listing — EventPro
+# Google Play listing — SabManage
 
 Copy these into Play Console → Grow → Store presence → Main store listing.
 Add Hindi as a second language (Translations → Add language → Hindi – hi-IN) and paste the Hindi text there.
@@ -13,15 +13,15 @@ Add Hindi as a second language (Translations → Add language → Hindi – hi-I
 
 ## English (en-IN)
 
-**App name** (25/30)
-EventPro: Tent & Catering
+**App name** (26/30)
+SabManage: Tent & Catering
 
 **Short description** (76/80)
 Bookings, stock, catering, GST bills and payments for tent houses & caterers
 
 **Full description**
 
-EventPro keeps the full hisaab of your tent house, catering or event business in one app.
+SabManage keeps the full hisaab of your tent house, catering or event business in one app.
 
 Made for tent houses, caterers, halwais, decorators and event managers who run weddings, receptions, sangeet, jagrans and corporate events.
 
@@ -69,15 +69,15 @@ Start with a free trial. Your data stays in the cloud and only your team can see
 
 ## Hindi (hi-IN)
 
-**App name** (25/30)
-EventPro: टेंट और कैटरिंग
+**App name** (26/30)
+SabManage: टेंट और कैटरिंग
 
 **Short description** (70/80)
 टेंट हाउस और कैटरर के लिए bookings, stock, GST bill और payments का app
 
 **Full description**
 
-EventPro आपके टेंट हाउस, कैटरिंग या इवेंट business का पूरा हिसाब एक app में रखता है।
+SabManage आपके टेंट हाउस, कैटरिंग या इवेंट business का पूरा हिसाब एक app में रखता है।
 
 टेंट हाउस, कैटरर, हलवाई, डेकोरेटर और इवेंट मैनेजर के लिए बना, जो शादी, रिसेप्शन, संगीत, जागरण और corporate events करते हैं।
 
@@ -130,9 +130,9 @@ Free trial से शुरू करें। आपका data cloud में
 | App category | Business |
 | Tags | Business management, Invoicing, Inventory |
 | Email | support email from Super Admin → Plans & support |
-| Website | your domain (home page) |
-| Privacy policy | `https://<your-domain>/privacy` |
-| Account deletion URL | `https://<your-domain>/delete-account` |
+| Website | https://sabmanage.com |
+| Privacy policy | `https://sabmanage.com/privacy` |
+| Account deletion URL | `https://sabmanage.com/delete-account` |
 | Ads | No ads |
 | Target age | 18 and over |
 | Content rating | Fill the questionnaire as a business/utility app with no violence, sexual content, gambling or user-to-user chat → rated for everyone |

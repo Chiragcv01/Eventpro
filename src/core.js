@@ -1,5 +1,5 @@
 'use strict';
-/* ================= EventPro OS v3 — core ================= */
+/* ================= SabManage v3 — core ================= */
 const APP_VERSION = '3.0.0';
 const CFG = window.EVENTPRO_CONFIG || {};
 const $ = (s, r = document) => r.querySelector(s);
@@ -147,7 +147,7 @@ function defaultSettings(o = {}) {
 const MOBILE_DOMAIN = 'mobile.eventpro.app';
 function loginId(v) { v = String(v || '').trim(); if (v.includes('@')) return v.toLowerCase(); const d = v.replace(/\D/g, ''); return d.length >= 10 ? d.slice(-10) + '@' + MOBILE_DOMAIN : v.toLowerCase(); }
 function displayId(e) { e = String(e || ''); return e.endsWith('@' + MOBILE_DOMAIN) ? '+91 ' + e.split('@')[0] : e; }
-const DEFAULT_PLATFORM = { appName: 'EventPro', supportName: 'EventPro Support', supportPhone: '', supportEmail: '', trialDays: 14, plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
+const DEFAULT_PLATFORM = { appName: 'SabManage', supportName: 'SabManage Support', supportPhone: '', supportEmail: '', trialDays: 14, plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
 const superEmails = () => (CFG.superAdminEmails || []).map(loginId);
 function orgState(o) { if (!o) return 'active'; if (o.status === 'suspended') return 'suspended'; if (o.expires && o.expires < todayLocal()) return 'expired'; return o.status || 'active'; }
 const STATE_PILL = { trial: ['Trial', 'info'], active: ['Active', 'good'], expired: ['Expired', 'bad'], suspended: ['Suspended', 'bad'] };
@@ -347,7 +347,7 @@ const CloudDB = {
   async mfaEnroll() {
     const f = await this.mfaFactors();
     for (const x of (f.all || []).filter(x => x.factor_type === 'totp' && x.status !== 'verified')) await this.sb.auth.mfa.unenroll({ factorId: x.id });
-    const { data, error } = await this.sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'EventPro ' + new Date().toISOString().slice(0, 16), issuer: S.platform?.appName || 'EventPro' });
+    const { data, error } = await this.sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'SabManage ' + new Date().toISOString().slice(0, 16), issuer: S.platform?.appName || 'SabManage' });
     if (error) throw this.err(error);
     let svg = String(data.totp.qr_code || ''); svg = svg.replace(/^data:image\/svg\+xml;[^,]*,/, '');
     try { if (/^%3C/i.test(svg)) svg = decodeURIComponent(svg); } catch (e) { }
@@ -623,7 +623,7 @@ function shell(body) {
   const isHome = S.view === 'dashboard';
   return `<div class="app">
   <aside class="side">
-    <div class="brand">${S.org ? bizLogo(st) : `<div class="logo" style="background:#0F172A">${ic('shield')}</div>`}<div style="min-width:0"><b title="${esc(bizName)}">${esc(bizName)}</b><span>${S.org ? 'on ' + esc(S.platform?.appName || 'EventPro') : esc(S.platform?.appName || 'EventPro') + ' platform'}</span></div></div>
+    <div class="brand">${S.org ? bizLogo(st) : `<div class="logo" style="background:#0F172A">${ic('shield')}</div>`}<div style="min-width:0"><b title="${esc(bizName)}">${esc(bizName)}</b><span>${S.org ? 'on ' + esc(S.platform?.appName || 'SabManage') : esc(S.platform?.appName || 'SabManage') + ' platform'}</span></div></div>
     <nav class="nav" aria-label="Main">${adminBtn}${groups.map(g => `<div class="nav-group">${g}</div>` + items.filter(m => m.group === g).map(m => `<button style="--c:${m.c}" class="${cur === m.key ? 'on' : ''}" onclick="A.go('${m.key}')">${ibox(m.icon, m.c, 'sm')}${esc(m.label)}</button>`).join('')).join('')}</nav>
     <div class="side-foot"><div class="avatar">${esc(initials(name))}</div><div style="min-width:0;flex:1"><b style="display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(name)}</b><span class="tiny muted">${esc(roleLabel)}</span></div><button class="icon-btn" title="Account" onclick="A.accountMenu()">${ic('gear')}</button></div>
   </aside>
@@ -677,7 +677,7 @@ A.accountMenu = () => {
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>
     <button class="linkbtn" style="align-self:center;color:var(--muted);font-weight:600" onclick="A.deleteAccountSheet()">${ic('trash')} Delete my account</button>
-    <p class="tiny muted" style="text-align:center">EventPro OS v${APP_VERSION} · ${S.adapter.mode === 'local' ? 'Offline mode: data is saved on this device only.' : 'Cloud sync is on.'}</p></div>`);
+    <p class="tiny muted" style="text-align:center">SabManage v${APP_VERSION} · ${S.adapter.mode === 'local' ? 'Offline mode: data is saved on this device only.' : 'Cloud sync is on.'}</p></div>`);
 };
 const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'] };
 function alertCard(a) { const [i, c] = ALERT_STYLE[a.tag] || ['alert', '#E0344B']; return `<div class="alert" style="--c:${c}" onclick="${a.go}">${ibox(i, c, 'sm')}<div class="grow" style="min-width:0"><b>${esc(a.title)}</b><div class="sub">${esc(a.sub || '')}</div></div>${ic('chev', 'go')}</div>`; }
