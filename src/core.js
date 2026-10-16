@@ -328,7 +328,10 @@ const CloudDB = {
     const f = await this.mfaFactors();
     for (const x of (f.all || []).filter(x => x.factor_type === 'totp' && x.status !== 'verified')) await this.sb.auth.mfa.unenroll({ factorId: x.id });
     const { data, error } = await this.sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'EventPro ' + new Date().toISOString().slice(0, 16), issuer: S.platform?.appName || 'EventPro' });
-    if (error) throw this.err(error); return { id: data.id, qr: data.totp.qr_code, secret: data.totp.secret };
+    if (error) throw this.err(error);
+    let svg = String(data.totp.qr_code || ''); svg = svg.replace(/^data:image\/svg\+xml;[^,]*,/, '');
+    try { if (/^%3C/i.test(svg)) svg = decodeURIComponent(svg); } catch (e) { }
+    return { id: data.id, qr: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), secret: data.totp.secret };
   },
   async mfaVerify(factorId, code) { const { error } = await this.sb.auth.mfa.challengeAndVerify({ factorId, code: String(code).replace(/\D/g, '') }); if (error) throw new Error(/invalid|expired|code/i.test(error.message) ? 'Wrong or expired code. Type the latest 6-digit code from your app.' : error.message); },
   async mfaLoginVerify(code) { const f = await this.mfaFactors(); const t = (f.totp || [])[0]; if (!t) throw new Error('No authenticator found for this login.'); return this.mfaVerify(t.id, code); },
