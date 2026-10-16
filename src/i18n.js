@@ -1616,3 +1616,119 @@ Your login will be erased. The business data you worked on stays with the busine
 Google Play requires a way to delete accounts. People ask from the app (Account → Delete my account) or the website page | Google Play के नियम से account delete करने का तरीका होना चाहिए। लोग app से (Account → मेरा account delete करें) या website के इस page से request भेजते हैं:
 . Call them to confirm, then erase. | । उन्हें call करके पुष्टि करें, फिर हटाएं।
 `);
+I18N.load(`
+# ---------- Excel import, getting started, terms, subscriptions ----------
+Import | Import
+Import from Excel | Excel से import करें
+Godown stock | Godown stock
+Menu (dishes) | Menu (dishes)
+Crew & staff | Crew और staff
+Download the sample sheet | Sample sheet download करें
+Sample sheet (.xlsx) | Sample sheet (.xlsx)
+Upload the filled sheet | भरी हुई sheet upload करें
+Excel (.xlsx, .xls) or CSV. The first row must be the headings. | Excel (.xlsx, .xls) या CSV। पहली line में headings होनी चाहिए।
+Choose file | File चुनें
+Fill your {} in it, or use your own sheet with these headings: | इसमें अपना {1} भरें, या इन headings वाली अपनी sheet इस्तेमाल करें:
+Check and import | देखें और import करें
+{} new | {1} नए
+{} already exist | {1} पहले से हैं
+{} with problems | {1} में गड़बड़
+Update existing | पुराने update करें
+Skip existing | पुराने छोड़ दें
+Row | Line
+New | नया
+Skip | छोड़ें
+Showing {} of {} rows | {2} में से {1} lines दिख रही हैं
+Rows with problems are left out. Fix them in the sheet and upload again any time. | गड़बड़ वाली lines छोड़ दी गईं। Sheet में ठीक करके कभी भी दोबारा upload करें।
+Import {} rows | {1} lines import करें
+Import {} row | {1} line import करें
+Importing… | Import हो रहा है…
+{} rows imported | {1} lines import हो गईं
+Reading {}… | {1} पढ़ रहे हैं…
+The sheet is empty | Sheet खाली है
+No rows found under the headings | Headings के नीचे कोई line नहीं मिली
+Heading not found: {}. Use the sample sheet headings. | यह heading नहीं मिली: {1}। Sample sheet वाली headings इस्तेमाल करें।
+This file is over 8 MB. Split it into smaller sheets. | यह file 8 MB से बड़ी है। छोटी sheets में बांटें।
+Could not make the sample sheet. Check your internet. | Sample sheet नहीं बन सकी। Internet देखें।
+Repeated in this sheet | Sheet में दोबारा है
+Total quantity missing | कुल मात्रा नहीं डाली
+Numbers only in quantity, rent and weight | मात्रा, किराया और वज़न में सिर्फ़ नंबर
+Daily wage must be a number | रोज़ की मज़दूरी नंबर में होनी चाहिए
+Guests and amount must be numbers | मेहमान और रकम नंबर में होने चाहिए
+Start date not understood. Use 18-11-2026 | शुरू की तारीख समझ नहीं आई। ऐसे लिखें: 18-11-2026
+End date not understood | आखिरी तारीख समझ नहीं आई
+Bring your existing stock, menu, crew, vendors and bookings in one go. Download the sample sheet, fill it, upload. | अपना पुराना stock, menu, crew, vendors और bookings एक बार में लाएं। Sample sheet download करें, भरें, upload करें।
+Item name | Item का नाम
+Total quantity | कुल मात्रा
+Damaged | टूटा
+Rent per day (₹) | रोज़ का किराया (₹)
+Godown location | Godown में जगह
+Dish name | Dish का नाम
+Selected by default (Yes/No) | पहले से चुनी (Yes/No)
+Ingredients (Name = kg per guest; …) | सामग्री (नाम = प्रति मेहमान kg; …)
+Daily wage (₹) | रोज़ की मज़दूरी (₹)
+Package amount (₹) | Package की रकम (₹)
+Get started | शुरू करें
+{} of {} done | {2} में से {1} हो गए
+Hide | छुपाएं
+Add your logo and GST details | अपना logo और GST details डालें
+They print on every bill | ये हर bill पर छपते हैं
+Import your godown stock | अपना godown stock import करें
+From Excel, in one go | Excel से, एक बार में
+Add your menu | अपना menu जोड़ें
+Dishes with ingredients per guest | प्रति मेहमान सामग्री के साथ dishes
+Add your team | अपनी team जोड़ें
+Logins for manager, accountant, crew | Manager, accountant, crew के login
+Create your first booking | अपनी पहली booking बनाएं
+Or import your diary | या अपनी diary import करें
+I agree to the | मैं सहमत हूं:
+Terms of use | Terms of use
+and | और
+Privacy policy | Privacy policy
+Please accept the Terms of use and Privacy policy | कृपया Terms of use और Privacy policy स्वीकार करें
+Grace period | Grace period
+Your plan ended on {}. | आपका plan {1} को खत्म हुआ।
+The app will stop working after {}. Renew now to keep using it. | {1} के बाद app बंद हो जाएगा। चलाते रहने के लिए अभी renew करें।
+Your plan has ended. Renew to use the app again. | आपका plan खत्म हो गया है। App फिर से चलाने के लिए renew करें।
+Your plan has | आपका plan
+ended | खत्म हो गया है
+Your plan ended on {}. Your data is safe. Renew to start using {} again. | आपका plan {1} को खत्म हुआ। आपका data सुरक्षित है। {2} फिर से चलाने के लिए renew करें।
+Renew your plan | अपना plan renew करें
+{} plan · {}/month | {1} plan · {2}/महीना
+/month | /महीना
+Plan, validity, price and access for this business | इस business का plan, validity, कीमत और access
+Or change validity by | या validity इतनी बदलें
+Special price for this business (₹/month) | इस business के लिए खास कीमत (₹/महीना)
+Leave empty to charge the normal plan price | खाली छोड़ें तो plan की आम कीमत लगेगी
+−1 month | −1 महीना
+−15 days | −15 दिन
+−7 days | −7 दिन
+−1 day | −1 दिन
++1 day | +1 दिन
++3 days | +3 दिन
++7 days | +7 दिन
++15 days | +15 दिन
+When the validity date passes, the business cannot use the app until you extend it. Their data stays safe. Suspended blocks the app at once. | Validity की तारीख निकलने पर business तब तक app नहीं चला पाएगा जब तक आप उसे बढ़ाएं नहीं। उनका data सुरक्षित रहता है। Suspended करने पर app तुरंत बंद हो जाता है।
+special | खास
+free | free
+Prices change for everyone at once and show on the website, renewal reminders and the Settings page. A special price set on one business stays as it is. | कीमत सभी के लिए एक साथ बदलती है और website, renewal reminders और Settings page पर दिखती है। किसी एक business की खास कीमत वैसी ही रहती है।
+Grace days after a plan ends | Plan खत्म होने के बाद grace दिन
+The app keeps working for these many days after expiry, with a warning. 0 = stops the next day. | खत्म होने के बाद इतने दिन app चेतावनी के साथ चलता रहेगा। 0 = अगले दिन बंद।
+Plan {} | Plan {1}
+Plan {} (new, optional) | Plan {1} (नया, ज़रूरी नहीं)
+Price per month (₹) | महीने की कीमत (₹)
+What is included (one per line, shown on the website) | क्या-क्या मिलता है (हर line में एक, website पर दिखेगा)
+To remove a plan, clear its name. Businesses already on that plan keep it until you change them. | Plan हटाने के लिए उसका नाम खाली करें। उस plan वाले businesses का plan तब तक रहेगा जब तक आप न बदलें।
+Change validity for many businesses | कई businesses की validity एक साथ बदलें
+Useful for a festival offer or to make up for downtime. Applies to every business in the chosen group. | Festival offer या app बंद रहने की भरपाई के लिए। चुने गए group के हर business पर लागू होगा।
+All active and trial businesses | सभी चालू और trial businesses
+Only paid (active) | सिर्फ़ paid (चालू)
+Only free trial | सिर्फ़ free trial
+Every business, including expired | हर business, खत्म हो चुके भी
+Apply | लागू करें
+No businesses in this group | इस group में कोई business नहीं
+Change validity? | Validity बदलें?
+Updated {} businesses | {1} businesses update हुए
+Imported {} | Import किया: {1}
+Blocked until renewed | Renew होने तक बंद
+`);

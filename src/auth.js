@@ -19,6 +19,7 @@ V.auth = () => {
       <div class="field"><span>What do you do? Pick all that apply</span><div class="stack-sm">${types}</div></div>
       ${fieldHTML({ name: 'email', label: 'Your login ID: email or mobile number', required: true, autocomplete: 'username', hint: 'You will use this to log in every time' })}
       ${fieldHTML({ name: 'password', label: 'Password (min 6 characters)', type: 'password', required: true, minlength: 6, autocomplete: 'new-password' })}
+      <label class="check terms"><input type="checkbox" name="terms" required> <span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms of use</a> and <a href="/privacy" target="_blank" rel="noopener">Privacy policy</a></span></label>
       <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">Create my business account</button>
       <p class="tiny muted">You become the Owner with full access. Inside the app you create login IDs and passwords for your manager, accountant and staff, and decide what each person can see.</p></form>`,
     guest: `<form class="stack" onsubmit="A.doGuest(event)">
@@ -50,10 +51,12 @@ A.doLogin = e => { const v = formVals(e); if (!v) return; withBtn(e, async () =>
 A.doSignup = e => {
   const v = formVals(e); if (!v) return;
   if (!v.bizTypes?.length) { toast('Pick at least one business type', 'bad'); return; }
+  if (!v.terms) { toast('Please accept the Terms of use and Privacy policy', 'bad'); return; }
   withBtn(e, async () => {
     const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter an email or a 10-digit mobile number');
     if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
     const st = defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: v.bizTypes });
+    st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = '2026-10';
     await S.adapter.signUpBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: ROLE_DEFAULTS, settings: st });
     S.user = await S.adapter.signIn(email, v.password); await afterLogin(); toast('Business created. You are the Owner.');
   });

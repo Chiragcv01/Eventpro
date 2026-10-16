@@ -165,7 +165,7 @@ function poRow(p) { const v = getById('vendors', p.vendorId); const bal = (+p.am
 V.vendors = () => {
   const tab = S.params.tab || 'pos'; const pos = col('pos').slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   const owed = sum(pos, p => (+p.amount || 0) - (+p.paid || 0));
-  return pageHead('Vendors & purchase orders', 'Florists, DJ, dairy, crockery partners. Issue POs and track what you owe.', can('vendors', 2) ? `<button class="btn" onclick="A.vendorForm()">${ic('plus')} Vendor</button><button class="btn primary" onclick="A.poForm()">${ic('plus')} Issue PO</button>` : '') +
+  return pageHead('Vendors & purchase orders', 'Florists, DJ, dairy, crockery partners. Issue POs and track what you owe.', can('vendors', 2) ? `${importBtn('vendors')}<button class="btn" onclick="A.vendorForm()">${ic('plus')} Vendor</button><button class="btn primary" onclick="A.poForm()">${ic('plus')} Issue PO</button>` : '') +
   `<div class="kpis">${kpi('Vendors', col('vendors').length)}${kpi('Open POs', pos.filter(p => (+p.amount || 0) > (+p.paid || 0)).length)}${kpi('You owe vendors', inr(owed), '', owed ? 'bad' : 'good')}${kpi('Paid to vendors', inr(sum(pos, p => p.paid)))}</div>
   <div class="tabs"><button class="${tab === 'pos' ? 'on' : ''}" onclick="A.setP('tab','pos')">Purchase orders</button><button class="${tab === 'list' ? 'on' : ''}" onclick="A.setP('tab','list')">Vendor list</button></div>
   ${tab === 'pos' ? `<div class="card"><div class="rows">${pos.map(poRow).join('') || empty('No POs yet', 'Issue a PO when you book a florist, DJ or supplier.')}</div></div>`
@@ -194,7 +194,7 @@ A.delPO = id => { const p = getById('pos', id); confirmBox('Delete ' + p.no + '?
 /* ================= Staff, attendance, payroll ================= */
 V.staff = () => {
   const tab = S.params.tab || 'roster'; const edit = can('staff', 2);
-  const head = pageHead('Staff & wages', 'Crew roster, daily attendance by event, advances and monthly payout.', edit ? `<button class="btn primary" onclick="A.staffForm()">${ic('plus')} Add crew</button>` : '');
+  const head = pageHead('Staff & wages', 'Crew roster, daily attendance by event, advances and monthly payout.', edit ? `${importBtn('staff')}<button class="btn primary" onclick="A.staffForm()">${ic('plus')} Add crew</button>` : '');
   const tabs = `<div class="tabs">${[['roster', 'Roster'], ['attendance', 'Attendance'], ['payroll', 'Payroll']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}</div>`;
   if (tab === 'attendance') {
     const date = S.filters.attDate || todayLocal(); const evs = col('events').filter(e => e.date <= addDays(date, 1) && eventEnd(e) >= addDays(date, -1) && e.stage !== 'Cancelled');
@@ -373,6 +373,7 @@ V.settings = () => {
 
   <div class="card"><div class="card-h"><div><h3>Peak saaya / muhurat dates</h3><p>Highlighted on the calendar so you price high-demand dates right</p></div>${edit ? `<button class="btn sm" onclick="A.saayaForm()">${ic('plus')} Add date</button>` : ''}</div><div class="rows">${(st.saaya || []).slice().sort(by('date')).map((s, i) => `<div class="row"><span class="pill accent">${fmtShort(s.date)}</span><div class="main-col">${esc(s.label || '')}</div>${edit ? `<button class="btn sm ghost" onclick="A.delSaaya('${s.date}')">${ic('trash')}</button>` : ''}</div>`).join('') || empty('No dates added', 'Add the wedding muhurat dates from your panchang.')}</div></div>
 
+  ${importCard()}
   <div class="card"><div class="card-h"><div><h3>Data & backup</h3><p>${S.adapter.mode === 'cloud' ? 'Cloud sync is on. Data is stored in your Supabase project.' : 'Offline mode. Data is stored in this browser only; take backups regularly.'}</p></div></div><div class="sheet-b row-flex" style="padding-top:12px">
     ${!FRAMED ? `<button class="btn" onclick="A.exportBackup()">${ic('download')} Download backup</button>` : `<button class="btn" onclick="A.exportBackup()">${ic('copy')} Copy backup</button>`}
     ${lvl('settings') >= 3 ? `<label class="btn">${ic('upload')} Restore from file<input type="file" accept=".json,application/json" hidden onchange="A.importBackup(this.files[0])"></label>` : ''}</div>

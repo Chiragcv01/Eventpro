@@ -460,3 +460,19 @@ html[lang=hi] body{word-break:normal;overflow-wrap:anywhere}
 details.card summary{cursor:pointer;list-style:none}
 details.card summary::-webkit-details-marker{display:none}
 details.card[open] summary{margin-bottom:6px}
+
+.check.terms{align-items:flex-start;font-size:14px;color:var(--ink2);line-height:1.45}
+.check.terms input{margin-top:3px}
+.check.terms a{color:var(--brand);font-weight:700}
+.plan-edit{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--surface2)}
+
+/* Excel import + getting started */
+.imp-step{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.imp-step .n{width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800;flex:none}
+.imp-cols{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.start-card{border-color:#CFE0FF;background:linear-gradient(180deg,#F5F8FF,#fff);margin-bottom:16px}
+.start-step{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font:inherit;color:inherit}
+.start-step:hover{border-color:var(--primary)}
+.start-step.ok{opacity:.65}
+.start-step.ok b{text-decoration:line-through}
+.start-step .ico{width:18px;height:18px;color:var(--muted)}

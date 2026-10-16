@@ -41,16 +41,16 @@ function planCard() {
   if (!S.org) return '';
   const P = S.platform || DEFAULT_PLATFORM; const stt = orgState(S.org); const [lab, tone] = STATE_PILL[stt] || ['Active', 'good'];
   const left = S.org.expires ? daysBetween(todayLocal(), S.org.expires) : null;
-  return `<div class="card pad row-flex" style="justify-content:space-between">${ibox('star', '#EAB308', 'lg')}<div class="grow" style="min-width:200px"><div class="row-flex" style="gap:8px"><h3>${esc(S.org.plan || 'Pro')} plan</h3>${pill(lab, tone)}</div><p class="small muted">${S.org.expires ? (left >= 0 ? `Valid till ${fmtDate(S.org.expires)} · ${left} day${left === 1 ? '' : 's'} left` : `Expired on ${fmtDate(S.org.expires)}`) : 'No expiry date'}${P.supportPhone ? ` · Support ${esc(P.supportPhone)}` : ''}</p></div>
+  return `<div class="card pad row-flex" style="justify-content:space-between">${ibox('star', '#EAB308', 'lg')}<div class="grow" style="min-width:200px"><div class="row-flex" style="gap:8px"><h3>${esc(S.org.plan || 'Pro')} plan</h3>${pill(lab, tone)}${S.org.plan && S.org.plan !== 'Trial' ? `<b class="num">${inr(orgPrice(S.org))}<span class="tiny muted">/month</span></b>` : ''}</div><p class="small muted">${S.org.expires ? (left >= 0 ? `Valid till ${fmtDate(S.org.expires)} · ${left} day${left === 1 ? '' : 's'} left` : `Expired on ${fmtDate(S.org.expires)}`) : 'No expiry date'}${P.supportPhone ? ` · Support ${esc(P.supportPhone)}` : ''}</p></div>
   ${P.supportPhone ? waBtn(`Namaste, I want to renew/upgrade ${P.appName} for ${settings().bizName}. Current plan: ${S.org.plan}.`, P.supportPhone, 'Renew / upgrade', 'btn wa') : ''}${S.super ? `<button class="btn" onclick="A.go('admin')">${ic('shield')} Manage in console</button>` : ''}</div>`;
 }
 
 /* ================= Account paused screen ================= */
 V.blocked = () => {
   const P = S.platform || DEFAULT_PLATFORM; const st = settings();
-  return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex">${bizLogo(st)}<b style="font:800 21px var(--f-display)">${esc(st.bizName || S.org.name)}</b></div><h1>Access is <em>paused</em> for this business.</h1><p>Your data is safe. ${esc(P.appName)} has paused this account, usually because of a pending renewal. Contact support to restore access.</p></div></section>
-  <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><div class="card pad stack"><h2>Get access back</h2>
-  ${P.supportPhone ? `<div class="checkcard">${ibox('phone', '#0B9B68')}<span class="grow">${esc(P.supportName)}<div class="mono small" style="font-weight:500">${esc(P.supportPhone)}</div></span>${waBtn(`Namaste, ${st.bizName} account is paused. Please help me restore it.`, P.supportPhone, 'WhatsApp')}</div>` : ''}
+  return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex">${bizLogo(st)}<b style="font:800 21px var(--f-display)">${esc(st.bizName || S.org.name)}</b></div>${orgState(S.org) === 'expired' ? `<h1>Your plan has <em>ended</em>.</h1><p>Your plan ended on ${fmtDate(S.org.expires)}. Your data is safe. Renew to start using ${esc(P.appName)} again.</p>` : `<h1>Access is <em>paused</em> for this business.</h1><p>Your data is safe. ${esc(P.appName)} has paused this account, usually because of a pending renewal. Contact support to restore access.</p>`}</div></section>
+  <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><div class="card pad stack"><h2>${orgState(S.org) === 'expired' ? 'Renew your plan' : 'Get access back'}</h2>${S.org.plan && S.org.plan !== 'Trial' ? `<p class="small muted">${esc(S.org.plan)} plan · ${inr(orgPrice(S.org))}/month</p>` : ''}
+  ${P.supportPhone ? `<div class="checkcard">${ibox('phone', '#0B9B68')}<span class="grow">${esc(P.supportName)}<div class="mono small" style="font-weight:500">${esc(P.supportPhone)}</div></span>${waBtn(orgState(S.org) === 'expired' ? `Namaste, I want to renew ${P.appName} for ${st.bizName || S.org.name}.` : `Namaste, ${st.bizName || S.org.name} account is paused. Please help me restore it.`, P.supportPhone, 'WhatsApp')}</div>` : ''}
   ${P.supportEmail ? `<div class="checkcard">${ibox('send', '#1F5EFF')}<span class="grow">Email<div class="small" style="font-weight:500">${esc(P.supportEmail)}</div></span><button class="btn sm" onclick="A.copy('${esc(P.supportEmail)}')">${ic('copy')}</button></div>` : ''}
   ${S.orgs.length > 1 ? `<div class="eyebrow">Your other businesses</div>${S.orgs.filter(o => o.orgId !== S.org.orgId).map(o => `<button class="btn" style="justify-content:space-between" onclick="A.switchOrg('${o.orgId}')"><span>${esc(o.name)}</span>${ic('chev')}</button>`).join('')}` : ''}
   <button class="btn ghost block" onclick="A.logout()">${ic('logout')} Log out</button></div></div></section></div>`;
@@ -71,6 +71,7 @@ A.adminOpen = async id => {
 };
 const pickMeta = o => ({ status: o.status, plan: o.plan, expires: o.expires, notes: o.notes });
 function planPrice(name) { return +((S.platform?.plans || DEFAULT_PLATFORM.plans).find(p => p.name === name)?.price || 0); }
+const orgPrice = o => (o && o.price != null && o.price !== '' ? +o.price : planPrice(o?.plan));
 
 V.admin = () => {
   const head = pageHead('Super Admin', 'Every business on your platform: plans, renewals, users and access.', `<button class="btn" onclick="A.adminLoad()">${ic('pulse')} Refresh</button><button class="btn primary" onclick="A.adminAddBusiness()">${ic('plus')} Add business</button>`, '', ['shield', '#0F172A']);
@@ -78,17 +79,17 @@ V.admin = () => {
   if (S.admin.error) return head + `<div class="banner bad">${ic('alert')}<span>${esc(S.admin.error)}</span></div>`;
   const tab = S.params.tab || 'biz'; const t = todayLocal();
   const rows = S.admin.orgs.map(o => ({ ...o, state: orgState(o), left: o.expires ? daysBetween(t, o.expires) : null }));
-  const live = rows.filter(r => ['trial', 'active'].includes(r.state));
+  const live = rows.filter(r => ['trial', 'active', 'grace'].includes(r.state));
   const expiring = live.filter(r => r.left != null && r.left <= 7);
   const paid = rows.filter(r => r.state === 'active');
-  const mrr = sum(paid, r => planPrice(r.plan));
+  const mrr = sum(paid, r => orgPrice(r));
   const newLeads = (S.site?.leads || []).filter(l => l.status === 'new').length;
   const tabs = `<div class="tabs">${[['biz', `Businesses (${rows.length})`], ['users', `Users (${S.admin.users.length})`], ['platform', 'Plans & support'], ['site', 'Website'], ['blog', 'Blog'], ['leads', 'Enquiries', newLeads], ['deletions', 'Account deletion', (S.site?.dels || []).filter(d => d.status === 'pending').length]].map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}</div>`;
   const kp = `<div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
     ${kpi('Businesses', rows.length, `${S.admin.users.length} users in total`, '', 'store', '#1F5EFF')}
     ${kpi('Paid & active', paid.length, `Monthly value ${inr(mrr)}`, 'good', 'check', '#0B9B68')}
     ${kpi('On free trial', rows.filter(r => r.state === 'trial').length, `${expiring.length} expire within 7 days`, expiring.length ? 'accent' : '', 'clock', '#D97706')}
-    ${kpi('Expired / paused', rows.filter(r => ['expired', 'suspended'].includes(r.state)).length, 'Read-only or blocked', rows.some(r => ['expired', 'suspended'].includes(r.state)) ? 'bad' : '', 'alert', '#E0344B')}
+    ${kpi('Expired / paused', rows.filter(r => ['expired', 'suspended'].includes(r.state)).length, 'Blocked until renewed', rows.some(r => ['expired', 'suspended'].includes(r.state)) ? 'bad' : '', 'alert', '#E0344B')}
   </div>`;
   const mfaWarn = S.adapter.mode === 'cloud' && !S.mfaOn ? `<div class="banner warn" style="margin-bottom:16px;align-items:center">${ic('shield')}<span class="grow"><b>Protect your Super Admin login.</b> Turn on the Authenticator so nobody can open the console with just your password.</span><button class="btn sm" onclick="A.mfaSheet()">Turn on</button></div>` : '';
   if (tab === 'site') return head + mfaWarn + tabs + adminSite();
@@ -121,25 +122,29 @@ function adminOrgCard(o) {
     <div class="row-flex" style="flex-wrap:nowrap;align-items:flex-start">${o.logo ? `<div class="logo has-img" style="width:46px;height:46px">${`<img src="${esc(o.logo)}" alt="">`}</div>` : `<span class="ibox" style="--c:#1F5EFF;width:46px;height:46px;font:800 16px var(--f-display)">${esc(initials(o.name))}</span>`}
       <div style="min-width:0;flex:1"><b style="display:block;line-height:1.25;font-size:16px">${esc(o.name)}</b><span class="tiny muted">${esc(o.city || '')}${o.city ? ' · ' : ''}since ${fmtShort(todayLocal(new Date(o.created || Date.now())))}</span></div>${pill(lab, tone)}</div>
     <div class="small" style="color:var(--ink2)">${ic('user')} ${esc(o.ownerName || '—')} <span class="muted">· ${esc(phone ? '+91 ' + phone.replace(/\D/g, '').slice(-10) : displayId(o.ownerEmail || ''))}</span></div>
-    <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>Team · Bookings</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
+    <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b><span>${o.plan === 'Trial' ? 'free' : inr(orgPrice(o)) + '/mo' + (o.price != null ? ' · special' : '')}</span></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>Team · Bookings</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
     ${o.notes ? `<div class="tiny muted">${ic('edit')} ${esc(o.notes)}</div>` : ''}
     <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
     <div class="tiny muted">Last activity ${o.lastActivity ? new Date(o.lastActivity).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—'} · ${o.invoices} bills</div></div>`;
 }
 A.adminManage = id => {
   const o = S.admin.orgs.find(x => x.orgId === id); const P = S.platform || DEFAULT_PLATFORM;
-  formModal({ title: o.name, sub: 'Plan, expiry and access for this business', fields: [
+  const steps = [[-30, '−1 month'], [-15, '−15 days'], [-7, '−7 days'], [-1, '−1 day'], [0, 'No change'], [1, '+1 day'], [7, '+7 days'], [15, '+15 days'], [30, '+1 month'], [90, '+3 months'], [180, '+6 months'], [365, '+1 year']];
+  formModal({ title: o.name, sub: 'Plan, validity, price and access for this business', fields: [
     { name: 'plan', label: 'Plan', type: 'select', options: ['Trial', ...P.plans.map(p => p.name)].map(n => [n, n === 'Trial' ? 'Free trial' : `${n} · ${inr(planPrice(n))}/month`]), value: o.plan },
     { name: 'status', label: 'Access', type: 'select', options: [['trial', 'Trial'], ['active', 'Active (paid)'], ['suspended', 'Suspended (block login)']], value: o.status },
     { name: 'expires', label: 'Valid till', type: 'date', value: o.expires },
-    { name: 'extend', label: 'Or extend by', type: 'select', options: [['0', 'No change'], ['30', '+1 month'], ['90', '+3 months'], ['180', '+6 months'], ['365', '+1 year']], value: '0' },
+    { name: 'extend', label: 'Or change validity by', type: 'select', options: steps.map(([v, l]) => [String(v), l]), value: '0' },
+    { name: 'price', label: 'Special price for this business (₹/month)', type: 'number', min: 0, value: o.price ?? '', hint: 'Leave empty to charge the normal plan price' },
     { name: 'notes', label: 'Private note (only Super Admins see this)', type: 'textarea', value: o.notes, full: true, placeholder: 'e.g. Paid ₹9,999 by UPI on 12 Oct, yearly plan' },
-    { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('shield')}<span>After expiry the business can still log in and see data, but cannot add or change anything. Suspended blocks the app completely.</span></div>` }],
+    { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('shield')}<span>When the validity date passes${graceDays() ? ` (plus ${graceDays()} grace days)` : ''}, the business cannot use the app until you extend it. Their data stays safe. Suspended blocks the app at once.</span></div>` }],
     submit: 'Save', onSubmit: async v => {
       let exp = v.expires; const ext = +v.extend || 0;
-      if (ext) { const base = exp && exp > todayLocal() ? exp : todayLocal(); exp = addDays(base, ext); }
-      const status = ext && v.status === 'trial' && v.plan !== 'Trial' ? 'active' : v.status;
-      const patch = { plan: v.plan, status, expires: exp || '', notes: v.notes };
+      if (ext > 0) { const base = exp && exp > todayLocal() ? exp : todayLocal(); exp = addDays(base, ext); }
+      if (ext < 0) { exp = addDays(exp || todayLocal(), ext); }
+      const status = ext > 0 && v.status === 'trial' && v.plan !== 'Trial' ? 'active' : v.status;
+      const price = v.price === '' || v.price == null ? null : Math.max(0, +v.price);
+      const patch = { plan: v.plan, status, expires: exp || '', notes: v.notes, price };
       await S.adapter.adminUpdateOrg(id, patch); Object.assign(o, patch);
       if (S.org?.orgId === id) Object.assign(S.org, patch);
       S.orgs.forEach(x => { if (x.orgId === id) Object.assign(x, patch); });
@@ -156,21 +161,40 @@ function adminUsers() {
 A.toggleSuper = (email, on) => confirmBox(on ? 'Give Super Admin access?' : 'Remove Super Admin access?', on ? `${displayId(email)} will see and change every business on the platform.` : `${displayId(email)} will lose access to the Super Admin console.`, on ? 'Make Super Admin' : 'Remove', async () => { await S.adapter.adminSetSuper(email, on); await A.adminLoad(); toast('Updated'); }, on ? 'primary' : 'danger');
 A.addSuperForm = () => formModal({ title: 'Add a Super Admin', sub: 'They must have signed up already.', fields: [{ name: 'email', label: 'Their email or mobile number', required: true, full: true }], submit: 'Give access', onSubmit: async v => { await S.adapter.adminSetSuper(v.email, true); await A.adminLoad(); toast('Super Admin added'); } });
 function adminPlatform() {
-  const P = S.platform || DEFAULT_PLATFORM; const plans = [...P.plans, {}, {}].slice(0, 3);
-  return `<form class="card" onsubmit="A.savePlatform(event)"><div class="card-h"><div><h3>Plans & support</h3><p>Shown to businesses on renewal reminders, expiry screens and the Settings page.</p></div></div>
+  const P = S.platform || DEFAULT_PLATFORM; const n = Math.max(3, Math.min(6, (P.plans || []).length + 1)); const plans = [...(P.plans || []), ...Array(6).fill({})].slice(0, n);
+  return `<form class="card" onsubmit="A.savePlatform(event)"><div class="card-h"><div><h3>Plans & support</h3><p>Prices change for everyone at once and show on the website, renewal reminders and the Settings page. A special price set on one business stays as it is.</p></div></div>
   <div class="grid2" style="padding:6px 18px 14px">
     ${fieldHTML({ name: 'appName', label: 'Platform name', value: P.appName, required: true })}${fieldHTML({ name: 'trialDays', label: 'Free trial for new sign-ups (days)', type: 'number', min: 0, value: P.trialDays })}
+    ${fieldHTML({ name: 'graceDays', label: 'Grace days after a plan ends', type: 'number', min: 0, max: 60, value: P.graceDays ?? 0, hint: 'The app keeps working for these many days after expiry, with a warning. 0 = stops the next day.' })}
     ${fieldHTML({ name: 'supportName', label: 'Support name', value: P.supportName })}${fieldHTML({ name: 'supportPhone', label: 'Support WhatsApp number', type: 'tel', value: P.supportPhone, hint: 'Businesses tap “Renew” and it opens WhatsApp to this number' })}
-    ${fieldHTML({ name: 'supportEmail', label: 'Support email', type: 'email', value: P.supportEmail, full: true })}
+    ${fieldHTML({ name: 'supportEmail', label: 'Support email', type: 'email', value: P.supportEmail })}
     ${fieldHTML({ name: 'allowSignup', label: 'Let new businesses sign up on their own (free trial). Turn off to add businesses only from here.', type: 'checkbox', value: P.allowSignup !== false, full: true })}
-    ${plans.map((p, i) => fieldHTML({ name: 'pn' + i, label: `Plan ${i + 1} name`, value: p.name || '' }) + fieldHTML({ name: 'pp' + i, label: `Plan ${i + 1} price per month (₹)`, type: 'number', min: 0, value: p.price ?? '' })).join('')}
-  </div><footer class="sheet-f" style="position:static"><span class="tiny muted grow">New businesses start on a ${+P.trialDays || 0}-day free trial.</span><button class="btn primary" type="submit">Save</button></footer></form>`;
+    ${plans.map((p, i) => `<div class="full plan-edit"><div class="eyebrow">Plan ${i + 1}${i >= (P.plans || []).length ? ' (new, optional)' : ''}</div><div class="grid2" style="padding:0">${fieldHTML({ name: 'pn' + i, label: 'Name', value: p.name || '', placeholder: i ? '' : 'e.g. Basic' })}${fieldHTML({ name: 'pp' + i, label: 'Price per month (₹)', type: 'number', min: 0, value: p.price ?? '' })}${fieldHTML({ name: 'pd' + i, label: 'What is included (one per line, shown on the website)', type: 'textarea', rows: 2, value: p.desc || '', full: true })}</div></div>`).join('')}
+    <p class="tiny muted full">To remove a plan, clear its name. Businesses already on that plan keep it until you change them.</p>
+  </div><footer class="sheet-f" style="position:static"><span class="tiny muted grow">New businesses start on a ${+P.trialDays || 0}-day free trial.</span><button class="btn primary" type="submit">Save</button></footer></form>
+  <div class="card pad stack-sm" style="margin-top:16px"><h3>Change validity for many businesses</h3><p class="small muted">Useful for a festival offer or to make up for downtime. Applies to every business in the chosen group.</p>
+  <div class="row-flex" style="gap:8px"><select id="bulkWho" style="width:auto"><option value="live">All active and trial businesses</option><option value="paid">Only paid (active)</option><option value="trial">Only free trial</option><option value="all">Every business, including expired</option></select>
+  <select id="bulkDays" style="width:auto">${[[1, '+1 day'], [3, '+3 days'], [7, '+7 days'], [15, '+15 days'], [30, '+1 month'], [-1, '−1 day'], [-7, '−7 days']].map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select>
+  <button class="btn" type="button" onclick="A.bulkExtend()">${ic('clock')} Apply</button></div></div>`;
 }
 A.savePlatform = async e => {
   e.preventDefault(); const v = readForm(e.target);
-  const plans = [0, 1, 2].map(i => ({ name: (v['pn' + i] || '').trim(), price: +v['pp' + i] || 0 })).filter(p => p.name);
-  const p = { ...(S.platform || {}), appName: v.appName || 'SabManage', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
+  const plans = [0, 1, 2, 3, 4, 5].map(i => ({ name: (v['pn' + i] || '').trim(), price: +v['pp' + i] || 0, desc: (v['pd' + i] || '').trim() })).filter(p => p.name);
+  const p = { ...(S.platform || {}), appName: v.appName || 'SabManage', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), graceDays: Math.max(0, Math.min(60, +v.graceDays || 0)), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
   try { await S.adapter.savePlatform(p); S.platform = p; toast('Platform settings saved'); render(); } catch (err) { toast(err.message, 'bad'); }
+};
+A.bulkExtend = () => {
+  const who = $('#bulkWho').value, days = +$('#bulkDays').value; const t = todayLocal();
+  const list = (S.admin?.orgs || []).map(o => ({ ...o, state: orgState(o) })).filter(o => who === 'all' || (who === 'paid' ? o.state === 'active' : who === 'trial' ? o.state === 'trial' : ['trial', 'active', 'grace'].includes(o.state)));
+  if (!list.length) { toast('No businesses in this group', 'warn'); return; }
+  confirmBox('Change validity?', `${list.length} businesses will get ${days > 0 ? '+' : ''}${days} day${Math.abs(days) === 1 ? '' : 's'} on their validity date.`, 'Apply', async () => {
+    let done = 0;
+    for (const o of list) {
+      const base = days > 0 ? (o.expires && o.expires > t ? o.expires : t) : (o.expires || t);
+      const exp = addDays(base, days); await S.adapter.adminUpdateOrg(o.orgId, { expires: exp }); done++;
+    }
+    await A.adminLoad(); toast(`Updated ${done} businesses`);
+  }, 'primary');
 };
 
 /* ================= Per-person access ================= */

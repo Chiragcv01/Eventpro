@@ -149,8 +149,9 @@ function loginId(v) { v = String(v || '').trim(); if (v.includes('@')) return v.
 function displayId(e) { e = String(e || ''); return e.endsWith('@' + MOBILE_DOMAIN) ? '+91 ' + e.split('@')[0] : e; }
 const DEFAULT_PLATFORM = { appName: 'SabManage', supportName: 'SabManage Support', supportPhone: '', supportEmail: '', trialDays: 14, plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
 const superEmails = () => (CFG.superAdminEmails || []).map(loginId);
-function orgState(o) { if (!o) return 'active'; if (o.status === 'suspended') return 'suspended'; if (o.expires && o.expires < todayLocal()) return 'expired'; return o.status || 'active'; }
-const STATE_PILL = { trial: ['Trial', 'info'], active: ['Active', 'good'], expired: ['Expired', 'bad'], suspended: ['Suspended', 'bad'] };
+function graceDays() { return Math.max(0, Math.min(60, +(S.platform?.graceDays || 0))); }
+function orgState(o) { if (!o) return 'active'; if (o.status === 'suspended') return 'suspended'; if (o.expires && o.expires < todayLocal()) return addDays(o.expires, graceDays()) < todayLocal() ? 'expired' : 'grace'; return o.status || 'active'; }
+const STATE_PILL = { trial: ['Trial', 'info'], active: ['Active', 'good'], grace: ['Grace period', 'warn'], expired: ['Expired', 'bad'], suspended: ['Suspended', 'bad'] };
 
 /* ================= Data adapters ================= */
 const LocalDB = (() => {
@@ -176,7 +177,7 @@ const LocalDB = (() => {
     async signOut() { load().session = null; persist(); },
     async current() { const db = load(); if (!db.session) return null; const u = db.users.find(x => x.id === db.session.userId); return u ? { id: u.id, email: u.email, name: u.name } : null; },
     async myOrgs(userId) { const db = load(); return db.members.filter(m => m.userId === userId).map(m => ({ orgId: m.orgId, name: db.orgs[m.orgId]?.name || 'Business', role: m.role, perms: m.perms, ...this.orgMeta(m.orgId) })); },
-    orgMeta(id) { const o = load().orgs[id] || {}; return { status: o.status || 'active', plan: o.plan || 'Pro', expires: o.expires || '', notes: o.notes || '' }; },
+    orgMeta(id) { const o = load().orgs[id] || {}; return { status: o.status || 'active', plan: o.plan || 'Pro', expires: o.expires || '', notes: o.notes || '', price: o.price ?? null }; },
     async mfaState() { return null; }, async mfaIsOn() { return false; },
     async mfaEnroll() { throw new Error('Authenticator works only in the live (cloud) app.'); },
     async resetUserMfa() { throw new Error('Authenticator works only in the live (cloud) app.'); },
@@ -204,6 +205,7 @@ const LocalDB = (() => {
       return { data, roles: JSON.parse(JSON.stringify(db.roles[orgId] || {})), members: db.members.filter(m => m.orgId === orgId).map(m => ({ ...m })) };
     },
     async put(orgId, coll, rec) { const db = load(); db.records[orgId] = db.records[orgId] || {}; (db.records[orgId][coll] = db.records[orgId][coll] || {})[rec.id] = JSON.parse(JSON.stringify(rec)); if (coll === 'settings' && rec.bizName) db.orgs[orgId].name = rec.bizName; persist(); },
+    async putMany(orgId, coll, recs) { for (const r of recs) await this.put(orgId, coll, r); },
     async del(orgId, coll, id) { const db = load(); if (db.records[orgId]?.[coll]) delete db.records[orgId][coll][id]; persist(); },
     async saveRoles(orgId, roles) { load().roles[orgId] = JSON.parse(JSON.stringify(roles)); persist(); },
     async createInvite(orgId, role, name) { const db = load(); const code = inviteCode(); db.invites.push({ code, orgId, role, name, created: Date.now(), expires: Date.now() + 7 * 864e5 }); persist(); return code; },
@@ -305,12 +307,12 @@ const CloudDB = {
   async signOut() { await this.sb.auth.signOut(); },
   async current() { const { data } = await this.sb.auth.getSession(); const u = data.session?.user; return u ? { id: u.id, email: u.email, name: u.user_metadata?.name || u.email } : null; },
   async myOrgs(userId) {
-    const { data, error } = await this.sb.from('org_members').select('org_id, role, perms, orgs(name,status,plan,expires_at)').eq('user_id', userId);
-    if (error) throw this.err(error); return data.map(r => ({ orgId: r.org_id, name: r.orgs?.name || 'Business', role: r.role, perms: r.perms || null, status: r.orgs?.status, plan: r.orgs?.plan, expires: (r.orgs?.expires_at || '').slice(0, 10) }));
+    const { data, error } = await this.sb.from('org_members').select('org_id, role, perms, orgs(name,status,plan,expires_at,price)').eq('user_id', userId);
+    if (error) throw this.err(error); return data.map(r => ({ orgId: r.org_id, name: r.orgs?.name || 'Business', role: r.role, perms: r.perms || null, status: r.orgs?.status, plan: r.orgs?.plan, price: r.orgs?.price ?? null, expires: (r.orgs?.expires_at || '').slice(0, 10) }));
   },
   async isSuperAdmin() { const { data, error } = await this.sb.rpc('is_super_admin'); return !error && !!data; },
   async adminOverview() { const { data, error } = await this.sb.rpc('admin_overview'); if (error) throw this.err(error); return (data || []).map(o => ({ ...o, created: Date.parse(o.created), lastActivity: Date.parse(o.lastActivity || o.created) })); },
-  async adminUpdateOrg(id, p) { const row = {}; if (p.status) row.status = p.status; if (p.plan) row.plan = p.plan; if ('expires' in p) row.expires_at = p.expires ? p.expires + 'T23:59:59+05:30' : null; if ('notes' in p) row.notes = p.notes; const { error } = await this.sb.from('orgs').update(row).eq('id', id); if (error) throw this.err(error); },
+  async adminUpdateOrg(id, p) { const row = {}; if (p.status) row.status = p.status; if (p.plan) row.plan = p.plan; if ('expires' in p) row.expires_at = p.expires ? p.expires + 'T23:59:59+05:30' : null; if ('notes' in p) row.notes = p.notes; if ('price' in p) row.price = p.price === '' || p.price == null ? null : +p.price; const { error } = await this.sb.from('orgs').update(row).eq('id', id); if (error) throw this.err(error); },
   async adminUsers() { const { data, error } = await this.sb.rpc('admin_users'); if (error) throw this.err(error); return (data || []).map(u => ({ ...u, created: Date.parse(u.created) })); },
   async adminSetSuper(email, on) { const { error } = await this.sb.rpc('admin_set_super', { p_email: loginId(email), p_on: !!on }); if (error) throw this.err(error); },
   async getPlatform() { const { data } = await this.sb.from('platform_settings').select('data').eq('id', 1).maybeSingle(); return { ...DEFAULT_PLATFORM, ...(data?.data || {}) }; },
@@ -330,6 +332,7 @@ const CloudDB = {
     return { data, roles, members: r3.data.map(m => ({ orgId, userId: m.user_id, role: m.role, name: m.display_name, email: m.email, staffId: m.staff_id, perms: m.perms || null })) };
   },
   async put(orgId, coll, rec) { const { error } = await this.sb.from('records').upsert({ org_id: orgId, collection: coll, id: rec.id, data: rec, updated_at: new Date().toISOString() }); if (error) throw this.err(error); if (coll === 'settings' && rec.bizName) this.sb.from('orgs').update({ name: rec.bizName }).eq('id', orgId).then(() => { }); },
+  async putMany(orgId, coll, recs) { const now = new Date().toISOString(); for (let i = 0; i < recs.length; i += 200) { const { error } = await this.sb.from('records').upsert(recs.slice(i, i + 200).map(rec => ({ org_id: orgId, collection: coll, id: rec.id, data: rec, updated_at: now }))); if (error) throw this.err(error); } },
   async del(orgId, coll, id) { const { error } = await this.sb.from('records').delete().match({ org_id: orgId, collection: coll, id }); if (error) throw this.err(error); },
   async saveRoles(orgId, roles) { const rows = Object.entries(roles).filter(([k]) => k !== 'owner').map(([role, r]) => ({ org_id: orgId, role, label: r.label, perms: r.perms })); const { error } = await this.sb.from('org_roles').upsert(rows); if (error) throw this.err(error); },
   async createInvite(orgId, role, name) { const code = inviteCode(); const { error } = await this.sb.from('invites').insert({ code, org_id: orgId, role, display_name: name, expires_at: new Date(Date.now() + 7 * 864e5).toISOString() }); if (error) throw this.err(error); return code; },
@@ -415,9 +418,9 @@ function moduleOn(key) {
   if (!m?.biz) return true;
   return m.biz.some(b => (st.bizTypes || []).includes(b));
 }
-function lvl(mod) { if (S.super) return 3; let v = S.role === 'owner' ? 3 : Number(S.perms?.[mod] || 0); if (S.org && orgState(S.org) === 'expired') v = Math.min(v, 1); return v; }
+function lvl(mod) { if (S.super) return 3; let v = S.role === 'owner' ? 3 : Number(S.perms?.[mod] || 0); if (S.org && ['expired', 'suspended'].includes(orgState(S.org))) v = 0; return v; }
 function can(mod, l = 1) { return !!S.org && moduleOn(mod) && lvl(mod) >= l; }
-function need(mod, l = 2) { if (lvl(mod) < l) throw new Error(S.org && orgState(S.org) === 'expired' ? 'Your plan has expired, so the app is read-only. Renew to make changes.' : 'Your role does not have permission for this. Ask the owner to update access.'); }
+function need(mod, l = 2) { if (lvl(mod) < l) throw new Error(S.org && orgState(S.org) === 'expired' ? 'Your plan has ended. Renew to use the app again.' : 'Your role does not have permission for this. Ask the owner to update access.'); }
 
 async function save(coll, rec, msg) {
   need(COLL_MODULE[coll] || 'settings', 2);
@@ -427,6 +430,14 @@ async function save(coll, rec, msg) {
   await S.adapter.put(S.org.orgId, coll, rec);
   if (msg) logAct(msg);
   return rec;
+}
+async function saveMany(coll, recs, msg) {
+  need(COLL_MODULE[coll] || 'settings', 2);
+  const who = S.me?.name || S.user?.name; const now = Date.now();
+  recs.forEach(r => { r.updatedAt = now; r.updatedBy = who; });
+  await S.adapter.putMany(S.org.orgId, coll, recs);
+  const arr = col(coll); recs.forEach(r => { const i = arr.findIndex(x => x.id === r.id); if (i >= 0) arr[i] = r; else arr.unshift(r); });
+  if (msg) logAct(msg);
 }
 async function removeRec(coll, id, msg) {
   need(COLL_MODULE[coll] || 'settings', 3);
@@ -555,6 +566,7 @@ async function afterLogin() {
 }
 async function openOrg(orgId, override) {
   const o = override || S.orgs.find(x => x.orgId === orgId); if (!o) return;
+  if (['suspended', 'expired'].includes(orgState(o)) && !S.super) { S.org = o; S.data = {}; S.roles = JSON.parse(JSON.stringify(ROLE_DEFAULTS)); S.members = []; S.me = { name: S.user.name, role: o.role }; S.role = o.role; S.perms = {}; LS.set('ep3_lastOrg', orgId); render(); return; }
   const { data, roles, members } = await S.adapter.loadOrg(orgId);
   S.org = o; S.data = data; S.roles = Object.keys(roles).length ? roles : JSON.parse(JSON.stringify(ROLE_DEFAULTS)); S.members = members;
   const meM = members.find(m => m.userId === S.user.id);
@@ -590,7 +602,7 @@ function render() {
   if (S.mfaPending) { root.innerHTML = V.mfa(); return; }
   if (!S.user) { root.innerHTML = V.auth(); return; }
   if (!S.org) { if (S.super) { S.view = 'admin'; } else { root.innerHTML = V.noOrg(); return; } }
-  else if (orgState(S.org) === 'suspended' && !S.super) { root.innerHTML = V.blocked(); return; }
+  else if (['suspended', 'expired'].includes(orgState(S.org)) && !S.super) { root.innerHTML = V.blocked(); return; }
   const view = V[S.view] ? S.view : 'dashboard';
   let body;
   try { body = V[view](); } catch (e) { console.error(e); body = `<div class="banner bad">${ic('alert')} Something went wrong on this screen: ${esc(e.message)}</div>`; }
@@ -604,7 +616,7 @@ function planBanner() {
   const P = S.platform || DEFAULT_PLATFORM; const st = orgState(S.org);
   const sup = P.supportPhone ? waBtn(`Namaste, I want to renew ${P.appName} for ${settings().bizName || S.org.name}.`, P.supportPhone, 'Contact support') : '';
   if (S.org.viewAs) return `<div class="banner" style="margin-bottom:16px;align-items:center">${ic('shield')}<span class="grow">Super Admin view of <b>${esc(S.org.name)}</b>. Anything you change is saved to this business.</span><button class="btn sm" onclick="A.exitOrg()">Back to console</button></div>`;
-  if (st === 'expired') return `<div class="banner bad" style="margin-bottom:16px;align-items:center">${ic('alert')}<span class="grow"><b>Your plan expired on ${fmtDate(S.org.expires)}.</b> You can see all your data, but adding or changing anything is locked until you renew.</span>${sup}</div>`;
+  if (st === 'grace') return `<div class="banner bad" style="margin-bottom:16px;align-items:center">${ic('alert')}<span class="grow"><b>Your plan ended on ${fmtDate(S.org.expires)}.</b> The app will stop working after ${fmtDate(addDays(S.org.expires, graceDays()))}. Renew now to keep using it.</span>${sup}</div>`;
   if (S.org.expires) { const d = daysBetween(todayLocal(), S.org.expires); if (d <= 5) return `<div class="banner warn" style="margin-bottom:16px;align-items:center">${ic('clock')}<span class="grow"><b>${S.org.plan === 'Trial' ? 'Free trial' : 'Your ' + esc(S.org.plan) + ' plan'} ends ${d === 0 ? 'today' : `in ${d} day${d > 1 ? 's' : ''}`}</b> (${fmtDate(S.org.expires)}). Renew to keep adding bookings and bills.</span>${sup}</div>`; }
   return '';
 }

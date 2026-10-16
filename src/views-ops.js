@@ -34,7 +34,7 @@ V.dashboard = () => {
   </div>`;
 
   const evCards = upcoming.slice(0, 8).map(eventCard).join('');
-  return `${hero}${tiles}${stats}
+  return `${startCard()}${hero}${tiles}${stats}
   <div class="sec-h"><h2>Upcoming events</h2><button class="linkbtn" onclick="A.go('bookings')">See all ${ic('chev')}</button></div>
   ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
   <div class="split" style="margin-top:6px">
@@ -62,7 +62,7 @@ function eventRow(e) {
 /* ================= Bookings ================= */
 V.bookings = () => {
   const mode = S.params.mode || 'list';
-  const actions = can('bookings', 2) ? `<button class="btn primary" onclick="A.eventForm()">${ic('plus')} New booking</button>` : '';
+  const actions = can('bookings', 2) ? `${importBtn('events')}<button class="btn primary" onclick="A.eventForm()">${ic('plus')} New booking</button>` : '';
   return pageHead('Bookings', 'Every enquiry, quotation and confirmed event in one diary.', actions) +
     `<div class="toolbar">${seg('mode', [['list', 'List'], ['calendar', 'Calendar'], ['board', 'Pipeline']], mode, 'A.setP')}</div>` +
     (mode === 'calendar' ? calendarView() : mode === 'board' ? boardView() : listViewEvents());
@@ -275,7 +275,7 @@ V.inventory = () => {
   const date = S.filters.invDate || todayLocal(); const cat = S.filters.invCat || 'All';
   const cats = ['All', ...INV_CATS.filter(c => col('inventory').some(i => i.category === c))];
   const totalItems = sum(col('inventory'), i => i.total); const dmg = sum(col('inventory'), i => i.damaged);
-  return pageHead('Inventory', 'Godown stock with date-wise availability. Stock is held automatically for confirmed bookings.', can('inventory', 2) ? `<button class="btn primary" onclick="A.itemForm()">${ic('plus')} Add item</button>` : '') +
+  return pageHead('Inventory', 'Godown stock with date-wise availability. Stock is held automatically for confirmed bookings.', can('inventory', 2) ? `${importBtn('inventory')}<button class="btn primary" onclick="A.itemForm()">${ic('plus')} Add item</button>` : '') +
     `<div class="kpis">${kpi('Item types', col('inventory').length, '', '', 'box', '#2563EB')}${kpi('Total pieces', num(totalItems), '', '', 'chair', '#7C3AED')}${kpi('Out on rent now', num(sum(col('inventory'), onRent)), '', 'accent', 'truck', '#EA580C')}${kpi('Damaged / repair', num(dmg), '', dmg ? 'bad' : '', 'wrench', '#E0344B')}</div>
   <div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search chairs, tent, DG…" value="${esc(S.filters.invQ || '')}" oninput="A.invSearch(this.value)"></div><label class="row-flex small" style="gap:6px"><span class="muted">Free on</span><input type="date" value="${date}" style="width:auto" onchange="A.setF('invDate',this.value)"></label></div>
   <div class="chips" style="margin-bottom:12px">${cats.map(c => `<button class="chip ${cat === c ? 'on' : ''}" onclick="A.setF('invCat','${c}')">${c}</button>`).join('')}</div>
@@ -319,7 +319,7 @@ V.catering = () => {
   const c = S.cat; const edit = can('catering', 2);
   const evOpts = [['', '— Not linked —'], ...col('events').filter(e => !['Cancelled', 'Closed'].includes(e.stage)).sort(by('date')).map(e => [e.id, `${e.title} (${fmtShort(e.date)})`])];
   const cats = [...new Set([...DISH_CATS, ...col('dishes').map(d => d.category)])];
-  return pageHead('Catering & ration calculator', 'Pick the menu, set guests and buffer. Get the halwai’s samagri list, raw cost and a per-plate price.', edit ? `<button class="btn" onclick="A.dishForm()">${ic('plus')} Add dish</button>` : '') +
+  return pageHead('Catering & ration calculator', 'Pick the menu, set guests and buffer. Get the halwai’s samagri list, raw cost and a per-plate price.', edit ? `${importBtn('dishes')}<button class="btn" onclick="A.dishForm()">${ic('plus')} Add dish</button>` : '') +
   `<div class="card pad" style="margin-bottom:14px"><div class="grid2" style="padding:0;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
     <label class="field"><span>Guests (pax)</span><input type="number" min="1" value="${c.pax}" onchange="A.catSet('pax',this.value)"></label>
     <label class="field"><span>Halwai buffer</span><select onchange="A.catSet('buffer',this.value)">${[0, 5, 10, 15, 20].map(b => `<option value="${b}" ${+c.buffer === b ? 'selected' : ''}>+${b}%${b === 10 ? ' (usual)' : ''}</option>`).join('')}</select></label>
