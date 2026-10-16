@@ -170,6 +170,7 @@ const LocalDB = (() => {
     async signIn(email, password) {
       const db = load(); const u = db.users.find(x => x.email === email.toLowerCase().trim());
       if (!u || u.pass !== await this.hash(password)) throw new Error('Login ID or password is wrong.');
+      if (u.blocked) throw new Error('This login is blocked. Contact Super Admin.');
       db.session = { userId: u.id }; persist(); return { id: u.id, email: u.email, name: u.name };
     },
     async signOut() { load().session = null; persist(); },
@@ -185,7 +186,7 @@ const LocalDB = (() => {
         .sort((a, b) => (b.created || 0) - (a.created || 0));
     },
     async adminUpdateOrg(id, patch) { const o = load().orgs[id]; if (!o) throw new Error('Business not found'); Object.assign(o, patch); persist(); },
-    async adminUsers() { const db = load(); return db.users.map(u => ({ userId: u.id, email: u.email, name: u.name, created: u.created, super: !!(u.superAdmin || superEmails().includes(u.email)), orgs: db.members.filter(m => m.userId === u.id).map(m => ({ name: db.orgs[m.orgId]?.name, role: m.role })) })); },
+    async adminUsers() { const db = load(); return db.users.map(u => ({ userId: u.id, email: u.email, name: u.name, created: u.created, blocked: !!u.blocked, super: !!(u.superAdmin || superEmails().includes(u.email)), orgs: db.members.filter(m => m.userId === u.id).map(m => ({ name: db.orgs[m.orgId]?.name, role: m.role })) })); },
     async adminSetSuper(email, on) { const db = load(); const u = db.users.find(x => x.email === loginId(email)); if (!u) throw new Error('No account with this email or mobile. Ask them to sign up first.'); if (!on && u.id === db.session?.userId) throw new Error('You cannot remove your own Super Admin access.'); u.superAdmin = !!on; persist(); },
     async getPlatform() { return { ...DEFAULT_PLATFORM, ...(load().platform || {}) }; },
     async savePlatform(p) { load().platform = p; persist(); },
@@ -231,7 +232,7 @@ const LocalDB = (() => {
       const u = { id: uid('u_'), email, name, phone, pass: await this.hash(password), created: Date.now() }; db.users.push(u);
       const id = await this.createOrg(u.id, bizName, name, roles, settings); Object.assign(db.orgs[id], { plan, status, expires }); persist(); return id;
     },
-    async adminDeleteUser(userId) { const db = load(); if (db.members.some(m => m.userId === userId && m.role === 'owner')) throw new Error('This person owns a business. Delete or hand over the business first.'); db.users = db.users.filter(u => u.id !== userId); db.members = db.members.filter(m => m.userId !== userId); persist(); },
+    async adminBlockUser(userId, block) { const u = load().users.find(x => x.id === userId); if (!u) throw new Error('Login not found'); u.blocked = !!block; persist(); },
     userIdByEmail(email) { return load().users.find(u => u.email === email)?.id; },
     async createGuest(orgId, eventId, days, fixed) { const db = load(); const token = fixed || guestToken(); db.guests.push({ token, orgId, eventId, expires: Date.now() + days * 864e5 }); persist(); return token; },
     async guestView(token) {
@@ -275,7 +276,7 @@ const CloudDB = {
   },
   async signIn(email, password) {
     const { data, error } = await this.sb.auth.signInWithPassword({ email, password });
-    if (error) throw new Error(/invalid/i.test(error.message) ? 'Login ID or password is wrong.' : error.message);
+    if (error) throw new Error(/banned/i.test(error.message) ? 'This login is blocked. Contact Super Admin.' : /invalid/i.test(error.message) ? 'Login ID or password is wrong.' : error.message);
     return { id: data.user.id, email: data.user.email, name: data.user.user_metadata?.name || email };
   },
   async signOut() { await this.sb.auth.signOut(); },
@@ -325,7 +326,7 @@ const CloudDB = {
   },
   async setPasswordFor(userId, password, orgId) { return this.rpc('set_user_password', { p_user: userId, p_password: password, p_org: orgId || null }); },
   async adminCreateBusiness({ email, password, name, phone, bizName, roles, settings, plan, status, expires }) { return this.rpc('admin_create_business', { p_email: loginId(email), p_password: password, p_name: name, p_phone: phone || '', p_biz: bizName, p_roles: roles, p_settings: settings, p_plan: plan, p_status: status, p_expires: expires ? expires + 'T23:59:59+05:30' : null }); },
-  async adminDeleteUser(userId) { return this.rpc('admin_delete_user', { p_user: userId }); },
+  async adminBlockUser(userId, block) { return this.rpc('admin_block_user', { p_user: userId, p_block: !!block }); },
   async changeOwnPassword(password) { const { error } = await this.sb.auth.updateUser({ password }); if (error) throw this.err(error); }
 };
 

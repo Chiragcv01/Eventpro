@@ -611,6 +611,7 @@ const LocalDB = (() => {
     async signIn(email, password) {
       const db = load(); const u = db.users.find(x => x.email === email.toLowerCase().trim());
       if (!u || u.pass !== await this.hash(password)) throw new Error('Login ID or password is wrong.');
+      if (u.blocked) throw new Error('This login is blocked. Contact Super Admin.');
       db.session = { userId: u.id }; persist(); return { id: u.id, email: u.email, name: u.name };
     },
     async signOut() { load().session = null; persist(); },
@@ -626,7 +627,7 @@ const LocalDB = (() => {
         .sort((a, b) => (b.created || 0) - (a.created || 0));
     },
     async adminUpdateOrg(id, patch) { const o = load().orgs[id]; if (!o) throw new Error('Business not found'); Object.assign(o, patch); persist(); },
-    async adminUsers() { const db = load(); return db.users.map(u => ({ userId: u.id, email: u.email, name: u.name, created: u.created, super: !!(u.superAdmin || superEmails().includes(u.email)), orgs: db.members.filter(m => m.userId === u.id).map(m => ({ name: db.orgs[m.orgId]?.name, role: m.role })) })); },
+    async adminUsers() { const db = load(); return db.users.map(u => ({ userId: u.id, email: u.email, name: u.name, created: u.created, blocked: !!u.blocked, super: !!(u.superAdmin || superEmails().includes(u.email)), orgs: db.members.filter(m => m.userId === u.id).map(m => ({ name: db.orgs[m.orgId]?.name, role: m.role })) })); },
     async adminSetSuper(email, on) { const db = load(); const u = db.users.find(x => x.email === loginId(email)); if (!u) throw new Error('No account with this email or mobile. Ask them to sign up first.'); if (!on && u.id === db.session?.userId) throw new Error('You cannot remove your own Super Admin access.'); u.superAdmin = !!on; persist(); },
     async getPlatform() { return { ...DEFAULT_PLATFORM, ...(load().platform || {}) }; },
     async savePlatform(p) { load().platform = p; persist(); },
@@ -672,7 +673,7 @@ const LocalDB = (() => {
       const u = { id: uid('u_'), email, name, phone, pass: await this.hash(password), created: Date.now() }; db.users.push(u);
       const id = await this.createOrg(u.id, bizName, name, roles, settings); Object.assign(db.orgs[id], { plan, status, expires }); persist(); return id;
     },
-    async adminDeleteUser(userId) { const db = load(); if (db.members.some(m => m.userId === userId && m.role === 'owner')) throw new Error('This person owns a business. Delete or hand over the business first.'); db.users = db.users.filter(u => u.id !== userId); db.members = db.members.filter(m => m.userId !== userId); persist(); },
+    async adminBlockUser(userId, block) { const u = load().users.find(x => x.id === userId); if (!u) throw new Error('Login not found'); u.blocked = !!block; persist(); },
     userIdByEmail(email) { return load().users.find(u => u.email === email)?.id; },
     async createGuest(orgId, eventId, days, fixed) { const db = load(); const token = fixed || guestToken(); db.guests.push({ token, orgId, eventId, expires: Date.now() + days * 864e5 }); persist(); return token; },
     async guestView(token) {
@@ -716,7 +717,7 @@ const CloudDB = {
   },
   async signIn(email, password) {
     const { data, error } = await this.sb.auth.signInWithPassword({ email, password });
-    if (error) throw new Error(/invalid/i.test(error.message) ? 'Login ID or password is wrong.' : error.message);
+    if (error) throw new Error(/banned/i.test(error.message) ? 'This login is blocked. Contact Super Admin.' : /invalid/i.test(error.message) ? 'Login ID or password is wrong.' : error.message);
     return { id: data.user.id, email: data.user.email, name: data.user.user_metadata?.name || email };
   },
   async signOut() { await this.sb.auth.signOut(); },
@@ -766,7 +767,7 @@ const CloudDB = {
   },
   async setPasswordFor(userId, password, orgId) { return this.rpc('set_user_password', { p_user: userId, p_password: password, p_org: orgId || null }); },
   async adminCreateBusiness({ email, password, name, phone, bizName, roles, settings, plan, status, expires }) { return this.rpc('admin_create_business', { p_email: loginId(email), p_password: password, p_name: name, p_phone: phone || '', p_biz: bizName, p_roles: roles, p_settings: settings, p_plan: plan, p_status: status, p_expires: expires ? expires + 'T23:59:59+05:30' : null }); },
-  async adminDeleteUser(userId) { return this.rpc('admin_delete_user', { p_user: userId }); },
+  async adminBlockUser(userId, block) { return this.rpc('admin_block_user', { p_user: userId, p_block: !!block }); },
   async changeOwnPassword(password) { const { error } = await this.sb.auth.updateUser({ password }); if (error) throw this.err(error); }
 };
 
@@ -2160,7 +2161,7 @@ function adminUsers() {
   const list = S.admin.users.filter(u => !q || [u.name, u.email, ...(u.orgs || []).map(o => o.name)].join(' ').toLowerCase().includes(q)).sort((a, b) => (b.created || 0) - (a.created || 0));
   return `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search name, email, mobile or business" value="${esc(S.filters.admU || '')}" onchange="A.setF('admU',this.value)"></div><button class="btn primary" onclick="A.addSuperForm()">${ic('shield')} Add Super Admin</button></div>
   <div class="card"><div class="rows">${list.map(u => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(u.name))}</div><div class="main-col" style="min-width:180px"><b>${esc(u.name || '—')}${u.userId === S.user.id ? ' (you)' : ''}</b><div class="sub">${esc(displayId(u.email))}${u.lastLogin ? ' · last login ' + new Date(u.lastLogin).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : ' · never logged in'}</div><div class="row-flex" style="gap:5px;margin-top:5px">${(u.orgs || []).map(o => `<span class="pill">${esc(o.name)} · ${esc(o.role)}</span>`).join('') || '<span class="tiny muted">Not in any business</span>'}</div></div>
-    <div class="row-flex" style="gap:6px">${u.super ? pill('Super Admin', 'primary') : ''}<button class="btn sm" onclick="A.adminResetPw('${u.userId}')">${ic('key')} Reset password</button>${u.userId !== S.user.id ? `<button class="btn sm ${u.super ? 'ghost danger' : ''}" onclick="A.toggleSuper('${esc(u.email)}',${!u.super})">${u.super ? 'Remove Super Admin' : 'Make Super Admin'}</button><button class="btn sm ghost danger" onclick="A.adminDeleteUser('${u.userId}')">${ic('trash')}</button>` : ''}</div></div>`).join('') || empty('No users found', '')}</div></div>`;
+    <div class="row-flex" style="gap:6px">${u.blocked ? pill('Blocked', 'bad') : ''}${u.super ? pill('Super Admin', 'primary') : ''}<button class="btn sm" onclick="A.adminResetPw('${u.userId}')">${ic('key')} Reset password</button>${u.userId !== S.user.id ? `<button class="btn sm ${u.super ? 'ghost danger' : ''}" onclick="A.toggleSuper('${esc(u.email)}',${!u.super})">${u.super ? 'Remove Super Admin' : 'Make Super Admin'}</button><button class="btn sm ${u.blocked ? '' : 'ghost danger'}" onclick="A.adminBlock('${u.userId}',${!u.blocked})">${u.blocked ? 'Unblock' : 'Block login'}</button>` : ''}</div></div>`).join('') || empty('No users found', '')}</div></div>`;
 }
 A.toggleSuper = (email, on) => confirmBox(on ? 'Give Super Admin access?' : 'Remove Super Admin access?', on ? `${displayId(email)} will see and change every business on the platform.` : `${displayId(email)} will lose access to the Super Admin console.`, on ? 'Make Super Admin' : 'Remove', async () => { await S.adapter.adminSetSuper(email, on); await A.adminLoad(); toast('Updated'); }, on ? 'primary' : 'danger');
 A.addSuperForm = () => formModal({ title: 'Add a Super Admin', sub: 'They must have signed up already.', fields: [{ name: 'email', label: 'Their email or mobile number', required: true, full: true }], submit: 'Give access', onSubmit: async v => { await S.adapter.adminSetSuper(v.email, true); await A.adminLoad(); toast('Super Admin added'); } });
@@ -2244,9 +2245,9 @@ A.adminResetPw = userId => {
   formModal({ title: 'Reset password', sub: `${u.name} · ${displayId(u.email)}`, fields: [{ name: 'password', label: 'New password', type: 'text', required: true, value: genPass(), full: true, hint: 'Share it with them on WhatsApp after saving.' }],
     submit: 'Set password', onSubmit: async v => { if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters'); await S.adapter.setPasswordFor(userId, v.password, null); setTimeout(() => credSheet('Password reset', u.name, u.email, v.password), 60); } });
 };
-A.adminDeleteUser = userId => {
+A.adminBlock = (userId, block) => {
   const u = S.admin.users.find(x => x.userId === userId);
-  confirmBox('Delete this login?', `${u.name} (${displayId(u.email)}) will not be able to log in again. Business data stays.`, 'Delete login', async () => { await S.adapter.adminDeleteUser(userId); await A.adminLoad(); toast('Login deleted'); });
+  confirmBox(block ? 'Block this login?' : 'Unblock this login?', block ? `${u.name} (${displayId(u.email)}) will not be able to log in until you unblock. Their data stays.` : `${u.name} will be able to log in again.`, block ? 'Block login' : 'Unblock', async () => { await S.adapter.adminBlockUser(userId, block); await A.adminLoad(); toast(block ? 'Login blocked' : 'Login unblocked'); }, block ? 'danger' : 'primary');
 };
 A.adminAddBusiness = () => {
   const P = S.platform || DEFAULT_PLATFORM;

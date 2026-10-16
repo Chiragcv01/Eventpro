@@ -103,16 +103,68 @@ begin
   return admin_create_org(v_uid, p_biz, p_name, p_roles, p_settings, coalesce(p_status, 'trial'), coalesce(p_plan, 'Trial'), p_expires);
 end $$;
 
--- Super Admin: delete a login (not an owner of a business, not yourself).
-create or replace function public.admin_delete_user(p_user uuid)
+-- Super Admin: block / unblock a login (nothing is deleted; data stays).
+create or replace function public.admin_block_user(p_user uuid, p_block boolean)
 returns void language plpgsql security definer set search_path = public as $$
 begin
   if not is_super_admin() then raise exception 'Super Admin only'; end if;
-  if p_user = auth.uid() then raise exception 'You cannot delete your own login.'; end if;
-  if exists (select 1 from org_members where user_id = p_user and role = 'owner') then
-    raise exception 'This person owns a business. Suspend the business instead.';
-  end if;
-  delete from auth.users where id = p_user;
+  if p_user = auth.uid() then raise exception 'You cannot block your own login.'; end if;
+  update auth.users set banned_until = case when p_block then 'infinity'::timestamptz else null end, updated_at = now()
+   where id = p_user;
+  if not found then raise exception 'Login not found'; end if;
+end $$;
+
+-- Super Admin access is switched on/off with an "active" flag (never deleted).
+alter table public.platform_admins add column if not exists active boolean not null default true;
+
+create or replace function public.is_super_admin() returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from platform_admins where user_id = auth.uid() and active)
+$$;
+
+create or replace function public.perm_for(p_user uuid, p_org uuid, p_module text) returns int
+language plpgsql stable security definer set search_path = public as $$
+declare v_lvl int; v_status text; v_exp timestamptz;
+begin
+  if p_user is null then return null; end if;
+  if exists (select 1 from platform_admins where user_id = p_user and active) then return 3; end if;
+  select o.status, o.expires_at into v_status, v_exp from orgs o where o.id = p_org;
+  if v_status = 'suspended' then return 0; end if;
+  select case when m.role = 'owner' then 3
+              else coalesce((m.perms ->> p_module)::int, (r.perms ->> p_module)::int, 0) end
+    into v_lvl
+    from org_members m
+    left join org_roles r on r.org_id = m.org_id and r.role = m.role
+   where m.org_id = p_org and m.user_id = p_user;
+  if v_lvl is null then return null; end if;
+  if v_exp is not null and v_exp < now() then return least(v_lvl, 1); end if;
+  return v_lvl;
+end $$;
+
+create or replace function public.admin_set_super(p_email text, p_on boolean)
+returns void language plpgsql security definer set search_path = public as $$
+declare v_uid uuid;
+begin
+  if not is_super_admin() then raise exception 'Super Admin only'; end if;
+  select id into v_uid from auth.users where lower(email) = lower(trim(p_email));
+  if v_uid is null then raise exception 'No account with this login ID.'; end if;
+  if not p_on and v_uid = auth.uid() then raise exception 'You cannot remove your own Super Admin access.'; end if;
+  insert into platform_admins(user_id, active) values (v_uid, p_on)
+    on conflict (user_id) do update set active = excluded.active;
+end $$;
+
+create or replace function public.admin_users()
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+begin
+  if not is_super_admin() then raise exception 'Super Admin only'; end if;
+  return coalesce((select jsonb_agg(jsonb_build_object(
+      'userId', u.id, 'email', u.email, 'created', u.created_at, 'lastLogin', u.last_sign_in_at,
+      'blocked', (u.banned_until is not null and u.banned_until > now()),
+      'name', coalesce(nullif(u.raw_user_meta_data->>'name', ''), (select display_name from org_members where user_id = u.id limit 1), u.email),
+      'super', exists (select 1 from platform_admins p where p.user_id = u.id and p.active),
+      'orgs', coalesce((select jsonb_agg(jsonb_build_object('name', o.name, 'role', m.role, 'orgId', o.id))
+                        from org_members m join orgs o on o.id = m.org_id where m.user_id = u.id), '[]'::jsonb))
+      order by u.created_at desc) from auth.users u), '[]'::jsonb);
 end $$;
 
 revoke all on function public._new_auth_user(text, text, text, text) from public, anon, authenticated;
@@ -120,9 +172,17 @@ revoke all on function public.public_signup(text, text, text, text, text, jsonb,
 revoke all on function public.create_member(uuid, text, text, text, text, jsonb, text) from public, anon;
 revoke all on function public.set_user_password(uuid, text, uuid) from public, anon;
 revoke all on function public.admin_create_business(text, text, text, text, text, jsonb, jsonb, text, text, timestamptz) from public, anon;
-revoke all on function public.admin_delete_user(uuid) from public, anon;
+revoke all on function public.admin_block_user(uuid, boolean) from public, anon;
+revoke all on function public.orgs_protect() from public, anon, authenticated;
 grant execute on function public.public_signup(text, text, text, text, text, jsonb, jsonb) to anon, authenticated;
 grant execute on function public.create_member(uuid, text, text, text, text, jsonb, text) to authenticated;
 grant execute on function public.set_user_password(uuid, text, uuid) to authenticated;
 grant execute on function public.admin_create_business(text, text, text, text, text, jsonb, jsonb, text, text, timestamptz) to authenticated;
-grant execute on function public.admin_delete_user(uuid) to authenticated;
+grant execute on function public.admin_block_user(uuid, boolean) to authenticated;
+
+-- =====================================================================
+-- Make someone Super Admin (run in the SQL editor, with their login email):
+-- insert into public.platform_admins(user_id, active)
+-- select id, true from auth.users where email = 'you@yourmail.com'
+-- on conflict (user_id) do update set active = true;
+-- =====================================================================
