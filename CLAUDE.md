@@ -1,0 +1,78 @@
+# SabManage — handover notes for Claude / developers
+
+Read this first. It is the full context of the project as of 16 Oct 2026, so a new session can continue without the original chat.
+
+## What it is
+SabManage (earlier name: EventPro OS) is a multi-tenant SaaS for Indian **tent houses, caterers/halwais, decorators and event managers**: bookings, godown stock with date-wise availability, catering ration calculator, GST invoices/quotations/challans/receipts with the business's own logo, payments and WhatsApp reminders, vendors and POs, crew attendance and wages, live setup tracker, reports/P&L, reviews, a client (guest) page, and per-person access control.
+
+- Owner of the platform (Super Admin): **Chirag Sharma** — login `chiragsharma98873@gmail.com`, support WhatsApp 9950653247. He communicates in **Hinglish**; reply in Hinglish, keep UI copy in plain English with the Hindi dictionary.
+- Live: website https://sabmanage.com · app https://sabmanage.com/app · old https://eventpro-os.vercel.app redirects here.
+- Repo: https://github.com/Chiragcv01/Eventpro (branch `main`; currently public — owner was advised to make it private).
+
+## Stack and hosting
+| Piece | Where | Notes |
+|---|---|---|
+| App | `app.html` built from `src/` by `python3 build.py` | Single-file vanilla JS SPA, no framework, no npm for the app |
+| Website/blog | `api/site.js` (Vercel Node function) + `site.css`, `site.js`, `img/` | Server-rendered for SEO/WhatsApp previews, cached `s-maxage=60` |
+| Hosting | Vercel project `eventpro-os` (id `prj_rfaKxq9TGcMSEQOVuiBqZTrZapWM`, team `team_Bqpb2KJqrwCkxsphCKF7Rcx8`), Hobby plan, functions region `bom1` | Git-linked: every push to `main` deploys (~30 s) |
+| Database/auth/storage | Supabase project `uregwtavhkjowiltukiq` (Mumbai), org "Chiragcv01's Org", **Free plan** | URL + public anon key are in `src/head.html` and `api/site.js` (public by design; RLS protects data) |
+| Domain | `sabmanage.com` on **Hostinger** (DNS: A @ → 216.198.79.1, 64.29.17.1; CNAME www → Vercel). www redirects to apex |
+| Android | Trusted Web Activity, package `com.sabmanage.app`, v1.0.0 (code 1), minSdk 24, targetSdk 36 | Built by GitHub Actions (unsigned) → signed by owner with upload key |
+
+## Repo layout
+```
+src/head.html        config (Supabase URL/key), fonts, title
+src/i18n.js          Hindi engine (MutationObserver translator) + dictionary "English | हिंदी"
+src/core.js          utils, icons, constants, LocalDB + CloudDB adapters, state S, actions A, permissions, shell, alerts, business logic
+src/auth.js          login/sign-up (Terms checkbox), forgot password, guest (client) portal, Authenticator (TOTP)
+src/views-ops.js     dashboard, bookings, event page, inventory, catering
+src/views-money.js   invoices, payments, vendors, staff, live tracker, expenses, reports, reviews, tools, team, settings
+src/views-admin.js   bill branding, plan card, blocked screen, Super Admin console (businesses, users, plans), employee logins
+src/views-site.js    Super Admin: Website content, Blog editor (+cleanHTML sanitizer), Enquiries, Account deletion; user "Delete my account"
+src/views-import.js  Excel/CSV import (SheetJS from jsDelivr, lazy) + "Get started" card
+src/app.css          app design (clean white, colourful; Baloo 2 + Mukta fonts)
+build.py             concatenates src → app.html (order: i18n, core, auth, views-ops, views-money, views-admin, views-site, views-import)
+api/site.js          website: home, /blog, /blog/:slug, /privacy, /terms, /delete-account, sitemap, robots, RSS; HTML allow-list sanitizer
+site.css, site.js    website style; language switch, contact form, delete-request form (call Supabase RPCs directly)
+sw.js, offline.html  service worker (offline screen only; no private data cached)
+manifest.webmanifest PWA manifest (start_url /app)
+.well-known/assetlinks.json   Android Digital Asset Links (upload key SHA-256; add Play app-signing SHA-256 later)
+android/             twa-manifest.json + generate.js (@bubblewrap/core); built by .github/workflows/android.yml → branch android-build
+play-store/          LISTING.md (EN + HI text, Data safety answers), icon, feature graphic, 8 screenshots
+supabase/            schema.sql, auth_admin.sql, website.sql, account_deletion.sql, subscriptions.sql (copies of what was applied)
+vercel.json          rewrites (website routes → api/site), redirect old host, headers
+img/                 site screenshots, og.jpg, icons
+```
+
+## Data model (Supabase, all tables have RLS)
+- `orgs` (business: name, status trial/active/suspended, plan, expires_at, **price** special ₹/month, notes) — trigger `orgs_protect` lets only Super Admin/service_role change status/plan/expires_at/notes/price.
+- `org_members` (org_id, user_id, role, display_name, email, perms override jsonb, staff_id), `org_roles` (role perms jsonb).
+- `records` (org_id, collection, id, data jsonb) — ALL business data. Collections: events, inventory, dishes, mandi, invoices, counters, payments, vendors, pos, staff, attendance, advances, payouts, tasks, expenses, reviews, settings(main), activity.
+- `invites`, `guest_links` (client page tokens), `platform_admins` (user_id, active), `platform_settings` (id=1, data jsonb: appName, supportName/Phone/Email, trialDays, **graceDays**, allowSignup, plans[{name,price,desc}], site{brandName, tagline, about, aboutHi, legalName, address, city, phone, whatsapp, email, hours, mapUrl, instagram, facebook, youtube, linkedin, showPricing}).
+- `blog_posts` (slug, title, excerpt, content HTML, cover_url, tags, lang, status draft/published, seo_*, author, published_at), `contact_messages` (website enquiries), `account_deletions` (requests).
+- Storage bucket `blog` (public read; Super Admin write).
+- Key functions: `perm_for(user, org, module)` → 0–3 (Super Admin 3; suspended 0; **expired + graceDays → 0**); `perm()`, `my_role()`, `is_super_admin()` all require `mfa_ok()` (aal2 when user has a verified TOTP factor). RPCs: `public_signup`, `create_org`, `create_member`, `set_user_password`, `admin_create_business`, `admin_block_user`, `admin_set_super`, `admin_overview`, `admin_users`, `reset_user_mfa`, `guest_view`, `guest_review`, `submit_enquiry` (throttled), `request_account_deletion`, `request_account_deletion_web`. **`admin_delete_account` is written in `supabase/account_deletion.sql` but NOT applied yet** (needs owner approval because it deletes data).
+- Mobile login IDs are stored as `<10 digits>@mobile.eventpro.app` (constant `MOBILE_DOMAIN`; keep it — existing users depend on it). Users are created directly in auth.users with bcrypt (no email confirmation).
+
+## Behaviour rules worth knowing
+- Permissions: levels 0 none, 1 view, 2 edit, 3 full(delete). Owner = 3 everywhere. `lvl()`/`can()`/`need()` in core.js mirror the DB.
+- Subscription: plan validity ends → after `graceDays` the business is fully blocked (DB returns no data; UI shows `V.blocked` "Your plan has ended" with renew WhatsApp). Grace period shows a red banner. Super Admin can change plan/status/date, ± validity, special price, bulk change validity, edit up to 6 plans.
+- Owners cannot reset their own password; only Super Admin. Owners reset employees' passwords.
+- Hindi: `I18N` translates text nodes/placeholders via the dictionary; `.paper` (bills) and `[translate=no]` are never translated. `I18N.missing()` lists untranslated visible strings. Common English words stay English by design.
+- Blog HTML is sanitized on save (`cleanHTML` in views-site.js) and on render (`sanitize` in api/site.js).
+- Offline mode: if `supabaseUrl` is empty the app uses LocalDB (localStorage) — used for local testing (`superAdminEmails` in config makes a Super Admin offline).
+
+## How to work on it
+1. Edit `src/*`, run `python3 build.py` (writes `app.html`; also `dist/`, `app.js`, `artifact.html` which are git-ignored).
+2. Test offline: copy app.html, blank the Supabase URL/key in `window.EVENTPRO_CONFIG`, open with Playwright/Chromium.
+3. Add Hindi lines to `src/i18n.js` for any new UI text.
+4. DB changes: apply as a Supabase migration (non-destructive SQL applies directly; SQL containing delete/drop needs the owner's approval) and save a copy in `supabase/`.
+5. Commit with a clear message and push to `main` → live.
+6. Android: bump `appVersionCode` in `android/twa-manifest.json`, push → Actions builds unsigned files to branch `android-build` → sign with the owner's upload key (`jarsigner` for .aab, `apksigner.jar` for .apk). Key file `sabmanage-upload.jks`, alias `upload`, SHA-256 `5B:C1:89:CA:AB:4B:92:11:71:AB:35:49:AF:39:E7:31:CF:12:E1:1F:9A:C9:4B:DB:14:B2:8F:5D:9B:3B:62:3F`. The key and its password are only with the owner — never commit them.
+
+## Status (16 Oct 2026)
+Done: full app; roles/permissions; Super Admin console (businesses, users, plans & support, website, blog, enquiries, account deletion); Authenticator; Hindi; website + blog + legal pages + SEO; contact form; Excel import (stock, menu, crew, vendors, bookings); Get-started card; Terms consent at sign-up; subscription controls and blocking; account deletion requests (app + web); PWA + offline screen; Android .aab/.apk v1.0.0 signed; Play Store listing kit; domain sabmanage.com; rebrand to SabManage. Database is clean (only the Super Admin user, 0 businesses).
+
+Pending (owner): enable Authenticator on Super Admin; change Super Admin password; make repo private; run `supabase/account_deletion.sql`; Play Console account + closed test (12 testers × 14 days) + listing; send Play **app signing** SHA-256 to add to `assetlinks.json`; fill website address/legal name; get Terms/Privacy reviewed; buy Supabase Pro + Vercel Pro before first paying customer.
+
+Next features (agreed order): Razorpay online renewal (needs owner's Razorpay KYC) → stronger password rule (8 chars + number) → GSTR-1/Tally export → automatic WhatsApp reminders (WhatsApp Business API) → offline crew updates → lead/error alerts → iPhone app, multi-branch, client CRM.
