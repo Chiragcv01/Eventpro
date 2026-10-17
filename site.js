@@ -8,7 +8,8 @@
   if (param === 'hi' || param === 'en') put(param);
   /* referral link from another business: sabmanage.com/?ref=code (kept for sign-up in the app) */
   try { var ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
-  var lang = get() === 'hi' ? 'hi' : 'en';
+  /* the website is English only; an old Hindi choice from earlier visits is ignored */
+  var lang = 'en';
 
   function apply(l) {
     lang = l;
@@ -20,7 +21,6 @@
     var t = document.body.dataset.hiTitle; if (t) { if (!document.body.dataset.enTitle) document.body.dataset.enTitle = document.title; document.title = l === 'hi' ? t : document.body.dataset.enTitle; }
     document.querySelectorAll('#langBtn [data-l]').forEach(function (s) { s.classList.toggle('on', s.dataset.l === l); });
   }
-  if (lang === 'hi') apply('hi');
   var lb = document.getElementById('langBtn');
   if (lb) lb.addEventListener('click', function () { var n = lang === 'hi' ? 'en' : 'hi'; put(n); apply(n); });
 

@@ -2175,3 +2175,8 @@ Code you got from the business | बिज़नेस से मिला क�
 Open my page | मेरा पेज खोलें
 Staff | स्टाफ़
 `);
+I18N.load(`
+Collections, receipts and polite payment reminders. | वसूली, रसीदें और विनम्र तकाज़ा।
+Remind | तकाज़ा
+Run your entire business from one app. | अपने बिज़नेस का पूरा हिसाब, एक ऐप में।
+`);

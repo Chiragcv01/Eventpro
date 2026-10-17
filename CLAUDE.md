@@ -81,7 +81,8 @@ download/SabManage.apk  the signed Android app served at sabmanage.com/download/
 
 ## Brand and website (17 Oct 2026 redesign)
 - Owner's rule (repeated twice): the main website and the app's opening screen must NOT name any business type (no tent, catering, events, doctors, clinics, weddings) anywhere: hero, nav, FAQ, About, contact form, footer, structured data. The type is asked only at sign-up. /events and /doctors still exist for direct sharing but are unlinked, noindex and out of the sitemap. Blog is only in the footer (posts are wedding-related); the home page has no blog section.
-- Home sections: hero (bilingual headline + 'Today' panel), pillars, 'See the app' (img/shot-bill.webp, shot-payments.webp, shot-staff-hi.webp from a neutral demo business 'Sharma Enterprises'), small helps, steps, pricing, about, FAQ, contact.
+- Owner's rule: the WEBSITE is English only, in professional English: no Hindi line, no language switch (`hi()` in api/site.js returns '' and site.js ignores the old ep_lang choice), no Hinglish words (no 'hisaab', 'taqaza', 'ji'). The APP stays bilingual; its English mode uses 'Remind' (Hindi तकाज़ा) and 'Run your entire business from one app.' on the login screen.
+- Home sections: hero ('Run your entire business from one app.' + 'Today' panel), pillars, 'A closer look at the app' (img/shot-bill.webp, shot-payments.webp, shot-staff.webp from a neutral demo business 'Sharma Enterprises'), small helps, steps, pricing, about, FAQ, contact.
 - Mark = three rounded tiles + a tick (`icon.svg`, `MARK` in api/site.js, `MARK_SVG` in core.js, PNGs in img/icons, play-store/app-icon-512.png). og.jpg and the Play feature graphic use the same 'Today' panel design.
 - Website fonts: Anek Devanagari (headings, font-stretch ~84–92%) + Mukta (text). Palette: ink #0E1A33, blue #1F5EFF, green #0B9B68, mist #F4F6FA. The festive canopy/bunting is removed (`.canopy` hidden). Bump `V` in api/site.js when site.css/site.js change.
 

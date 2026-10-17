@@ -2,7 +2,7 @@
   "id": "/app",
   "name": "SabManage",
   "short_name": "SabManage",
-  "description": "The whole hisaab of your business in one app: bookings and appointments, GST bills, payments, staff and customer reminders. In Hindi and English.",
+  "description": "Business management app for bookings, GST invoices, payments, staff and customer follow-ups. Works on any phone, in English and Hindi.",
   "lang": "en-IN",
   "dir": "ltr",
   "start_url": "/app",

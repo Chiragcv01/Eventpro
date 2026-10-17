@@ -3,12 +3,13 @@
    Content comes from Supabase (public, read-only data). */
 const SB_URL = process.env.SUPABASE_URL || 'https://uregwtavhkjowiltukiq.supabase.co';
 const SB_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZWd3dGF2aGtqb3dpbHR1a2lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTA1MjksImV4cCI6MjEwNzcyNjUyOX0.bVRTpmkE_c30j-_pegk0HLdGaSeSNqQ3pwtBjeRoAIw';
-const V = '8';
+const V = '9';
 const PER_PAGE = 9;
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const hi = s => s ? ` data-hi="${esc(s)}"` : '';
+/* the website is English only (owner's decision, Oct 2026); Hindi lives inside the app */
+const hi = () => '';
 const inr = n => '₹' + Math.round(+n || 0).toLocaleString('en-IN');
 const digits = s => String(s || '').replace(/\D/g, '');
 const waNum = s => { const d = digits(s); return d.length === 10 ? '91' + d : d; };
@@ -74,9 +75,9 @@ const MARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"
 const ic = (n, cls = 'ico') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n] || ''}"/></svg>`;
 
 /* ---------- data ---------- */
-const DEFAULT_SITE = { brandName: 'SabManage', tagline: 'Apne business ka poora hisaab, ek app mein.', about: 'SabManage is built in Jaipur for Indian businesses that run on people and phones. We spent time with owners, their staff and their customers to understand how the daily work is really done, and turned it into one simple app that works on any phone, in Hindi and English.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
+const DEFAULT_SITE = { brandName: 'SabManage', tagline: 'Run your entire business from one app.', about: 'SabManage is built in Jaipur for Indian businesses that run on people and phones. We worked closely with business owners, their teams and their customers to understand how daily operations really happen, and built one simple app that brings it all together, on any phone, in English and Hindi.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
 /* texts that were the old defaults (never edited in Super Admin) move to the new defaults */
-const OLD_DEFAULTS = { tagline: ['Tent, catering aur event ka poora hisaab, ek app mein.'], about: ['SabManage is built in Jaipur for Indian businesses that run on people and phones: tent houses, caterers, halwais, decorators, event managers, and now doctors and clinics. We sat with them in godowns, kitchens, wedding lawns and clinics to understand how the daily work is really done, and turned that into one simple app that works on any phone, in Hindi and English.', 'SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.'] };
+const OLD_DEFAULTS = { tagline: ['Tent, catering aur event ka poora hisaab, ek app mein.', 'Apne business ka poora hisaab, ek app mein.'], about: ['SabManage is built in Jaipur for Indian businesses that run on people and phones. We spent time with owners, their staff and their customers to understand how the daily work is really done, and turned it into one simple app that works on any phone, in Hindi and English.', 'SabManage is built in Jaipur for Indian businesses that run on people and phones: tent houses, caterers, halwais, decorators, event managers, and now doctors and clinics. We sat with them in godowns, kitchens, wedding lawns and clinics to understand how the daily work is really done, and turned that into one simple app that works on any phone, in Hindi and English.', 'SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.'] };
 async function loadSettings() {
   let plat = {};
   try { const r = await sb('platform_settings?id=eq.1&select=data'); plat = (r[0] && r[0].data) || {}; } catch (e) { }
@@ -92,7 +93,7 @@ async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
 /* ---------- page shell ---------- */
 function shell({ s, plat, origin, path, title, desc, image, body, type = 'website', jsonld = [], noindex = false, hiTitle = '' }) {
   const brand = s.brandName || 'SabManage'; const url = origin + path;
-  const nav = [['/#features', 'Features', 'सुविधाएं'], ['/#app', 'See the app', 'ऐप देखें'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
+  const nav = [['/#features', 'Features', ''], ['/#app', 'Product tour', ''], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/#about', 'About', ''], ['/#contact', 'Contact', '']];
   const waN = s.whatsapp || s.phone;
   const social = [['instagram', 'insta', 'Instagram'], ['facebook', 'fb', 'Facebook'], ['youtube', 'yt', 'YouTube'], ['linkedin', 'li', 'LinkedIn']].filter(([k]) => safeUrl(s[k])).map(([k, i, l]) => `<a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" aria-label="${l}">${ic(i)}</a>`).join('');
   return `<!doctype html>
@@ -122,7 +123,6 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
   <a class="brand" href="/"><span class="mk">${MARK}</span>${esc(brand)}</a>
   <nav class="nav" id="nav" aria-label="Main">${nav.map(([h, l, h2]) => `<a href="${h}"${hi(h2)}>${l}</a>`).join('')}<a href="/app" class="mobile-login"${hi('लॉग इन')}>Log in</a></nav>
   <span class="grow"></span>
-  <button class="lang" type="button" id="langBtn" aria-label="भाषा / Language" translate="no"><span data-l="hi">हिं</span><span data-l="en" class="on">EN</span></button>
   <a class="btn sm login" href="/app" data-app-link${hi('लॉग इन')}>Log in</a>
   ${plat.allowSignup !== false ? `<a class="btn sm primary start" href="/app#signup"${hi('फ़्री ट्रायल शुरू करें')}>Start free trial</a>` : `<a class="btn sm primary start" href="/#contact"${hi('डेमो लें')}>Book a demo</a>`}
   <button class="menu-btn" type="button" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="nav">${ic('menu')}</button>
@@ -133,7 +133,7 @@ ${body}
 <footer>
   <div class="wrap">
     <div class="about-f"><a class="brand" href="/"><span class="mk">${MARK}</span>${esc(brand)}</a>
-      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('बुकिंग, बिल, पेमेंट, स्टाफ़ और ग्राहक, एक आसान ऐप में। किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में।')}>Bookings, bills, payments, staff and customers in one simple app. On any phone, in Hindi and English.</p>
+      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('बुकिंग, बिल, पेमेंट, स्टाफ़ और ग्राहक, एक आसान ऐप में। किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में।')}>Business management for growing Indian businesses: bookings, invoices, payments and teams in one app.</p>
       ${social ? `<div class="social">${social}</div>` : ''}</div>
     <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/blog"${hi('ब्लॉग')}>Blog</a></li><li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
     <div><h4${hi('संपर्क')}>Contact</h4><ul>
@@ -156,48 +156,42 @@ ${waN ? `<a class="wa-float" href="${esc(wa(waN, 'Namaste, I want to know more a
 function homePage({ s, plat, posts }) {
   const brand = s.brandName || 'SabManage'; const trial = +plat.trialDays || 0; const signup = plat.allowSignup !== false;
   const waN = s.whatsapp || s.phone;
-  const startBtn = signup ? `<a class="btn primary" href="/app#signup"${hi(trial ? `${trial} दिन का फ़्री ट्रायल शुरू करें` : 'फ़्री में शुरू करें')}>${trial ? `Start ${trial}-day free trial` : 'Start free'}</a>` : `<a class="btn primary" href="#contact"${hi('डेमो लें')}>Book a demo</a>`;
-  const waLink = waN ? `<a class="btn ghost" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('व्हाट्सऐप पर डेमो')}>Demo on WhatsApp</span></a>` : '';
+  const startBtn = signup ? `<a class="btn primary" href="/app#signup">Start free trial</a>` : `<a class="btn primary" href="#contact">Book a demo</a>`;
+  const demoBtn = waN ? `<a class="btn ghost" href="${esc(wa(waN, `Hello, I would like a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}<span>Book a demo</span></a>` : '';
   const d = new Date(Date.now() + 5.5 * 3600e3);
-  const DAYS = [['Sunday', 'रविवार'], ['Monday', 'सोमवार'], ['Tuesday', 'मंगलवार'], ['Wednesday', 'बुधवार'], ['Thursday', 'गुरुवार'], ['Friday', 'शुक्रवार'], ['Saturday', 'शनिवार']];
-  const MONTHS = [['January', 'जनवरी'], ['February', 'फ़रवरी'], ['March', 'मार्च'], ['April', 'अप्रैल'], ['May', 'मई'], ['June', 'जून'], ['July', 'जुलाई'], ['August', 'अगस्त'], ['September', 'सितंबर'], ['October', 'अक्टूबर'], ['November', 'नवंबर'], ['December', 'दिसंबर']];
-  const [den, dhi] = DAYS[d.getUTCDay()]; const [men, mhi] = MONTHS[d.getUTCMonth()]; const dn = d.getUTCDate();
+  const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const custom = s.tagline && s.tagline !== DEFAULT_SITE.tagline;
   const rows = [
-    ['09:02', 'user', '#0D9488', 'Ramesh reached work', 'रमेश काम पर पहुंचे', 'Attendance', 'हाज़िरी', ''],
-    ['10:15', 'rupee', '#0B9B68', 'Advance received from Verma ji', 'वर्मा जी से एडवांस मिला', '', '', '+₹15,000'],
-    ['11:40', 'calendar', '#1F5EFF', 'New booking for Saturday, 5 pm', 'शनिवार शाम 5 बजे की नई बुकिंग', 'Kapoor family', 'कपूर परिवार', ''],
-    ['12:30', 'receipt', '#7C3AED', 'Bill #241 sent on WhatsApp', 'बिल #241 व्हाट्सऐप पर भेजा', '', '', '₹32,400'],
-    ['16:00', 'bell', '#D97706', 'Payment reminder sent', 'पेमेंट की याद दिलाई', 'Sharma Traders', 'शर्मा ट्रेडर्स', '₹8,500 due']
+    ['09:02', 'user', '#0D9488', 'Ramesh checked in', 'Attendance', ''],
+    ['10:15', 'rupee', '#0B9B68', 'Advance received from Verma & Co.', '', '+₹15,000'],
+    ['11:40', 'calendar', '#1F5EFF', 'New booking for Saturday, 5:00 pm', 'Kapoor & Sons', ''],
+    ['12:30', 'receipt', '#7C3AED', 'Invoice #241 sent via WhatsApp', '', '₹32,400'],
+    ['16:00', 'bell', '#D97706', 'Payment reminder sent', 'Sharma Traders', '₹8,500 due']
   ];
   const pillars = [
-    ['calendar', 'Customers and bookings', 'ग्राहक और बुकिंग', 'Every enquiry, booking or appointment with its date, time and notes. Nothing lives on paper slips any more.', 'हर इन्क्वायरी, बुकिंग या अपॉइंटमेंट, तारीख, समय और नोट के साथ। अब कुछ भी पर्चियों पर नहीं।'],
-    ['receipt', 'Bills and payments', 'बिल और पेमेंट', 'GST bills with your logo and UPI. See who owes what, and send a polite WhatsApp reminder in one tap.', 'आपके लोगो और यूपीआई वाले जीएसटी बिल। किस पर कितना बाकी है देखें, और एक टैप में व्हाट्सऐप पर याद दिलाएं।'],
-    ['users', 'Staff and attendance', 'स्टाफ़ और हाज़िरी', 'Each person gets their own login and sees only what you allow. Attendance, wages and overtime are worked out for you.', 'हर व्यक्ति का अपना लॉगिन, और उसे सिर्फ़ वही दिखे जो आप चाहें। हाज़िरी, मज़दूरी और ओवरटाइम अपने आप।'],
-    ['bell', 'Updates and alerts', 'अपडेट और अलर्ट', 'Your team’s updates reach your phone within a second. Important alerts ring, even when the phone is on silent.', 'टीम के अपडेट एक सेकंड में आपके फ़ोन पर। ज़रूरी अलर्ट बजते हैं, फ़ोन साइलेंट हो तब भी।']
+    ['calendar', 'Bookings and customers', 'Track every enquiry, booking and appointment with dates, times and notes. No more paper diaries or missed follow-ups.'],
+    ['receipt', 'Invoices and payments', 'Create GST-ready invoices with your logo and UPI details. See what is outstanding at a glance and send reminders in one tap.'],
+    ['users', 'Team and attendance', 'Give every team member their own login with role-based access. Attendance, wages and overtime are calculated for you.'],
+    ['bell', 'Real-time updates', 'Updates from your team reach your phone instantly. Priority alerts ring even when the phone is on silent.']
   ];
   const feats = [
-    ['globe', '#16A34A', 'Hindi, with help on every screen', 'हिंदी में, हर स्क्रीन पर मदद के साथ', 'Switch the whole app to Hindi with one tap. An ⓘ button on every screen explains it in plain words.', 'एक टैप में पूरा ऐप हिंदी में। हर स्क्रीन पर ⓘ बटन आसान शब्दों में समझाता है।'],
-    ['android', '#1F5EFF', 'Any phone, plus an Android app', 'कोई भी फ़ोन, साथ में एंड्रॉयड ऐप', 'Works in the browser on any phone or computer. The Android app adds ringing alerts.', 'किसी भी फ़ोन या कंप्यूटर के ब्राउज़र में चलता है। एंड्रॉयड ऐप में बजने वाले अलर्ट भी।'],
-    ['shield', '#475569', 'You decide who sees what', 'किसे क्या दिखे, आप तय करें', 'Switch any section Off, See or Change for each person. The server enforces it.', 'हर व्यक्ति के लिए कोई भी सेक्शन बंद, देखे या बदले। सर्वर पर लागू होता है।'],
-    ['sun', '#F59E0B', 'A summary every morning', 'हर सुबह की झलक', 'At 7:45 am your phone shows the day ahead and who to call back.', 'सुबह 7:45 बजे फ़ोन पर आज का काम और किसे फ़ोन करना है।'],
-    ['download', '#0891B2', 'Bring your Excel sheets', 'अपनी एक्सेल शीट लाएं', 'Import your old lists of stock, staff and customers instead of typing them again.', 'पुराना स्टॉक, स्टाफ़ और ग्राहकों की लिस्ट दोबारा टाइप करने के बजाय इंपोर्ट करें।'],
-    ['star', '#EAB308', 'Data kept in India, safely', 'डेटा भारत में, सुरक्षित', 'Stored in Mumbai. Download a full backup any time, and protect logins with a 6-digit Authenticator code.', 'मुंबई में स्टोर। कभी भी पूरा बैकअप डाउनलोड करें, और लॉगिन को 6 अंकों के ऑथेंटिकेटर कोड से सुरक्षित करें।']
+    ['globe', '#16A34A', 'English and Hindi', 'Switch the entire app between English and Hindi in one tap, with built-in help on every screen.'],
+    ['android', '#1F5EFF', 'Works on any device', 'Use it in any browser on phone or computer, or install the Android app for instant alerts.'],
+    ['shield', '#475569', 'Role-based access', 'Decide exactly what each team member can view or edit. Permissions are enforced on the server.'],
+    ['sun', '#F59E0B', 'Morning briefing', 'Start every day with a 7:45 am summary of what is scheduled and who needs a follow-up.'],
+    ['download', '#0891B2', 'Easy data import', 'Bring in your existing stock, staff and customer lists from Excel in minutes.'],
+    ['star', '#EAB308', 'Secure and private', 'Your data is stored in India, with full backups on demand and optional two-factor sign-in.']
   ];
   const plans = (plat.plans || []).filter(p => p && p.name);
   const mid = plans.length === 3 ? 1 : -1;
   const plansHtml = s.showPricing !== false && plans.length ? `
   <section class="sec" id="pricing"><div class="wrap">
-    <div class="sec-h"><h2${hi('सीधी कीमत, कोई छुपा चार्ज नहीं')}>Simple monthly pricing</h2><p${hi('सभी प्लान में पूरा ऐप मिलता है। आपकी टीम के हिसाब से प्लान चुनें।')}>Every plan includes the full app. Pick the one that fits the size of your team.</p></div>
+    <div class="sec-h"><h2${hi('सीधी कीमत, कोई छुपा चार्ज नहीं')}>Simple, transparent pricing</h2><p${hi('सभी प्लान में पूरा ऐप मिलता है। आपकी टीम के हिसाब से प्लान चुनें।')}>Every plan includes the complete app. Choose the one that matches the size of your team.</p></div>
     <div class="plans">${plans.map((p, i) => `<div class="plan ${i === mid ? 'hl' : ''}"><h3>${esc(p.name)}</h3><div class="pr">${inr(p.price)}<small${hi(' / महीना')}> / month</small></div>
-      ${p.desc ? `<ul>${String(p.desc).split(/[,\n]/).map(x => x.trim()).filter(Boolean).slice(0, 8).map(x => `<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul>` : `<ul><li>${ic('check')}<span${hi('सभी सेक्शन और जीएसटी बिल')}>All sections and GST bills</span></li><li>${ic('check')}<span${hi('स्टाफ़ लॉगिन और एक्सेस कंट्रोल')}>Staff logins and access control</span></li><li>${ic('check')}<span${hi('क्लाउड बैकअप, किसी भी फ़ोन पर')}>Cloud backup, works on any phone</span></li></ul>`}
+      ${p.desc ? `<ul>${String(p.desc).split(/[,\n]/).map(x => x.trim()).filter(Boolean).slice(0, 8).map(x => `<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul>` : `<ul><li>${ic('check')}<span${hi('सभी सेक्शन और जीएसटी बिल')}>All features, including GST invoicing</span></li><li>${ic('check')}<span${hi('स्टाफ़ लॉगिन और एक्सेस कंट्रोल')}>Team logins with role-based access</span></li><li>${ic('check')}<span${hi('क्लाउड बैकअप, किसी भी फ़ोन पर')}>Secure cloud backup on any device</span></li></ul>`}
       ${signup ? `<a class="btn ${i === mid ? 'primary' : ''}" href="/app#signup"${hi('फ़्री ट्रायल शुरू करें')}>Start free trial</a>` : `<a class="btn ${i === mid ? 'primary' : ''}" href="#contact"${hi('बात करें')}>Talk to us</a>`}</div>`).join('')}</div>
-    ${trial ? `<div class="trial">${ic('star')}<span${hi(`पहले ${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं। ट्रायल के बाद प्लान चुनें, आपका डेटा वैसा ही रहेगा।`)}>First ${trial} days are free. No card needed. Choose a plan after the trial; your data stays as it is.</span></div>` : ''}
-  </div></section>` : '';
-  const blogHtml = posts.length ? `
-  <section class="sec soft" id="blog"><div class="wrap">
-    <div class="sec-h" style="display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;max-width:none"><div><h2${hi('ब्लॉग से')}>From the blog</h2><p${hi('सीज़न की तैयारी, दाम और बिज़नेस बढ़ाने के तरीके।')}>Season planning, pricing and ways to grow your business.</p></div><a class="btn" href="/blog"${hi('सभी पोस्ट')}>All posts</a></div>
-    <div class="posts">${posts.slice(0, 3).map(postCard).join('')}</div>
+    ${trial ? `<div class="trial">${ic('star')}<span${hi(`पहले ${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं। ट्रायल के बाद प्लान चुनें, आपका डेटा वैसा ही रहेगा।`)}>Start with a ${trial}-day free trial. No credit card required, and your data stays intact when you upgrade.</span></div>` : ''}
   </div></section>` : '';
   const ways = [
     waN && ['wa', '#0B9B68', 'WhatsApp', esc(waN), wa(waN, `Namaste, I want to know more about ${brand}.`)],
@@ -208,90 +202,90 @@ function homePage({ s, plat, posts }) {
   ].filter(Boolean);
   const wayHi = { WhatsApp: 'व्हाट्सऐप', 'Call us': 'कॉल करें', Email: 'ईमेल', Office: 'ऑफ़िस', 'Working hours': 'काम का समय' };
   const faqs = [
-    ['Will it fit my kind of business?', 'क्या यह मेरे काम के हिसाब से चलेगा?', 'Yes. When you create your account you tell us what you do, and the app opens with the sections that fit your work. You can switch off anything you do not need. If something is missing, tell us.', 'हां। अकाउंट बनाते समय आप बताते हैं कि आप क्या काम करते हैं, और ऐप उसी हिसाब के सेक्शन के साथ खुलता है। जो ज़रूरी न हो उसे बंद कर सकते हैं। कुछ कम लगे तो हमें बताइए।'],
-    ['Do I need to install anything?', 'क्या कुछ इंस्टॉल करना पड़ेगा?', 'No. It opens in the browser on any Android phone, iPhone or computer. On Android you can also download the app from sabmanage.com/download.', 'नहीं। यह किसी भी एंड्रॉयड फ़ोन, आईफ़ोन या कंप्यूटर के ब्राउज़र में खुलता है। एंड्रॉयड पर sabmanage.com/download से ऐप भी डाउनलोड कर सकते हैं।'],
-    ['Can my staff use it with their own login?', 'क्या मेरा स्टाफ़ अपने लॉगिन से चला सकता है?', 'Yes. You create a login for each person and choose which sections they can see or change. Staff who are not good with phones get one simple screen with big buttons.', 'हां। आप हर व्यक्ति का लॉगिन बनाते हैं और तय करते हैं कि वे कौन-से सेक्शन देख या बदल सकते हैं। जो फ़ोन कम चलाते हैं, उन्हें बड़े बटन वाली एक आसान स्क्रीन मिलती है।'],
-    ['Will bills show my business name and logo?', 'क्या बिल पर मेरे बिज़नेस का नाम और लोगो आएगा?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID print on every bill and receipt.', 'हां। आपका लोगो, स्टैम्प, पता, जीएसटीआईएन, बैंक डिटेल्स और यूपीआई आईडी हर बिल और रसीद पर छपते हैं।'],
-    ['Is my data safe?', 'क्या मेरा डेटा सुरक्षित है?', 'Your data is stored in India and only your team can see it, each person only what you allow. You can download a full backup any time.', 'आपका डेटा भारत में रहता है और सिर्फ़ आपकी टीम देख सकती है, हर व्यक्ति सिर्फ़ उतना जितना आप चाहें। आप कभी भी पूरा बैकअप डाउनलोड कर सकते हैं।'],
-    ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the whole app to Hindi with one tap. Everything is in Hindi letters, so people who do not read English can use it too.', 'हां। कोई भी एक टैप में पूरा ऐप हिंदी में कर सकता है। सब कुछ हिंदी अक्षरों में है, ताकि जो अंग्रेज़ी नहीं पढ़ते वे भी चला सकें।'],
-    ['What happens when the trial ends?', 'ट्रायल खत्म होने पर क्या होगा?', 'Choose a plan and we renew your account; everything stays as it is. If you do not renew, the app stops, but your data is kept safe for 90 days so you can come back.', 'प्लान चुनें और हम आपका अकाउंट रिन्यू कर देंगे; सब कुछ वैसा ही रहेगा। रिन्यू न करें तो ऐप बंद हो जाता है, पर आपका डेटा 90 दिन तक सुरक्षित रहता है।']
+    ['Will it work for my business?', 'Yes. During sign-up you choose the type of work you do, and SabManage turns on the modules that fit. You can switch modules on or off at any time.'],
+    ['Do I need to install anything?', 'No. SabManage runs in any modern browser on Android, iPhone and computers. Android users can also install our app from sabmanage.com/download.'],
+    ['Can my team use it with their own logins?', 'Yes. Create a login for each team member and control what they can view or edit. Field staff get a simplified screen with large, clear buttons.'],
+    ['Will invoices carry my business branding?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID appear on every invoice and receipt.'],
+    ['How secure is my data?', 'Your data is stored on servers in India and is visible only to your team, according to the access you set. You can download a complete backup at any time.'],
+    ['Is the app available in Hindi?', 'Yes. Every screen can be switched between English and Hindi with a single tap.'],
+    ['What happens after the free trial?', 'Choose a plan and continue without interruption. If you decide not to renew, access is paused and your data is kept securely for 90 days.']
   ];
   return `
   <section class="hx"><div class="wrap hx-grid">
     <div class="hx-copy">
-      ${custom ? `<h1>${esc(s.tagline)}</h1>` : `<h1><span class="l1"${hi('अपने बिज़नेस का पूरा हिसाब, एक ऐप में।')}>The whole hisaab of your business, in one app.</span><span class="l2" lang="hi" data-hi="The whole hisaab of your business, in one app.">अपने बिज़नेस का पूरा हिसाब, एक ऐप में।</span></h1>`}
-      <p class="lead"${hi('बुकिंग और अपॉइंटमेंट, बिल, पेमेंट, स्टाफ़ की हाज़िरी और ग्राहकों को याद-दिहानी। किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में, और सिर्फ़ उन सेक्शन के साथ जो आपके काम के हैं।')}>Bookings and appointments, bills, payments, staff attendance and customer reminders. On any phone, in Hindi and English, with only the sections your kind of business needs.</p>
-      <div class="cta">${startBtn}<a class="btn" href="/download">${ic('android')}<span${hi('एंड्रॉयड ऐप')}>Android app</span></a>${waLink}</div>
-      ${trial ? `<p class="note"${hi(`${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।`)}>${trial} days free. No card needed.</p>` : ''}
+      <h1>${esc(custom ? s.tagline : DEFAULT_SITE.tagline)}</h1>
+      <p class="lead">Bookings, invoices, payments, staff and customer follow-ups in one place. Built for owners who want clear numbers and a team that stays in sync.</p>
+      <div class="cta">${startBtn}<a class="btn" href="/download">${ic('android')}<span>Get the Android app</span></a>${demoBtn}</div>
+      ${trial ? `<p class="note">${trial}-day free trial. No credit card required.</p>` : ''}
     </div>
     <figure class="today" aria-label="An example of one day in the app">
-      <figcaption><span class="mk">${MARK}</span><b${hi(`आज, ${dhi} ${dn} ${mhi}`)}>Today, ${den} ${dn} ${men}</b></figcaption>
-      <ol>${rows.map(([t, i, c, e, h, se, sh, amt]) => `<li style="--c:${c}"><time>${t}</time><i>${ic(i)}</i><div><b${hi(h)}>${e}</b>${se ? `<span${hi(sh)}>${se}</span>` : ''}</div>${amt ? `<em${amt.includes('due') ? hi(amt.replace(' due', ' बाकी')) : ''} class="${amt.startsWith('+') ? 'in' : ''}">${amt}</em>` : ''}</li>`).join('')}</ol>
-      <div class="tot"><div><span${hi('आज आया')}>Money in today</span><b>₹15,000</b></div><div><span${hi('लेना बाकी')}>Still to collect</span><b>₹8,500</b></div></div>
+      <figcaption><span class="mk">${MARK}</span><b>Today, ${DAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}</b></figcaption>
+      <ol>${rows.map(([t, i, c, e, se, amt]) => `<li style="--c:${c}"><time>${t}</time><i>${ic(i)}</i><div><b>${e}</b>${se ? `<span>${se}</span>` : ''}</div>${amt ? `<em class="${amt.startsWith('+') ? 'in' : ''}">${amt}</em>` : ''}</li>`).join('')}</ol>
+      <div class="tot"><div><span>Collected today</span><b>₹15,000</b></div><div><span>Outstanding</span><b>₹8,500</b></div></div>
     </figure>
   </div></section>
 
   <section class="sec" id="features"><div class="wrap">
-    <div class="sec-h"><h2${hi('बिज़नेस का हर रोज़ का काम, एक जगह')}>Everything the day runs on, in one place</h2></div>
-    <div class="pillars">${pillars.map(([i, t, th, dd, dh]) => `<div><i>${ic(i)}</i><h3${hi(th)}>${t}</h3><p${hi(dh)}>${dd}</p></div>`).join('')}</div>
+    <div class="sec-h"><h2>One platform for your daily operations</h2><p>Replace registers, spreadsheets and scattered chats with one system your whole team can use.</p></div>
+    <div class="pillars">${pillars.map(([i, t, dd]) => `<div><i>${ic(i)}</i><h3>${t}</h3><p>${dd}</p></div>`).join('')}</div>
   </div></section>
 
   <section class="sec soft" id="app"><div class="wrap">
-    <div class="sec-h"><h2${hi('ऐप की असली स्क्रीन')}>See the app</h2><p${hi('ये असली स्क्रीन हैं। जो अंग्रेज़ी में है, वही एक टैप में हिंदी में।')}>These are real screens. Everything you see in English is one tap away in Hindi.</p></div>
+    <div class="sec-h"><h2>A closer look at the app</h2><p>Real screens from SabManage, designed to stay clear and fast on any phone.</p></div>
     <div class="showcase">
-      <figure class="doc"><img src="/img/shot-bill.webp" width="766" height="852" loading="lazy" alt="A GST tax invoice made in the app, with the business name, GST number, bank details and UPI ID"><figcaption${hi('आपके नाम, जीएसटी, बैंक और यूपीआई वाला बिल, पीडीएफ़ या व्हाट्सऐप पर')}>A GST bill with your name, bank and UPI details, sent as PDF or on WhatsApp</figcaption></figure>
-      <figure class="ph"><div class="phone"><img src="/img/shot-payments.webp" width="390" height="780" loading="lazy" alt="The payments screen showing money due by age and a WhatsApp reminder button for each customer"></div><figcaption${hi('किस पर कितना बाकी, और एक टैप में याद-दिहानी')}>Who owes what, with a reminder in one tap</figcaption></figure>
-      <figure class="ph"><div class="phone"><img src="/img/shot-staff-hi.webp" width="390" height="780" loading="lazy" alt="The staff screen in Hindi with each person’s duty hours, shifts and pay"></div><figcaption${hi('स्टाफ़, ड्यूटी और तनख्वाह, पूरी हिंदी में')}>Staff, duty and pay, fully in Hindi</figcaption></figure>
+      <figure class="doc"><img src="/img/shot-bill.webp" width="766" height="852" loading="lazy" alt="A GST tax invoice created in the app, with the business name, GSTIN, bank details and UPI ID"><figcaption>GST-ready invoices with your branding, bank and UPI details. Share as PDF or on WhatsApp.</figcaption></figure>
+      <figure class="ph"><div class="phone"><img src="/img/shot-payments.webp" width="390" height="780" loading="lazy" alt="The payments screen showing outstanding amounts by age, with a reminder button for each customer"></div><figcaption>Outstanding payments by age, with one-tap reminders.</figcaption></figure>
+      <figure class="ph"><div class="phone"><img src="/img/shot-staff.webp" width="390" height="780" loading="lazy" alt="The team screen showing each person’s role, duty hours, shifts and pay"></div><figcaption>Team roster with duty hours, shifts and pay.</figcaption></figure>
     </div>
   </div></section>
 
   <section class="sec"><div class="wrap">
-    <div class="sec-h"><h2${hi('छोटी बातें, जो रोज़ काम आती हैं')}>Small things that help every day</h2></div>
-    <div class="feats">${feats.map(([i, c, t, th, dd, dh]) => `<div class="feat" style="--c:${c}"><div class="ib">${ic(i)}</div><div><h3${hi(th)}>${t}</h3><p${hi(dh)}>${dd}</p></div></div>`).join('')}</div>
+    <div class="sec-h"><h2>Built for the way you work</h2></div>
+    <div class="feats">${feats.map(([i, c, t, dd]) => `<div class="feat" style="--c:${c}"><div class="ib">${ic(i)}</div><div><h3>${t}</h3><p>${dd}</p></div></div>`).join('')}</div>
   </div></section>
 
   <section class="sec soft" id="how"><div class="wrap">
-    <div class="sec-h"><h2${hi('एक दिन में शुरू करें')}>Start in a day</h2></div>
+    <div class="sec-h"><h2>Up and running in a day</h2></div>
     <ol class="steps">
-      <li><h3${hi('अकाउंट बनाएं और अपना काम चुनें')}>Create your account and pick your work</h3><p${hi('नाम, मोबाइल और बिज़नेस का नाम डालें, और बताएं आप क्या करते हैं। आप ओनर बनते हैं।')}>Enter your name, mobile and business name, and choose what you do. You become the Owner.</p></li>
-      <li><h3${hi('अपनी जानकारी एक बार डालें')}>Add your details once</h3><p${hi('लोगो, जीएसटी, यूपीआई और रेट डालें, या पुरानी एक्सेल शीट इंपोर्ट करें।')}>Add your logo, GST, UPI and rates, or import your old Excel sheets.</p></li>
-      <li><h3${hi('टीम जोड़ें और दिन शुरू करें')}>Add your team and start the day</h3><p${hi('हर व्यक्ति का लॉगिन बनाएं और पहली बुकिंग या अपॉइंटमेंट डालें।')}>Create a login for each person and add your first booking or appointment.</p></li>
+      <li><h3>Create your account</h3><p>Sign up with your name, mobile number and business details. Tell us what you do and the app sets itself up.</p></li>
+      <li><h3>Add your business details</h3><p>Upload your logo, GST and bank details, or import existing records from Excel.</p></li>
+      <li><h3>Invite your team</h3><p>Create logins for your staff, set their access and start managing your day.</p></li>
     </ol>
   </div></section>
   ${plansHtml}
   <section class="sec" id="about"><div class="wrap about">
-    <div class="txt"><h2 style="margin-bottom:18px"${hi('हमारे बारे में')}>About us</h2><p${hi(s.aboutHi || (s.about === DEFAULT_SITE.about ? 'सबमैनेज जयपुर में उन भारतीय बिज़नेस के लिए बना है जो लोगों और फ़ोन से चलते हैं। हमने मालिकों, उनके स्टाफ़ और ग्राहकों के साथ समय बिताकर समझा कि रोज़ का काम असल में कैसे होता है, और उसे एक आसान ऐप में बदला जो किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में चलता है।' : ''))}>${esc(s.about || DEFAULT_SITE.about)}</p></div>
+    <div class="txt"><h2 style="margin-bottom:18px">About SabManage</h2><p>${esc(s.about || DEFAULT_SITE.about)}</p></div>
     <dl>
-      <div><dt${hi(`${/^jaipur$/i.test(s.city || '') ? 'जयपुर' : (s.city || 'भारत')} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय बिज़नेस के असली रोज़ के काम को समझकर बनाया गया।')}>Designed around how Indian businesses really work, day to day.</dd></div>
-      <div><dt${hi('आपकी भाषा में')}>In your language</dt><dd${hi('पूरा ऐप हिंदी और अंग्रेज़ी में, एक टैप में बदलें।')}>The whole app works in Hindi and English, switch with one tap.</dd></div>
-      <div><dt${hi('आपका डेटा, आपकी टीम')}>Your data stays with your team</dt><dd${hi('हर व्यक्ति वही देखता है जो आप अनुमति देते हैं।')}>Each person sees only what you allow.</dd></div>
+      <div><dt>Made in India</dt><dd>Built around how Indian businesses actually operate.</dd></div>
+      <div><dt>Bilingual by design</dt><dd>Every screen works in English and Hindi.</dd></div>
+      <div><dt>Private by default</dt><dd>Each person sees only what you allow.</dd></div>
     </dl>
   </div></section>
 
   <section class="sec soft" id="faq"><div class="wrap">
-    <div class="sec-h"><h2${hi('अक्सर पूछे जाने वाले सवाल')}>Common questions</h2></div>
-    <div class="faq">${faqs.map(([q, qh, a, ah]) => `<details><summary${hi(qh)}>${q}</summary><p${hi(ah)}>${a}</p></details>`).join('')}</div>
+    <div class="sec-h"><h2>Frequently asked questions</h2></div>
+    <div class="faq">${faqs.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}</div>
   </div></section>
 
   <section class="sec" id="contact"><div class="wrap">
-    <div class="sec-h"><h2${hi('संपर्क करें')}>Contact us</h2><p${hi('अपना नंबर छोड़ें, हमारी टीम आपको कॉल करके फ़्री डेमो देगी।')}>Leave your number and our team will call you for a free demo.</p></div>
+    <div class="sec-h"><h2>Talk to us</h2><p>Share your details and our team will call you to arrange a free demo.</p></div>
     <div class="contact">
       <form class="cform" id="enqForm" novalidate>
-        <label><span${hi('आपका नाम')}>Your name</span><input name="name" required maxlength="120" autocomplete="name"></label>
-        <label><span${hi('मोबाइल नंबर')}>Mobile number</span><input name="phone" type="tel" required maxlength="16" autocomplete="tel" inputmode="tel" placeholder="98290 12345"></label>
-        <label><span${hi('बिज़नेस का नाम')}>Business name</span><input name="business" maxlength="160" autocomplete="organization"></label>
-        <label><span${hi('शहर')}>City</span><input name="city" maxlength="80" autocomplete="address-level2"></label>
-        <label class="full"><span${hi('आपका काम')}>What does your business do?</span><input name="bizType" maxlength="120"></label>
-        <label class="full"><span${hi('मैसेज (ज़रूरी नहीं)')}>Message (optional)</span><textarea name="message" rows="3" maxlength="2000"></textarea></label>
+        <label><span>Full name</span><input name="name" required maxlength="120" autocomplete="name"></label>
+        <label><span>Mobile number</span><input name="phone" type="tel" required maxlength="16" autocomplete="tel" inputmode="tel" placeholder="98290 12345"></label>
+        <label><span>Business name</span><input name="business" maxlength="160" autocomplete="organization"></label>
+        <label><span>City</span><input name="city" maxlength="80" autocomplete="address-level2"></label>
+        <label class="full"><span>Nature of business</span><input name="bizType" maxlength="120"></label>
+        <label class="full"><span>Message (optional)</span><textarea name="message" rows="3" maxlength="2000"></textarea></label>
         <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-        <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('कॉल बैक मांगें')}>Request a call back</button></div>
+        <div class="full"><button class="btn primary" type="submit" style="width:100%">Request a callback</button></div>
         <div class="msg" id="enqMsg" hidden role="status"></div>
       </form>
-      <div class="cways">${ways.map(([i, c, t, v, href]) => `${href ? `<a class="cway" style="--c:${c}" href="${esc(href)}"${/^https/.test(href) ? ' target="_blank" rel="noopener"' : ''}>` : `<div class="cway" style="--c:${c}">`}<i>${ic(i)}</i><div><b${hi(wayHi[t])}>${t}</b><span>${v}</span></div>${href ? '</a>' : '</div>'}`).join('')}</div>
+      <div class="cways">${ways.map(([i, c, t, v, href]) => `${href ? `<a class="cway" style="--c:${c}" href="${esc(href)}"${/^https/.test(href) ? ' target="_blank" rel="noopener"' : ''}>` : `<div class="cway" style="--c:${c}">`}<i>${ic(i)}</i><div><b>${t === 'Working hours' ? 'Business hours' : t}</b><span>${v}</span></div>${href ? '</a>' : '</div>'}`).join('')}</div>
     </div>
   </div></section>
 
-  <div class="wrap"><div class="band"><div><h2${hi('आज से पूरा हिसाब एक जगह रखें')}>Keep the whole hisaab in one place, from today</h2><p${hi(trial ? `${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}</div></div></div>`;
+  <div class="wrap"><div class="band"><div><h2>Ready to simplify your business?</h2><p>${trial ? `Start your ${trial}-day free trial today. No credit card required.` : 'Get started today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}</div></div></div>`;
 }
 
 /* ---------- /events: tent houses, caterers and event managers ---------- */
@@ -328,7 +322,7 @@ function eventsPage({ s, plat }) {
   return `
   <section class="hx sub"><div class="wrap hx-grid">
     <div class="hx-copy">
-      <p class="crumb"><a href="/"${hi('होम')}>Home</a> / <span${hi('टेंट, कैटरिंग और इवेंट')}>Tent, catering and events</span></p>
+      <p class="crumb"><a href="/">Home</a> / <span${hi('टेंट, कैटरिंग और इवेंट')}>Tent, catering and events</span></p>
       <h1${hi('टेंट, कैटरिंग और इवेंट का पूरा हिसाब।')}>Tent, catering and events, fully in hand.</h1>
       <p class="lead"${hi('बुकिंग, गोदाम स्टॉक, हलवाई का राशन, जीएसटी बिल, पेमेंट की याद-दिहानी, क्रू की हाज़िरी और हर इवेंट का मुनाफ़ा।')}>Bookings, godown stock, halwai ration, GST bills, payment reminders, crew attendance and the profit of every event.</p>
       <div class="cta">${startBtn}${demo}</div>
@@ -355,7 +349,7 @@ function eventsPage({ s, plat }) {
       <ul><li${hi('कम स्टॉक की चेतावनी बुकिंग के समय ही')}>Stock shortage warning while you book</li><li${hi('क्लाइंट को लिंक भेजें, वे प्रोग्रेस और बिल देख सकें')}>Share a link so the client sees progress and the bill</li><li${hi('इवेंट के बाद रिव्यू मांगें')}>Ask for a review after the event</li></ul></div></div>
   </div></section>
 
-  <div class="wrap"><div class="band"><div><h2${hi('इस सीज़न का पूरा हिसाब एक जगह रखें')}>Keep this season’s hisaab in one place</h2><p${hi(trial ? `${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}</div></div></div>`;
+  <div class="wrap"><div class="band"><div><h2${hi('इस सीज़न का पूरा हिसाब एक जगह रखें')}>Keep the whole season organised in one place</h2><p${hi(trial ? `${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}</div></div></div>`;
 }
 function postCard(p) {
   return `<a class="pcard" href="/blog/${esc(p.slug)}"${p.lang === 'hi' ? ' lang="hi"' : ''}><div class="im">${p.cover_url ? `<img src="${esc(p.cover_url)}" alt="" loading="lazy">` : ic('sparkle')}</div><div class="tx"><time datetime="${esc(p.published_at)}">${fmtDate(p.published_at)}</time><h3>${esc(p.title)}</h3>${p.excerpt ? `<p>${esc(p.excerpt)}</p>` : ''}</div></a>`;
@@ -635,7 +629,7 @@ module.exports = async (req, res) => {
       const org = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: brand, applicationCategory: 'BusinessApplication', operatingSystem: 'Web, Android, iOS', description: 'Business app for Indian businesses: bookings and appointments, GST bills, payments, staff and customer reminders, in Hindi and English.', url: origin,
         offers: (plat.plans || []).filter(p => p.name).map(p => ({ '@type': 'Offer', name: p.name, price: String(+p.price || 0), priceCurrency: 'INR' })) };
       const lb = { '@context': 'https://schema.org', '@type': 'Organization', name: s.legalName || brand, url: origin, ...(s.phone ? { telephone: s.phone } : {}), ...(s.email ? { email: s.email } : {}), ...(s.address ? { address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: s.city, addressCountry: 'IN' } } : {}), sameAs: ['instagram', 'facebook', 'youtube', 'linkedin'].map(k => safeUrl(s[k])).filter(Boolean) };
-      return send(200, shell({ ...base, path: '/', title: `${brand}: the whole hisaab of your business, in one app`, desc: 'Bookings and appointments, GST bills, payments, staff attendance and customer reminders in one simple app for Indian businesses. Works on any phone, in Hindi and English.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
+      return send(200, shell({ ...base, path: '/', title: `${brand}: business management app for bookings, invoices, payments and teams`, desc: 'Run your entire business from one app: bookings, GST invoices, payments, staff attendance and customer follow-ups. Works on any phone. Start a 14-day free trial.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
     }
     if (page === 'blog') {
       const pnum = Math.max(1, Math.min(500, parseInt(q.page || '1', 10) || 1));

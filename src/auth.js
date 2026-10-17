@@ -32,7 +32,7 @@ V.auth = () => {
   return `<div class="auth">
   <section class="auth-brand"><div class="inner">
     <div class="row-flex"><div class="logo">${MARK_SVG}</div><div><b style="font:800 21px/1 var(--f-display);display:block">SabManage</b><span class="tiny muted">Your business, in one app</span></div></div>
-    <h1>Apne business ka poora hisaab, ek app mein.</h1>
+    <h1>Run your entire business from one app.</h1>
     <p class="desk-only">Bookings and appointments, GST bills, payments, staff attendance and customer reminders. On any phone, in Hindi and English.</p>
     <div class="showcase">${showcase.map(([l, i, c]) => `<div class="sc">${ibox(i, c, 'lg')}<span>${l}</span></div>`).join('')}</div>
   </div></section>
