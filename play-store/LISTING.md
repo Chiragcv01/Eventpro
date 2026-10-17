@@ -172,4 +172,10 @@ The app needs a login, so Play asks for one. Create a demo business from Super A
 | App activity → Other user-generated content (bookings, notes, reviews) | Collected · Required · App functionality |
 | Device or other IDs → notification address (push subscription), only if the user allows notifications | Collected · Optional · App functionality |
 | App activity → In-app actions (team alerts sent/seen, attendance check-in time) | Collected · Required · App functionality |
+| Health and fitness → Health info (clinics only: patient readings, visit notes, illness, allergies) | Collected · Optional · App functionality |
+| Photos and videos → Photos (patient photos, reports, doctor certificate) | Collected · Optional · App functionality |
+| Audio → Voice or sound recordings (voice notes, only when the user taps record) | Collected · Optional · App functionality |
+| Files and docs (PDF reports, certificates) | Collected · Optional · App functionality |
 | Location, contacts, SMS/messages, advertising ID | Not collected |
+
+Also needed in Play Console because of the clinic features: **App content → Health apps** declaration (choose "Medical / patient records" and "Telehealth"; not a medical device), and keep the privacy policy URL https://sabmanage.com/privacy.

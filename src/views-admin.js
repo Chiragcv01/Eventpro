@@ -59,7 +59,7 @@ V.blocked = () => {
 /* ================= Super Admin console ================= */
 A.adminLoad = async () => {
   S.adminLoading = true;
-  try { const [orgs, users, plat] = await Promise.all([S.adapter.adminOverview(), S.adapter.adminUsers(), S.adapter.getPlatform()]); S.admin = { orgs, users, loaded: true }; S.platform = plat; A.siteLoad(); }
+  try { const [orgs, users, plat, ver] = await Promise.all([S.adapter.adminOverview(), S.adapter.adminUsers(), S.adapter.getPlatform(), S.adapter.adminVerifications().catch(() => [])]); S.admin = { orgs, users, ver, loaded: true }; S.platform = plat; A.siteLoad(); }
   catch (e) { S.admin = { orgs: [], users: [], loaded: true, error: e.message }; }
   S.adminLoading = false; if (S.view === 'admin') render();
 };
@@ -69,7 +69,7 @@ A.adminOpen = async id => {
   const mine = S.orgs.find(x => x.orgId === id);
   try { await openOrg(id, mine ? { ...mine, ...pickMeta(o) } : { orgId: id, name: o.name, role: 'owner', ...pickMeta(o), viewAs: true }); window.scrollTo({ top: 0 }); } catch (e) { toast(e.message, 'bad'); }
 };
-const pickMeta = o => ({ status: o.status, plan: o.plan, expires: o.expires, notes: o.notes });
+const pickMeta = o => ({ status: o.status, plan: o.plan, expires: o.expires, notes: o.notes, kind: o.kind || 'event', verify: o.verify || null });
 function planPrice(name) { return +((S.platform?.plans || DEFAULT_PLATFORM.plans).find(p => p.name === name)?.price || 0); }
 const orgPrice = o => (o && o.price != null && o.price !== '' ? +o.price : planPrice(o?.plan));
 
@@ -84,7 +84,7 @@ V.admin = () => {
   const paid = rows.filter(r => r.state === 'active');
   const mrr = sum(paid, r => orgPrice(r));
   const newLeads = (S.site?.leads || []).filter(l => l.status === 'new').length;
-  const tabs = `<div class="tabs">${[['biz', `Businesses (${rows.length})`], ['users', `Users (${S.admin.users.length})`], ['platform', 'Plans & support'], ['site', 'Website'], ['blog', 'Blog'], ['leads', 'Enquiries', newLeads], ['deletions', 'Account deletion', (S.site?.dels || []).filter(d => d.status === 'pending').length]].map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('adm-' + tab)}</div>`;
+  const tabs = `<div class="tabs">${[['biz', `Businesses (${rows.length})`], ['users', `Users (${S.admin.users.length})`], ['platform', 'Plans & support'], ['site', 'Website'], ['blog', 'Blog'], ['leads', 'Enquiries', newLeads], ['verify', 'Doctor verification', (S.admin.ver || []).filter(v => v.status === 'pending').length], ['deletions', 'Account deletion', (S.site?.dels || []).filter(d => d.status === 'pending').length]].map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('adm-' + tab)}</div>`;
   const kp = `<div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
     ${kpi('Businesses', rows.length, `${S.admin.users.length} users in total`, '', 'store', '#1F5EFF')}
     ${kpi('Paid & active', paid.length, `Monthly value ${inr(mrr)}`, 'good', 'check', '#0B9B68')}
@@ -95,6 +95,7 @@ V.admin = () => {
   if (tab === 'site') return head + mfaWarn + tabs + adminSite();
   if (tab === 'blog') return (S.params.edit ? '' : head + mfaWarn + tabs) + adminBlog();
   if (tab === 'leads') return head + mfaWarn + tabs + adminLeads();
+  if (tab === 'verify') return head + mfaWarn + tabs + adminVerify();
   if (tab === 'deletions') return head + mfaWarn + tabs + adminDeletions();
   if (tab === 'users') return head + mfaWarn + kp + tabs + adminUsers();
   if (tab === 'platform') return head + mfaWarn + kp + tabs + adminPlatform();
@@ -120,13 +121,13 @@ function adminOrgCard(o) {
   const phone = o.ownerPhone || (String(o.ownerEmail || '').endsWith('@' + MOBILE_DOMAIN) ? o.ownerEmail.split('@')[0] : '');
   return `<div class="card pad stack-sm">
     <div class="row-flex" style="flex-wrap:nowrap;align-items:flex-start">${o.logo ? `<div class="logo has-img" style="width:46px;height:46px">${`<img src="${esc(o.logo)}" alt="">`}</div>` : `<span class="ibox" style="--c:#1F5EFF;width:46px;height:46px;font:800 16px var(--f-display)">${esc(initials(o.name))}</span>`}
-      <div style="min-width:0;flex:1"><b style="display:block;line-height:1.25;font-size:16px">${esc(o.name)}</b><span class="tiny muted">${esc(o.city || '')}${o.city ? ' · ' : ''}since ${fmtShort(todayLocal(new Date(o.created || Date.now())))}</span></div>${pill(lab, tone)}</div>
+      <div style="min-width:0;flex:1"><b style="display:block;line-height:1.25;font-size:16px">${esc(o.name)}</b><span class="tiny muted">${o.kind === 'clinic' ? '<span>Clinic</span> · ' : ''}${esc(o.city || '')}${o.city ? ' · ' : ''}since ${fmtShort(todayLocal(new Date(o.created || Date.now())))}</span></div>${pill(lab, tone)}</div>
     <div class="small" style="color:var(--ink2)">${ic('user')} ${esc(o.ownerName || '—')} <span class="muted">· ${esc(phone ? '+91 ' + phone.replace(/\D/g, '').slice(-10) : displayId(o.ownerEmail || ''))}</span></div>
-    <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b><span>${o.plan === 'Trial' ? 'free' : inr(orgPrice(o)) + '/mo' + (o.price != null ? ' · special' : '')}</span></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>Team · Bookings</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
+    <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b><span>${o.plan === 'Trial' ? 'free' : inr(orgPrice(o)) + '/mo' + (o.price != null ? ' · special' : '')}</span></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>${o.kind === 'clinic' ? 'Team · Patients' : 'Team · Bookings'}</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
     ${o.notes ? `<div class="tiny muted">${ic('edit')} ${esc(o.notes)}</div>` : ''}
     ${o.referredBy ? `<div class="tiny">${ic('gift')} Referred by <b>${esc((S.admin.orgs.find(x => refCode(x.orgId) === o.referredBy) || {}).name || o.referredBy)}</b></div>` : ''}
     <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
-    <div class="tiny muted">Last activity ${o.lastActivity ? new Date(o.lastActivity).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—'} · ${o.invoices} bills</div></div>`;
+    <div class="tiny muted">Last activity ${o.lastActivity ? new Date(o.lastActivity).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—'} · ${o.invoices} ${o.kind === 'clinic' ? 'appointments' : 'bills'}</div></div>`;
 }
 A.adminManage = id => {
   const o = S.admin.orgs.find(x => x.orgId === id); const P = S.platform || DEFAULT_PLATFORM;
@@ -203,16 +204,16 @@ A.bulkExtend = () => {
 A.memberMore = uidv => {
   const m = S.members.find(x => x.userId === uidv); const rp = S.roles[m.role]?.perms || {}; const ov = m.perms || {};
   const roleOpts = Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => [k, r.label]);
-  const matrix = `<div class="eyebrow" style="margin:4px 0 8px">What ${esc((m.name || '').split(' ')[0])} can do</div><div class="tbl-wrap perm card" style="box-shadow:none"><table class="tbl"><thead><tr><th>Section</th><th>Access</th></tr></thead><tbody>${MODULES.map(md => `<tr><td><span class="row-flex" style="gap:8px;flex-wrap:nowrap">${ibox(md.icon, md.c, 'sm')}${esc(md.label)}</span></td><td><select name="p_${md.key}" class="${ov[md.key] != null ? 'ovr' : ''}">${[['', `Role default · ${LEVELS[+(rp[md.key] || 0)][1]}`], ...LEVELS.map(([v, l]) => [String(v), l])].map(([v, l]) => `<option value="${v}" ${String(ov[md.key] ?? '') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table></div><small class="muted">Change only what is different for this person. Everything else follows their role.</small>`;
+  const matrix = `<div class="eyebrow" style="margin:4px 0 8px">What ${esc((m.name || '').split(' ')[0])} can do</div><div class="tbl-wrap perm card" style="box-shadow:none"><table class="tbl"><thead><tr><th>Section</th><th>Access</th></tr></thead><tbody>${kindModules().map(md => `<tr><td><span class="row-flex" style="gap:8px;flex-wrap:nowrap">${ibox(md.icon, md.c, 'sm')}${esc(md.label)}</span></td><td><select name="p_${md.key}" class="${ov[md.key] != null ? 'ovr' : ''}">${[['', `Role default · ${LEVELS[+(rp[md.key] || 0)][1]}`], ...LEVELS.map(([v, l]) => [String(v), l])].map(([v, l]) => `<option value="${v}" ${String(ov[md.key] ?? '') === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></td></tr>`).join('')}</tbody></table></div><small class="muted">Change only what is different for this person. Everything else follows their role.</small>`;
   formModal({ title: m.name || displayId(m.email), sub: displayId(m.email), wide: true, fields: [
     { name: 'role', label: 'Role', type: 'select', options: roleOpts, value: m.role },
-    { name: 'staffId', label: 'Link to crew record (for “My tasks”)', type: 'select', options: [['', '— Not linked —'], ...col('staff').map(s => [s.id, s.name])], value: m.staffId || '' },
+    ...(isClinic() ? [] : [{ name: 'staffId', label: 'Link to crew record (for “My tasks”)', type: 'select', options: [['', '— Not linked —'], ...col('staff').map(s => [s.id, s.name])], value: m.staffId || '' }]),
     { name: 'pass', label: 'Set a new password (leave empty to keep)', type: 'text', full: true, autocomplete: 'new-password', hint: 'Use this when they forget their password. Then share it with them.' },
     { type: 'html', full: true, html: matrix }],
     left: `<button type="button" class="btn danger" onclick="A.removeMember('${uidv}')">${ic('trash')} Remove</button>${S.adapter.mode === 'cloud' ? `<button type="button" class="btn" onclick="A.resetMfa('${uidv}','${S.org.orgId}',${esc(JSON.stringify(m.name || ''))})">${ic('shield')} Reset authenticator</button>` : ''}`,
     onSubmit: async v => {
       need('team', 3); const perms = {};
-      MODULES.forEach(md => { const x = v['p_' + md.key]; if (x !== '' && x != null) perms[md.key] = +x; });
+      kindModules().forEach(md => { const x = v['p_' + md.key]; if (x !== '' && x != null) perms[md.key] = +x; });
       await S.adapter.updateMember(S.org.orgId, uidv, { staffId: v.staffId, perms, role: v.role });
       Object.assign(m, { staffId: v.staffId, perms: Object.keys(perms).length ? perms : null, role: v.role });
       if (v.pass) { if (v.pass.length < 6) throw new Error('Password needs 6+ characters'); await S.adapter.setPasswordFor(uidv, v.pass, S.org.orgId); setTimeout(() => credSheet('Password changed', m.name, m.email, v.pass), 60); }
@@ -222,8 +223,8 @@ A.memberMore = uidv => {
 function accessSummary(m) {
   if (m.role === 'owner') return 'Full access to everything';
   const p = { ...(S.roles[m.role]?.perms || {}), ...(m.perms || {}) };
-  const full = MODULES.filter(md => +p[md.key] >= 2).map(md => md.label.split(' ')[0]);
-  const view = MODULES.filter(md => +p[md.key] === 1).length;
+  const full = kindModules().filter(md => +p[md.key] >= 2).map(md => md.label.split(' ')[0]);
+  const view = kindModules().filter(md => +p[md.key] === 1).length;
   return (full.length ? 'Can change: ' + full.slice(0, 4).join(', ') + (full.length > 4 ? ` +${full.length - 4}` : '') : 'View only') + (view ? ` · views ${view} more` : '');
 }
 
@@ -246,7 +247,7 @@ A.memberForm = () => {
     { type: 'html', full: true, html: `<div class="field"><span>Their job</span>${roleCards('staff')}</div>` },
     { name: 'email', label: 'Login ID: mobile number or email', required: true, placeholder: '98290 12345', hint: 'They type this on the login screen' },
     { name: 'password', label: 'Password', type: 'text', required: true, value: genPass(), minlength: 6, hint: 'Change it if you like. Minimum 6 characters.' },
-    { name: 'staffId', label: 'Crew name (for their own work list)', type: 'select', options: [['', '— New crew name (made for you) —'], ...col('staff').map(s => [s.id, s.name])], hint: 'Crew logins see only the work given to this name' },
+    ...(isClinic() ? [] : [{ name: 'staffId', label: 'Crew name (for their own work list)', type: 'select', options: [['', '— New crew name (made for you) —'], ...col('staff').map(s => [s.id, s.name])], hint: 'Crew logins see only the work given to this name' }]),
     { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('key')}<span>Later, tap “What they see” next to their name to switch any section on or off.</span></div>` }],
     submit: 'Create login', onSubmit: async v => {
       need('team', 2); const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter a 10-digit mobile number or an email');
@@ -276,12 +277,37 @@ A.adminAddBusiness = () => {
     { name: 'city', label: 'City', value: 'Jaipur' },
     { name: 'plan', label: 'Plan', type: 'select', options: ['Trial', ...P.plans.map(p => p.name)].map(n => [n, n === 'Trial' ? 'Free trial' : `${n} · ${inr(planPrice(n))}/month`]) },
     { name: 'expires', label: 'Valid till', type: 'date', value: addDays(todayLocal(), +P.trialDays || 14) },
+    { name: 'kind', label: 'Type of business', type: 'select', options: [['event', 'Tent / catering / event'], ['clinic', 'Doctor / Clinic']], value: 'event' },
     ...BIZ_TYPES.map(([k, l]) => ({ name: 't_' + k, label: l, type: 'checkbox', value: true }))],
     submit: 'Create business', onSubmit: async v => {
       const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter a 10-digit mobile number or an email');
-      const types = BIZ_TYPES.map(([k]) => k).filter(k => v['t_' + k]);
-      const st = Object.assign(defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: types.length ? types : ['tent', 'caterer', 'event'] }), { city: v.city });
-      await S.adapter.adminCreateBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: ROLE_DEFAULTS, settings: st, plan: v.plan, status: v.plan === 'Trial' ? 'trial' : 'active', expires: v.expires });
+      const clinic = v.kind === 'clinic'; const types = clinic ? ['clinic'] : BIZ_TYPES.map(([k]) => k).filter(k => v['t_' + k]);
+      const st = Object.assign(defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: types.length ? types : ['tent', 'caterer', 'event'] }), { city: v.city }, clinic ? clinicDefaults({ name: v.name }) : {});
+      await S.adapter.adminCreateBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: clinic ? CLINIC_ROLES : ROLE_DEFAULTS, settings: st, plan: v.plan, status: v.plan === 'Trial' ? 'trial' : 'active', expires: v.expires });
       await A.adminLoad(); setTimeout(() => credSheet('Business created', v.name, email, v.password), 60);
     } });
+};
+
+/* ================= Doctor verification (Super Admin) ================= */
+function adminVerify() {
+  const list = (S.admin.ver || []).slice().sort((a, b) => (a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1) || String(b.submitted_at).localeCompare(String(a.submitted_at)));
+  const noDocs = (S.admin.orgs || []).filter(o => o.kind === 'clinic' && !o.verify);
+  return `<div class="banner" style="margin-bottom:14px">${ic('shield')}<span>A clinic stays fully locked until you approve it. Check the registration number on the council's website (for NMC: the Indian Medical Register) before approving.</span></div>
+  <div class="grid g-auto">${list.map(v => { const o = (S.admin.orgs || []).find(x => x.orgId === v.org_id) || {}; const phone = o.ownerPhone || (String(o.ownerEmail || '').endsWith('@' + MOBILE_DOMAIN) ? o.ownerEmail.split('@')[0] : '');
+    return `<div class="card pad stack-sm"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><div style="min-width:0"><b style="font-size:16px">${esc(v.orgName || o.name || 'Clinic')}</b><div class="tiny muted">Dr. ${esc(v.doctor_name || o.ownerName || '')} · ${v.submitted_at ? new Date(v.submitted_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}</div></div>${pill(v.status === 'approved' ? 'Approved' : v.status === 'rejected' ? 'Rejected' : 'Pending', v.status === 'approved' ? 'good' : v.status === 'rejected' ? 'bad' : 'warn')}</div>
+      <div class="small stack-sm"><div><span class="muted">Registration no.</span> <b class="mono">${esc(v.reg_no || '—')}</b></div><div><span class="muted">Council</span> <b>${esc(v.council || '—')}</b></div><div><span class="muted">Qualification</span> <b>${esc(v.qualification || '—')}</b> · <span>${esc(v.specialisation || '')}</span></div></div>
+      <div class="row-flex" style="gap:6px">${(v.files || []).map((f, i) => `<button class="btn sm" onclick="A.openFile('verify','${esc(f.path)}')">${ic(f.type === 'pdf' ? 'file' : 'image')} ${esc(f.name || 'File ' + (i + 1))}</button>`).join('') || '<span class="tiny muted">No files</span>'}</div>
+      ${v.note ? `<div class="tiny muted">${ic('edit')} ${esc(v.note)}</div>` : ''}
+      <div class="row-flex" style="gap:6px">${v.status !== 'approved' ? `<button class="btn sm primary" onclick="A.verifyDecide('${v.org_id}','approved')">${ic('check')} Approve</button><button class="btn sm ghost danger" onclick="A.verifyDecide('${v.org_id}','rejected')">${ic('x')} Reject</button>` : `<button class="btn sm ghost" onclick="A.verifyDecide('${v.org_id}','pending')">Undo approval</button>`}${phone ? waBtn(v.status === 'approved' ? `Namaste Dr. ${v.doctor_name || ''}, aapka ${S.platform?.appName || 'SabManage'} clinic account approve ho gaya hai. App kholiye: https://sabmanage.com/app` : `Namaste Dr. ${v.doctor_name || ''}, ${S.platform?.appName || 'SabManage'} team se. `, phone, 'Doctor') : ''}</div></div>`; }).join('') || `<div class="card">${empty('No certificates yet', 'When a doctor signs up, their certificate shows here for approval.', '', 'steth', '#E11D48')}</div>`}</div>
+  ${noDocs.length ? `<div class="sec-h"><h2>Clinics that have not uploaded yet</h2></div><div class="card"><div class="rows">${noDocs.map(o => `<div class="row"><div class="main-col"><b>${esc(o.name)}</b><div class="sub">${esc(o.ownerName || '')} · ${esc(displayId(o.ownerEmail || ''))}</div></div><button class="btn sm" onclick="A.verifyDecide('${o.orgId}','approved')">Approve without files</button></div>`).join('')}</div></div>` : ''}`;
+}
+A.verifyDecide = (orgId, status) => {
+  const o = (S.admin.orgs || []).find(x => x.orgId === orgId) || {};
+  if (status === 'rejected') return formModal({ title: 'Reject verification', sub: o.name, fields: [{ name: 'note', label: 'Reason the doctor will see', type: 'textarea', full: true, required: true, value: 'The certificate photo is not clear. Please upload a clear photo of your registration certificate.' }], submit: 'Reject', onSubmit: async v => { await S.adapter.adminSetVerify(orgId, 'rejected', v.note); await A.adminLoad(); toast('Rejected. The doctor sees your reason.'); } });
+  confirmBox(status === 'approved' ? 'Approve this doctor?' : 'Undo approval?', status === 'approved' ? `${o.name} will open fully. ${o.plan === 'Trial' ? 'Their free trial starts again from today.' : ''}` : `${o.name} will be locked again until you approve.`, status === 'approved' ? 'Approve' : 'Undo', async () => {
+    if (!(S.admin.ver || []).some(v => v.org_id === orgId)) await S.adapter.submitVerification(orgId, { doctor_name: o.ownerName || '', reg_no: 'Added by Super Admin', council: 'Checked by Super Admin', files: [{ path: orgId + '/none', name: 'none', type: 'pdf' }] }).catch(() => { });
+    await S.adapter.adminSetVerify(orgId, status, '');
+    if (status === 'approved' && o.plan === 'Trial') await S.adapter.adminUpdateOrg(orgId, { expires: addDays(todayLocal(), +(S.platform?.trialDays || 14)) });
+    await A.adminLoad(); toast(status === 'approved' ? 'Approved' : 'Locked again');
+  }, status === 'approved' ? 'primary' : 'danger');
 };

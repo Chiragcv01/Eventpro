@@ -87,14 +87,26 @@ const ICONS = {
   diya: 'M12 3c2 3 4 5 4 8a4 4 0 0 1-8 0c0-3 2-5 4-8zM4 17h16l-2 4H6z', store: 'M3 9l2-5h14l2 5M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8',
   grid: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', pulse: 'M3 12h4l3-8 4 16 3-8h4', chev: 'M9 6l6 6-6 6',
   user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', pin: 'M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12zM12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+  heart: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z',
+  steth: 'M6 3v6a4 4 0 0 0 8 0V3M10 13v2a5 5 0 0 0 10 0v-2M20 11a1.5 1.5 0 1 0 0-.01',
+  mic: 'M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3', video: 'M3 7h12v10H3zM15 10l6-3v10l-6-3',
+  camera: 'M4 8h3l2-3h6l2 3h3v11H4zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z', file: 'M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6',
+  drop: 'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z', scale: 'M4 4h16v16H4zM8 9a6 6 0 0 1 8 0M12 9l1.5 3',
+  thermo: 'M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0zM12 9v7', lungs: 'M12 4v8M12 12c-2-2-4-3-6-1-2 2-2 8 0 9 2 1 4-1 4-4v-3M12 12c2-2 4-3 6-1 2 2 2 8 0 9-2 1-4-1-4-4v-3',
+  play: 'M7 4l12 8-12 8z', stop: 'M6 6h12v12H6z',
   arrow: 'M5 12h14M13 6l6 6-6 6', globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z', trend: 'M3 17l6-6 4 4 8-8M15 7h6v6', phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'
 };
 const ic = (n, cls = '') => `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n] || ''}"/></svg>`;
 
 /* ================= Domain constants ================= */
 const BIZ_TYPES = [['tent', 'Tent House'], ['caterer', 'Caterer / Halwai'], ['event', 'Event Manager / Planner']];
+/* 'event' businesses (tent / caterer / event manager) and 'clinic' (doctor) get different sections.
+   A module without `kinds` is for event businesses only. */
 const MODULES = [
-  { key: 'dashboard', label: 'Dashboard', icon: 'home', group: 'Daily' },
+  { key: 'dashboard', label: 'Dashboard', icon: 'home', group: 'Daily', kinds: ['event', 'clinic'] },
+  { key: 'appointments', label: 'Appointments', icon: 'calendar', group: 'Daily', kinds: ['clinic'] },
+  { key: 'patients', label: 'Patients', icon: 'heart', group: 'Daily', kinds: ['clinic'] },
+  { key: 'medical', label: 'Medical records', icon: 'file', group: 'Daily', kinds: ['clinic'], hidden: true },
   { key: 'bookings', label: 'Bookings', icon: 'calendar', group: 'Daily' },
   { key: 'tasks', label: 'Live Tracker', short: 'Live', icon: 'pulse', group: 'Daily' },
   { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event'] },
@@ -108,17 +120,17 @@ const MODULES = [
   { key: 'reports', label: 'Reports & P&L', icon: 'chart', group: 'Money' },
   { key: 'reviews', label: 'Reviews', icon: 'star', group: 'Business' },
   { key: 'marketing', label: 'Marketing', icon: 'megaphone', group: 'Business' },
-  { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business' },
-  { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business' }
+  { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business', kinds: ['event', 'clinic'] },
+  { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business', kinds: ['event', 'clinic'] }
 ];
-const MOD_COLOR = { dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
+const MOD_COLOR = { appointments: '#7C3AED', patients: '#E11D48', medical: '#0891B2', dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
 MODULES.forEach(m => { m.c = MOD_COLOR[m.key]; });
 const MOD = Object.fromEntries(MODULES.map(m => [m.key, m]));
 const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C026D3'], 'Sangeet & Mehendi': ['music', '#F59E0B'], 'Ring Ceremony': ['rings', '#8B5CF6'], 'Corporate Event': ['briefcase', '#2563EB'], 'Birthday / Anniversary': ['cake', '#F97316'], 'Religious / Jagran': ['diya', '#EA580C'], 'Exhibition': ['store', '#0891B2'], 'Other': ['calendar', '#64748B'] };
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team' };
+const COLL_MODULE = { events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
@@ -127,6 +139,12 @@ const ROLE_DEFAULTS = {
   accountant: { label: 'Accountant', perms: { dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
   supervisor: { label: 'Site Supervisor', perms: { dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
   staff: { label: 'Crew / Staff', perms: { dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
+};
+const CLINIC_ROLES = {
+  owner: { label: 'Doctor (Owner)', perms: allPerms(3), locked: true },
+  manager: { label: 'Associate doctor', perms: { dashboard: 1, appointments: 3, patients: 3, medical: 3, tasks: 2, team: 1, settings: 1 } },
+  supervisor: { label: 'Receptionist', perms: { dashboard: 1, appointments: 3, patients: 2, medical: 0, tasks: 2, team: 0, settings: 0 } },
+  staff: { label: 'Nurse / Assistant', perms: { dashboard: 1, appointments: 1, patients: 2, medical: 1, tasks: 1, team: 0, settings: 0 } }
 };
 const STAGES = ['Enquiry', 'Quoted', 'Confirmed', 'Setup', 'Live', 'Completed', 'Closed', 'Cancelled'];
 const RESERVING = ['Confirmed', 'Setup', 'Live'];
@@ -157,8 +175,8 @@ function displayId(e) { e = String(e || ''); return e.endsWith('@' + MOBILE_DOMA
 const DEFAULT_PLATFORM = { appName: 'SabManage', supportName: 'SabManage Support', supportPhone: '', supportEmail: '', trialDays: 14, referralReward: 'You get 1 month free when they take a paid plan.', plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
 const superEmails = () => (CFG.superAdminEmails || []).map(loginId);
 function graceDays() { return Math.max(0, Math.min(60, +(S.platform?.graceDays || 0))); }
-function orgState(o) { if (!o) return 'active'; if (o.status === 'suspended') return 'suspended'; if (o.expires && o.expires < todayLocal()) return addDays(o.expires, graceDays()) < todayLocal() ? 'expired' : 'grace'; return o.status || 'active'; }
-const STATE_PILL = { trial: ['Trial', 'info'], active: ['Active', 'good'], grace: ['Grace period', 'warn'], expired: ['Expired', 'bad'], suspended: ['Suspended', 'bad'] };
+function orgState(o) { if (!o) return 'active'; if (o.status === 'suspended') return 'suspended'; if (o.kind === 'clinic' && o.verify !== 'approved') return 'verify'; if (o.expires && o.expires < todayLocal()) return addDays(o.expires, graceDays()) < todayLocal() ? 'expired' : 'grace'; return o.status || 'active'; }
+const STATE_PILL = { verify: ['Verification pending', 'warn'], trial: ['Trial', 'info'], active: ['Active', 'good'], grace: ['Grace period', 'warn'], expired: ['Expired', 'bad'], suspended: ['Suspended', 'bad'] };
 
 /* ================= Data adapters ================= */
 const LocalDB = (() => {
@@ -184,7 +202,7 @@ const LocalDB = (() => {
     async signOut() { load().session = null; persist(); },
     async current() { const db = load(); if (!db.session) return null; const u = db.users.find(x => x.id === db.session.userId); return u ? { id: u.id, email: u.email, name: u.name } : null; },
     async myOrgs(userId) { const db = load(); return db.members.filter(m => m.userId === userId).map(m => ({ orgId: m.orgId, name: db.orgs[m.orgId]?.name || 'Business', role: m.role, perms: m.perms, ...this.orgMeta(m.orgId) })); },
-    orgMeta(id) { const o = load().orgs[id] || {}; return { status: o.status || 'active', plan: o.plan || 'Pro', expires: o.expires || '', notes: o.notes || '', price: o.price ?? null }; },
+    orgMeta(id) { const db = load(); const o = db.orgs[id] || {}; const v = (db.verify || {})[id]; return { status: o.status || 'active', plan: o.plan || 'Pro', expires: o.expires || '', notes: o.notes || '', price: o.price ?? null, kind: o.kind || 'event', verify: v?.status || null, verifyNote: v?.note || '' }; },
     async mfaState() { return null; }, async mfaIsOn() { return false; },
     async mfaEnroll() { throw new Error('Authenticator works only in the live (cloud) app.'); },
     async resetUserMfa() { throw new Error('Authenticator works only in the live (cloud) app.'); },
@@ -197,12 +215,32 @@ const LocalDB = (() => {
         .sort((a, b) => (b.created || 0) - (a.created || 0));
     },
     async adminUpdateOrg(id, patch) { const o = load().orgs[id]; if (!o) throw new Error('Business not found'); Object.assign(o, patch); persist(); },
+    /* clinics: doctor verification, files, patient links and the patient portal (offline copies for testing) */
+    async submitVerification(orgId, v) { const db = load(); db.verify = db.verify || {}; if (db.verify[orgId]?.status === 'approved') throw new Error('Already verified'); if (!(v.files || []).length) throw new Error('Upload your registration certificate'); db.verify[orgId] = { org_id: orgId, ...v, status: 'pending', note: null, submitted_at: new Date().toISOString() }; persist(); },
+    async myVerification(orgId) { return (load().verify || {})[orgId] || null; },
+    async adminVerifications() { const db = load(); return Object.values(db.verify || {}).map(v => ({ ...v, orgName: db.orgs[v.org_id]?.name })); },
+    async adminSetVerify(orgId, status, note) { const db = load(); db.verify = db.verify || {}; db.verify[orgId] = { ...(db.verify[orgId] || { org_id: orgId, files: [] }), status, note: note || null, reviewed_at: new Date().toISOString() }; persist(); },
+    async uploadFile(bucket, path, blob) { const db = load(); db.files = db.files || {}; db.files[bucket + ':' + path] = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); }); persist(); return path; },
+    async fileUrl(bucket, path) { return (load().files || {})[bucket + ':' + path] || ''; },
+    async loadPatient() { return null; },
+    async patientLink(orgId, pid, reset) { const db = load(); db.plinks = db.plinks || []; if (reset) db.plinks.forEach(l => { if (l.orgId === orgId && l.pid === pid) l.revoked = true; }); let l = db.plinks.find(x => x.orgId === orgId && x.pid === pid && !x.revoked); if (!l) { l = { token: guestToken() + guestToken().slice(0, 6), orgId, pid, consent: null }; db.plinks.push(l); } const p = db.records[orgId]?.patients?.[pid]; if (p) p.linkToken = l.token; persist(); return l.token; },
+    _pl(token) { const db = load(); const l = (db.plinks || []).find(x => x.token === String(token || '').trim().toLowerCase() && !x.revoked); if (!l) throw new Error('This link is not active. Please ask your clinic for a new link.'); const o = db.orgs[l.orgId]; if (!o || orgState({ ...o, ...this.orgMeta(l.orgId) }) !== 'trial' && orgState({ ...o, ...this.orgMeta(l.orgId) }) !== 'active' && orgState({ ...o, ...this.orgMeta(l.orgId) }) !== 'grace') throw new Error('This clinic is not taking online requests right now. Please call the clinic.'); return { l, R: db.records[l.orgId] }; },
+    _notify(orgId, title, body) { const l = LS.get('ep_alerts_' + orgId, []); l.unshift({ id: uid('al_'), org_id: orgId, from_user: 'patient', from_name: 'Patient', title, body, kind: 'patient', to_role: 'managers', acks: {}, created_at: new Date().toISOString() }); LS.set('ep_alerts_' + orgId, l.slice(0, 200)); },
+    _put(R, coll, rec) { (R[coll] = R[coll] || {})[rec.id] = rec; },
+    async portalView(token) { const { l, R } = this._pl(token); const st = R.settings?.main || {}; const pt = R.patients?.[l.pid]; if (!pt) throw new Error('Patient not found. Please ask your clinic for a new link.'); const of = c => Object.values(R[c] || {}).filter(x => x.patientId === l.pid);
+      return { clinic: { bizName: st.bizName, doctor: st.doctorName, spec: st.specialisation, qual: st.qualification, regNo: st.regNo, council: st.council, phone: st.phone, logo: st.logo, upi: st.upi, address: st.address, city: st.city, timings: st.timings, feeClinic: st.feeClinic, feeVideo: st.feeVideo },
+        patient: { id: pt.id, name: pt.name, age: pt.age, sex: pt.sex, track: pt.track }, consent: !!l.consent, readings: of('readings').sort((a, b) => String(b.at).localeCompare(String(a.at))), appts: of('appts').filter(a => a.status !== 'cancelled'), msgs: of('pmsgs').sort((a, b) => String(a.at).localeCompare(String(b.at))) }; },
+    async portalConsent(token, name) { const { l } = this._pl(token); l.consent = { at: new Date().toISOString(), name }; persist(); },
+    async portalReading(token, p) { const { l, R } = this._pl(token); if (!l.consent) throw new Error('Please give your consent first'); const now = new Date(); const rec = { id: uid('rd_'), patientId: l.pid, by: 'patient', at: todayLocal(now) + 'T' + now.toTimeString().slice(0, 5), date: todayLocal(now), ...cleanReading(p) }; if (!readingHas(rec)) throw new Error('Fill at least one reading'); this._put(R, 'readings', rec); const pt = R.patients[l.pid]; pt.lastReadingAt = rec.at; const f = readingFlags(rec); if (f.length) this._notify(l.orgId, 'Reading to check: ' + pt.name, f.join(' ')); persist(); return rec; },
+    async portalMessage(token, p) { const { l, R } = this._pl(token); if (!l.consent) throw new Error('Please give your consent first'); const now = new Date(); if (!(p.text || '').trim() && !(p.files || []).length) throw new Error('Write something, or add a photo or voice note'); const pt = R.patients[l.pid]; const rec = { id: uid('pm_'), patientId: l.pid, from: 'patient', at: todayLocal(now) + 'T' + now.toTimeString().slice(0, 5), text: (p.text || '').trim(), files: p.files || [], by: pt.name }; this._put(R, 'pmsgs', rec); pt.unread = (+pt.unread || 0) + 1; pt.lastMsgAt = rec.at; this._notify(l.orgId, 'Message from ' + pt.name, rec.text || 'Photo / voice'); persist(); return rec; },
+    async portalBook(token, p) { const { l, R } = this._pl(token); if (!l.consent) throw new Error('Please give your consent first'); if (!p.date || p.date < todayLocal()) throw new Error('Pick a date within the next 90 days'); const pt = R.patients[l.pid]; const st = R.settings?.main || {}; const mode = ['clinic', 'video', 'whatsapp'].includes(p.mode) ? p.mode : 'clinic'; const rec = { id: uid('ap_'), patientId: l.pid, patientName: pt.name, phone: pt.phone, date: p.date, time: p.time || '', mode, status: 'requested', source: 'patient', reason: p.reason || '', fee: +(mode === 'clinic' ? st.feeClinic : st.feeVideo) || 0, paid: false, created: Date.now() }; this._put(R, 'appts', rec); this._notify(l.orgId, 'Appointment request: ' + pt.name, rec.date + ' ' + rec.time); persist(); return rec; },
+    async portalPaid(token, apptId, utr) { const { l, R } = this._pl(token); const a = R.appts?.[apptId]; if (!a || a.patientId !== l.pid) throw new Error('Appointment not found'); a.payClaim = { at: new Date().toISOString().slice(0, 16).replace('T', ' '), utr: utr || '' }; this._notify(l.orgId, 'Fee paid by ' + a.patientName + ' (check UPI)', inr(a.fee)); persist(); },
     async adminUsers() { const db = load(); return db.users.map(u => ({ userId: u.id, email: u.email, name: u.name, created: u.created, blocked: !!u.blocked, super: !!(u.superAdmin || superEmails().includes(u.email)), orgs: db.members.filter(m => m.userId === u.id).map(m => ({ name: db.orgs[m.orgId]?.name, role: m.role })) })); },
     async adminSetSuper(email, on) { const db = load(); const u = db.users.find(x => x.email === loginId(email)); if (!u) throw new Error('No account with this email or mobile. Ask them to sign up first.'); if (!on && u.id === db.session?.userId) throw new Error('You cannot remove your own Super Admin access.'); u.superAdmin = !!on; persist(); },
     async getPlatform() { return { ...DEFAULT_PLATFORM, ...(load().platform || {}) }; },
     async savePlatform(p) { load().platform = p; persist(); },
     async createOrg(userId, name, displayName, roles, settings) {
-      const db = load(); const id = uid('o_'); db.orgs[id] = { name, created: Date.now(), status: 'trial', plan: 'Trial', expires: addDays(todayLocal(), +(S.platform?.trialDays || DEFAULT_PLATFORM.trialDays)) };
+      const db = load(); const id = uid('o_'); db.orgs[id] = { name, created: Date.now(), status: 'trial', plan: 'Trial', kind: (settings?.bizTypes || []).includes('clinic') ? 'clinic' : 'event', expires: addDays(todayLocal(), +(S.platform?.trialDays || DEFAULT_PLATFORM.trialDays)) };
       db.members.push({ orgId: id, userId, role: 'owner', name: displayName, email: db.users.find(u => u.id === userId)?.email });
       db.roles[id] = roles; db.records[id] = { settings: { main: settings } }; persist(); return id;
     },
@@ -314,8 +352,8 @@ const CloudDB = {
   async signOut() { await this.sb.auth.signOut(); },
   async current() { const { data } = await this.sb.auth.getSession(); const u = data.session?.user; return u ? { id: u.id, email: u.email, name: u.user_metadata?.name || u.email } : null; },
   async myOrgs(userId) {
-    const { data, error } = await this.sb.from('org_members').select('org_id, role, perms, orgs(name,status,plan,expires_at,price)').eq('user_id', userId);
-    if (error) throw this.err(error); return data.map(r => ({ orgId: r.org_id, name: r.orgs?.name || 'Business', role: r.role, perms: r.perms || null, status: r.orgs?.status, plan: r.orgs?.plan, price: r.orgs?.price ?? null, expires: (r.orgs?.expires_at || '').slice(0, 10) }));
+    const { data, error } = await this.sb.from('org_members').select('org_id, role, perms, orgs(name,status,plan,expires_at,price,kind,org_verifications(status,note))').eq('user_id', userId);
+    if (error) throw this.err(error); return data.map(r => { const v = [].concat(r.orgs?.org_verifications || [])[0]; return { orgId: r.org_id, name: r.orgs?.name || 'Business', role: r.role, perms: r.perms || null, status: r.orgs?.status, plan: r.orgs?.plan, price: r.orgs?.price ?? null, expires: (r.orgs?.expires_at || '').slice(0, 10), kind: r.orgs?.kind || 'event', verify: v?.status || null, verifyNote: v?.note || '' }; });
   },
   async isSuperAdmin() { const { data, error } = await this.sb.rpc('is_super_admin'); return !error && !!data; },
   async adminOverview() { const { data, error } = await this.sb.rpc('admin_overview'); if (error) throw this.err(error); return (data || []).map(o => ({ ...o, created: Date.parse(o.created), lastActivity: Date.parse(o.lastActivity || o.created) })); },
@@ -330,7 +368,7 @@ const CloudDB = {
   },
   async loadOrg(orgId) {
     const [r1, r2, r3] = await Promise.all([
-      this.sb.from('records').select('collection,id,data').eq('org_id', orgId).limit(20000),
+      this.sb.from('records').select('collection,id,data').eq('org_id', orgId).not('collection', 'in', '(readings,pmsgs,visits)').limit(20000),
       this.sb.from('org_roles').select('role,label,perms').eq('org_id', orgId),
       this.sb.from('org_members').select('user_id,role,display_name,email,staff_id,perms').eq('org_id', orgId)]);
     for (const r of [r1, r2, r3]) if (r.error) throw this.err(r.error);
@@ -350,6 +388,21 @@ const CloudDB = {
   async removeMember(orgId, userId) { const { error } = await this.sb.from('org_members').delete().match({ org_id: orgId, user_id: userId }); if (error) throw this.err(error); },
   async createGuest(orgId, eventId, days) { const token = guestToken(); const { error } = await this.sb.from('guest_links').insert({ token, org_id: orgId, event_id: eventId, expires_at: new Date(Date.now() + days * 864e5).toISOString() }); if (error) throw this.err(error); return token; },
   async guestView(token) { const { data, error } = await this.sb.rpc('guest_view', { p_token: String(token).trim().toLowerCase() }); if (error) throw this.err(error); if (!data) throw new Error('This guest code is invalid or has expired.'); return data; },
+  /* clinics */
+  async submitVerification(orgId, v) { return this.rpc('submit_verification', { p_org: orgId, p: v }); },
+  async myVerification(orgId) { const { data } = await this.sb.from('org_verifications').select('*').eq('org_id', orgId).maybeSingle(); return data || null; },
+  async adminVerifications() { const { data, error } = await this.sb.from('org_verifications').select('*, orgs(name)').order('submitted_at', { ascending: false }).limit(300); if (error) throw this.err(error); return (data || []).map(v => ({ ...v, orgName: v.orgs?.name })); },
+  async adminSetVerify(orgId, status, note) { const { error } = await this.sb.from('org_verifications').update({ status, note: note || null, reviewed_at: new Date().toISOString(), reviewed_by: S.user?.id || null }).eq('org_id', orgId); if (error) throw this.err(error); },
+  async uploadFile(bucket, path, blob) { const { error } = await this.sb.storage.from(bucket).upload(path, blob, { contentType: (blob.type || 'application/octet-stream').split(';')[0], upsert: false }); if (error) throw this.err(error); return path; },
+  async fileUrl(bucket, path) { const { data, error } = await this.sb.storage.from(bucket).createSignedUrl(path, 3600); if (error) return ''; return data.signedUrl; },
+  async loadPatient(orgId, pid) { const { data, error } = await this.sb.from('records').select('collection,data').eq('org_id', orgId).in('collection', ['readings', 'pmsgs', 'visits']).eq('data->>patientId', pid).limit(5000); if (error) throw this.err(error); const out = { readings: [], pmsgs: [], visits: [] }; (data || []).forEach(r => out[r.collection].push(r.data)); return out; },
+  async patientLink(orgId, pid, reset) { return this.rpc('patient_link', { p_org: orgId, p_patient: pid, p_reset: !!reset }); },
+  async portalView(token) { return this.rpc('patient_view', { p_token: String(token).trim().toLowerCase() }); },
+  async portalConsent(token, name) { return this.rpc('patient_consent', { p_token: token, p_name: name || '' }); },
+  async portalReading(token, p) { return this.rpc('patient_add_reading', { p_token: token, p }); },
+  async portalMessage(token, p) { return this.rpc('patient_message', { p_token: token, p }); },
+  async portalBook(token, p) { return this.rpc('patient_book', { p_token: token, p }); },
+  async portalPaid(token, apptId, utr) { return this.rpc('patient_paid', { p_token: token, p_appt: apptId, p_utr: utr || '' }); },
   async guestReview(token, review) { const { error } = await this.sb.rpc('guest_review', { p_token: String(token).trim().toLowerCase(), p_review: review }); if (error) throw this.err(error); },
   async mfaState() { try { const { data, error } = await this.sb.auth.mfa.getAuthenticatorAssuranceLevel(); return error ? null : data; } catch (e) { return null; } },
   async mfaFactors() { const { data, error } = await this.sb.auth.mfa.listFactors(); if (error) throw this.err(error); return data; },
@@ -418,8 +471,12 @@ const settings = () => getById('settings', 'main') || defaultSettings();
 const mandi = () => getById('mandi', 'rates')?.rates || settings().mandi || DEFAULT_MANDI;
 const cloudReady = () => !!(CFG.supabaseUrl && CFG.supabaseAnonKey);
 
+const kindModules = () => MODULES.filter(m => (m.kinds || ['event']).includes(orgKind()));
+const orgKind = () => (S.org?.kind === 'clinic' ? 'clinic' : 'event');
+const isClinic = () => !!S.org && orgKind() === 'clinic';
 function moduleOn(key) {
   const m = MOD[key]; const st = settings();
+  if (!(m?.kinds || ['event']).includes(orgKind())) return false;
   if (st.modules && st.modules[key] === false) return false;
   if (st.modules && st.modules[key] === true) return true;
   if (!m?.biz) return true;
@@ -473,7 +530,7 @@ const datebox = (d, c) => `<span class="datebox" style="--c:${c || '#1F5EFF'}"><
 const empty = (title, text, action = '', icon = 'sparkle', c = '#94A3B8') => `<div class="empty">${ibox(icon, c, 'lg')}<b>${esc(title)}</b><span>${esc(text)}</span>${action}</div>`;
 function pageHead(title, sub, actions = '', back = '', icon) {
   const m = MOD[currentModule()]; const [i, c] = icon || (m ? [m.icon, m.c] : ['grid', '#1F5EFF']);
-  return `${back ? `<button class="back" onclick="${back}">${ic('back')} Back</button>` : ''}<div class="phead"><div class="t">${ibox(i, c, 'lg')}<div style="min-width:0"><h1>${esc(title)}${typeof info === 'function' ? info(S.view) : ''}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div></div><div class="row-flex">${actions}</div></div>`;
+  return `${back ? `<button class="back" onclick="${back}">${ic('back')} Back</button>` : ''}<div class="phead"><div class="t">${ibox(i, c, 'lg')}<div style="min-width:0"><h1>${esc(title)}${typeof info === 'function' ? info(isClinic() && typeof HELP !== 'undefined' && HELP['c-' + S.view] ? 'c-' + S.view : S.view) : ''}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div></div><div class="row-flex">${actions}</div></div>`;
 }
 function kpi(label, value, sub = '', tone = '', icon = '', c = '') { return `<div class="kpi ${tone}"><div class="kt">${icon ? ibox(icon, c, 'sm') : ''}<div class="eyebrow">${esc(label)}</div></div><div class="v">${value}</div>${sub ? `<div class="s">${sub}</div>` : ''}</div>`; }
 const waBtn = (text, phone, label = 'WhatsApp', cls = 'btn wa sm') => `<a class="${cls}" href="${esc(waLink(text, phone))}" target="_blank" rel="noopener">${ic('wa')} ${esc(label)}</a>`;
@@ -482,7 +539,7 @@ function seg(key, opts, cur, fn) { return `<div class="seg" role="tablist">${opt
 function modal(html, { wide = false } = {}) {
   const root = $('#modalRoot');
   root.innerHTML = `<div class="scrim" onclick="if(event.target===this)A.closeModal()"><div class="sheet fade ${wide ? 'wide' : ''}" role="dialog" aria-modal="true">${html}</div></div>`;
-  root.hidden = false;
+  root.hidden = false; afterRender();
   setTimeout(() => { const f = root.querySelector('[autofocus]') || root.querySelector('input:not([type=checkbox]),select,textarea'); if (f && window.innerWidth > 700) f.focus(); }, 60);
 }
 A.closeModal = () => { const r = $('#modalRoot'); r.hidden = true; r.innerHTML = ''; FORM_CB = null; };
@@ -551,8 +608,10 @@ async function boot() {
   try { const ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   const h = location.hash.replace('#', '');
   if (h.startsWith('alert-')) { try { history.replaceState(null, '', location.pathname); } catch (e) { } }
+  if (h.startsWith('p-')) { try { await A.openPortal(h.slice(2)); return; } catch (e) { S.portal = null; S.portalError = e.message; $('#app').innerHTML = portalErrorScreen(e.message); return; } }
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
-  if (h === 'signup' || h === 'login') { S.authTab = h === 'signup' && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
+  if (h === 'signup-clinic') { S.preKind = 'clinic'; }
+  if (h === 'signup' || h === 'login' || h === 'signup-clinic') { S.authTab = h.startsWith('signup') && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
   render();
 }
@@ -576,13 +635,14 @@ async function afterLogin() {
 }
 async function openOrg(orgId, override) {
   const o = override || S.orgs.find(x => x.orgId === orgId); if (!o) return;
-  if (['suspended', 'expired'].includes(orgState(o)) && !S.super) { S.org = o; S.data = {}; S.roles = JSON.parse(JSON.stringify(ROLE_DEFAULTS)); S.members = []; S.me = { name: S.user.name, role: o.role }; S.role = o.role; S.perms = {}; LS.set('ep3_lastOrg', orgId); render(); return; }
+  if (['suspended', 'expired', 'verify'].includes(orgState(o)) && !S.super) { S.org = o; S.data = {}; S.roles = JSON.parse(JSON.stringify(ROLE_DEFAULTS)); S.members = []; S.me = { name: S.user.name, role: o.role }; S.role = o.role; S.perms = {}; LS.set('ep3_lastOrg', orgId); render(); return; }
   const { data, roles, members } = await S.adapter.loadOrg(orgId);
   S.org = o; S.data = data; S.roles = Object.keys(roles).length ? roles : JSON.parse(JSON.stringify(ROLE_DEFAULTS)); S.members = members;
   const meM = members.find(m => m.userId === S.user.id);
   S.me = meM || { name: S.user.name + (S.super ? ' (Super Admin)' : ''), role: 'owner' };
   S.role = meM ? meM.role : (S.super ? 'owner' : o.role);
   S.perms = S.role === 'owner' ? allPerms(3) : { ...(S.roles[S.role]?.perms || {}), ...(S.me.perms || {}) };
+  S.patLoaded = {};
   S.invites = []; S.invitesLoaded = false; S.draft = null; S.dirty = false;
   if (!o.viewAs) LS.set('ep3_lastOrg', orgId);
   S.view = MODULES.find(m => can(m.key))?.key || 'dashboard'; S.params = {};
@@ -592,15 +652,15 @@ async function openOrg(orgId, override) {
   maybeAskTerms();
 }
 /* Terms: the owner accepts at signup; when TERMS_VERSION changes, owners are asked once to accept the new version */
-const TERMS_VERSION = '2026-10-17';
+const TERMS_VERSION = '2026-10-17.2';
 function maybeAskTerms() {
   const meOwner = S.members.some(m => m.userId === S.user?.id && m.role === 'owner');
   if (!S.org || !meOwner || settings().termsVersion === TERMS_VERSION) return;
   setTimeout(() => {
     if (document.getElementById('alertRoot')) return;
     modal(`<form class="form terms-sheet" onsubmit="A.acceptTerms(event)">${sheetHead('Updated terms of use', 'Please read and accept to continue')}<div class="sheet-b stack">
-      <p>We have updated our Terms of use and Privacy policy so they match everything the app does now: crew money and attendance, team alerts and notifications, marketing and WhatsApp messages, and what happens when a plan ends.</p>
-      <ul class="terms-points"><li>Your business data stays yours. We do not sell it.</li><li>You are responsible for client and crew details you add, and for messages you send.</li><li>Bills, GST and wage figures are a help; please check them.</li><li>Notifications can be late; do not depend on them in an emergency.</li><li>When a plan ends, the app stops until you renew. Data is kept safe for 90 days.</li></ul>
+      <p>We have updated our Terms of use and Privacy policy so they match everything the app does now, including the new clinic features: patient records, the patient link, photos and voice notes, and online consultations.</p>
+      <ul class="terms-points"><li>Your business data stays yours. We do not sell it.</li><li>You are responsible for client, crew and patient details you add, for their consent, and for messages you send.</li><li>${isClinic() ? 'Medical decisions are yours. The app only stores and shows records; it does not diagnose.' : 'Bills, GST and wage figures are a help; please check them.'}</li><li>Notifications can be late; do not depend on them in an emergency.</li><li>When a plan ends, the app stops until you renew. Data is kept safe for 90 days.</li></ul>
       <div class="row-flex"><a class="btn sm" href="/terms" target="_blank" rel="noopener">${ic('receipt')} Terms of use</a><a class="btn sm" href="/privacy" target="_blank" rel="noopener">${ic('shield')} Privacy policy</a></div>
       <label class="check terms"><input type="checkbox" name="ok" value="1"> <span>I have read and agree to the Terms of use and Privacy policy for my business.</span></label>
     </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} I agree</button></footer></form>`);
@@ -634,17 +694,23 @@ A.setF = (k, v) => { S.filters[k] = v; render(); };
 
 function render() {
   const root = $('#app');
+  if (S.portal) { root.innerHTML = V.portal(); afterRender(); return; }
   if (S.guest) { root.innerHTML = V.guest(); return; }
   if (S.mfaPending) { root.innerHTML = V.mfa(); return; }
   if (!S.user) { root.innerHTML = V.auth(); return; }
   if (!S.org) { if (S.super) { S.view = 'admin'; } else { root.innerHTML = V.noOrg(); return; } }
+  else if (orgState(S.org) === 'verify' && !S.super) { root.innerHTML = V.verify(); return; }
   else if (['suspended', 'expired'].includes(orgState(S.org)) && !S.super) { root.innerHTML = V.blocked(); return; }
   const view = V[S.view] ? S.view : 'dashboard';
   let body;
   try { body = V[view](); } catch (e) { console.error(e); body = `<div class="banner bad">${ic('alert')} Something went wrong on this screen: ${esc(e.message)}</div>`; }
   root.innerHTML = shell(body);
+  afterRender();
 }
-function navItems() { return MODULES.filter(m => can(m.key)); }
+/* things that must run after the screen is drawn (e.g. load signed URLs of private photos / voice notes) */
+const AFTER_RENDER = [];
+function afterRender() { AFTER_RENDER.forEach(f => { try { f(); } catch (e) { } }); }
+function navItems() { return MODULES.filter(m => !m.hidden && can(m.key)); }
 function currentModule() { const map = { event: 'bookings', invoice: 'invoices' }; return map[S.view] || S.view; }
 function bizLogo(st, cls = 'logo') { return st.logo ? `<div class="${cls} has-img"><img src="${esc(st.logo)}" alt=""></div>` : `<div class="${cls}">${ic('tent')}</div>`; }
 function planBanner() {
@@ -660,7 +726,7 @@ function shell(body) {
   const st = settings(); const items = navItems(); const cur = currentModule();
   const groups = [...new Set(items.map(m => m.group))];
   const alerts = computeAlerts(); const bellN = alerts.length + (typeof pendingForMe === 'function' ? pendingForMe().length : 0);
-  const pri = ['dashboard', 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments'].filter(k => can(k));
+  const pri = (isClinic() ? ['dashboard', 'appointments', 'patients'] : ['dashboard', 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments']).filter(k => can(k));
   const left = pri.slice(0, 2), right = pri.slice(2, 3);
   const roleLabel = S.org ? (S.roles[S.role]?.label || S.role) : '';
   const name = S.me?.name || S.user.name; const first = (name || '').split(' ')[0];
@@ -692,6 +758,14 @@ function shell(body) {
 }
 function createActions() {
   if (!S.org) return [];
+  if (isClinic()) return [
+    can('appointments', 2) && ['Book appointment', 'calendar', MOD.appointments.c, 'A.apptForm()'],
+    can('patients', 2) && ['New patient', 'user', MOD.patients.c, 'A.patientForm()'],
+    can('patients', 2) && ['Add reading', 'pulse', '#0EA5E9', "A.pickPatient('reading')"],
+    can('medical', 2) && ['Visit / report', 'file', MOD.medical.c, "A.pickPatient('visit')"],
+    can('tasks', 2) && ['Alert to team', 'bell', '#E11D74', 'A.alertForm()'],
+    lvl('team') >= 2 && ['Add employee', 'users', MOD.team.c, 'A.memberForm()']
+  ].filter(Boolean);
   return [
     can('bookings', 2) && ['New booking', 'calendar', MOD.bookings.c, 'A.newBooking()'],
     can('invoices', 2) && ['Quotation / bill', 'receipt', MOD.invoices.c, 'A.newInvoice()'],
@@ -820,6 +894,7 @@ function followDue(e) {
 }
 function computeAlerts() {
   if (!S.org) return [];
+  if (isClinic()) return typeof clinicAlerts === 'function' ? clinicAlerts() : [];
   const out = []; const t = todayLocal();
   if (can('invoices')) col('invoices').filter(i => i.type === 'invoice').forEach(i => { const c = invCalc(i); if (c.balance > 0 && i.dueDate && i.dueDate < t) out.push({ tag: 'Overdue', tone: 'bad', title: `${i.client || 'Client'} owes ${inr(c.balance)}`, sub: `${i.no} · due ${fmtDate(i.dueDate)} (${daysBetween(i.dueDate, t)} days late)`, go: `A.go('invoice',{id:'${i.id}'})` }); });
   if (can('inventory')) shortages().forEach(s => out.push({ tag: 'Shortage', tone: 'bad', title: `${s.short} × ${s.item.name} short`, sub: `${s.ev.title} on ${fmtDate(s.ev.date)}. Rent from a partner or move a booking.`, go: `A.go('event',{id:'${s.ev.id}',tab:'items'})` }));

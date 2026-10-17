@@ -11,6 +11,10 @@
       "destination": "/api/site?view=download"
     },
     {
+      "source": "/doctors",
+      "destination": "/api/site?view=doctors"
+    },
+    {
       "source": "/blog",
       "destination": "/api/site?view=blog"
     },

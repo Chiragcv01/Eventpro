@@ -10,7 +10,7 @@
 
 /* ---------- mode ---------- */
 const isSimple = () => !!S.org && !LS.get('ep_full_' + S.org.orgId, false);
-const isCrewUser = () => !!S.org && S.role !== 'owner' && (S.role === 'staff' || (!!S.me?.staffId && lvl('bookings') < 2));
+const isCrewUser = () => !!S.org && !isClinic() && S.role !== 'owner' && (S.role === 'staff' || (!!S.me?.staffId && lvl('bookings') < 2));
 A.setFull = on => { LS.set('ep_full_' + S.org.orgId, !!on); A.closeModal(); A.go('dashboard'); toast(on ? 'Full app is on. All sections are on the home screen.' : 'Easy home is on.'); };
 A.newBooking = () => (isSimple() && can('bookings', 2) ? A.quickBooking() : A.eventForm());
 
@@ -47,7 +47,7 @@ function liveNotice(coll, rec, old) {
 async function liveRefresh() {
   if (!S.org || S.adapter?.mode !== 'cloud' || Date.now() - lastFullLoad < 90e3) return;
   if (['suspended', 'expired'].includes(orgState(S.org))) return;
-  try { const { data, members } = await S.adapter.loadOrg(S.org.orgId); S.data = data; S.members = members; lastFullLoad = Date.now(); liveRender(); } catch (e) { }
+  try { const { data, members } = await S.adapter.loadOrg(S.org.orgId); S.data = data; S.members = members; S.patLoaded = {}; lastFullLoad = Date.now(); liveRender(); } catch (e) { }
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') liveRefresh(); });
 
@@ -177,7 +177,7 @@ const ROLE_HELP = {
   staff: 'Crew: sees only their own work and marks attendance.'
 };
 function roleCards(cur, name = 'role') {
-  return `<div class="role-cards">${Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => `<label class="role-card"><input type="radio" name="${name}" value="${k}" ${cur === k ? 'checked' : ''}><span><b>${esc(r.label)}</b><small>${esc(ROLE_HELP[k] || 'Custom role')}</small></span></label>`).join('')}</div>`;
+  return `<div class="role-cards">${Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => `<label class="role-card"><input type="radio" name="${name}" value="${k}" ${cur === k ? 'checked' : ''}><span><b>${esc(r.label)}</b><small>${esc((isClinic() ? CLINIC_ROLE_HELP : ROLE_HELP)[k] || 'Custom role')}</small></span></label>`).join('')}</div>`;
 }
 const LV3 = [[0, 'Off'], [1, 'See'], [2, 'Change']];
 A.accessSheet = uidv => {

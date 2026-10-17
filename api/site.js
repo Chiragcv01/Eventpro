@@ -56,6 +56,9 @@ function sanitize(html) {
 
 /* ---------- icons (same set as the app) ---------- */
 const P = {
+  steth: 'M6 3v6a4 4 0 0 0 8 0V3M10 13v2a5 5 0 0 0 10 0v-2M20 11a1.5 1.5 0 1 0 0-.01', heart: 'M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z',
+  mic: 'M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3', video: 'M3 7h12v10H3zM15 10l6-3v10l-6-3',
+  file: 'M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6', user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
   bell: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0', home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', megaphone: 'M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1zM17 8a5 5 0 0 1 0 8', sun: 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4', download: 'M12 3v12M7 10l5 5 5-5M4 19h16', android: 'M6 9h12v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zM6 9a6 6 0 0 1 12 0M9 6.5h.01M15 6.5h.01M3 10v5M21 10v5M9 18v3M15 18v3',
   tent: 'M3 20L12 4l9 16zM12 4v16M8 20l4-6 4 6', pot: 'M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 6c0-1 1-2 1-3M14 6c0-1 1-2 1-3', sparkle: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7z',
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', box: 'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10', receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3', rupee: 'M7 4h10M7 8h10M7 4c6 0 6 8 0 8H6l8 8',
@@ -70,11 +73,14 @@ const P = {
 const ic = (n, cls = 'ico') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n] || ''}"/></svg>`;
 
 /* ---------- data ---------- */
-const DEFAULT_SITE = { brandName: 'SabManage', tagline: 'Tent, catering aur event ka poora hisaab, ek app mein.', about: 'SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
+const DEFAULT_SITE = { brandName: 'SabManage', tagline: 'Apne business ka poora hisaab, ek app mein.', about: 'SabManage is built in Jaipur for Indian businesses that run on people and phones: tent houses, caterers, halwais, decorators, event managers, and now doctors and clinics. We sat with them in godowns, kitchens, wedding lawns and clinics to understand how the daily work is really done, and turned that into one simple app that works on any phone, in Hindi and English.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
+/* texts that were the old defaults (never edited in Super Admin) move to the new defaults */
+const OLD_DEFAULTS = { tagline: ['Tent, catering aur event ka poora hisaab, ek app mein.'], about: ['SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.'] };
 async function loadSettings() {
   let plat = {};
   try { const r = await sb('platform_settings?id=eq.1&select=data'); plat = (r[0] && r[0].data) || {}; } catch (e) { }
   const site = { ...DEFAULT_SITE, phone: plat.supportPhone || '', whatsapp: plat.supportPhone || '', email: plat.supportEmail || '', ...(plat.site || {}) };
+  Object.entries(OLD_DEFAULTS).forEach(([k, olds]) => { if (olds.includes(site[k])) site[k] = DEFAULT_SITE[k]; });
   return { plat: { appName: 'SabManage', trialDays: 14, plans: [], ...plat }, site };
 }
 const POST_COLS = 'slug,title,excerpt,cover_url,published_at,updated_at,tags,lang,author';
@@ -85,7 +91,7 @@ async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
 /* ---------- page shell ---------- */
 function shell({ s, plat, origin, path, title, desc, image, body, type = 'website', jsonld = [], noindex = false, hiTitle = '' }) {
   const brand = s.brandName || 'SabManage'; const url = origin + path;
-  const nav = [['/#features', 'Features', 'सुविधाएं'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
+  const nav = [['/#features', 'Features', 'सुविधाएं'], ['/doctors', 'For doctors', 'डॉक्टरों के लिए'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
   const waN = s.whatsapp || s.phone;
   const social = [['instagram', 'insta', 'Instagram'], ['facebook', 'fb', 'Facebook'], ['youtube', 'yt', 'YouTube'], ['linkedin', 'li', 'LinkedIn']].filter(([k]) => safeUrl(s[k])).map(([k, i, l]) => `<a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" aria-label="${l}">${ic(i)}</a>`).join('');
   return `<!doctype html>
@@ -158,7 +164,9 @@ function homePage({ s, plat, posts }) {
     ['pot', '#16A34A', 'Caterers & halwais', 'कैटरर और हलवाई', 'Turn a menu and guest count into the full samagri list and a per-plate price in seconds.', 'मेन्यू और मेहमानों की गिनती से सेकंडों में पूरी सामग्री लिस्ट और प्रति प्लेट रेट निकालें।',
       [['Ration list with your mandi rates', 'आपके मंडी रेट से राशन लिस्ट'], ['Per-plate cost and margin', 'प्रति प्लेट लागत और मार्जिन'], ['Menu saved to each booking', 'हर बुकिंग में मेन्यू सेव']]],
     ['sparkle', '#DB2777', 'Event managers', 'इवेंट मैनेजर', 'Run vendors, crew, run-sheets and client updates for every function from one place.', 'हर फ़ंक्शन के वेंडर, क्रू, रन-शीट और क्लाइंट अपडेट एक ही जगह से संभालें।',
-      [['Vendor purchase orders and dues', 'वेंडर के परचेज़ ऑर्डर और बकाया'], ['Live setup tracker for crew', 'क्रू के लिए लाइव सेटअप ट्रैकर'], ['Client page with progress and bill', 'क्लाइंट के लिए प्रोग्रेस और बिल वाला पेज']]]
+      [['Vendor purchase orders and dues', 'वेंडर के परचेज़ ऑर्डर और बकाया'], ['Live setup tracker for crew', 'क्रू के लिए लाइव सेटअप ट्रैकर'], ['Client page with progress and bill', 'क्लाइंट के लिए प्रोग्रेस और बिल वाला पेज']]],
+    ['steth', '#E11D48', 'Doctors & clinics', 'डॉक्टर और क्लिनिक', 'Every patient’s BP, sugar, weight, reports and photos date-wise, with charts. Patients send readings from home.', 'हर मरीज़ का बीपी, शुगर, वज़न, रिपोर्ट और फ़ोटो तारीख के हिसाब से, ग्राफ़ के साथ। मरीज़ घर से रीडिंग भेजते हैं।',
+      [['Appointments in clinic, on video or WhatsApp', 'क्लिनिक, वीडियो या व्हाट्सऐप पर अपॉइंटमेंट'], ['Patient sends problems with photo or voice', 'मरीज़ फ़ोटो या आवाज़ में परेशानी भेजे'], ['Fees by UPI with reminders', 'यूपीआई से फ़ीस, याद-दिहानी के साथ']], '/doctors']
   ];
   const feats = [
     ['home', '#1F5EFF', 'Easy home screen', 'आसान होम स्क्रीन', 'Open the app and see today: events, setup done and money to collect. Big buttons for the daily work.', 'ऐप खोलते ही आज की झलक: इवेंट, कितना सेटअप हुआ और कितना पैसा लेना है। रोज़ के काम के बड़े बटन।'],
@@ -209,16 +217,18 @@ function homePage({ s, plat, posts }) {
     ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the whole app to Hindi with one tap. Everything is written in Hindi letters, so people who do not read English can use it too.', 'हां। कोई भी एक टैप में पूरा ऐप हिंदी में कर सकता है। सब कुछ हिंदी अक्षरों में लिखा है, ताकि जो अंग्रेज़ी नहीं पढ़ते वे भी चला सकें।'],
     ['Is there a mobile app?', 'क्या मोबाइल ऐप है?', 'Yes. Download the Android app from sabmanage.com/download (Play Store coming soon). On any other phone, open sabmanage.com/app in Chrome or Safari.', 'हां। एंड्रॉयड ऐप sabmanage.com/download से डाउनलोड करें (प्ले स्टोर पर जल्द)। किसी और फ़ोन पर क्रोम या सफ़ारी में sabmanage.com/app खोलें।'],
     ['My crew are not good with phones. Will they manage?', 'मेरा क्रू फ़ोन ज़्यादा नहीं चलाता। क्या वे चला पाएंगे?', 'Yes. Crew see only one simple screen: a big “I have reached the site” button and their own work with 25% / 50% / Done buttons.', 'हां। क्रू को सिर्फ़ एक आसान स्क्रीन दिखती है: बड़ा "मैं साइट पर पहुंच गया" बटन और उनका अपना काम, 25% / 50% / डन बटन के साथ।'],
-    ['What happens when the trial ends?', 'ट्रायल खत्म होने पर क्या होगा?', 'You can still log in and see all your data. To keep adding bookings and bills, choose a plan and we renew your account.', 'आप लॉगिन करके अपना पूरा डेटा देख सकते हैं। बुकिंग और बिल जोड़ते रहने के लिए प्लान चुनें, हम आपका अकाउंट रिन्यू कर देंगे।']
+    ['Is it only for tent houses and events?', 'क्या यह सिर्फ़ टेंट हाउस और इवेंट के लिए है?', 'No. When you sign up you pick your work: tent house, caterer, event manager or doctor / clinic, and the app opens with the right sections. More kinds of business are coming.', 'नहीं। साइन अप करते समय आप अपना काम चुनते हैं: टेंट हाउस, कैटरर, इवेंट मैनेजर या डॉक्टर / क्लिनिक, और ऐप सही सेक्शन के साथ खुलता है। और भी बिज़नेस जल्द जुड़ेंगे।'],
+    ['Is patient data safe?', 'क्या मरीज़ों का डेटा सुरक्षित है?', 'Yes. Every doctor is verified before the clinic opens. Data stays in India, photos and voice notes are private files, each patient’s link opens only their own page, and your staff see only what you allow.', 'हां। क्लिनिक खुलने से पहले हर डॉक्टर की जांच होती है। डेटा भारत में रहता है, फ़ोटो और आवाज़ निजी फ़ाइलें हैं, हर मरीज़ का लिंक सिर्फ़ उसका अपना पेज खोलता है, और स्टाफ़ को सिर्फ़ उतना दिखता है जितना आप चाहें।'],
+    ['What happens when the trial ends?', 'ट्रायल खत्म होने पर क्या होगा?', 'Choose a plan and we renew your account; everything stays as it is. If you do not renew, the app stops, but your data is kept safe for 90 days so you can come back.', 'प्लान चुनें और हम आपका अकाउंट रिन्यू कर देंगे; सब कुछ वैसा ही रहेगा। रिन्यू न करें तो ऐप बंद हो जाता है, पर आपका डेटा 90 दिन तक सुरक्षित रहता है ताकि आप वापस आ सकें।']
   ];
   return `
   <div class="canopy" aria-hidden="true"></div><div class="lights" aria-hidden="true"></div>
   <section class="hero"><div class="wrap">
     <div>
-      <h1${hi(s.tagline === DEFAULT_SITE.tagline ? 'टेंट, कैटरिंग और इवेंट का पूरा हिसाब, एक ऐप में।' : '')}>${esc(s.tagline || DEFAULT_SITE.tagline)}</h1>
-      <p class="lead"${hi('बुकिंग, गोदाम स्टॉक, हलवाई का राशन, जीएसटी बिल, पेमेंट की याद-दिहानी, क्रू की हाज़िरी और हर इवेंट का मुनाफ़ा। टेंट हाउस, कैटरर और इवेंट मैनेजर के लिए बना।')}>Bookings, godown stock, halwai ration, GST bills, payment reminders, crew attendance and the profit of every event. Made for tent houses, caterers and event managers.</p>
+      <h1${hi(s.tagline === DEFAULT_SITE.tagline ? 'अपने बिज़नेस का पूरा हिसाब, एक ऐप में।' : '')}>${esc(s.tagline || DEFAULT_SITE.tagline)}</h1>
+      <p class="lead"${hi('बुकिंग, स्टॉक, बिल, पेमेंट, स्टाफ़ और ग्राहक, सब एक आसान ऐप में। टेंट हाउस, कैटरर, इवेंट मैनेजर, और अब डॉक्टर और क्लिनिक के लिए भी: मरीज़ों का रिकॉर्ड, ग्राफ़, अपॉइंटमेंट और ऑनलाइन फ़ीस।')}>Bookings, stock, bills, payments, staff and customers in one simple app. Made for tent houses, caterers and event managers, and now for doctors and clinics too: patient records with charts, appointments and online fees.</p>
       <div class="cta">${startBtn}<a class="btn" href="/download">${ic('android')}<span${hi('ऐप डाउनलोड करें')}>Download app</span></a>${waBtn}</div>
-      <ul class="facts"><li>${ic('check')}<span${hi('किसी भी फ़ोन पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('पूरी हिंदी में')}>Full Hindi</span></li><li>${ic('check')}<span${hi('क्रू के लिए आसान')}>Easy for crew</span></li><li>${ic('check')}<span${hi('आपके लोगो वाले जीएसटी बिल')}>GST bills with your logo</span></li></ul>
+      <ul class="facts"><li>${ic('check')}<span${hi('किसी भी फ़ोन पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('पूरी हिंदी में')}>Full Hindi</span></li><li>${ic('check')}<span${hi('स्टाफ़ के लिए आसान')}>Easy for staff</span></li><li>${ic('check')}<span${hi('डॉक्टरों के लिए भी')}>For doctors too</span></li><li>${ic('check')}<span${hi('आपके लोगो वाले जीएसटी बिल')}>GST bills with your logo</span></li></ul>
     </div>
     <div class="tagstack">
       <div class="phone"><img src="/img/app-dashboard.webp" width="390" height="780" alt="SabManage app home screen showing money pending from clients, upcoming events and quick actions" fetchpriority="high"></div>
@@ -228,8 +238,8 @@ function homePage({ s, plat, posts }) {
   </div></section>
 
   <section class="sec soft" id="who"><div class="wrap">
-    <div class="sec-h"><h2${hi('शादी और इवेंट का काम करने वालों के लिए')}>Built for the people who run weddings and events</h2><p${hi('एक ही ऐप, तीन तरह के बिज़नेस। जो सेक्शन काम का नहीं, उसे बंद कर दें।')}>One app for three kinds of business. Switch off any section you don’t need.</p></div>
-    <div class="who">${who.map(([i, c, t, th, d, dh, list]) => `<article style="--c:${c}"><div class="ib">${ic(i)}</div><h3${hi(th)}>${t}</h3><p style="color:var(--ink2);margin-top:8px"${hi(dh)}>${d}</p><ul>${list.map(([e, h]) => `<li>${ic('check')}<span${hi(h)}>${e}</span></li>`).join('')}</ul></article>`).join('')}</div>
+    <div class="sec-h"><h2${hi('आपके काम के हिसाब से बना ऐप')}>One app, set up for your kind of business</h2><p${hi('साइन अप करते समय अपना काम चुनें: टेंट हाउस, कैटरर, इवेंट मैनेजर या डॉक्टर। ऐप उसी के हिसाब से खुलता है, फ़ालतू सेक्शन नहीं।')}>Pick your work when you sign up: tent house, caterer, event manager or doctor. The app opens with only the sections you need.</p></div>
+    <div class="who">${who.map(([i, c, t, th, d, dh, list, link]) => `<article style="--c:${c}"><div class="ib">${ic(i)}</div><h3${hi(th)}>${t}</h3><p style="color:var(--ink2);margin-top:8px"${hi(dh)}>${d}</p><ul>${list.map(([e, h]) => `<li>${ic('check')}<span${hi(h)}>${e}</span></li>`).join('')}</ul>${link ? `<a class="more" href="${link}"><span${hi('और जानें')}>Learn more</span> ${ic('arrow')}</a>` : ''}</article>`).join('')}</div>
   </div></section>
 
   <section class="sec" id="features"><div class="wrap">
@@ -246,6 +256,13 @@ function homePage({ s, plat, posts }) {
       <ul><li${hi('कम स्टॉक की चेतावनी बुकिंग के समय ही')}>Stock shortage warning while you book</li><li${hi('क्लाइंट को लिंक भेजें, वे प्रोग्रेस और बिल देख सकें')}>Share a link so the client sees progress and the bill</li><li${hi('इवेंट के बाद रिव्यू मांगें')}>Ask for a review after the event</li></ul></div></div>
   </div></section>
 
+  <section class="sec" id="clinics"><div class="wrap">
+    <div class="spot" style="--c:#E11D48"><div class="shot"><img src="/img/app-patient.webp" width="390" height="780" loading="lazy" alt="A patient's page in Hindi with BP, sugar and weight charts and big buttons to send readings"></div>
+      <div><span class="kicker"${hi('नया: डॉक्टरों और क्लिनिक के लिए')}>New: for doctors and clinics</span><h3${hi('हर मरीज़ की सेहत, ग्राफ़ में')}>Every patient’s health, in charts</h3><p${hi('मरीज़ घर से अपना बीपी, शुगर और वज़न भेजते हैं, फ़ोटो या आवाज़ में परेशानी बताते हैं, अपॉइंटमेंट बुक करते हैं और यूपीआई से फ़ीस देते हैं। आप सब कुछ ग्राफ़ और तारीख के हिसाब से देखते हैं।')}>Patients send their BP, sugar and weight from home, tell their problem with a photo or voice note, book an appointment and pay the fee by UPI. You see it all as charts and date-wise records.</p>
+      <ul><li${hi('मरीज़ के लिए कोई ऐप या लॉगिन नहीं, बस एक निजी लिंक')}>No app or login for the patient, just a private link</li><li${hi('वीडियो कॉल, व्हाट्सऐप कॉल या क्लिनिक विज़िट')}>Video call, WhatsApp call or clinic visit</li><li${hi('स्टाफ़ को सिर्फ़ उतना दिखे जितना आप चाहें')}>Staff see only what you allow</li></ul>
+      <a class="btn primary" href="/doctors"${hi('डॉक्टरों के लिए देखें')}>See how it works for doctors</a></div></div>
+  </div></section>
+
   <section class="sec" id="how"><div class="wrap">
     <div class="sec-h"><h2${hi('एक दिन में शुरू करें')}>Start in a day</h2></div>
     <ol class="steps">
@@ -257,9 +274,9 @@ function homePage({ s, plat, posts }) {
   ${plansHtml}
   ${blogHtml}
   <section class="sec" id="about"><div class="wrap about">
-    <div class="txt"><h2 style="margin-bottom:18px"${hi('हमारे बारे में')}>About us</h2><p${hi(s.aboutHi || '')}>${esc(s.about || DEFAULT_SITE.about)}</p></div>
+    <div class="txt"><h2 style="margin-bottom:18px"${hi('हमारे बारे में')}>About us</h2><p${hi(s.aboutHi || (s.about === DEFAULT_SITE.about ? 'सबमैनेज जयपुर में उन भारतीय बिज़नेस के लिए बना है जो लोगों और फ़ोन से चलते हैं: टेंट हाउस, कैटरर, हलवाई, डेकोरेटर, इवेंट मैनेजर, और अब डॉक्टर और क्लिनिक। हमने गोदामों, रसोइयों, शादी के लॉन और क्लिनिकों में बैठकर समझा कि रोज़ का काम असल में कैसे होता है, और उसे एक आसान ऐप में बदला जो किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में चलता है।' : ''))}>${esc(s.about || DEFAULT_SITE.about)}</p></div>
     <dl>
-      <div><dt${hi(`${s.city || 'भारत'} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय शादियों और इवेंट के असली काम को समझकर बनाया गया।')}>Designed around how Indian weddings and events are really run.</dd></div>
+      <div><dt${hi(`${s.city || 'भारत'} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय बिज़नेस के असली रोज़ के काम को समझकर बनाया गया।')}>Designed around how Indian businesses really work, day to day.</dd></div>
       <div><dt${hi('आपकी भाषा में')}>In your language</dt><dd${hi('पूरा ऐप हिंदी और अंग्रेज़ी में, एक टैप में बदलें।')}>The whole app works in Hindi and English, switch with one tap.</dd></div>
       <div><dt${hi('आपका डेटा, आपकी टीम')}>Your data stays with your team</dt><dd${hi('हर व्यक्ति वही देखता है जो आप अनुमति देते हैं।')}>Each person sees only what you allow.</dd></div>
     </dl>
@@ -322,7 +339,7 @@ function postPage({ s, plat, p, related, origin }) {
 }
 
 /* ---------- legal ---------- */
-const TERMS_VERSION = '2026-10-17';
+const TERMS_VERSION = '2026-10-17.2';
 function legalPage(kind, { s, plat = {} }) {
   const org = esc(s.legalName || s.brandName || 'SabManage'); const brand = esc(s.brandName || 'SabManage');
   const contact = [s.email && `email <a href="mailto:${esc(s.email)}">${esc(s.email)}</a>`, s.phone && `call or WhatsApp ${esc(s.phone)}`].filter(Boolean).join(' or ') || 'use the contact form on our website';
@@ -336,9 +353,10 @@ function legalPage(kind, { s, plat = {} }) {
     ['We do not track your location and do not read your phone contacts.', 'हम आपकी लोकेशन ट्रैक नहीं करते और फ़ोन के कॉन्टैक्ट नहीं पढ़ते।'],
     ['Notifications need your permission; you can turn them off any time in phone settings.', 'नोटिफ़िकेशन आपकी इजाज़त से आते हैं; फ़ोन की सेटिंग्स से कभी भी बंद कर सकते हैं।'],
     ['You are responsible for the client and crew details you enter, and for having their permission.', 'आप जो क्लाइंट और क्रू की जानकारी डालते हैं, उसकी और उनकी इजाज़त की ज़िम्मेदारी आपकी है।'],
+    ['Patients’ health records are private files: only the clinic’s allowed staff and the patient’s own link can open them.', 'मरीज़ों के सेहत के रिकॉर्ड निजी फ़ाइलें हैं: सिर्फ़ क्लिनिक का अनुमति वाला स्टाफ़ और मरीज़ का अपना लिंक इन्हें खोल सकता है।'],
     ['You can download a backup any time, and ask us to delete your account.', 'आप कभी भी बैकअप डाउनलोड कर सकते हैं और अकाउंट डिलीट करने को कह सकते हैं।']])}
   <p>This policy explains what ${org} (“we”, “us”) collects when you use ${brand} (the app at sabmanage.com/app, the Android app and the website), why, and what choices you have. It is written to follow the Digital Personal Data Protection Act, 2023 and the Information Technology Act, 2000 of India.</p>
-  <h2>1. Our role</h2><p>For your own account (name, login, plan) we decide how the data is used. For the business data you and your team enter (clients, crew, events, bills), <b>your business decides</b> what is entered and why, and we process it only to run the service for you. In the language of the DPDP Act, your business is the Data Fiduciary for that data and we act as its Data Processor.</p>
+  <h2>1. Our role</h2><p>For your own account (name, login, plan) we decide how the data is used. For the business data you and your team enter (clients, crew, events, bills, and for clinics, patients and their health records), <b>your business decides</b> what is entered and why, and we process it only to run the service for you. In the language of the DPDP Act, your business is the Data Fiduciary for that data and we act as its Data Processor.</p>
   <h2>2. What we collect</h2><ul>
     <li><b>Account details:</b> name, mobile number or email used to log in, business name, role in the business, and the date you accepted our terms. Passwords are stored only in hashed form.</li>
     <li><b>Business data you enter:</b> bookings, client names, phone numbers and addresses, stock, menus, quotations, invoices, payments, vendors and purchase orders, expenses, crew names, phone numbers, wages, attendance, hours, advances and payouts, setup tasks, reviews, packages and settings such as your logo, stamp, GSTIN and bank/UPI details.</li>
@@ -346,8 +364,10 @@ function legalPage(kind, { s, plat = {} }) {
     <li><b>Attendance from crew phones:</b> when a crew member taps “I have reached the site”, we record the date and time. <b>We do not collect GPS location.</b></li>
     <li><b>Notifications:</b> if you allow notifications, your phone or browser gives us a notification address (push subscription) and we store it with your app language.</li>
     <li><b>Technical data:</b> login times, browser/app type and basic logs needed to keep the service secure and working. The app keeps small settings (language, last business opened) on your device.</li>
-    <li><b>Website:</b> the name, number and message you send through our contact form; account-deletion requests; a referral code if you came through another business’s link.</li></ul>
-  <p>We do not access your phone’s contacts, photos (except a logo or picture you choose to upload), microphone, camera or location.</p>
+    <li><b>Website:</b> the name, number and message you send through our contact form; account-deletion requests; a referral code if you came through another business’s link.</li>
+    <li><b>Clinics (health data):</b> patient name, age, gender, mobile, illness and allergies; readings such as BP, sugar, weight, pulse, oxygen and temperature; visit notes, diagnosis, medicines and advice; reports, photos and voice notes; appointments, fees and payment messages; and the time the patient agreed to use the patient page. This is sensitive personal data and is handled only for the patient’s care by their clinic.</li>
+    <li><b>Doctor verification:</b> the doctor’s registration number, council, qualification and the certificate files uploaded at sign-up. Only our verification team sees them.</li></ul>
+  <p>We do not access your phone’s contacts or location. The camera and microphone are used only when you tap Photo or Voice note, and only that photo or recording is uploaded.</p>
   <h2>3. Why we use it</h2><ul>
     <li>To run the service: show your data to the people you give access to, calculate bills, stock, wages and profit, and keep your team in sync.</li>
     <li>To send notifications you allowed: team alerts, “work done” updates and a morning summary.</li>
@@ -358,17 +378,18 @@ function legalPage(kind, { s, plat = {} }) {
     <li><b>Supabase</b> (database, login and file storage), with your data stored in the Mumbai, India region.</li>
     <li><b>Vercel</b> (website and app hosting).</li>
     <li><b>Google, Apple or Mozilla push services</b>, which carry encrypted notifications to your phone.</li>
-    <li>Public content networks (jsDelivr, Google Fonts) that deliver app code and fonts; they do not receive your business data.</li></ul>
+    <li>Public content networks (jsDelivr, Google Fonts) that deliver app code and fonts; they do not receive your business data.</li>
+    <li>Jitsi Meet (for video consultations that a clinic starts) and WhatsApp (for calls and messages you choose to send). Calls are not recorded or stored by us.</li></ul>
   <p>Messages you send through WhatsApp buttons open in your own WhatsApp and are sent by you; we do not see them. We may share data if required by Indian law or a valid order of a court or authority.</p>
-  <h2>5. Your clients’ and crew’s information</h2><p>You control the client and crew details you enter. You confirm that you have a lawful reason and, where needed, their consent to store them and to message them, and that you will tell them how their details are used. A client link shows that client only their own event, programme and bill. Lists you download (for example the client list) leave our system and are then your responsibility.</p>
-  <h2>6. How we protect it</h2><p>All traffic is encrypted (HTTPS). Every business is separated by database access rules checked on the server, and every person sees only the sections the owner allows. Logins can be protected with an Authenticator code. Notification keys are kept in an encrypted vault.</p>
+  <h2>5. Your clients’, crew’s and patients’ information</h2><p>You control the client and crew details you enter. You confirm that you have a lawful reason and, where needed, their consent to store them and to message them, and that you will tell them how their details are used. A client link shows that client only their own event, programme and bill. A patient link shows that patient only their own readings, messages, appointments and fees, and works only after the patient agrees. Patients who want their data corrected or deleted should ask their clinic; we help the clinic do it. Lists you download (for example the client list) leave our system and are then your responsibility.</p>
+  <h2>6. How we protect it</h2><p>All traffic is encrypted (HTTPS). Every business is separated by database access rules checked on the server, and every person sees only the sections the owner allows. Logins can be protected with an Authenticator code. Notification keys are kept in an encrypted vault. Patient photos, reports, voice notes and doctor certificates are stored as private files that open only through short-lived links for people who are allowed to see them.</p>
   <h2>7. How long we keep it</h2><ul>
     <li>While your account is active.</li>
     <li>If a plan ends and is not renewed, the business is blocked but data is kept for 90 days so you can renew. After that we may delete it, after telling you on WhatsApp or email.</li>
     <li>When you ask us to delete your account, we confirm with you and delete it within 7 days. Copies in backups are removed within 30 days.</li>
     <li>Where tax or other law requires records to be kept, you should keep your own copies (download a backup from Settings).</li></ul>
   <h2>8. Your rights</h2><p>You can see and correct your data in the app at any time, download a full backup from Settings, withdraw notification permission in phone settings, ask us to delete your account (in the app: your name → Delete my account, or the <a href="/delete-account">account deletion page</a>), and raise a grievance with us. Crew and clients whose details a business entered should first contact that business; we will help the business respond.</p>
-  <h2>9. Children</h2><p>${brand} is for businesses and is not meant for anyone under 18.</p>
+  <h2>9. Children</h2><p>${brand} accounts are for businesses and are not meant for anyone under 18. A child’s health details may be recorded by a clinic, and a parent or guardian uses the patient page for the child.</p>
   <h2>10. Changes</h2><p>If we change this policy we will update the date above, and for important changes we will tell owners inside the app.</p>
   <h2>11. Contact and grievance officer</h2><p>For privacy questions or complaints, ${contact}. We reply within 7 days and resolve grievances within 30 days.</p></div>`;
   return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1${hi('इस्तेमाल की शर्तें')}>Terms of use</h1><p${hi(`अपडेट: 17 अक्टूबर 2026 · वर्ज़न ${TERMS_VERSION}`)}>Last updated ${updated} · Version ${TERMS_VERSION}</p>
@@ -380,9 +401,10 @@ function legalPage(kind, { s, plat = {} }) {
     ['Bills, GST, wages and messages you send are your responsibility; the app helps you prepare them.', 'बिल, जीएसटी, मज़दूरी और भेजे गए मैसेज आपकी ज़िम्मेदारी हैं; ऐप सिर्फ़ उन्हें बनाने में मदद करता है।'],
     ['Do not send messages to people who have not agreed, and do not ask for fake reviews.', 'जिन्होंने इजाज़त न दी हो उन्हें मार्केटिंग मैसेज न भेजें, और नकली रिव्यू न मंगवाएं।'],
     ['Notifications can be late or missed; do not depend on them for emergencies.', 'नोटिफ़िकेशन देर से आ सकते हैं या छूट सकते हैं; इमरजेंसी के लिए इन पर निर्भर न रहें।'],
+    ['Doctors: only verified doctors can open a clinic. Medical decisions and telemedicine rules are yours; the app does not diagnose.', 'डॉक्टर: सिर्फ़ जांचे हुए डॉक्टर ही क्लिनिक खोल सकते हैं। इलाज के फ़ैसले और टेलीमेडिसिन के नियम आपकी ज़िम्मेदारी हैं; ऐप डायग्नोसिस नहीं करता।'],
     [`Any dispute is under Indian law, courts at ${city}.`, `कोई भी विवाद भारतीय कानून के तहत, ${/jaipur/i.test(city) ? 'जयपुर' : city} की अदालतों में।`]])}
   <p>These terms are an agreement between you (and the business you represent) and ${org} (“we”, “us”) for using ${brand}: the app at sabmanage.com/app, the Android app and the website. By creating an account, ticking “I agree” or using ${brand}, you accept these terms. If you use it for a business, you confirm you are allowed to accept them for that business. You must be at least 18.</p>
-  <h2>1. The service</h2><p>${brand} helps tent houses, caterers, decorators and event managers manage bookings, stock, catering, bills, payments, vendors, crew, expenses, reports, marketing and team alerts. We keep improving it and may add, change or remove features. Where a change removes something important you rely on, we will tell you in advance where possible.</p>
+  <h2>1. The service</h2><p>${brand} helps tent houses, caterers, decorators and event managers manage bookings, stock, catering, bills, payments, vendors, crew, expenses, reports, marketing and team alerts, and helps doctors and clinics manage patients, readings, medical records, appointments, online consultations and fees. We keep improving it and may add, change or remove features. Where a change removes something important you rely on, we will tell you in advance where possible.</p>
   <h2>2. Accounts and logins</h2><ul>
     <li>The person who signs up becomes the Owner of the business account and controls who can log in and what each person can see or change.</li>
     <li>Keep passwords private. You are responsible for everything done through logins you create, and for removing access when a person leaves.</li>
@@ -404,22 +426,98 @@ function legalPage(kind, { s, plat = {} }) {
     <li>Send marketing or broadcast messages only to people who have agreed to hear from you, stop when they ask, and follow WhatsApp’s and Meta’s rules.</li>
     <li>Ask only real clients for reviews and follow Google’s review rules. Do not offer rewards for reviews or post fake reviews.</li>
     <li>Client lists you download are your responsibility once downloaded.</li></ul>
-  <h2>8. Notifications and alerts</h2><p>Team alerts, updates and the morning summary depend on the phone, its settings, internet, battery-saver settings and services run by Google, Apple and others. They may be delayed or not delivered. In the Android app, team alerts may ring with an alarm-type sound even when the phone is on silent; each person can change this in the phone’s notification settings. Do not rely on ${brand} notifications for emergencies or safety.</p>
-  <h2>9. Fair use</h2><p>Do not use ${brand} for anything unlawful; to send spam; to store data you have no right to store; to try to access another business’s data; to break, overload, copy or reverse-engineer the service; or to resell it without our written permission. We may suspend a login or business that breaks these rules, and will tell the owner why unless the law prevents it.</p>
-  <h2>10. The Android app</h2><p>Install the Android app only from sabmanage.com/download or Google Play. Apps from other sources are not ours.</p>
-  <h2>11. Referrals</h2><p>If we offer a reward for referring another business, it applies only when that business joins through your link and takes a paid plan, has no cash value, cannot be combined with other offers unless we say so, and may be changed or stopped. Self-referrals and misuse are not rewarded.</p>
-  <h2>12. Availability and backups</h2><p>We work to keep ${brand} available and our provider keeps database backups, but we cannot promise the service will never be interrupted or that data can always be restored. Keep your own backup from Settings, especially before the wedding season.</p>
-  <h2>13. Our rights</h2><p>${brand}, its design, code and name belong to us. Your logo, stamp and business data remain yours.</p>
-  <h2>14. Limitation of liability</h2><p>To the extent the law allows, we are not liable for indirect or consequential losses such as lost bookings, profit, goodwill or data caused by using or not being able to use ${brand}. Our total liability for any claim is limited to the fees you paid us in the 3 months before the claim.</p>
-  <h2>15. Indemnity</h2><p>You will compensate us for claims and costs caused by your misuse of the service, the data you enter, or messages you send in breach of these terms or the law.</p>
-  <h2>16. Ending the agreement</h2><p>You can stop at any time and ask us to delete your account. We may end or suspend the service for non-payment or serious breach of these terms, after informing you where possible. Sections 5, 6, 14, 15 and 18 continue after the agreement ends.</p>
-  <h2>17. Changes to these terms</h2><p>We may update these terms. We will change the date and version above. For important changes, owners will be asked to accept the new terms in the app; continuing to use ${brand} after that means you accept them.</p>
-  <h2>18. Law and disputes</h2><p>These terms are governed by the laws of India. We will first try to resolve any dispute by talking to you. If that does not work, the courts at ${city} have exclusive jurisdiction.</p>
-  <h2>19. Contact and grievance officer</h2><p>Questions or complaints about these terms: ${contact}. We reply within 7 days.</p></div>`;
+  <h2>8. Doctors, clinics and patients</h2><ul>
+    <li>Clinic features are only for registered medical practitioners (and their staff) with a valid registration with the National Medical Commission or a State Medical Council, or the council for their system of medicine. We check the registration certificate before a clinic opens, but you remain responsible for keeping your registration valid. We may suspend a clinic if the registration is not valid.</li>
+    <li>${brand} is a record-keeping and communication tool. It is not a medical device and does not diagnose, prescribe or give medical advice. Coloured numbers and alerts are only general hints. All medical decisions are yours.</li>
+    <li>Online consultations (video or WhatsApp calls) must follow the Telemedicine Practice Guidelines and the medical council rules that apply to you, including identifying the patient, getting consent, and the rules on what may be prescribed online. Video rooms run on Jitsi Meet and calls on WhatsApp, under those services’ own terms.</li>
+    <li>Patient details are sensitive personal data. Your clinic decides what is recorded and is responsible for the patient’s consent, for telling patients how their data is used, and for keeping medical records for as long as the law requires. Download copies before you close your account.</li>
+    <li>The patient link is private to each patient. Patients agree to share their readings, messages, photos and voice notes with your clinic before they can use it. If a link reaches the wrong person, make a new link at once.</li>
+    <li>Fees paid by UPI go straight from the patient to you. We do not handle that money, and “I have paid” on the patient page is only the patient’s message until you confirm it.</li>
+    <li>Patients use the patient page under your clinic’s care. It is not for emergencies: it tells patients to call 108 or go to the nearest hospital.</li></ul>
+  <h2>9. Notifications and alerts</h2><p>Team alerts, updates and the morning summary depend on the phone, its settings, internet, battery-saver settings and services run by Google, Apple and others. They may be delayed or not delivered. In the Android app, team alerts may ring with an alarm-type sound even when the phone is on silent; each person can change this in the phone’s notification settings. Do not rely on ${brand} notifications for emergencies or safety.</p>
+  <h2>10. Fair use</h2><p>Do not use ${brand} for anything unlawful; to send spam; to store data you have no right to store; to try to access another business’s data; to break, overload, copy or reverse-engineer the service; or to resell it without our written permission. We may suspend a login or business that breaks these rules, and will tell the owner why unless the law prevents it.</p>
+  <h2>11. The Android app</h2><p>Install the Android app only from sabmanage.com/download or Google Play. Apps from other sources are not ours.</p>
+  <h2>12. Referrals</h2><p>If we offer a reward for referring another business, it applies only when that business joins through your link and takes a paid plan, has no cash value, cannot be combined with other offers unless we say so, and may be changed or stopped. Self-referrals and misuse are not rewarded.</p>
+  <h2>13. Availability and backups</h2><p>We work to keep ${brand} available and our provider keeps database backups, but we cannot promise the service will never be interrupted or that data can always be restored. Keep your own backup from Settings, especially before the wedding season.</p>
+  <h2>14. Our rights</h2><p>${brand}, its design, code and name belong to us. Your logo, stamp and business data remain yours.</p>
+  <h2>15. Limitation of liability</h2><p>To the extent the law allows, we are not liable for indirect or consequential losses such as lost bookings, profit, goodwill or data caused by using or not being able to use ${brand}. Our total liability for any claim is limited to the fees you paid us in the 3 months before the claim.</p>
+  <h2>16. Indemnity</h2><p>You will compensate us for claims and costs caused by your misuse of the service, the data you enter, or messages you send in breach of these terms or the law.</p>
+  <h2>17. Ending the agreement</h2><p>You can stop at any time and ask us to delete your account. We may end or suspend the service for non-payment or serious breach of these terms, after informing you where possible. Sections 5, 6, 8, 15, 16 and 19 continue after the agreement ends.</p>
+  <h2>18. Changes to these terms</h2><p>We may update these terms. We will change the date and version above. For important changes, owners will be asked to accept the new terms in the app; continuing to use ${brand} after that means you accept them.</p>
+  <h2>19. Law and disputes</h2><p>These terms are governed by the laws of India. We will first try to resolve any dispute by talking to you. If that does not work, the courts at ${city} have exclusive jurisdiction.</p>
+  <h2>20. Contact and grievance officer</h2><p>Questions or complaints about these terms: ${contact}. We reply within 7 days.</p></div>`;
 }
 
 
 /* ---------- account deletion (Google Play) ---------- */
+/* ---------- /doctors: landing page for doctors and clinics ---------- */
+function doctorsPage({ s, plat }) {
+  const brand = s.brandName || 'SabManage'; const trial = +plat.trialDays || 0; const signup = plat.allowSignup !== false; const waN = s.whatsapp || s.phone;
+  const startBtn = signup ? `<a class="btn primary" href="/app#signup-clinic"${hi(trial ? `${trial} दिन फ़्री, क्लिनिक शुरू करें` : 'क्लिनिक शुरू करें')}>${trial ? `Start your clinic, ${trial} days free` : 'Start your clinic'}</a>` : `<a class="btn primary" href="/#contact"${hi('डेमो लें')}>Book a demo</a>`;
+  const demo = waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I am a doctor. I want a demo of ${brand} for my clinic.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('व्हाट्सऐप पर डेमो')}>Demo on WhatsApp</span></a>` : '';
+  const feats = [
+    ['heart', '#E11D48', 'Patient records, date-wise', 'मरीज़ों का रिकॉर्ड, तारीख के हिसाब से', 'Every visit with problem, diagnosis, medicines, reports and photos. Print a clean prescription with your registration number.', 'हर विज़िट में परेशानी, डायग्नोसिस, दवाइयां, रिपोर्ट और फ़ोटो। अपने रजिस्ट्रेशन नंबर के साथ साफ़ पर्चा प्रिंट करें।'],
+    ['pulse', '#0EA5E9', 'BP, sugar & weight charts', 'बीपी, शुगर और वज़न के ग्राफ़', 'Readings from the clinic and from home show as charts and as a table, with the change since the first visit.', 'क्लिनिक और घर की रीडिंग ग्राफ़ और टेबल में दिखती हैं, पहली विज़िट से कितना बदला यह भी।'],
+    ['link', '#7C3AED', 'Patients send readings from home', 'मरीज़ घर से रीडिंग भेजें', 'Each patient gets a private link. No app, no login. Big buttons in Hindi or English.', 'हर मरीज़ को एक निजी लिंक मिलता है। न ऐप, न लॉगिन। हिंदी या अंग्रेज़ी में बड़े बटन।'],
+    ['mic', '#DB2777', 'Photos and voice notes', 'फ़ोटो और आवाज़', 'Patients show a rash or a report with a photo, or simply speak their problem. You reply the same way.', 'मरीज़ फ़ोटो से रैश या रिपोर्ट दिखाएं, या बोलकर परेशानी बताएं। आप भी वैसे ही जवाब दें।'],
+    ['calendar', '#2563EB', 'Appointments & online consultation', 'अपॉइंटमेंट और ऑनलाइन परामर्श', 'Clinic visit, video call or WhatsApp call. Patients request a time; you confirm in one tap and send a reminder.', 'क्लिनिक विज़िट, वीडियो कॉल या व्हाट्सऐप कॉल। मरीज़ समय मांगें; आप एक टैप में पक्का करें और याद दिलाएं।'],
+    ['rupee', '#0B9B68', 'Fees by UPI, with reminders', 'यूपीआई से फ़ीस, याद-दिहानी के साथ', 'Patients pay straight to your UPI. No fee is cut. Send a polite WhatsApp reminder for pending fees.', 'मरीज़ सीधे आपके यूपीआई पर पैसा भेजते हैं। कोई कटौती नहीं। बाकी फ़ीस के लिए व्हाट्सऐप पर याद दिलाएं।'],
+    ['bell', '#D97706', 'Alerts for readings to check', 'जांचने लायक रीडिंग पर अलर्ट', 'When a patient sends a very high BP or sugar, a message or a request, your phone gets a notification.', 'मरीज़ बहुत ज़्यादा बीपी या शुगर, मैसेज या रिक्वेस्ट भेजे, तो आपके फ़ोन पर नोटिफ़िकेशन आता है।'],
+    ['shield', '#475569', 'Staff see only what you allow', 'स्टाफ़ को सिर्फ़ उतना दिखे जितना आप चाहें', 'Receptionist: appointments and fees. Nurse: readings. Associate doctor: records. You choose for each person.', 'रिसेप्शनिस्ट: अपॉइंटमेंट और फ़ीस। नर्स: रीडिंग। साथी डॉक्टर: रिकॉर्ड। हर व्यक्ति के लिए आप तय करें।'],
+    ['globe', '#16A34A', 'Hindi and English', 'हिंदी और अंग्रेज़ी', 'The whole app and the patient’s page switch to Hindi with one tap.', 'पूरा ऐप और मरीज़ का पेज एक टैप में हिंदी में।']
+  ];
+  const faqs = [
+    ['Why do you ask for my registration certificate?', 'आप मेरा रजिस्ट्रेशन सर्टिफ़िकेट क्यों मांगते हैं?', 'Patients trust the doctors on SabManage, so every clinic is checked once. Upload your medical council registration certificate at sign-up; the clinic opens after approval, usually within 24 hours.', 'मरीज़ सबमैनेज पर डॉक्टरों पर भरोसा करते हैं, इसलिए हर क्लिनिक की एक बार जांच होती है। साइन अप पर अपनी मेडिकल काउंसिल रजिस्ट्रेशन का सर्टिफ़िकेट अपलोड करें; मंज़ूरी के बाद क्लिनिक खुल जाता है, अक्सर 24 घंटे में।'],
+    ['Do patients need to install an app?', 'क्या मरीज़ों को ऐप डालना पड़ेगा?', 'No. You send each patient a private link on WhatsApp. It opens in the phone’s browser. The patient agrees once, then sends readings, photos or voice notes and books appointments.', 'नहीं। आप हर मरीज़ को व्हाट्सऐप पर निजी लिंक भेजते हैं। यह फ़ोन के ब्राउज़र में खुलता है। मरीज़ एक बार सहमति देता है, फिर रीडिंग, फ़ोटो या आवाज़ भेजता है और अपॉइंटमेंट बुक करता है।'],
+    ['How do video consultations work?', 'वीडियो परामर्श कैसे होता है?', 'Book a video appointment and the app makes a free Jitsi Meet video room. You and the patient join from the link. You can also choose a WhatsApp call.', 'वीडियो अपॉइंटमेंट बुक करें, ऐप एक फ़्री जिट्सी मीट वीडियो रूम बना देता है। आप और मरीज़ लिंक से जुड़ते हैं। व्हाट्सऐप कॉल भी चुन सकते हैं।'],
+    ['Where is patient data kept?', 'मरीज़ों का डेटा कहां रहता है?', 'On secure servers in India (Mumbai). Photos, reports and voice notes are private files. Only your clinic’s logins, as you allow, and the patient’s own link can open them.', 'भारत (मुंबई) के सुरक्षित सर्वर पर। फ़ोटो, रिपोर्ट और आवाज़ निजी फ़ाइलें हैं। सिर्फ़ आपके क्लिनिक के लॉगिन, आपकी अनुमति से, और मरीज़ का अपना लिंक इन्हें खोल सकता है।'],
+    ['Does the app give medical advice?', 'क्या ऐप मेडिकल सलाह देता है?', 'No. It stores and shows records. Coloured numbers are only a quick hint; you decide. The patient page tells patients to call 108 in an emergency.', 'नहीं। यह रिकॉर्ड रखता और दिखाता है। रंगीन नंबर सिर्फ़ एक इशारा हैं; फ़ैसला आपका। मरीज़ के पेज पर लिखा है कि इमरजेंसी में 108 पर कॉल करें।']
+  ];
+  return `
+  <div class="canopy" aria-hidden="true"></div>
+  <section class="hero"><div class="wrap">
+    <div>
+      <span class="kicker"${hi('डॉक्टर और क्लिनिक के लिए')}>For doctors and clinics</span>
+      <h1${hi('हर मरीज़ की सेहत, एक ऐप में।')}>Every patient’s health, in one simple app.</h1>
+      <p class="lead"${hi('मरीज़ों का रिकॉर्ड, बीपी-शुगर-वज़न के ग्राफ़, घर से भेजी रीडिंग, फ़ोटो और आवाज़ में परेशानी, क्लिनिक या वीडियो अपॉइंटमेंट और यूपीआई से फ़ीस। हिंदी और अंग्रेज़ी में।')}>Patient records, BP, sugar and weight charts, readings sent from home, problems shared by photo or voice, clinic or video appointments and fees by UPI. In Hindi and English.</p>
+      <div class="cta">${startBtn}${demo}</div>
+      <ul class="facts"><li>${ic('check')}<span${hi('सिर्फ़ जांचे हुए डॉक्टर')}>Verified doctors only</span></li><li>${ic('check')}<span${hi('मरीज़ के लिए कोई ऐप नहीं')}>No app for patients</span></li><li>${ic('check')}<span${hi('डेटा भारत में')}>Data stays in India</span></li></ul>
+    </div>
+    <div class="tagstack">
+      <div class="phone"><img src="/img/app-clinic.webp" width="390" height="780" alt="Clinic home screen with today's appointments, requests, messages and fees to collect" fetchpriority="high"></div>
+      <div class="sticker a"><i style="background:#E11D48">${ic('pulse')}</i><span${hi('नई रीडिंग<small>बीपी 128/82, घर से</small>')}>New reading<small>BP 128/82, from home</small></span></div>
+      <div class="sticker b"><i style="background:#0B9B68">${ic('rupee')}</i><span${hi('फ़ीस मिली<small>₹400 यूपीआई से</small>')}>Fee received<small>₹400 by UPI</small></span></div>
+    </div>
+  </div></section>
+
+  <section class="sec soft" id="features"><div class="wrap">
+    <div class="sec-h"><h2${hi('क्लिनिक के लिए सब कुछ, बिना झंझट')}>Everything a clinic needs, nothing extra</h2><p${hi('क्लिनिक चुनकर साइन अप करें, ऐप सिर्फ़ डॉक्टर वाले सेक्शन के साथ खुलेगा।')}>Sign up as a clinic and the app opens with only the doctor’s sections.</p></div>
+    <div class="feats">${feats.map(([i, c, t, th, d, dh]) => `<div class="feat" style="--c:${c}"><div class="ib">${ic(i)}</div><div><h3${hi(th)}>${t}</h3><p${hi(dh)}>${d}</p></div></div>`).join('')}</div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="spot flip" style="--c:#7C3AED"><div class="shot"><img src="/img/app-patient.webp" width="390" height="780" loading="lazy" alt="The patient's own page in Hindi with buttons to send readings, tell a problem, book an appointment and call the clinic"></div>
+      <div><h3${hi('मरीज़ के लिए उतना ही आसान जितना व्हाट्सऐप')}>As easy for the patient as WhatsApp</h3><p${hi('मरीज़ को सिर्फ़ चार बड़े बटन दिखते हैं: रीडिंग भेजें, परेशानी बताएं, अपॉइंटमेंट बुक करें, फ़ीस दें। बुज़ुर्ग भी आराम से चला लेते हैं।')}>Patients see four big buttons: send reading, tell my problem, book appointment, pay fee. Even elderly patients manage it.</p>
+      <ul><li${hi('सहमति एक बार, फिर बस टैप')}>Consent once, then just tap</li><li${hi('अपने ग्राफ़ देखकर मरीज़ भी खुश')}>Patients see their own charts and stay motivated</li><li${hi('लिंक गलत व्यक्ति के पास जाए तो एक टैप में बदलें')}>If a link reaches the wrong person, replace it in one tap</li></ul></div></div>
+  </div></section>
+
+  <section class="sec soft" id="how"><div class="wrap">
+    <div class="sec-h"><h2${hi('तीन कदम में शुरू करें')}>Start in three steps</h2></div>
+    <ol class="steps">
+      <li><h3${hi('डॉक्टर / क्लिनिक चुनकर साइन अप करें')}>Sign up as Doctor / Clinic</h3><p${hi('अपना रजिस्ट्रेशन नंबर और सर्टिफ़िकेट अपलोड करें। मंज़ूरी अक्सर 24 घंटे में।')}>Add your registration number and certificate. Approval usually within 24 hours.</p></li>
+      <li><h3${hi('फ़ीस, यूपीआई और समय डालें')}>Set fees, UPI and timings</h3><p${hi('क्लिनिक और वीडियो की फ़ीस, यूपीआई आईडी, समय और लोगो एक बार डालें।')}>Add clinic and video fees, your UPI ID, timings and logo once.</p></li>
+      <li><h3${hi('मरीज़ जोड़ें और लिंक भेजें')}>Add patients and send their link</h3><p${hi('नाम और मोबाइल डालें, व्हाट्सऐप पर लिंक भेजें। बाकी अपने आप आता रहेगा।')}>Add a name and mobile, send the link on WhatsApp. The rest comes in by itself.</p></li>
+    </ol>
+    <div class="cta" style="justify-content:center;margin-top:26px">${startBtn}${demo}</div>
+  </div></section>
+
+  <section class="sec" id="faq"><div class="wrap">
+    <div class="sec-h"><h2${hi('डॉक्टरों के सवाल')}>Questions doctors ask</h2></div>
+    <div class="faq">${faqs.map(([q, qh, a, ah]) => `<details><summary${hi(qh)}>${q}</summary><p${hi(ah)}>${a}</p></details>`).join('')}</div>
+    <p class="small" style="color:var(--muted);margin-top:18px"${hi('सबमैनेज एक रिकॉर्ड और कम्युनिकेशन टूल है, मेडिकल डिवाइस नहीं। इलाज के फ़ैसले डॉक्टर के होते हैं। ऑनलाइन परामर्श भारत की टेलीमेडिसिन गाइडलाइंस के अनुसार डॉक्टर की ज़िम्मेदारी है।')}>SabManage is a records and communication tool, not a medical device. Treatment decisions are the doctor’s. Online consultations are the doctor’s responsibility under India’s Telemedicine Practice Guidelines.</p>
+  </div></section>`;
+}
+
 function downloadPage({ s }) {
   const brand = esc(s.brandName || 'SabManage');
   const steps = [
@@ -480,7 +578,7 @@ module.exports = async (req, res) => {
     if (page === 'sitemap' || page === 'rss') {
       const posts = await loadPosts({ limit: 1000 });
       if (page === 'rss') return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>${esc(brand)} blog</title><link>${origin}/blog</link><description>${esc(s.tagline)}</description>${posts.slice(0, 30).map(p => `<item><title>${esc(p.title)}</title><link>${origin}/blog/${esc(p.slug)}</link><guid>${origin}/blog/${esc(p.slug)}</guid><pubDate>${new Date(p.published_at).toUTCString()}</pubDate><description>${esc(p.excerpt)}</description></item>`).join('')}</channel></rss>`, 'application/rss+xml; charset=utf-8');
-      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/download', ''], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
+      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/download', ''], ['/doctors', ''], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
       return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(([u, d]) => `<url><loc>${esc(origin + u)}</loc>${d ? `<lastmod>${String(d).slice(0, 10)}</lastmod>` : ''}</url>`).join('')}</urlset>`, 'application/xml; charset=utf-8');
     }
     const base = { s, plat, origin };
@@ -489,7 +587,7 @@ module.exports = async (req, res) => {
       const org = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: brand, applicationCategory: 'BusinessApplication', operatingSystem: 'Web, Android, iOS', description: 'Bookings, inventory, catering, GST invoices, payments and crew management for tent houses, caterers and event managers.', url: origin,
         offers: (plat.plans || []).filter(p => p.name).map(p => ({ '@type': 'Offer', name: p.name, price: String(+p.price || 0), priceCurrency: 'INR' })) };
       const lb = { '@context': 'https://schema.org', '@type': 'Organization', name: s.legalName || brand, url: origin, ...(s.phone ? { telephone: s.phone } : {}), ...(s.email ? { email: s.email } : {}), ...(s.address ? { address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: s.city, addressCountry: 'IN' } } : {}), sameAs: ['instagram', 'facebook', 'youtube', 'linkedin'].map(k => safeUrl(s[k])).filter(Boolean) };
-      return send(200, shell({ ...base, path: '/', title: `${brand}: tent house, catering & event management app`, desc: 'Bookings, godown stock, catering ration, GST bills, payments and crew in one app for tent houses, caterers and event managers. Works on any phone, in Hindi and English.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
+      return send(200, shell({ ...base, path: '/', title: `${brand}: business app for tent houses, caterers, events and clinics`, desc: 'Bookings, stock, GST bills, payments, staff and customers in one simple app. For tent houses, caterers, event managers, and doctors and clinics (patient records, charts, appointments, fees). In Hindi and English.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
     }
     if (page === 'blog') {
       const pnum = Math.max(1, Math.min(500, parseInt(q.page || '1', 10) || 1));
@@ -508,6 +606,7 @@ module.exports = async (req, res) => {
       const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: desc, datePublished: p.published_at, dateModified: p.updated_at || p.published_at, inLanguage: p.lang === 'hi' ? 'hi-IN' : 'en-IN', mainEntityOfPage: origin + '/blog/' + p.slug, ...(p.cover_url ? { image: [p.cover_url] } : {}), author: { '@type': p.author ? 'Person' : 'Organization', name: p.author || brand }, publisher: { '@type': 'Organization', name: brand } };
       return send(200, shell({ ...base, path: '/blog/' + p.slug, title: `${p.seo_title || p.title} | ${brand}`, desc, image: p.cover_url || origin + '/img/og.jpg', type: 'article', jsonld: [ld], body: postPage({ ...base, p, related: more }) }));
     }
+    if (page === 'doctors') return send(200, shell({ ...base, path: '/doctors', title: `${brand} for doctors: patient records, BP & sugar charts, appointments`, desc: 'A simple clinic app for Indian doctors: patient records with BP, sugar and weight charts, readings sent by patients from home, photos and voice notes, appointments with video calls, and fees by UPI. In Hindi and English.', image: origin + '/img/og.jpg', body: doctorsPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'download') return send(200, shell({ ...base, path: '/download', title: `Download the ${brand} app`, desc: `Download the ${brand} Android app for tent houses, caterers and event managers.`, body: downloadPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'delete') return send(200, shell({ ...base, path: '/delete-account', title: `Delete your account | ${brand}`, desc: `How to delete your ${brand} account and data.`, body: deletePage(base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     if (page === 'privacy' || page === 'terms') return send(200, shell({ ...base, path: '/' + page, title: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} | ${brand}`, desc: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} for ${brand}.`, body: legalPage(page, base) }), 'text/html; charset=utf-8', 's-maxage=3600');

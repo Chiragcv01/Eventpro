@@ -5,8 +5,8 @@ V.auth = () => {
   const tab = S.authTab;
   const openSignup = S.platform?.allowSignup !== false;
   const tabs = [['login', 'Log in'], ...(openSignup ? [['signup', 'New business']] : []), ['guest', 'Client']];
-  const bizIcon = { tent: ['tent', '#2563EB'], caterer: ['pot', '#16A34A'], event: ['sparkle', '#DB2777'] };
-  const types = BIZ_TYPES.map(([v, l]) => `<label class="checkcard">${ibox(bizIcon[v][0], bizIcon[v][1], 'sm')}<span class="grow">${l}</span><input type="checkbox" name="bizTypes" value="${v}" data-multi="1" checked></label>`).join('');
+  if (S.preKind && tab === 'signup') { const k = S.preKind; S.preKind = null; setTimeout(() => { const el = document.querySelector(`input[name=bizTypes][value=${k}]`); if (el && !el.checked) { el.checked = true; A.pickKind(el); } }, 30); }
+  const types = KIND_CARDS.map(([v, l, sub, i, c]) => `<label class="kind-card"><input type="checkbox" name="bizTypes" value="${v}" data-multi="1" onchange="A.pickKind(this)">${ibox(i, c)}<span><b>${l}</b><small>${sub}</small></span></label>`).join('');
   const forms = {
     login: `<form class="stack" onsubmit="A.doLogin(event)">
       ${fieldHTML({ name: 'email', label: 'Login ID (email or mobile number)', required: true, autocomplete: 'username', placeholder: 'you@business.in or 98290 12345' })}
@@ -15,8 +15,9 @@ V.auth = () => {
       <button type="button" class="linkbtn" style="align-self:center" onclick="A.forgotModal()">Forgot password?</button></form>`,
     signup: `<form class="stack" onsubmit="A.doSignup(event)">
       <div class="grid2" style="padding:0">${fieldHTML({ name: 'name', label: 'Your name', required: true, autocomplete: 'name' })}${fieldHTML({ name: 'phone', label: 'Mobile', type: 'tel', required: true, placeholder: '98290 12345', autocomplete: 'tel' })}</div>
-      ${fieldHTML({ name: 'bizName', label: 'Business name', required: true, placeholder: 'e.g. Shree Ganesh Tent House' })}
-      <div class="field"><span>What do you do? Pick all that apply</span><div class="stack-sm">${types}</div></div>
+      <div class="field"><span>What is your business? *</span><div class="kind-cards">${types}</div><small>Tent, catering and event: pick all that apply. Doctors: pick Doctor / Clinic.</small></div>
+      <label class="field"><span id="bizNameLabel">Business name *</span><input id="f_bizName" name="bizName" required placeholder="e.g. Shree Ganesh Tent House"></label>
+      <div id="docFields" class="doc-fields" hidden>${doctorFieldsHTML({})}</div>
       ${fieldHTML({ name: 'email', label: 'Your login ID: email or mobile number', required: true, autocomplete: 'username', hint: 'You will use this to log in every time' })}
       ${fieldHTML({ name: 'password', label: 'Password (min 6 characters)', type: 'password', required: true, minlength: 6, autocomplete: 'new-password' })}
       <label class="check terms"><input type="checkbox" name="terms" required> <span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms of use</a> and <a href="/privacy" target="_blank" rel="noopener">Privacy policy</a></span></label>
@@ -50,16 +51,24 @@ async function withBtn(e, fn) { const b = e.target.querySelector('button[type=su
 A.doLogin = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { const u = await S.adapter.signIn(loginId(v.email), v.password); if (await needsMfa()) { S.mfaPending = u; render(); setTimeout(() => $('#f_code')?.focus(), 50); return; } S.user = u; await afterLogin(); toast('Welcome back, ' + (S.me?.name || S.user.name).split(' ')[0]); }); };
 A.doSignup = e => {
   const v = formVals(e); if (!v) return;
-  if (!v.bizTypes?.length) { toast('Pick at least one business type', 'bad'); return; }
+  if (!v.bizTypes?.length) { toast('Pick your business type', 'bad'); return; }
+  const clinic = v.bizTypes.includes('clinic'); const files = clinic ? [...(e.target.querySelector('[name=cert]')?.files || [])] : [];
+  if (clinic) { const err = doctorCheck(v, files); if (err) { toast(err, 'bad'); return; } }
   if (!v.terms) { toast('Please accept the Terms of use and Privacy policy', 'bad'); return; }
   withBtn(e, async () => {
     const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter an email or a 10-digit mobile number');
     if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
-    const st = defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: v.bizTypes });
+    const st = defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: clinic ? ['clinic'] : v.bizTypes });
+    if (clinic) Object.assign(st, clinicDefaults(v));
     st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = TERMS_VERSION;
     try { const ref = localStorage.getItem('ep_ref'); if (ref) st.referredBy = ref; } catch (x) { }
-    await S.adapter.signUpBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: ROLE_DEFAULTS, settings: st });
-    S.user = await S.adapter.signIn(email, v.password); await afterLogin(); toast('Business created. You are the Owner.');
+    await S.adapter.signUpBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: clinic ? CLINIC_ROLES : ROLE_DEFAULTS, settings: st });
+    S.user = await S.adapter.signIn(email, v.password);
+    if (clinic) {
+      try { const orgs = await S.adapter.myOrgs(S.user.id); const o = orgs.find(x => x.kind === 'clinic' && x.name === v.bizName) || orgs.find(x => x.kind === 'clinic'); if (o) await sendVerification(o.orgId, v, files); }
+      catch (err) { setTimeout(() => toast('Account made, but the certificate did not upload: ' + err.message + '. Please upload it again.', 'bad'), 400); }
+    }
+    await afterLogin(); toast(clinic ? 'Account created. We will check your certificate soon.' : 'Business created. You are the Owner.');
   });
 };
 A.doJoin = e => {
@@ -91,10 +100,12 @@ V.noOrg = () => `<div class="auth"><section class="auth-brand"><div class="inner
 A.newOrgModal = () => formModal({
   title: 'Create a business', sub: 'You will be the Owner.',
   fields: [{ name: 'bizName', label: 'Business name', required: true, full: true }, { name: 'phone', label: 'Business phone', type: 'tel' },
+  { name: 'kind', label: 'Type of business', type: 'select', options: [['event', 'Tent / catering / event'], ['clinic', 'Doctor / Clinic (certificate needed)']], value: 'event' },
   ...BIZ_TYPES.map(([v, l]) => ({ name: 't_' + v, label: l, type: 'checkbox', value: true }))],
   submit: 'Create', onSubmit: async v => {
-    const types = BIZ_TYPES.map(([k]) => k).filter(k => v['t_' + k]);
-    const id = await S.adapter.createOrg(S.user.id, v.bizName, S.user.name, ROLE_DEFAULTS, defaultSettings({ bizName: v.bizName, owner: S.user.name, phone: v.phone, email: S.user.email, bizTypes: types }));
+    const clinic = v.kind === 'clinic'; const types = clinic ? ['clinic'] : BIZ_TYPES.map(([k]) => k).filter(k => v['t_' + k]);
+    const st = defaultSettings({ bizName: v.bizName, owner: S.user.name, phone: v.phone, email: S.user.email, bizTypes: types }); if (clinic) Object.assign(st, clinicDefaults({ name: S.user.name }));
+    const id = await S.adapter.createOrg(S.user.id, v.bizName, S.user.name, clinic ? CLINIC_ROLES : ROLE_DEFAULTS, st);
     S.orgs = await S.adapter.myOrgs(S.user.id); await openOrg(id); toast('Business created');
   }
 });
@@ -175,3 +186,79 @@ A.mfaStart = async () => {
 A.mfaConfirm = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.mfaVerify(S.mfaEnrolling, v.code); S.mfaOn = true; A.closeModal(); toast('Authenticator is on. You will need the code at every login.'); render(); }); };
 A.mfaOff = () => confirmBox('Turn off authenticator?', 'Your login will need only the password again. You can turn it back on any time.', 'Turn off', async () => { await S.adapter.mfaDisable(); S.mfaOn = false; toast('Authenticator turned off'); render(); });
 A.resetMfa = (userId, orgId, name) => confirmBox('Reset authenticator?', `${name || 'This person'} will log in with just the password next time, and can set up the authenticator again on their new phone.`, 'Reset authenticator', async () => { const n = await S.adapter.resetUserMfa(userId, orgId); toast(n ? 'Authenticator reset' : 'They did not have an authenticator on'); if (S.view === 'admin') await A.adminLoad(); }, 'primary');
+
+/* ---------- business type + doctor verification ---------- */
+const KIND_CARDS = [['tent', 'Tent House', 'Stock, bookings, crew', 'tent', '#2563EB'], ['caterer', 'Caterer / Halwai', 'Menu, ration, plates', 'pot', '#16A34A'],
+  ['event', 'Event Manager', 'Planning, vendors, setup', 'sparkle', '#DB2777'], ['clinic', 'Doctor / Clinic', 'Patients, reports, appointments', 'steth', '#E11D48']];
+const COUNCILS = ['National Medical Commission (NMC)', 'Rajasthan Medical Council', 'Delhi Medical Council', 'Maharashtra Medical Council', 'Gujarat Medical Council', 'Uttar Pradesh Medical Council', 'Madhya Pradesh Medical Council', 'Haryana Medical Council', 'Punjab Medical Council', 'Bihar Medical Council', 'West Bengal Medical Council', 'Karnataka Medical Council', 'Tamil Nadu Medical Council', 'Telangana State Medical Council', 'Andhra Pradesh Medical Council', 'Kerala (TCMC)', 'Dental Council (State / DCI)', 'AYUSH / Ayurveda / Homoeopathy Board', 'Physiotherapy Council', 'Other state council'];
+const SPECIALITIES = ['General Physician', 'Diabetologist', 'Cardiologist', 'Physiotherapist', 'Paediatrician', 'Gynaecologist', 'Dermatologist', 'Orthopaedic', 'ENT', 'Eye specialist', 'Dentist', 'Psychiatrist', 'Dietitian', 'Ayurveda', 'Homoeopathy', 'Other'];
+function doctorFieldsHTML(v) {
+  return `<div class="banner" style="font-size:13px">${ic('shield')}<span>For patient safety we check every doctor. Upload your registration certificate. The app opens after our team approves it, usually within 24 hours.</span></div>
+  <div class="grid2" style="padding:0">
+  ${fieldHTML({ name: 'regNo', label: 'Medical registration number *', value: v.reg_no || '', placeholder: 'e.g. RMC/12345' })}
+  ${fieldHTML({ name: 'council', label: 'Medical council *', type: 'select', options: [['', '— Choose —'], ...COUNCILS], value: v.council || '' })}
+  ${fieldHTML({ name: 'qualification', label: 'Qualification', value: v.qualification || '', placeholder: 'e.g. MBBS, MD (Medicine)' })}
+  ${fieldHTML({ name: 'specialisation', label: 'Speciality', type: 'select', options: SPECIALITIES, value: v.specialisation || 'General Physician' })}</div>
+  <label class="field"><span>Registration certificate (photo or PDF) *</span><input type="file" name="cert" accept="image/*,application/pdf" multiple><small>You can add your degree too. Up to 6 files, 10 MB each.</small></label>`;
+}
+A.pickKind = el => {
+  const f = el.form; const boxes = [...f.querySelectorAll('input[name=bizTypes]')];
+  if (el.value === 'clinic' && el.checked) boxes.forEach(b => { if (b !== el) b.checked = false; });
+  if (el.value !== 'clinic' && el.checked) boxes.forEach(b => { if (b.value === 'clinic') b.checked = false; });
+  const clinic = boxes.some(b => b.value === 'clinic' && b.checked);
+  const d = f.querySelector('#docFields'); if (d) d.hidden = !clinic;
+  const lab = f.querySelector('#bizNameLabel'); if (lab) lab.textContent = T(clinic ? 'Clinic / hospital name *' : 'Business name *');
+  const bn = f.querySelector('[name=bizName]'); if (bn) bn.placeholder = clinic ? 'e.g. Sharma Clinic' : 'e.g. Shree Ganesh Tent House';
+};
+function doctorCheck(v, files) {
+  if (!(v.regNo || '').trim()) return 'Write your medical registration number';
+  if (!v.council) return 'Choose your medical council';
+  if (!files.length) return 'Upload your registration certificate';
+  if (files.length > 6) return 'Up to 6 files';
+  for (const f of files) { if (!/^image\/|^application\/pdf$/.test(f.type)) return 'Certificate must be a photo or a PDF'; if (f.size > 10e6) return 'Each file must be under 10 MB'; }
+  return '';
+}
+function clinicDefaults(v) { return { doctorName: v.name || '', regNo: (v.regNo || '').trim(), council: v.council || '', qualification: (v.qualification || '').trim(), specialisation: v.specialisation || 'General Physician', timings: '', feeClinic: '', feeVideo: '', terms: '' }; }
+/* resize a photo before upload (saves data and storage); PDFs and audio go as they are */
+async function shrinkPhoto(file, max = 1800, q = .82) {
+  if (!/^image\/(jpeg|png|webp|heic|heif)/.test(file.type)) return file;
+  try {
+    const url = URL.createObjectURL(file); const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight)); const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', q)); return blob && blob.size < file.size ? blob : file;
+  } catch (e) { return file; }
+}
+const extOf = (blob, name = '') => blob.type === 'application/pdf' ? 'pdf' : /^audio\//.test(blob.type) ? (blob.type.includes('ogg') ? 'ogg' : blob.type.includes('mp4') ? 'm4a' : blob.type.includes('mpeg') ? 'mp3' : 'webm') : blob.type === 'image/png' ? 'png' : blob.type === 'image/webp' ? 'webp' : 'jpg';
+async function sendVerification(orgId, v, files) {
+  const up = [];
+  for (const f of files) { const b = await shrinkPhoto(f); const path = `${orgId}/${uid('c_')}.${extOf(b, f.name)}`; await S.adapter.uploadFile('verify', path, b); up.push({ path, name: f.name.slice(0, 80), type: b.type === 'application/pdf' ? 'pdf' : 'image' }); }
+  await S.adapter.submitVerification(orgId, { doctor_name: v.name || v.doctorName || '', reg_no: (v.regNo || '').trim(), council: v.council, qualification: (v.qualification || '').trim(), specialisation: v.specialisation || '', files: up });
+}
+A.openFile = async (bucket, path) => { const w = window.open('', '_blank'); try { const u = await S.adapter.fileUrl(bucket, path); if (!u) throw new Error('File not found'); if (w) w.location = u; else location.href = u; } catch (e) { if (w) w.close(); toast(e.message, 'bad'); } };
+
+/* waiting for approval */
+V.verify = () => {
+  const P = S.platform || DEFAULT_PLATFORM; const o = S.org; const v = S.myVerify && S.myVerify.orgId === o.orgId ? S.myVerify.v : undefined;
+  if (v === undefined) { if (!S.myVerifyLoading) { S.myVerifyLoading = true; S.adapter.myVerification(o.orgId).then(x => { S.myVerify = { orgId: o.orgId, v: x }; }).catch(() => { S.myVerify = { orgId: o.orgId, v: null }; }).finally(() => { S.myVerifyLoading = false; render(); }); } }
+  const st = v?.status; const pending = st === 'pending';
+  const sup = P.supportPhone ? waBtn(`Namaste, I am Dr. ${S.me?.name || S.user.name} (${o.name}). Please check my certificate for ${P.appName}.`, P.supportPhone, 'WhatsApp support', 'btn wa') : '';
+  return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo" style="background:#E11D48">${ic('steth')}</div><b style="font:800 21px var(--f-display)">${esc(o.name)}</b></div>
+    <h1>${pending ? 'We are <em>checking</em> your certificate.' : 'One step <em>left</em>: verify you are a doctor.'}</h1>
+    <p>${pending ? 'Our team checks your registration with the medical council. This usually takes less than 24 hours. You will get a WhatsApp message, and the app opens here by itself.' : 'Patients trust the doctors on SabManage. Upload your medical registration certificate once. After approval you can add patients, appointments and reports.'}</p></div></section>
+  <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><div class="card pad stack">
+    ${v === undefined ? `<p class="muted">Loading…</p>` : pending ? `<div class="banner warn">${ic('clock')}<span><b>Verification pending</b> · sent ${v.submitted_at ? new Date(v.submitted_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : ''}</span></div>
+      <div class="stack-sm small"><div><span class="muted">Registration no.</span> <b>${esc(v.reg_no || '')}</b></div><div><span class="muted">Council</span> <b>${esc(v.council || '')}</b></div><div><span class="muted">Files</span> <b>${(v.files || []).length}</b></div></div>
+      <div class="row-flex">${sup}<button class="btn" onclick="S.myVerify=null;A.recheckVerify()">${ic('pulse')} Check again</button></div>
+      <button class="linkbtn" onclick="S.myVerify={orgId:'${o.orgId}',v:{...S.myVerify.v,status:'edit'}};render()">Change details or add a file</button>`
+    : `${st === 'rejected' ? `<div class="banner bad">${ic('alert')}<span><b>Not approved yet.</b> ${esc(v.note || 'Please upload a clear photo of your registration certificate.')}</span></div>` : ''}
+      <form class="stack" onsubmit="A.doVerify(event)" novalidate>${doctorFieldsHTML(v || settings())}<button class="btn primary block" style="min-height:50px" type="submit">${ic('upload')} Send for approval</button></form>${sup}`}
+    ${S.orgs.length > 1 ? `<div class="eyebrow">Your other businesses</div>${S.orgs.filter(x => x.orgId !== o.orgId).map(x => `<button class="btn" style="justify-content:space-between" onclick="A.switchOrg('${x.orgId}')"><span>${esc(x.name)}</span>${ic('chev')}</button>`).join('')}` : ''}
+    <button class="btn ghost block" onclick="A.logout()">${ic('logout')} Log out</button></div></div></section></div>`;
+};
+A.doVerify = e => {
+  e.preventDefault(); const v = readForm(e.target); const files = [...(e.target.querySelector('[name=cert]')?.files || [])];
+  const err = doctorCheck(v, files); if (err) { toast(err, 'bad'); return; }
+  withBtn(e, async () => { await sendVerification(S.org.orgId, { ...v, name: S.me?.name || S.user.name }, files); S.myVerify = null; toast('Sent. We will check it soon.'); await A.recheckVerify(); });
+};
+A.recheckVerify = async () => { try { S.orgs = await S.adapter.myOrgs(S.user.id); const o = S.orgs.find(x => x.orgId === S.org.orgId); if (o && orgState(o) !== 'verify') { await openOrg(o.orgId); toast('Approved! Welcome to SabManage.'); return; } if (o) S.org = o; } catch (e) { } render(); };

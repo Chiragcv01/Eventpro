@@ -15,14 +15,22 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "POST only" }, 405);
   try {
     const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
-    const token = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
-    const { data: who, error: werr } = await admin.auth.getUser(token);
-    if (werr || !who?.user) return json({ error: "Not logged in" }, 401);
+    // the database itself (patient portal → _clinic_notify) calls with the cron token instead of a user login
+    const svc = req.headers.get("x-cron-token") || "";
+    let trusted = false;
+    if (svc) { const { data: ok } = await admin.rpc("cron_token_ok", { p: svc }); trusted = !!ok; }
+    let me = "";
+    if (!trusted) {
+      const token = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
+      const { data: who, error: werr } = await admin.auth.getUser(token);
+      if (werr || !who?.user) return json({ error: "Not logged in" }, 401);
+      me = who.user.id;
+    }
 
     const { alertId, delay } = await req.json().catch(() => ({}));
     if (!alertId) return json({ error: "alertId missing" }, 400);
     const { data: a } = await admin.from("alerts").select("*").eq("id", alertId).maybeSingle();
-    if (!a || a.from_user !== who.user.id) return json({ error: "Not allowed" }, 403);
+    if (!a || (!trusted && a.from_user !== me) || (trusted && a.kind !== "patient")) return json({ error: "Not allowed" }, 403);
     if (Date.now() - Date.parse(a.created_at) > 15 * 60 * 1000) return json({ error: "Alert is too old to send" }, 400);
 
     let users: string[] = [];
@@ -31,7 +39,7 @@ Deno.serve(async (req) => {
       let q = admin.from("org_members").select("user_id").eq("org_id", a.org_id);
       if (a.to_role === "managers") q = q.in("role", ["owner", "manager", "supervisor"]);
       const { data: m } = await q;
-      users = (m || []).map((x: { user_id: string }) => x.user_id).filter((x: string) => x !== a.from_user);
+      users = (m || []).map((x: { user_id: string }) => x.user_id).filter((x: string) => a.kind === "patient" || x !== a.from_user);
     }
     if (!users.length) return json({ sent: 0, devices: 0 });
     const { data: subs } = await admin.from("push_subs").select("*").in("user_id", users);
@@ -41,7 +49,7 @@ Deno.serve(async (req) => {
     webpush.setVapidDetails("https://sabmanage.com", keys.public, keys.private);
     const payload = JSON.stringify({
       id: a.id, urgent: a.kind !== "update" && !!a.urgent, kind: a.kind || "alert",
-      title: (a.kind === "update" ? "✅ " : a.urgent ? "🚨 " : "🔔 ") + a.title,
+      title: (a.kind === "update" ? "✅ " : a.kind === "patient" ? "💬 " : a.urgent ? "🚨 " : "🔔 ") + a.title,
       body: [a.from_name, a.body].filter(Boolean).join(": ").slice(0, 400),
       url: "/app#alert-" + a.id,
     });

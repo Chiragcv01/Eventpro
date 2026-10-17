@@ -260,3 +260,9 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px
 .legal-sum h2{margin:0 0 8px;font-size:20px}
 .legal-sum ul{display:flex;flex-direction:column;gap:6px}
 .legal-sum li{color:var(--ink)}
+.who{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1180px){.who{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.who{grid-template-columns:minmax(0,1fr)}}
+.who .more{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-weight:700;color:var(--c);text-decoration:none}
+.who .more svg{width:18px;height:18px}
+.kicker{display:inline-block;font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#E11D48;background:#FFE4EA;border-radius:999px;padding:5px 12px;margin-bottom:12px}

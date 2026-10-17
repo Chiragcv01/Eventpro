@@ -52,7 +52,7 @@ const AlertsDB = {
     const { data, error } = await S.adapter.sb.rpc('ack_alert', { p_id: id }); if (error) throw S.adapter.err(error); return data;
   }
 };
-const forMe = a => a.from_user !== S.user?.id && (!a.to_user || a.to_user === S.user?.id);
+const forMe = a => (a.kind === 'patient' || a.from_user !== S.user?.id) && (!a.to_user || a.to_user === S.user?.id);
 const isRing = a => (a.kind || 'alert') === 'alert';
 const seenByMe = a => !!(a.acks || {})[S.user?.id];
 const canSendAlert = () => S.adapter?.mode === 'cloud' ? lvl('tasks') >= 2 : !!S.org && lvl('tasks') >= 2;
@@ -69,7 +69,7 @@ async function startAlerts() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: 'org_id=eq.' + S.org.orgId }, p => {
         const a = p.new; if (!a?.id) return; const i = (S.teamAlerts || []).findIndex(x => x.id === a.id);
         if (i >= 0) S.teamAlerts[i] = a; else S.teamAlerts.unshift(a);
-        if (p.eventType === 'INSERT' && forMe(a)) { if (isRing(a)) showAlertOverlay(); else toast('✅ ' + a.title + (a.body ? ' · ' + a.body : '')); }
+        if (p.eventType === 'INSERT' && forMe(a)) { if (isRing(a)) showAlertOverlay(); else toast((a.kind === 'patient' ? '💬 ' : '✅ ') + a.title + (a.body ? ' · ' + a.body : '')); }
         refreshAlertDot();
       }).subscribe();
   }
