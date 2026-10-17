@@ -17,7 +17,7 @@ SabManage (earlier name: EventPro OS) is a multi-tenant SaaS for Indian business
 | Hosting | Vercel project `eventpro-os` (id `prj_rfaKxq9TGcMSEQOVuiBqZTrZapWM`, team `team_Bqpb2KJqrwCkxsphCKF7Rcx8`), Hobby plan, functions region `bom1` | Git-linked: every push to `main` deploys (~30 s) |
 | Database/auth/storage | Supabase project `uregwtavhkjowiltukiq` (Mumbai), org "Chiragcv01's Org", **Free plan** | URL + public anon key are in `src/head.html` and `api/site.js` (public by design; RLS protects data) |
 | Domain | `sabmanage.com` on **Hostinger** (DNS: A @ → 216.198.79.1, 64.29.17.1; CNAME www → Vercel). www redirects to apex |
-| Android | Trusted Web Activity, package `com.sabmanage.app`, v1.2.0 (code 3, notifications on), minSdk 24, targetSdk 36 | Built by GitHub Actions (unsigned) → signed by owner with upload key |
+| Android | Trusted Web Activity, package `com.sabmanage.app`, v1.3.0 (code 4, notifications on, new icon, app name 'SabManage'), minSdk 24, targetSdk 36 | Built by GitHub Actions (unsigned) → signed by owner with upload key |
 
 ## Repo layout
 ```
@@ -38,7 +38,7 @@ src/alerts.js        Team alerts: send/receive, full-screen ringing card, tune (
 src/views-marketing.js  Marketing module: follow-ups, Google review requests, rate card (print/PDF), clients (CSV export, anniversaries, muhurat campaign), QR poster (qrcode-generator from jsDelivr, lazy), refer & share
 src/app.css          app design (clean white, colourful; Baloo 2 + Mukta fonts)
 build.py             concatenates src → app.html (order: i18n, core, alerts, help, auth, views-ops, views-money, views-admin, views-site, views-import, views-marketing, simple, clinic, clinic-text)
-api/site.js          website: home, /doctors (clinic landing page), /blog, /blog/:slug, /privacy, /terms, /delete-account, sitemap, robots, RSS; HTML allow-list sanitizer
+api/site.js          website: home (industry-neutral: bilingual headline, 'today' panel, pillars, business types), /events (tent/catering/event page), /doctors (clinic page), /blog, /blog/:slug, /privacy, /terms, /delete-account, sitemap, robots, RSS; HTML allow-list sanitizer
 site.css, site.js    website style; language switch, contact form, delete-request form (call Supabase RPCs directly)
 sw.js, offline.html  service worker (offline screen; push → notification; no private data cached)
 sounds/alert.mp3     the SabManage alert tune (same tune as android/sabmanage_alert.ogg)
@@ -78,6 +78,11 @@ download/SabManage.apk  the signed Android app served at sabmanage.com/download/
 - Morning summary: pg_cron 02:15 UTC → edge function `daily-summary` (token in Vault `cron_token`) → push 'Today: N events…' to owners/managers in their app language (`push_subs.lang`). Android v1.2: only titles starting 🔔/🚨 use the alarm channel; ☀️/✅ use the normal channel.
 - Blog HTML is sanitized on save (`cleanHTML` in views-site.js) and on render (`sanitize` in api/site.js).
 - Offline mode: if `supabaseUrl` is empty the app uses LocalDB (localStorage) — used for local testing (`superAdminEmails` in config makes a Super Admin offline).
+
+## Brand and website (17 Oct 2026 redesign)
+- Owner's rule: the website home and the app's opening screen must NOT feel like tent/catering or doctors; they are for every business. The business type is asked only at sign-up. Industry details live on /events and /doctors.
+- Mark = three rounded tiles + a tick (`icon.svg`, `MARK` in api/site.js, `MARK_SVG` in core.js, PNGs in img/icons, play-store/app-icon-512.png). og.jpg and the Play feature graphic use the same 'Today' panel design.
+- Website fonts: Anek Devanagari (headings, font-stretch ~84–92%) + Mukta (text). Palette: ink #0E1A33, blue #1F5EFF, green #0B9B68, mist #F4F6FA. The festive canopy/bunting is removed (`.canopy` hidden). Bump `V` in api/site.js when site.css/site.js change.
 
 ## Clinics (doctors) — behaviour
 - Sign-up: 'What is your business?' cards (tent / caterer / event = multi; Doctor / Clinic = exclusive) → doctor fields (reg no, council, qualification, speciality, certificate upload) → clinic shows `V.verify` until approved. `/app#signup-clinic` preselects Doctor. Roles: Doctor (Owner), Associate doctor, Receptionist (no medical records), Nurse / Assistant (`CLINIC_ROLES`).

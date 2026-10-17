@@ -14,16 +14,16 @@ Add Hindi as a second language (Translations → Add language → Hindi – hi-I
 ## English (en-IN)
 
 **App name** (26/30)
-SabManage: Tent & Catering
+SabManage: Business Hisaab
 
 **Short description** (76/80)
-Bookings, stock, catering, GST bills and payments for tent houses & caterers
+Bookings, GST bills, payments, staff & reminders for your business, in Hindi
 
 **Full description**
 
-SabManage keeps the full hisaab of your tent house, catering or event business in one app.
+SabManage keeps the full hisaab of your business in one app: bookings and appointments, GST bills, payments, staff attendance and customer reminders, in Hindi and English.
 
-Made for tent houses, caterers, halwais, decorators and event managers who run weddings, receptions, sangeet, jagrans and corporate events.
+When you create your account you pick your work, and the app opens with only the sections you need. Today it is set up for tent houses, caterers, halwais, decorators, event managers, and doctors and clinics. More kinds of business are coming.
 
 EASY FOR EVERYONE
 • Easy home: today's events, setup done and money to collect at a glance
@@ -78,17 +78,17 @@ Start with a free trial. Your data stays in the cloud and only your team can see
 
 ## Hindi (hi-IN)
 
-**App name** (26/30)
-सबमैनेज: टेंट और कैटरिंग
+**App name** (22/30)
+सबमैनेज: बिज़नेस का हिसाब
 
-**Short description** (70/80)
-टेंट हाउस और कैटरर के लिए बुकिंग, स्टॉक, जीएसटी बिल और पेमेंट का ऐप
+**Short description** (64/80)
+आपके बिज़नेस के लिए बुकिंग, जीएसटी बिल, पेमेंट, स्टाफ़ और याद-दिहानी
 
 **Full description**
 
-सबमैनेज आपके टेंट हाउस, कैटरिंग या इवेंट बिज़नेस का पूरा हिसाब एक ऐप में रखता है।
+सबमैनेज आपके बिज़नेस का पूरा हिसाब एक ऐप में रखता है: बुकिंग और अपॉइंटमेंट, जीएसटी बिल, पेमेंट, स्टाफ़ की हाज़िरी और ग्राहकों को याद-दिहानी, हिंदी और अंग्रेज़ी में।
 
-टेंट हाउस, कैटरर, हलवाई, डेकोरेटर और इवेंट मैनेजर के लिए बना, जो शादी, रिसेप्शन, संगीत, जागरण और कॉर्पोरेट इवेंट करते हैं।
+अकाउंट बनाते समय आप अपना काम चुनते हैं, और ऐप सिर्फ़ उन्हीं सेक्शन के साथ खुलता है जो आपके काम के हैं। अभी यह टेंट हाउस, कैटरर, हलवाई, डेकोरेटर, इवेंट मैनेजर, और डॉक्टर व क्लिनिक के लिए तैयार है।
 
 सबके लिए आसान
 • आसान होम: आज के इवेंट, कितना सेटअप हुआ और कितना पैसा लेना है, एक नज़र में
