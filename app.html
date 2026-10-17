@@ -561,6 +561,9 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .chip:hover{border-color:var(--primary);color:var(--primary)}
 .urgent-check{background:#FFF1F2;border:1px solid #FECDD3;border-radius:12px;padding:10px 12px}
 @media (prefers-reduced-motion: reduce){.alert-ring,.alert-scrim.urgent{animation:none}}
+.notif-state{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:var(--surface2);border:1px solid var(--line)}
+.notif-state.on{background:#ECFDF5;border-color:#A7F3D0}
+.notif-state.denied{background:#FFF1F2;border-color:#FECDD3}
 
 </style>
 </head>
@@ -2573,6 +2576,37 @@ Could not turn on notifications: {} | नोटिफ़िकेशन चा�
 {} new important reminders. Tap the bell. | {1} नए ज़रूरी रिमाइंडर। घंटी दबाएं।
 `);
 
+I18N.load(`
+# ---------- notification permission ----------
+Alert notifications | अलर्ट नोटिफ़िकेशन
+Hear your team’s alerts even when the app is closed | ऐप बंद होने पर भी टीम के अलर्ट सुनें
+Notifications are on | नोटिफ़िकेशन चालू हैं
+Notifications are blocked on this phone | इस फ़ोन पर नोटिफ़िकेशन बंद हैं
+Not available here | यहां नहीं चलेगा
+Notifications are off | नोटिफ़िकेशन बंद हैं
+Alerts from your team will ring on this phone with the SabManage tune. | टीम के अलर्ट इस फ़ोन पर सबमैनेज की धुन के साथ बजेंगे।
+You (or someone) tapped “Don’t allow” earlier. Turn it on from phone settings: | पहले "इजाज़त न दें" दबाया गया था। फ़ोन की सेटिंग्स से चालू करें:
+Open SabManage in the Android app, or in Chrome at sabmanage.com/app. | सबमैनेज एंड्रॉयड ऐप में खोलें, या क्रोम में sabmanage.com/app खोलें।
+Tap Allow, then choose “Allow” on the phone’s pop-up. | "चालू करें" दबाएं, फिर फ़ोन के पॉप-अप में "Allow" (इजाज़त दें) चुनें।
+Open your phone Settings → Apps → SabManage → Notifications. | फ़ोन की सेटिंग्स → ऐप्स → सबमैनेज → नोटिफ़िकेशन खोलें।
+Turn on "Allow notifications" and open "Team alerts": keep sound on. | "नोटिफ़िकेशन की इजाज़त" चालू करें और "Team alerts" खोलकर आवाज़ चालू रखें।
+Come back here and tap "Check again". | यहां वापस आकर "फिर से देखें" दबाएं।
+Check again | फिर से देखें
+Allow notifications | नोटिफ़िकेशन चालू करें
+Test it on this phone | इस फ़ोन पर जांचें
+Tap the button, then within 10 seconds close the app, put the phone on silent and lock it. The alert should ring. | बटन दबाएं, फिर 10 सेकंड के अंदर ऐप बंद करें, फ़ोन साइलेंट करें और लॉक करें। अलर्ट बजना चाहिए।
+Send me a test alert in 10 seconds | 10 सेकंड में मुझे टेस्ट अलर्ट भेजें
+Play the alert tune now | अभी अलर्ट की धुन सुनें
+Not now | अभी नहीं
+Test alert | टेस्ट अलर्ट
+If you hear the tune, alerts are working on this phone. | धुन सुनाई दी तो इस फ़ोन पर अलर्ट ठीक चल रहे हैं।
+Test alert in 10 seconds. Close the app now. | 10 सेकंड में टेस्ट अलर्ट आएगा। अभी ऐप बंद करें।
+This phone is not registered yet. Tap Allow notifications first. | यह फ़ोन अभी जुड़ा नहीं है। पहले "नोटिफ़िकेशन चालू करें" दबाएं।
+Could not send the test: {} | टेस्ट नहीं भेज पाए: {1}
+Notifications on | नोटिफ़िकेशन चालू
+Notifications off | नोटिफ़िकेशन बंद
+`);
+
 'use strict';
 /* ================= SabManage v3 — core ================= */
 const APP_VERSION = '3.0.0';
@@ -3144,7 +3178,7 @@ async function afterLogin() {
       S.orgs = await S.adapter.myOrgs(S.user.id);
     } catch (e) { toast(e.message, 'bad'); }
   }
-  if (!S.orgs.length) { S.org = null; if (S.super) { S.view = 'admin'; S.params = {}; } render(); return; }
+  if (!S.orgs.length) { S.org = null; if (S.super) { S.view = 'admin'; S.params = {}; } render(); if (typeof maybeAskPush === 'function') maybeAskPush(); return; }
   const last = LS.get('ep3_lastOrg', null);
   await openOrg((S.orgs.find(o => o.orgId === last) || S.orgs[0]).orgId);
 }
@@ -3271,7 +3305,7 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
-      <button class="tile" onclick="A.testTune()">${ibox('bell', '#E11D74')}<span>Alert tune</span></button>
+      <button class="tile" onclick="A.notifSheet()">${ibox('bell', typeof notifState === 'function' && notifState() === 'on' ? '#0B9B68' : '#E11D74')}<span>Notifications ${typeof notifState === 'function' && notifState() === 'on' ? 'on' : 'off'}</span></button>
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
       ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
@@ -3464,7 +3498,7 @@ async function startAlerts() {
       }).subscribe();
   }
   const pending = pendingForMe(); if (pending.length) setTimeout(showAlertOverlay, 400);
-  refreshAlertDot(); chimeForNewReminders(); ensurePush(false);
+  refreshAlertDot(); chimeForNewReminders(); maybeAskPush();
 }
 const pendingForMe = () => (S.teamAlerts || []).filter(a => forMe(a) && !seenByMe(a) && Date.now() - Date.parse(a.created_at) < 36 * 3600e3);
 function refreshAlertDot() { const b = document.querySelector('.topbar [aria-label="Alerts"] .dot'); const n = computeAlerts().length + pendingForMe().length; if (b) b.textContent = n; else if (n) render(); }
@@ -3544,12 +3578,40 @@ async function ensurePush(ask) {
     LS.set('ep_push_on', true); if (ask) { toast('Phone notifications are on'); render(); } return true;
   } catch (e) { if (ask) toast('Could not turn on notifications: ' + e.message, 'bad'); return false; }
 }
-A.enablePush = () => ensurePush(true);
+A.enablePush = async () => { const ok = await ensurePush(true); if (document.querySelector('.notif-sheet')) A.notifSheet(); return ok; };
+/* ask once after login (Android 13+ never asks at install time; the app has to ask) */
+function maybeAskPush() {
+  if (!pushOK() || S.pushAsked) return; S.pushAsked = true;
+  if (Notification.permission === 'granted') { ensurePush(false); return; }
+  if (Notification.permission === 'denied' || (LS.get('ep_push_later', 0) > Date.now())) return;
+  setTimeout(() => { const mr = document.getElementById('modalRoot'); if ((mr && !mr.hidden) || document.getElementById('alertRoot')) return; A.notifSheet(); }, 1500);
+}
+const notifState = () => !pushOK() ? 'unsupported' : Notification.permission === 'granted' ? (LS.get('ep_push_on', false) ? 'on' : 'granted') : Notification.permission;
+A.notifSheet = () => {
+  const st = notifState(); const member = S.org && S.members.some(m => m.userId === S.user?.id) && canSendAlert();
+  const steps = ['Open your phone Settings → Apps → SabManage → Notifications.', 'Turn on "Allow notifications" and open "Team alerts": keep sound on.', 'Come back here and tap "Check again".'];
+  modal(`<div class="notif-sheet">${sheetHead('Alert notifications', 'Hear your team’s alerts even when the app is closed')}<div class="sheet-b stack">
+    <div class="notif-state ${st}">${ibox(st === 'on' ? 'check' : 'bell', st === 'on' ? '#0B9B68' : st === 'denied' ? '#E0344B' : '#E11D74', 'lg')}<div><b>${st === 'on' ? 'Notifications are on' : st === 'denied' ? 'Notifications are blocked on this phone' : st === 'unsupported' ? 'Not available here' : 'Notifications are off'}</b>
+      <div class="small muted">${st === 'on' ? 'Alerts from your team will ring on this phone with the SabManage tune.' : st === 'denied' ? 'You (or someone) tapped “Don’t allow” earlier. Turn it on from phone settings:' : st === 'unsupported' ? 'Open SabManage in the Android app, or in Chrome at sabmanage.com/app.' : 'Tap Allow, then choose “Allow” on the phone’s pop-up.'}</div></div></div>
+    ${st === 'denied' ? `<ol class="help-steps">${steps.map(s => `<li>${s}</li>`).join('')}</ol><button class="btn" onclick="A.notifSheet()">Check again</button>` : ''}
+    ${['default', 'granted'].includes(st) ? `<button class="btn primary block" style="min-height:52px;font-size:16px" onclick="A.enablePush()">${ic('bell')} Allow notifications</button>` : ''}
+    ${st === 'on' && member ? `<div class="card pad stack-sm"><b>Test it on this phone</b><span class="small muted">Tap the button, then within 10 seconds close the app, put the phone on silent and lock it. The alert should ring.</span><button class="btn" onclick="A.testPush()">${ic('send')} Send me a test alert in 10 seconds</button></div>` : ''}
+    <button class="btn ghost" onclick="A.testTune()">${ic('bell')} Play the alert tune now</button>
+    ${st === 'default' ? `<button class="linkbtn" onclick="LS.set('ep_push_later', Date.now() + 3 * 864e5); A.closeModal()">Not now</button>` : ''}
+  </div></div>`);
+};
+A.testPush = async () => {
+  try {
+    const a = await AlertsDB.send({ title: 'Test alert', body: 'If you hear the tune, alerts are working on this phone.', urgent: true, to_user: S.user.id, to_name: S.me?.name || S.user.name, from_name: 'SabManage' });
+    const { data, error } = await S.adapter.sb.functions.invoke('send-alert', { body: { alertId: a.id, delay: 10 } }); if (error) throw error;
+    A.closeModal(); toast(data?.devices ? 'Test alert in 10 seconds. Close the app now.' : 'This phone is not registered yet. Tap Allow notifications first.', data?.devices ? '' : 'warn');
+  } catch (e) { toast('Could not send the test: ' + e.message, 'bad'); }
+};
 async function stopPush() { try { if (!pushOK()) return; const reg = await navigator.serviceWorker.getRegistration(); const sub = reg && await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) { } }
 const pushIsOn = () => pushOK() && Notification.permission === 'granted' && LS.get('ep_push_on', false);
 function pushCard() {
   if (!S.org || !pushOK() || pushIsOn() || LS.get('ep_push_hide', false)) return '';
-  return `<div class="card pad row-flex push-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('bell', '#E11D74')}<div class="grow" style="min-width:0"><b>Turn on alert notifications</b><div class="small muted">So you hear alerts from your team with the SabManage tune, even when the app is closed.</div></div><div class="row-flex" style="gap:6px"><button class="btn primary sm" onclick="A.enablePush()">Turn on</button><button class="icon-btn" style="width:34px;height:34px" aria-label="Hide" onclick="LS.set('ep_push_hide',true);render()">${ic('x')}</button></div></div>`;
+  return `<div class="card pad row-flex push-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('bell', '#E11D74')}<div class="grow" style="min-width:0"><b>Turn on alert notifications</b><div class="small muted">So you hear alerts from your team with the SabManage tune, even when the app is closed.</div></div><div class="row-flex" style="gap:6px"><button class="btn primary sm" onclick="A.notifSheet()">Turn on</button><button class="icon-btn" style="width:34px;height:34px" aria-label="Hide" onclick="LS.set('ep_push_hide',true);render()">${ic('x')}</button></div></div>`;
 }
 /* service worker tells an open app that a push arrived */
 try { navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', ev => { if (ev.data?.type === 'sm-alert' && S.org) startAlerts(); }); } catch (e) { }

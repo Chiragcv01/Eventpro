@@ -569,7 +569,7 @@ async function afterLogin() {
       S.orgs = await S.adapter.myOrgs(S.user.id);
     } catch (e) { toast(e.message, 'bad'); }
   }
-  if (!S.orgs.length) { S.org = null; if (S.super) { S.view = 'admin'; S.params = {}; } render(); return; }
+  if (!S.orgs.length) { S.org = null; if (S.super) { S.view = 'admin'; S.params = {}; } render(); if (typeof maybeAskPush === 'function') maybeAskPush(); return; }
   const last = LS.get('ep3_lastOrg', null);
   await openOrg((S.orgs.find(o => o.orgId === last) || S.orgs[0]).orgId);
 }
@@ -696,7 +696,7 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
-      <button class="tile" onclick="A.testTune()">${ibox('bell', '#E11D74')}<span>Alert tune</span></button>
+      <button class="tile" onclick="A.notifSheet()">${ibox('bell', typeof notifState === 'function' && notifState() === 'on' ? '#0B9B68' : '#E11D74')}<span>Notifications ${typeof notifState === 'function' && notifState() === 'on' ? 'on' : 'off'}</span></button>
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
       ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}

@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     const { data: who, error: werr } = await admin.auth.getUser(token);
     if (werr || !who?.user) return json({ error: "Not logged in" }, 401);
 
-    const { alertId } = await req.json().catch(() => ({}));
+    const { alertId, delay } = await req.json().catch(() => ({}));
     if (!alertId) return json({ error: "alertId missing" }, 400);
     const { data: a } = await admin.from("alerts").select("*").eq("id", alertId).maybeSingle();
     if (!a || a.from_user !== who.user.id) return json({ error: "Not allowed" }, 403);
@@ -43,6 +43,14 @@ Deno.serve(async (req) => {
       body: [a.from_name, a.body].filter(Boolean).join(": ").slice(0, 400),
       url: "/app#alert-" + a.id,
     });
+    // "test on my own phone": wait a few seconds so the person can close the app and lock the phone
+    const wait = a.to_user === a.from_user ? Math.max(0, Math.min(20, Number(delay) || 0)) : 0;
+    if (wait) {
+      const job = (async () => { await new Promise((r) => setTimeout(r, wait * 1000)); await Promise.all(subs.map((s: { endpoint: string; p256dh: string; auth: string }) => webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload, { TTL: 600, urgency: "high" }).catch(() => null))); })();
+      // @ts-ignore EdgeRuntime is provided by Supabase
+      if (typeof EdgeRuntime !== "undefined") EdgeRuntime.waitUntil(job); else await job;
+      return json({ sent: subs.length, devices: subs.length, delayed: wait });
+    }
     let sent = 0; const gone: string[] = []; const errors: string[] = [];
     await Promise.all(subs.map(async (s: { endpoint: string; p256dh: string; auth: string }) => {
       try {

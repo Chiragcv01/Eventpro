@@ -536,3 +536,6 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .chip:hover{border-color:var(--primary);color:var(--primary)}
 .urgent-check{background:#FFF1F2;border:1px solid #FECDD3;border-radius:12px;padding:10px 12px}
 @media (prefers-reduced-motion: reduce){.alert-ring,.alert-scrim.urgent{animation:none}}
+.notif-state{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:var(--surface2);border:1px solid var(--line)}
+.notif-state.on{background:#ECFDF5;border-color:#A7F3D0}
+.notif-state.denied{background:#FFF1F2;border-color:#FECDD3}

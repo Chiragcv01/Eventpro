@@ -2002,3 +2002,34 @@ Could not turn on notifications: {} | नोटिफ़िकेशन चा�
 1 new important reminder. Tap the bell. | 1 नया ज़रूरी रिमाइंडर। घंटी दबाएं।
 {} new important reminders. Tap the bell. | {1} नए ज़रूरी रिमाइंडर। घंटी दबाएं।
 `);
+
+I18N.load(`
+# ---------- notification permission ----------
+Alert notifications | अलर्ट नोटिफ़िकेशन
+Hear your team’s alerts even when the app is closed | ऐप बंद होने पर भी टीम के अलर्ट सुनें
+Notifications are on | नोटिफ़िकेशन चालू हैं
+Notifications are blocked on this phone | इस फ़ोन पर नोटिफ़िकेशन बंद हैं
+Not available here | यहां नहीं चलेगा
+Notifications are off | नोटिफ़िकेशन बंद हैं
+Alerts from your team will ring on this phone with the SabManage tune. | टीम के अलर्ट इस फ़ोन पर सबमैनेज की धुन के साथ बजेंगे।
+You (or someone) tapped “Don’t allow” earlier. Turn it on from phone settings: | पहले "इजाज़त न दें" दबाया गया था। फ़ोन की सेटिंग्स से चालू करें:
+Open SabManage in the Android app, or in Chrome at sabmanage.com/app. | सबमैनेज एंड्रॉयड ऐप में खोलें, या क्रोम में sabmanage.com/app खोलें।
+Tap Allow, then choose “Allow” on the phone’s pop-up. | "चालू करें" दबाएं, फिर फ़ोन के पॉप-अप में "Allow" (इजाज़त दें) चुनें।
+Open your phone Settings → Apps → SabManage → Notifications. | फ़ोन की सेटिंग्स → ऐप्स → सबमैनेज → नोटिफ़िकेशन खोलें।
+Turn on "Allow notifications" and open "Team alerts": keep sound on. | "नोटिफ़िकेशन की इजाज़त" चालू करें और "Team alerts" खोलकर आवाज़ चालू रखें।
+Come back here and tap "Check again". | यहां वापस आकर "फिर से देखें" दबाएं।
+Check again | फिर से देखें
+Allow notifications | नोटिफ़िकेशन चालू करें
+Test it on this phone | इस फ़ोन पर जांचें
+Tap the button, then within 10 seconds close the app, put the phone on silent and lock it. The alert should ring. | बटन दबाएं, फिर 10 सेकंड के अंदर ऐप बंद करें, फ़ोन साइलेंट करें और लॉक करें। अलर्ट बजना चाहिए।
+Send me a test alert in 10 seconds | 10 सेकंड में मुझे टेस्ट अलर्ट भेजें
+Play the alert tune now | अभी अलर्ट की धुन सुनें
+Not now | अभी नहीं
+Test alert | टेस्ट अलर्ट
+If you hear the tune, alerts are working on this phone. | धुन सुनाई दी तो इस फ़ोन पर अलर्ट ठीक चल रहे हैं।
+Test alert in 10 seconds. Close the app now. | 10 सेकंड में टेस्ट अलर्ट आएगा। अभी ऐप बंद करें।
+This phone is not registered yet. Tap Allow notifications first. | यह फ़ोन अभी जुड़ा नहीं है। पहले "नोटिफ़िकेशन चालू करें" दबाएं।
+Could not send the test: {} | टेस्ट नहीं भेज पाए: {1}
+Notifications on | नोटिफ़िकेशन चालू
+Notifications off | नोटिफ़िकेशन बंद
+`);
