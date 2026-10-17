@@ -396,7 +396,7 @@ function truckTool() {
 /* ================= Team & access ================= */
 V.team = () => {
   const tab = S.params.tab || 'members'; const owner = lvl('team') >= 3; const roleOpts = Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => [k, r.label]);
-  const head = pageHead('Team & access', 'Who can log in, what each role can see and change, and a log of every action.', lvl('team') >= 2 ? `<button class="btn primary" onclick="A.memberForm()">${ic('plus')} Add employee</button>` : '');
+  const head = pageHead('Team & access', 'Who can log in, what each role can see and change, and a log of every action.', lvl('team') >= 2 ? `<button class="btn wa" onclick="A.shareAppLink()">${ic('wa')} Send app to team</button><button class="btn primary" onclick="A.memberForm()">${ic('plus')} Add employee</button>` : '');
   const tabs = `<div class="tabs">${[['members', 'Members'], ['roles', 'Roles & permissions'], ['activity', 'Activity log']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}${tabHelp('team-' + tab)}</div>`;
   if (tab === 'roles') {
     const roles = Object.entries(S.roles);

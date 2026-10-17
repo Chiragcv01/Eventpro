@@ -698,6 +698,7 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
+      ${typeof inAndroidApp === 'function' && !inAndroidApp() ? `<a class="tile" href="https://sabmanage.com/download" target="_blank" rel="noopener">${ibox('download', '#16A34A')}<span>Android app</span></a>` : ''}
       <button class="tile" onclick="A.notifSheet()">${ibox('bell', typeof notifState === 'function' && notifState() === 'on' ? '#0B9B68' : '#E11D74')}<span>Notifications ${typeof notifState === 'function' && notifState() === 'on' ? 'on' : 'off'}</span></button>
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>

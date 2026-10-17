@@ -616,6 +616,11 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .acc-seg input:checked+span{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.15)}
 .acc-seg input[value="0"]:checked+span{color:#B4182F}
 .acc-seg input[value="2"]:checked+span{color:#08744E}
+.whats-new{margin-bottom:14px;background:linear-gradient(135deg,#F5F3FF,#FFF 60%);border-color:#DDD6FE;display:flex;flex-direction:column;gap:10px}
+.whats-new b .ico{width:18px;height:18px;vertical-align:-3px;color:#7C3AED}
+.whats-new ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.whats-new li{display:flex;gap:9px;align-items:flex-start;font-size:14.5px;line-height:1.45}
+.whats-new li .ico{width:17px;height:17px;flex:none;margin-top:2px;color:#7C3AED}
 
 </style>
 </head>
@@ -2758,6 +2763,21 @@ Access saved | एक्सेस सेव हो गया
 Updated access for {} | {1} का एक्सेस बदला
 `);
 
+I18N.load(`
+# ---------- app download, what's new ----------
+What’s new in SabManage | सबमैनेज में नया क्या है
+Easy home: today’s events, setup % and money to collect at the top | आसान होम: ऊपर ही आज के इवेंट, सेटअप % और लेना बाकी पैसा
+New booking needs only 4 things; save packages for one-tap bookings | नई बुकिंग में सिर्फ़ 4 चीज़ें; पैकेज सेव करें और एक टैप में बुकिंग करें
+Crew get their own simple screen: “I have reached” and 25% / 50% / Done | क्रू की अपनी आसान स्क्रीन: "मैं पहुंच गया" और 25% / 50% / डन
+Crew updates show on your phone within a second | क्रू का अपडेट एक सेकंड में आपके फ़ोन पर दिखता है
+Alerts to your team ring with the SabManage tune | टीम को भेजे अलर्ट सबमैनेज की धुन के साथ बजते हैं
+Get the Android app | एंड्रॉयड ऐप लें
+Send app to team | टीम को ऐप भेजें
+Android app | एंड्रॉयड ऐप
+Close | बंद करें
+Log in with your mobile number and the password the owner gives you. | अपने मोबाइल नंबर और ओनर के दिए पासवर्ड से लॉगिन करें।
+`);
+
 'use strict';
 /* ================= SabManage v3 — core ================= */
 const APP_VERSION = '3.0.0';
@@ -3458,6 +3478,7 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
+      ${typeof inAndroidApp === 'function' && !inAndroidApp() ? `<a class="tile" href="https://sabmanage.com/download" target="_blank" rel="noopener">${ibox('download', '#16A34A')}<span>Android app</span></a>` : ''}
       <button class="tile" onclick="A.notifSheet()">${ibox('bell', typeof notifState === 'function' && notifState() === 'on' ? '#0B9B68' : '#E11D74')}<span>Notifications ${typeof notifState === 'function' && notifState() === 'on' ? 'on' : 'off'}</span></button>
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
@@ -5004,7 +5025,7 @@ function truckTool() {
 /* ================= Team & access ================= */
 V.team = () => {
   const tab = S.params.tab || 'members'; const owner = lvl('team') >= 3; const roleOpts = Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => [k, r.label]);
-  const head = pageHead('Team & access', 'Who can log in, what each role can see and change, and a log of every action.', lvl('team') >= 2 ? `<button class="btn primary" onclick="A.memberForm()">${ic('plus')} Add employee</button>` : '');
+  const head = pageHead('Team & access', 'Who can log in, what each role can see and change, and a log of every action.', lvl('team') >= 2 ? `<button class="btn wa" onclick="A.shareAppLink()">${ic('wa')} Send app to team</button><button class="btn primary" onclick="A.memberForm()">${ic('plus')} Add employee</button>` : '');
   const tabs = `<div class="tabs">${[['members', 'Members'], ['roles', 'Roles & permissions'], ['activity', 'Activity log']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}${tabHelp('team-' + tab)}</div>`;
   if (tab === 'roles') {
     const roles = Object.entries(S.roles);
@@ -5296,7 +5317,7 @@ function accessSummary(m) {
 function genPass() { const w = ['Tent', 'Diya', 'Gulab', 'Kesar', 'Moti', 'Raja', 'Neem', 'Chand', 'Heera', 'Mehndi']; return w[Math.floor(Math.random() * w.length)] + '@' + (1000 + Math.floor(Math.random() * 9000)); }
 function credSheet(title, name, email, pass) {
   const url = location.href.split('#')[0]; const id = displayId(email);
-  const msg = `Namaste ${name || ''} ji!\n${S.org ? settings().bizName + ' ke ' : ''}${S.platform?.appName || 'SabManage'} app ka login:\n\nLink: ${url}\nLogin ID: ${id.replace('+91 ', '')}\nPassword: ${pass}\n\nKripya yeh password kisi aur ko na bataein.`;
+  const msg = `Namaste ${name || ''} ji!\n${S.org ? settings().bizName + ' ke ' : ''}${S.platform?.appName || 'SabManage'} app ka login:\n\nApp download: https://sabmanage.com/download\nYa browser mein: ${url}\nLogin ID: ${id.replace('+91 ', '')}\nPassword: ${pass}\n\nKripya yeh password kisi aur ko na bataein.`;
   modal(`${sheetHead(title, name)}<div class="sheet-b stack">
     <div class="card pad stack-sm" style="background:var(--surface2);box-shadow:none"><div class="row-flex" style="justify-content:space-between"><span class="muted small">Link</span><span class="mono small" style="overflow-wrap:anywhere">${esc(url)}</span></div>
     <div class="row-flex" style="justify-content:space-between"><span class="muted small">Login ID</span><b class="mono">${esc(id.replace('+91 ', ''))}</b></div>
@@ -6107,7 +6128,7 @@ function simpleHome() {
     can('inventory') && bigBtn('Stock', 'box', MOD.inventory.c, "A.go('inventory')"),
     can('invoices', 2) && bigBtn('Bill / quotation', 'receipt', MOD.invoices.c, 'A.newInvoice()'),
     can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()')].filter(Boolean);
-  return `${pushCard()}
+  return `${pushCard()}${whatsNewCard()}
   <div class="today-strip">
     <div><b>${today.length}</b><span>Events today</span></div>
     <div><b>${tom.length}</b><span>Tomorrow</span></div>
@@ -6240,8 +6261,26 @@ A.saveAccess = (e, uidv) => {
 const fullDashboard = V.dashboard;
 V.dashboard = () => {
   if (isSimple()) return isCrewUser() ? crewHome() : `<div class="sec-h" style="margin-top:0"><h2>Today${info('dashboard')}</h2></div>` + simpleHome();
-  return `<div class="easy-switch"><button class="linkbtn" onclick="A.setFull(false)">${ic('home')} Switch to easy home</button></div>` + fullDashboard();
+  return `<div class="easy-switch"><button class="linkbtn" onclick="A.setFull(false)">${ic('home')} Switch to easy home</button></div>${whatsNewCard()}` + fullDashboard();
 };
+
+/* ---------- getting the Android app + what's new ---------- */
+const APP_DL = 'https://sabmanage.com/download';
+try { if (String(document.referrer).startsWith('android-app://com.sabmanage.app')) LS.set('ep_in_app', true); } catch (e) { }
+const inAndroidApp = () => LS.get('ep_in_app', false);
+A.shareAppLink = () => { const st = settings(); window.open(waLink(`${st.bizName ? st.bizName + ': ' : ''}SabManage app\n${T('Download')}: ${APP_DL}\n${T('Log in with your mobile number and the password the owner gives you.')}`, ''), '_blank', 'noopener'); };
+const WHATS_NEW = [
+  ['home', 'Easy home: today’s events, setup % and money to collect at the top'],
+  ['calendar', 'New booking needs only 4 things; save packages for one-tap bookings'],
+  ['pin', 'Crew get their own simple screen: “I have reached” and 25% / 50% / Done'],
+  ['pulse', 'Crew updates show on your phone within a second'],
+  ['bell', 'Alerts to your team ring with the SabManage tune']];
+function whatsNewCard() {
+  if (!S.org || LS.get('ep_new_v3', false) || isCrewUser()) return '';
+  return `<div class="card pad whats-new"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><b>${ic('sparkle')} What’s new in SabManage</b><button class="icon-btn" style="width:32px;height:32px" aria-label="Close" onclick="LS.set('ep_new_v3',true);render()">${ic('x')}</button></div>
+    <ul>${WHATS_NEW.map(([i, t]) => `<li>${ic(i)}<span>${t}</span></li>`).join('')}</ul>
+    <div class="row-flex">${!inAndroidApp() ? `<a class="btn sm primary" href="${APP_DL}" target="_blank" rel="noopener">${ic('download')} Get the Android app</a>` : ''}${can('team', 2) ? `<button class="btn sm wa" onclick="A.shareAppLink()">${ic('wa')} Send app to team</button>` : ''}</div></div>`;
+}
 
 boot();
 

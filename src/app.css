@@ -591,3 +591,8 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .acc-seg input:checked+span{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.15)}
 .acc-seg input[value="0"]:checked+span{color:#B4182F}
 .acc-seg input[value="2"]:checked+span{color:#08744E}
+.whats-new{margin-bottom:14px;background:linear-gradient(135deg,#F5F3FF,#FFF 60%);border-color:#DDD6FE;display:flex;flex-direction:column;gap:10px}
+.whats-new b .ico{width:18px;height:18px;vertical-align:-3px;color:#7C3AED}
+.whats-new ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.whats-new li{display:flex;gap:9px;align-items:flex-start;font-size:14.5px;line-height:1.45}
+.whats-new li .ico{width:17px;height:17px;flex:none;margin-top:2px;color:#7C3AED}

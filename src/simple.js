@@ -71,7 +71,7 @@ function simpleHome() {
     can('inventory') && bigBtn('Stock', 'box', MOD.inventory.c, "A.go('inventory')"),
     can('invoices', 2) && bigBtn('Bill / quotation', 'receipt', MOD.invoices.c, 'A.newInvoice()'),
     can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()')].filter(Boolean);
-  return `${pushCard()}
+  return `${pushCard()}${whatsNewCard()}
   <div class="today-strip">
     <div><b>${today.length}</b><span>Events today</span></div>
     <div><b>${tom.length}</b><span>Tomorrow</span></div>
@@ -204,5 +204,23 @@ A.saveAccess = (e, uidv) => {
 const fullDashboard = V.dashboard;
 V.dashboard = () => {
   if (isSimple()) return isCrewUser() ? crewHome() : `<div class="sec-h" style="margin-top:0"><h2>Today${info('dashboard')}</h2></div>` + simpleHome();
-  return `<div class="easy-switch"><button class="linkbtn" onclick="A.setFull(false)">${ic('home')} Switch to easy home</button></div>` + fullDashboard();
+  return `<div class="easy-switch"><button class="linkbtn" onclick="A.setFull(false)">${ic('home')} Switch to easy home</button></div>${whatsNewCard()}` + fullDashboard();
 };
+
+/* ---------- getting the Android app + what's new ---------- */
+const APP_DL = 'https://sabmanage.com/download';
+try { if (String(document.referrer).startsWith('android-app://com.sabmanage.app')) LS.set('ep_in_app', true); } catch (e) { }
+const inAndroidApp = () => LS.get('ep_in_app', false);
+A.shareAppLink = () => { const st = settings(); window.open(waLink(`${st.bizName ? st.bizName + ': ' : ''}SabManage app\n${T('Download')}: ${APP_DL}\n${T('Log in with your mobile number and the password the owner gives you.')}`, ''), '_blank', 'noopener'); };
+const WHATS_NEW = [
+  ['home', 'Easy home: today’s events, setup % and money to collect at the top'],
+  ['calendar', 'New booking needs only 4 things; save packages for one-tap bookings'],
+  ['pin', 'Crew get their own simple screen: “I have reached” and 25% / 50% / Done'],
+  ['pulse', 'Crew updates show on your phone within a second'],
+  ['bell', 'Alerts to your team ring with the SabManage tune']];
+function whatsNewCard() {
+  if (!S.org || LS.get('ep_new_v3', false) || isCrewUser()) return '';
+  return `<div class="card pad whats-new"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><b>${ic('sparkle')} What’s new in SabManage</b><button class="icon-btn" style="width:32px;height:32px" aria-label="Close" onclick="LS.set('ep_new_v3',true);render()">${ic('x')}</button></div>
+    <ul>${WHATS_NEW.map(([i, t]) => `<li>${ic(i)}<span>${t}</span></li>`).join('')}</ul>
+    <div class="row-flex">${!inAndroidApp() ? `<a class="btn sm primary" href="${APP_DL}" target="_blank" rel="noopener">${ic('download')} Get the Android app</a>` : ''}${can('team', 2) ? `<button class="btn sm wa" onclick="A.shareAppLink()">${ic('wa')} Send app to team</button>` : ''}</div></div>`;
+}

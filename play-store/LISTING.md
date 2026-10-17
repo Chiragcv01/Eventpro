@@ -25,6 +25,15 @@ SabManage keeps the full hisaab of your tent house, catering or event business i
 
 Made for tent houses, caterers, halwais, decorators and event managers who run weddings, receptions, sangeet, jagrans and corporate events.
 
+EASY FOR EVERYONE
+• Easy home: today's events, setup done and money to collect at a glance
+• New booking in just 4 things: name, mobile, date, amount (save packages for one tap)
+• Crew get their own simple screen: "I have reached the site" and 25% / 50% / Done
+• Live updates: crew progress shows on the owner's phone within a second
+• Alerts that ring with the SabManage tune, even when the phone is on silent
+• Morning summary at 7:45: today's events and who to call back
+• Full Hindi with one tap, and an ⓘ help button on every screen
+
 BOOKINGS AND CALENDAR
 • Every enquiry, quotation and confirmed event in one diary
 • Peak saaya and muhurat dates marked on the calendar
@@ -80,6 +89,15 @@ Start with a free trial. Your data stays in the cloud and only your team can see
 सबमैनेज आपके टेंट हाउस, कैटरिंग या इवेंट बिज़नेस का पूरा हिसाब एक ऐप में रखता है।
 
 टेंट हाउस, कैटरर, हलवाई, डेकोरेटर और इवेंट मैनेजर के लिए बना, जो शादी, रिसेप्शन, संगीत, जागरण और कॉर्पोरेट इवेंट करते हैं।
+
+सबके लिए आसान
+• आसान होम: आज के इवेंट, कितना सेटअप हुआ और कितना पैसा लेना है, एक नज़र में
+• सिर्फ़ 4 चीज़ों में नई बुकिंग: नाम, मोबाइल, तारीख, रकम (पैकेज से एक टैप में)
+• क्रू की अपनी आसान स्क्रीन: "मैं साइट पर पहुंच गया" और 25% / 50% / डन
+• लाइव अपडेट: क्रू का काम एक सेकंड में ओनर के फ़ोन पर
+• सबमैनेज की धुन वाले अलर्ट, फ़ोन साइलेंट हो तब भी बजते हैं
+• सुबह 7:45 बजे झलक: आज के इवेंट और किसे फ़ोन करना है
+• एक टैप में पूरी हिंदी, और हर स्क्रीन पर ⓘ मदद बटन
 
 बुकिंग और कैलेंडर
 • हर इन्क्वायरी, कोटेशन और पक्का इवेंट एक डायरी में

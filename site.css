@@ -252,3 +252,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px
 .nf{text-align:center;padding:90px 0}
 .nf h1{font-size:clamp(40px,6vw,64px);font-weight:800}
 .nf p{color:var(--ink2);margin:12px 0 26px}
+.dl-page .lead{font-size:18px;color:var(--ink2)}
+.dl-page .cta{display:flex;gap:10px;flex-wrap:wrap}
+.dl-steps{display:flex;flex-direction:column;gap:10px;padding-left:22px}
+.dl-steps li{line-height:1.6;font-size:16px}

@@ -56,6 +56,7 @@ function sanitize(html) {
 
 /* ---------- icons (same set as the app) ---------- */
 const P = {
+  bell: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0', home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', megaphone: 'M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1zM17 8a5 5 0 0 1 0 8', sun: 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4', download: 'M12 3v12M7 10l5 5 5-5M4 19h16', android: 'M6 9h12v8a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zM6 9a6 6 0 0 1 12 0M9 6.5h.01M15 6.5h.01M3 10v5M21 10v5M9 18v3M15 18v3',
   tent: 'M3 20L12 4l9 16zM12 4v16M8 20l4-6 4 6', pot: 'M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 6c0-1 1-2 1-3M14 6c0-1 1-2 1-3', sparkle: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7z',
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', box: 'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10', receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3', rupee: 'M7 4h10M7 8h10M7 4c6 0 6 8 0 8H6l8 8',
   handshake: 'M2 12l4-4h4l2 2 2-2h4l4 4M6 8l6 7 6-7M4 14l4 4M20 14l-4 4', users: 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21v-1a6 6 0 0 1 12 0v1M16 3.5a4 4 0 0 1 0 7.5M22 21v-1a6 6 0 0 0-4-5.6', pulse: 'M3 12h4l3-8 4 16 3-8h4',
@@ -84,7 +85,7 @@ async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
 /* ---------- page shell ---------- */
 function shell({ s, plat, origin, path, title, desc, image, body, type = 'website', jsonld = [], noindex = false, hiTitle = '' }) {
   const brand = s.brandName || 'SabManage'; const url = origin + path;
-  const nav = [['/#features', 'Features', 'सुविधाएं'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
+  const nav = [['/#features', 'Features', 'सुविधाएं'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
   const waN = s.whatsapp || s.phone;
   const social = [['instagram', 'insta', 'Instagram'], ['facebook', 'fb', 'Facebook'], ['youtube', 'yt', 'YouTube'], ['linkedin', 'li', 'LinkedIn']].filter(([k]) => safeUrl(s[k])).map(([k, i, l]) => `<a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" aria-label="${l}">${ic(i)}</a>`).join('');
   return `<!doctype html>
@@ -131,7 +132,7 @@ ${body}
     <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
     <div><h4${hi('संपर्क')}>Contact</h4><ul>
       ${s.phone ? `<li><a href="tel:+${waNum(s.phone)}">${esc(s.phone)}</a></li>` : ''}
-      ${waN ? `<li><a href="${esc(wa(waN, 'Namaste, I want to know more about ' + brand + '.'))}" target="_blank" rel="noopener">WhatsApp</a></li>` : ''}
+      ${waN ? `<li><a href="${esc(wa(waN, 'Namaste, I want to know more about ' + brand + '.'))}" target="_blank" rel="noopener"${hi('व्हाट्सऐप')}>WhatsApp</a></li>` : ''}
       ${s.email ? `<li><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>` : ''}
       ${s.address ? `<li style="color:var(--ink2)">${esc(s.address)}</li>` : ''}
     </ul></div>
@@ -160,16 +161,22 @@ function homePage({ s, plat, posts }) {
       [['Vendor purchase orders and dues', 'वेंडर के परचेज़ ऑर्डर और बकाया'], ['Live setup tracker for crew', 'क्रू के लिए लाइव सेटअप ट्रैकर'], ['Client page with progress and bill', 'क्लाइंट के लिए प्रोग्रेस और बिल वाला पेज']]]
   ];
   const feats = [
-    ['calendar', '#7C3AED', 'Bookings & calendar', 'बुकिंग और कैलेंडर', 'Every enquiry, quotation and confirmed event in one diary, with peak saaya dates marked.', 'हर इन्क्वायरी, कोटेशन और पक्का इवेंट एक डायरी में, साया की तारीखें अलग दिखती हैं।'],
-    ['box', '#2563EB', 'Godown stock', 'गोदाम का स्टॉक', 'See what is free on any date. Stock is held automatically for confirmed bookings.', 'किसी भी तारीख को क्या खाली है, देखें। पक्की बुकिंग के लिए स्टॉक अपने आप रुकता है।'],
-    ['pot', '#16A34A', 'Catering calculator', 'कैटरिंग कैलकुलेटर', 'Menu, guests and buffer in; samagri list, raw cost and per-plate price out.', 'मेन्यू, मेहमान और बफ़र डालें; सामग्री लिस्ट, लागत और प्रति प्लेट रेट पाएं।'],
+    ['home', '#1F5EFF', 'Easy home screen', 'आसान होम स्क्रीन', 'Open the app and see today: events, setup done and money to collect. Big buttons for the daily work.', 'ऐप खोलते ही आज की झलक: इवेंट, कितना सेटअप हुआ और कितना पैसा लेना है। रोज़ के काम के बड़े बटन।'],
+    ['calendar', '#7C3AED', 'Booking in 4 things', 'सिर्फ़ 4 चीज़ों में बुकिंग', 'Name, mobile, date and amount. Save ready packages like “Wedding 500 guests” and fill everything in one tap.', 'नाम, मोबाइल, तारीख और रकम। "शादी 500 मेहमान" जैसे तैयार पैकेज से सब एक टैप में भरें।'],
+    ['box', '#2563EB', 'Godown stock', 'गोदाम का स्टॉक', 'See what is free on any date. Stock is held automatically for confirmed bookings.', 'किसी भी तारीख को क्या खाली है, देखें। पक्की बुकिंग के लिए स्टॉक अपने आप रुक जाता है।'],
+    ['pot', '#16A34A', 'Catering calculator', 'कैटरिंग कैलकुलेटर', 'Menu, guests and buffer in; samagri list, raw cost and per-plate price out.', 'मेन्यू, मेहमान और बफ़र डालें; सामग्री लिस्ट, कच्चा खर्च और प्लेट का दाम पाएं।'],
     ['receipt', '#DB2777', 'GST bills with your logo', 'आपके लोगो वाले जीएसटी बिल', 'Quotations, tax invoices, receipts and challans with your logo, stamp and UPI.', 'आपके लोगो, स्टैम्प और यूपीआई के साथ कोटेशन, टैक्स इनवॉइस, रसीद और चालान।'],
     ['rupee', '#0B9B68', 'Payments & reminders', 'पेमेंट और याद-दिहानी', 'Record advances, see who owes what and send a polite WhatsApp reminder in one tap.', 'एडवांस दर्ज करें, किस पर कितना बाकी है देखें और एक टैप में व्हाट्सऐप पर याद दिलाएं।'],
+    ['pin', '#0D9488', 'Crew’s own screen', 'क्रू की अपनी स्क्रीन', 'Crew tap “I have reached the site” for attendance and 25% / 50% / Done for their work. Nothing else to learn.', 'क्रू "मैं साइट पर पहुंच गया" दबाकर हाज़िरी लगाते हैं और अपने काम पर 25% / 50% / डन दबाते हैं। और कुछ सीखना नहीं।'],
+    ['pulse', '#0EA5E9', 'Live updates', 'लाइव अपडेट', 'When crew update the setup, the owner’s phone shows it within a second. No calls needed.', 'क्रू सेटअप अपडेट करे तो ओनर के फ़ोन पर एक सेकंड में दिख जाता है। फ़ोन करने की ज़रूरत नहीं।'],
+    ['bell', '#E11D74', 'Alerts that ring', 'बजने वाले अलर्ट', 'Send “Come to the godown” to a worker. It rings with the SabManage tune, even when their phone is on silent (Android app).', 'कर्मचारी को "गोदाम पर आओ" भेजें। सबमैनेज की धुन के साथ बजेगा, फ़ोन साइलेंट हो तब भी (एंड्रॉयड ऐप)।'],
+    ['users', '#0D9488', 'Wages, overtime & kharcha', 'मज़दूरी, ओवरटाइम और खर्चा', 'Duty hours, overtime, extra shifts, advance, food money and bonus. The month’s pay is worked out for you.', 'ड्यूटी के घंटे, ओवरटाइम, एक्स्ट्रा शिफ़्ट, एडवांस, खाने का पैसा और इनाम। महीने की तनख्वाह अपने आप बनती है।'],
+    ['chart', '#0891B2', 'Every cost, real profit', 'हर खर्च, असली मुनाफ़ा', 'Expenses, crew wages, food money and vendor orders in one list, and the true profit of every function.', 'खर्च, क्रू की मज़दूरी, खाने का पैसा और वेंडर के ऑर्डर एक लिस्ट में, और हर फ़ंक्शन का असली मुनाफ़ा।'],
+    ['megaphone', '#E11D74', 'Free marketing tools', 'फ़्री मार्केटिंग टूल', 'Follow-up reminders for enquiries, Google review requests, rate card PDF, QR poster and anniversary wishes to old clients.', 'इन्क्वायरी के फ़ॉलो-अप, गूगल रिव्यू मांगना, रेट कार्ड पीडीएफ़, क्यूआर पोस्टर और पुराने ग्राहकों को सालगिरह की बधाई।'],
+    ['sun', '#F59E0B', 'Morning summary', 'सुबह की झलक', 'At 7:45 every morning: today’s events, tomorrow’s, and who to call back, as a notification.', 'हर सुबह 7:45 बजे नोटिफ़िकेशन: आज के इवेंट, कल के, और किसे फ़ोन करना है।'],
     ['handshake', '#D97706', 'Vendors & POs', 'वेंडर और पीओ', 'Florists, DJs, dairy and crockery partners with purchase orders and dues.', 'फूल वाले, डीजे, डेयरी और क्रॉकरी पार्टनर, परचेज़ ऑर्डर और बकाया के साथ।'],
-    ['users', '#0D9488', 'Crew & wages', 'क्रू और मज़दूरी', 'Daily attendance by event, advances and month-end payout for every worker.', 'इवेंट के हिसाब से रोज़ की हाज़िरी, एडवांस और हर कारीगर की महीने की तनख्वाह।'],
-    ['pulse', '#0EA5E9', 'Live setup tracker', 'लाइव सेटअप ट्रैकर', 'Crew update progress from their phones, so you know the pandal is ready before you reach.', 'क्रू अपने फ़ोन से प्रोग्रेस अपडेट करती है, आपके पहुंचने से पहले पता रहता है कि पंडाल तैयार है।'],
-    ['chart', '#0891B2', 'Profit by event', 'हर इवेंट का मुनाफ़ा', 'Billing minus vendors, expenses and wages: the real profit of every function.', 'बिल में से वेंडर, खर्च और मज़दूरी घटाकर हर फ़ंक्शन का असली मुनाफ़ा।'],
-    ['shield', '#475569', 'Staff logins & access', 'स्टाफ़ लॉगिन और एक्सेस', 'Give each person their own login and decide exactly which sections they can see.', 'हर व्यक्ति को अपना लॉगिन दें और तय करें कि वे कौन-से सेक्शन देख सकते हैं।']
+    ['shield', '#475569', 'Who sees what', 'किसे क्या दिखे', 'Each person gets their own login. Switch any section Off, See or Change for them.', 'हर व्यक्ति का अपना लॉगिन। उनके लिए कोई भी सेक्शन बंद, देखे या बदले करें।'],
+    ['globe', '#16A34A', 'Full Hindi + help on every screen', 'पूरी हिंदी + हर स्क्रीन पर मदद', 'The whole app in Hindi (Devanagari) with one tap, and an ⓘ button on every screen that explains it simply.', 'एक टैप में पूरा ऐप हिंदी में, और हर स्क्रीन पर ⓘ बटन जो आसान भाषा में समझाता है।'],
   ];
   const plans = (plat.plans || []).filter(p => p && p.name);
   const mid = plans.length === 3 ? 1 : -1;
@@ -199,7 +206,9 @@ function homePage({ s, plat, posts }) {
     ['Can my staff use it with their own login?', 'क्या मेरा स्टाफ़ अपने लॉगिन से चला सकता है?', 'Yes. You create a login ID and password for each person and choose which sections they can see or change. A crew member can see only their own tasks.', 'हां। आप हर व्यक्ति की लॉगिन आईडी और पासवर्ड बनाते हैं और तय करते हैं कि वे कौन-से सेक्शन देख या बदल सकते हैं। क्रू मेंबर सिर्फ़ अपने काम देख सकता है।'],
     ['Will my bills show my business name and logo?', 'क्या बिल पर मेरे बिज़नेस का नाम और लोगो आएगा?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID print on every quotation, invoice, receipt and challan.', 'हां। आपका लोगो, स्टैम्प, पता, जीएसटीआईएन, बैंक डिटेल्स और यूपीआई आईडी हर कोटेशन, इनवॉइस, रसीद और चालान पर छपते हैं।'],
     ['Is my data safe?', 'क्या मेरा डेटा सुरक्षित है?', 'Your data is stored in the cloud and only your team can see it. Every login can be protected with a 6-digit Authenticator code.', 'आपका डेटा क्लाउड में सुरक्षित रहता है और सिर्फ़ आपकी टीम देख सकती है। हर लॉगिन को 6 अंकों के ऑथेंटिकेटर कोड से सुरक्षित किया जा सकता है।'],
-    ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the app between Hindi and English with one tap. Everyday words like Booking, Invoice and GST stay in English, the way people say them.', 'हां। कोई भी एक टैप में ऐप को हिंदी या अंग्रेज़ी में कर सकता है। बुकिंग, इनवॉइस, जीएसटी जैसे आम शब्द अंग्रेज़ी में ही रहते हैं, जैसे लोग बोलते हैं।'],
+    ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the whole app to Hindi with one tap. Everything is written in Hindi letters, so people who do not read English can use it too.', 'हां। कोई भी एक टैप में पूरा ऐप हिंदी में कर सकता है। सब कुछ हिंदी अक्षरों में लिखा है, ताकि जो अंग्रेज़ी नहीं पढ़ते वे भी चला सकें।'],
+    ['Is there a mobile app?', 'क्या मोबाइल ऐप है?', 'Yes. Download the Android app from sabmanage.com/download (Play Store coming soon). On any other phone, open sabmanage.com/app in Chrome or Safari.', 'हां। एंड्रॉयड ऐप sabmanage.com/download से डाउनलोड करें (प्ले स्टोर पर जल्द)। किसी और फ़ोन पर क्रोम या सफ़ारी में sabmanage.com/app खोलें।'],
+    ['My crew are not good with phones. Will they manage?', 'मेरा क्रू फ़ोन ज़्यादा नहीं चलाता। क्या वे चला पाएंगे?', 'Yes. Crew see only one simple screen: a big “I have reached the site” button and their own work with 25% / 50% / Done buttons.', 'हां। क्रू को सिर्फ़ एक आसान स्क्रीन दिखती है: बड़ा "मैं साइट पर पहुंच गया" बटन और उनका अपना काम, 25% / 50% / डन बटन के साथ।'],
     ['What happens when the trial ends?', 'ट्रायल खत्म होने पर क्या होगा?', 'You can still log in and see all your data. To keep adding bookings and bills, choose a plan and we renew your account.', 'आप लॉगिन करके अपना पूरा डेटा देख सकते हैं। बुकिंग और बिल जोड़ते रहने के लिए प्लान चुनें, हम आपका अकाउंट रिन्यू कर देंगे।']
   ];
   return `
@@ -208,8 +217,8 @@ function homePage({ s, plat, posts }) {
     <div>
       <h1${hi(s.tagline === DEFAULT_SITE.tagline ? 'टेंट, कैटरिंग और इवेंट का पूरा हिसाब, एक ऐप में।' : '')}>${esc(s.tagline || DEFAULT_SITE.tagline)}</h1>
       <p class="lead"${hi('बुकिंग, गोदाम स्टॉक, हलवाई का राशन, जीएसटी बिल, पेमेंट की याद-दिहानी, क्रू की हाज़िरी और हर इवेंट का मुनाफ़ा। टेंट हाउस, कैटरर और इवेंट मैनेजर के लिए बना।')}>Bookings, godown stock, halwai ration, GST bills, payment reminders, crew attendance and the profit of every event. Made for tent houses, caterers and event managers.</p>
-      <div class="cta">${startBtn}${waBtn}</div>
-      <ul class="facts"><li>${ic('check')}<span${hi('किसी भी फ़ोन पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('हिंदी और अंग्रेज़ी')}>Hindi and English</span></li><li>${ic('check')}<span${hi('आपके लोगो वाले जीएसटी बिल')}>GST bills with your logo</span></li></ul>
+      <div class="cta">${startBtn}<a class="btn" href="/download">${ic('android')}<span${hi('ऐप डाउनलोड करें')}>Download app</span></a>${waBtn}</div>
+      <ul class="facts"><li>${ic('check')}<span${hi('किसी भी फ़ोन पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('पूरी हिंदी में')}>Full Hindi</span></li><li>${ic('check')}<span${hi('क्रू के लिए आसान')}>Easy for crew</span></li><li>${ic('check')}<span${hi('आपके लोगो वाले जीएसटी बिल')}>GST bills with your logo</span></li></ul>
     </div>
     <div class="tagstack">
       <div class="phone"><img src="/img/app-dashboard.webp" width="390" height="780" alt="SabManage app home screen showing money pending from clients, upcoming events and quick actions" fetchpriority="high"></div>
@@ -338,6 +347,27 @@ function legalPage(kind, { s }) {
 
 
 /* ---------- account deletion (Google Play) ---------- */
+function downloadPage({ s }) {
+  const brand = esc(s.brandName || 'SabManage');
+  const steps = [
+    ['Tap “Download the app” below.', 'नीचे "ऐप डाउनलोड करें" दबाएं।'],
+    ['When the download finishes, open the file SabManage.apk.', 'डाउनलोड पूरा होने पर SabManage.apk फ़ाइल खोलें।'],
+    ['If the phone says “Install unknown apps”, tap Settings and allow it for Chrome (or your file manager), then go back.', 'अगर फ़ोन "अनजान ऐप इंस्टॉल करें" पूछे, तो सेटिंग्स दबाकर क्रोम (या फ़ाइल मैनेजर) के लिए इजाज़त दें, फिर वापस आएं।'],
+    ['Tap Install, then Open. Log in with your mobile number and password.', 'इंस्टॉल दबाएं, फिर खोलें। अपने मोबाइल नंबर और पासवर्ड से लॉगिन करें।'],
+    ['When asked, tap “Allow” for notifications so alerts can ring.', 'पूछे जाने पर नोटिफ़िकेशन के लिए "Allow" (इजाज़त दें) दबाएं, ताकि अलर्ट बज सकें।']];
+  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext dl-page">
+  <h1${hi(`${brand} ऐप डाउनलोड करें`)}>Get the ${brand} app</h1>
+  <p class="lead"${hi('एंड्रॉयड फ़ोन के लिए। फ़्री, 2 एमबी, एक मिनट में इंस्टॉल।')}>For Android phones. Free, 2 MB, installs in a minute.</p>
+  <div class="cta" style="margin:18px 0 8px"><a class="btn primary" href="/download/SabManage.apk" download>${ic('download')}<span${hi('ऐप डाउनलोड करें')}>Download the app</span></a><a class="btn" href="/app">${ic('globe')}<span${hi('ब्राउज़र में खोलें')}>Open in browser</span></a></div>
+  <p class="tiny"${hi('प्ले स्टोर पर जल्द आ रहा है। आईफ़ोन पर सफ़ारी में sabmanage.com/app खोलें और "होम स्क्रीन पर जोड़ें" दबाएं।')}>Coming soon on Play Store. On iPhone, open sabmanage.com/app in Safari and tap “Add to Home Screen”.</p>
+  <h2${hi('कैसे इंस्टॉल करें')}>How to install</h2>
+  <ol class="dl-steps">${steps.map(([e, h]) => `<li${hi(h)}>${e}</li>`).join('')}</ol>
+  <h2${hi('अपनी टीम को भेजें')}>Send it to your team</h2>
+  <p${hi('यह लिंक अपने मैनेजर और क्रू को व्हाट्सऐप पर भेजें: sabmanage.com/download')}>Send this link to your manager and crew on WhatsApp: sabmanage.com/download</p>
+  <div class="cta"><a class="btn wa" href="https://wa.me/?text=${encodeURIComponent('SabManage app download: https://sabmanage.com/download')}" target="_blank" rel="noopener">${ic('wa')}<span${hi('व्हाट्सऐप पर भेजें')}>Send on WhatsApp</span></a></div>
+  <p class="tiny" style="margin-top:22px"${hi('सुरक्षित: यह ऐप सीधे सबमैनेज की वेबसाइट से है और हमारी चाबी से साइन किया गया है।')}>Safe: this app comes straight from the SabManage website and is signed with our key.</p>
+</div>`;
+}
 function deletePage({ s }) {
   const brand = esc(s.brandName || 'SabManage');
   return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext">
@@ -377,7 +407,7 @@ module.exports = async (req, res) => {
     if (page === 'sitemap' || page === 'rss') {
       const posts = await loadPosts({ limit: 1000 });
       if (page === 'rss') return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>${esc(brand)} blog</title><link>${origin}/blog</link><description>${esc(s.tagline)}</description>${posts.slice(0, 30).map(p => `<item><title>${esc(p.title)}</title><link>${origin}/blog/${esc(p.slug)}</link><guid>${origin}/blog/${esc(p.slug)}</guid><pubDate>${new Date(p.published_at).toUTCString()}</pubDate><description>${esc(p.excerpt)}</description></item>`).join('')}</channel></rss>`, 'application/rss+xml; charset=utf-8');
-      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
+      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/download', ''], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
       return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(([u, d]) => `<url><loc>${esc(origin + u)}</loc>${d ? `<lastmod>${String(d).slice(0, 10)}</lastmod>` : ''}</url>`).join('')}</urlset>`, 'application/xml; charset=utf-8');
     }
     const base = { s, plat, origin };
@@ -405,6 +435,7 @@ module.exports = async (req, res) => {
       const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: desc, datePublished: p.published_at, dateModified: p.updated_at || p.published_at, inLanguage: p.lang === 'hi' ? 'hi-IN' : 'en-IN', mainEntityOfPage: origin + '/blog/' + p.slug, ...(p.cover_url ? { image: [p.cover_url] } : {}), author: { '@type': p.author ? 'Person' : 'Organization', name: p.author || brand }, publisher: { '@type': 'Organization', name: brand } };
       return send(200, shell({ ...base, path: '/blog/' + p.slug, title: `${p.seo_title || p.title} | ${brand}`, desc, image: p.cover_url || origin + '/img/og.jpg', type: 'article', jsonld: [ld], body: postPage({ ...base, p, related: more }) }));
     }
+    if (page === 'download') return send(200, shell({ ...base, path: '/download', title: `Download the ${brand} app`, desc: `Download the ${brand} Android app for tent houses, caterers and event managers.`, body: downloadPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'delete') return send(200, shell({ ...base, path: '/delete-account', title: `Delete your account | ${brand}`, desc: `How to delete your ${brand} account and data.`, body: deletePage(base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     if (page === 'privacy' || page === 'terms') return send(200, shell({ ...base, path: '/' + page, title: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} | ${brand}`, desc: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} for ${brand}.`, body: legalPage(page, base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     return send(404, shell({ ...base, path: '/' + page, title: `Page not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह पेज नहीं मिला')}>This page is not here</h1><p${hi('लिंक शायद पुराना है।')}>The link may be old.</p><a class="btn primary" href="/"${hi('होम पर जाएं')}>Go to home</a></div>` }), 'text/html; charset=utf-8', 's-maxage=60');

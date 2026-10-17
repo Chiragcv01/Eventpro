@@ -2132,3 +2132,18 @@ Password & more | पासवर्ड और बाकी
 Access saved | एक्सेस सेव हो गया
 Updated access for {} | {1} का एक्सेस बदला
 `);
+
+I18N.load(`
+# ---------- app download, what's new ----------
+What’s new in SabManage | सबमैनेज में नया क्या है
+Easy home: today’s events, setup % and money to collect at the top | आसान होम: ऊपर ही आज के इवेंट, सेटअप % और लेना बाकी पैसा
+New booking needs only 4 things; save packages for one-tap bookings | नई बुकिंग में सिर्फ़ 4 चीज़ें; पैकेज सेव करें और एक टैप में बुकिंग करें
+Crew get their own simple screen: “I have reached” and 25% / 50% / Done | क्रू की अपनी आसान स्क्रीन: "मैं पहुंच गया" और 25% / 50% / डन
+Crew updates show on your phone within a second | क्रू का अपडेट एक सेकंड में आपके फ़ोन पर दिखता है
+Alerts to your team ring with the SabManage tune | टीम को भेजे अलर्ट सबमैनेज की धुन के साथ बजते हैं
+Get the Android app | एंड्रॉयड ऐप लें
+Send app to team | टीम को ऐप भेजें
+Android app | एंड्रॉयड ऐप
+Close | बंद करें
+Log in with your mobile number and the password the owner gives you. | अपने मोबाइल नंबर और ओनर के दिए पासवर्ड से लॉगिन करें।
+`);

@@ -7,6 +7,10 @@
       "destination": "/api/site?view=home"
     },
     {
+      "source": "/download",
+      "destination": "/api/site?view=download"
+    },
+    {
       "source": "/blog",
       "destination": "/api/site?view=blog"
     },
@@ -102,6 +106,23 @@
         {
           "key": "Access-Control-Allow-Origin",
           "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/download/(.*)\\.apk",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/vnd.android.package-archive"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"SabManage.apk\""
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
         }
       ]
     }
