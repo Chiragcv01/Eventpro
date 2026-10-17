@@ -2163,3 +2163,15 @@ I agree | मैं सहमत हूं
 Please tick the box to agree | सहमति के लिए बॉक्स पर टिक करें
 Thank you | धन्यवाद
 `);
+I18N.load(`
+Your business, in one app | आपका बिज़नेस, एक ऐप में
+Apne business ka poora hisaab, ek app mein. | अपने बिज़नेस का पूरा हिसाब, एक ऐप में।
+Bookings and appointments, GST bills, payments, staff attendance and customer reminders. On any phone, in Hindi and English. | बुकिंग और अपॉइंटमेंट, जीएसटी बिल, पेमेंट, स्टाफ़ की हाज़िरी और ग्राहकों को याद-दिहानी। किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में।
+Customers | ग्राहक
+Reminders | याद-दिहानी
+Hindi | हिंदी
+e.g. Sharma Enterprises | जैसे: शर्मा एंटरप्राइज़ेज़
+Code you got from the business | बिज़नेस से मिला कोड
+Open my page | मेरा पेज खोलें
+Staff | स्टाफ़
+`);

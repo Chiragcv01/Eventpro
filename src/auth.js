@@ -16,7 +16,7 @@ V.auth = () => {
     signup: `<form class="stack" onsubmit="A.doSignup(event)">
       <div class="grid2" style="padding:0">${fieldHTML({ name: 'name', label: 'Your name', required: true, autocomplete: 'name' })}${fieldHTML({ name: 'phone', label: 'Mobile', type: 'tel', required: true, placeholder: '98290 12345', autocomplete: 'tel' })}</div>
       <div class="field"><span>What is your business? *</span><div class="kind-cards">${types}</div><small>Tent, catering and event: pick all that apply. Doctors: pick Doctor / Clinic.</small></div>
-      <label class="field"><span id="bizNameLabel">Business name *</span><input id="f_bizName" name="bizName" required placeholder="e.g. Shree Ganesh Tent House"></label>
+      <label class="field"><span id="bizNameLabel">Business name *</span><input id="f_bizName" name="bizName" required placeholder="e.g. Sharma Enterprises"></label>
       <div id="docFields" class="doc-fields" hidden>${doctorFieldsHTML({})}</div>
       ${fieldHTML({ name: 'email', label: 'Your login ID: email or mobile number', required: true, autocomplete: 'username', hint: 'You will use this to log in every time' })}
       ${fieldHTML({ name: 'password', label: 'Password (min 6 characters)', type: 'password', required: true, minlength: 6, autocomplete: 'new-password' })}
@@ -25,15 +25,15 @@ V.auth = () => {
       <p class="tiny muted">You become the Owner with full access. Inside the app you create login IDs and passwords for your manager, accountant and staff, and decide what each person can see.</p></form>`,
     guest: `<form class="stack" onsubmit="A.doGuest(event)">
       <div class="banner">${ic('eye')}<span>See your own event only: setup progress, programme, bill, balance and how to pay. No login needed.</span></div>
-      ${fieldHTML({ name: 'code', label: 'Event code from your organiser', required: true, placeholder: 'e.g. k3m9xq2p7a' })}
-      <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">View my event</button></form>`
+      ${fieldHTML({ name: 'code', label: 'Code you got from the business', required: true, placeholder: 'e.g. k3m9xq2p7a' })}
+      <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">Open my page</button></form>`
   };
-  const showcase = [['Bookings', 'calendar', '#7C3AED'], ['Tent stock', 'tent', '#2563EB'], ['Catering', 'pot', '#16A34A'], ['GST bills', 'receipt', '#DB2777'], ['Payments', 'rupee', '#0B9B68'], ['Live setup', 'pulse', '#0EA5E9'], ['Crew', 'users', '#0D9488'], ['Reports', 'chart', '#0891B2']];
+  const showcase = [['Customers', 'user', '#7C3AED'], ['Bookings', 'calendar', '#2563EB'], ['GST bills', 'receipt', '#DB2777'], ['Payments', 'rupee', '#0B9B68'], ['Staff', 'users', '#0D9488'], ['Reminders', 'bell', '#D97706'], ['Reports', 'chart', '#0891B2'], ['Hindi', 'globe', '#16A34A']];
   return `<div class="auth">
   <section class="auth-brand"><div class="inner">
-    <div class="row-flex"><div class="logo">${ic('tent')}</div><div><b style="font:800 21px/1 var(--f-display);display:block">SabManage</b><span class="tiny muted">Tent · Catering · Events</span></div></div>
-    <h1>Tent, catering aur event ka <em>poora hisaab</em>, ek app mein.</h1>
-    <p class="desk-only">Bookings, godown stock, halwai ration, GST bills, payment reminders, crew attendance and profit for every event.</p>
+    <div class="row-flex"><div class="logo">${MARK_SVG}</div><div><b style="font:800 21px/1 var(--f-display);display:block">SabManage</b><span class="tiny muted">Your business, in one app</span></div></div>
+    <h1>Apne business ka poora hisaab, ek app mein.</h1>
+    <p class="desk-only">Bookings and appointments, GST bills, payments, staff attendance and customer reminders. On any phone, in Hindi and English.</p>
     <div class="showcase">${showcase.map(([l, i, c]) => `<div class="sc">${ibox(i, c, 'lg')}<span>${l}</span></div>`).join('')}</div>
   </div></section>
   <section class="auth-side"><div class="auth-card">
@@ -93,7 +93,7 @@ A.forgotModal = () => {
 };
 A.newPasswordModal = () => formModal({ title: 'Set a new password', fields: [{ name: 'p', label: 'New password', type: 'password', required: true, minlength: 6 }], submit: 'Update password', onSubmit: async v => { if (v.p.length < 6) throw new Error('Use at least 6 characters'); await S.adapter.changeOwnPassword(v.p); toast('Password updated'); } });
 
-V.noOrg = () => `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${ic('tent')}</div><b style="font:800 21px var(--f-display)">SabManage</b></div><h1>Namaste, <em>${esc((S.user.name || '').split(' ')[0] || 'ji')}</em>!</h1><p>Your login works, but you are not part of any business yet. Start your own business, or ask your employer to add you from their Team & Access screen.</p></div></section>
+V.noOrg = () => `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${MARK_SVG}</div><b style="font:800 21px var(--f-display)">SabManage</b></div><h1>Namaste, <em>${esc((S.user.name || '').split(' ')[0] || 'ji')}</em>!</h1><p>Your login works, but you are not part of any business yet. Start your own business, or ask your employer to add you from their Team & Access screen.</p></div></section>
 <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><div class="card pad stack"><h2>Get started</h2>
 <button class="checkcard" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span class="grow" style="text-align:left">Create my business<div class="tiny muted" style="font-weight:500">You become the Owner</div></span>${ic('chev')}</button>
 <button class="btn ghost block" onclick="A.logout()">${ic('logout')} Log out</button></div></div></section></div>`;
@@ -151,7 +151,7 @@ A.guestReview = e => { const v = formVals(e); if (!v) return; withBtn(e, async (
 /* ---------- Authenticator (2-step login) ---------- */
 V.mfa = () => {
   const P = S.platform || DEFAULT_PLATFORM;
-  return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${ic('tent')}</div><b style="font:800 21px var(--f-display)">${esc(P.appName || 'SabManage')}</b></div><h1>One more <em>step</em>.</h1><p>Your account is protected with an Authenticator app. Open Google Authenticator (or Microsoft Authenticator) on your phone and type the 6-digit code for ${esc(P.appName || 'SabManage')}.</p></div></section>
+  return `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${MARK_SVG}</div><b style="font:800 21px var(--f-display)">${esc(P.appName || 'SabManage')}</b></div><h1>One more <em>step</em>.</h1><p>Your account is protected with an Authenticator app. Open Google Authenticator (or Microsoft Authenticator) on your phone and type the 6-digit code for ${esc(P.appName || 'SabManage')}.</p></div></section>
   <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><form class="card pad stack" onsubmit="A.doMfa(event)">${ibox('shield', '#0B9B68', 'lg')}<h2>Enter your 6-digit code</h2>
     <p class="small muted">Logging in as <b>${esc(displayId(S.mfaPending?.email || ''))}</b></p>
     <input id="f_code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{6,7}" maxlength="7" required placeholder="123 456" style="font:700 28px var(--f-mono);letter-spacing:.3em;text-align:center">

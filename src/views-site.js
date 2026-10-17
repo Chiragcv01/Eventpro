@@ -1,7 +1,7 @@
 /* ================= Public website: content, blog, enquiries (Super Admin) ================= */
 const SITE_DEFAULT = {
   brandName: 'SabManage', tagline: 'Tent, catering aur event ka poora hisaab, ek app mein.',
-  about: 'SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.',
+  about: 'SabManage is built in Jaipur for Indian businesses that run on people and phones: tent houses, caterers, halwais, decorators, event managers, and now doctors and clinics. We sat with them in godowns, kitchens, wedding lawns and clinics to understand how the daily work is really done, and turned that into one simple app that works on any phone, in Hindi and English.',
   aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm',
   mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true
 };

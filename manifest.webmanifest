@@ -1,8 +1,8 @@
 {
   "id": "/app",
-  "name": "SabManage: Tent, Catering & Events",
+  "name": "SabManage",
   "short_name": "SabManage",
-  "description": "Bookings, godown stock, catering ration, GST bills, payments and crew for tent houses, caterers and event managers.",
+  "description": "The whole hisaab of your business in one app: bookings and appointments, GST bills, payments, staff and customer reminders. In Hindi and English.",
   "lang": "en-IN",
   "dir": "ltr",
   "start_url": "/app",

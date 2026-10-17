@@ -15,6 +15,10 @@
       "destination": "/api/site?view=doctors"
     },
     {
+      "source": "/events",
+      "destination": "/api/site?view=events"
+    },
+    {
       "source": "/blog",
       "destination": "/api/site?view=blog"
     },

@@ -96,6 +96,8 @@ const ICONS = {
   play: 'M7 4l12 8-12 8z', stop: 'M6 6h12v12H6z',
   arrow: 'M5 12h14M13 6l6 6-6 6', globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z', trend: 'M3 17l6-6 4 4 8-8M15 7h6v6', phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z'
 };
+/* the SabManage mark: three tiles and a tick ("sab kaam ho gaya") */
+const MARK_SVG = '<svg class="ico mark" viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor" stroke="none"><rect x="4" y="4" width="7" height="7" rx="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.8"/><rect x="4" y="13" width="7" height="7" rx="1.8"/></g><path d="M13.6 16.6l2 2 3.6-4.1" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 const ic = (n, cls = '') => `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n] || ''}"/></svg>`;
 
 /* ================= Domain constants ================= */

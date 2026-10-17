@@ -3,7 +3,7 @@
    Content comes from Supabase (public, read-only data). */
 const SB_URL = process.env.SUPABASE_URL || 'https://uregwtavhkjowiltukiq.supabase.co';
 const SB_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZWd3dGF2aGtqb3dpbHR1a2lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTA1MjksImV4cCI6MjEwNzcyNjUyOX0.bVRTpmkE_c30j-_pegk0HLdGaSeSNqQ3pwtBjeRoAIw';
-const V = '6';
+const V = '7';
 const PER_PAGE = 9;
 
 /* ---------- helpers ---------- */
@@ -70,6 +70,7 @@ const P = {
   insta: 'M4 4h16v16H4zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM17 7h.01', fb: 'M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3z', yt: 'M3 7a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zM10 9l5 3-5 3z', li: 'M4 9h4v11H4zM6 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM10 9h4v2c.6-1.2 2-2 3.5-2C20 9 21 10.6 21 13v7h-4v-6c0-1.2-.5-2-1.6-2s-1.9.8-1.9 2v6h-3.5z',
   arrow: 'M5 12h14M13 6l6 6-6 6', back: 'M15 18l-6-6 6-6', copy: 'M9 9h11v11H9zM5 15H4V4h11v1', bolt: 'M13 2L4 14h7l-1 8 9-12h-7z'
 };
+const MARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><rect x="4" y="4" width="7" height="7" rx="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.8"/><rect x="4" y="13" width="7" height="7" rx="1.8"/></g><path d="M13.6 16.6l2 2 3.6-4.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ic = (n, cls = 'ico') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n] || ''}"/></svg>`;
 
 /* ---------- data ---------- */
@@ -91,7 +92,7 @@ async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
 /* ---------- page shell ---------- */
 function shell({ s, plat, origin, path, title, desc, image, body, type = 'website', jsonld = [], noindex = false, hiTitle = '' }) {
   const brand = s.brandName || 'SabManage'; const url = origin + path;
-  const nav = [['/#features', 'Features', 'सुविधाएं'], ['/doctors', 'For doctors', 'डॉक्टरों के लिए'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
+  const nav = [['/#features', 'Features', 'सुविधाएं'], ['/#types', 'Who it’s for', 'किसके लिए'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
   const waN = s.whatsapp || s.phone;
   const social = [['instagram', 'insta', 'Instagram'], ['facebook', 'fb', 'Facebook'], ['youtube', 'yt', 'YouTube'], ['linkedin', 'li', 'LinkedIn']].filter(([k]) => safeUrl(s[k])).map(([k, i, l]) => `<a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" aria-label="${l}">${ic(i)}</a>`).join('');
   return `<!doctype html>
@@ -110,7 +111,7 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="${esc(brand)} blog" href="${esc(origin)}/blog/rss.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@75..100,500..800&family=Mukta:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/site.css?v=${V}">
 <script>if(location.hash.indexOf('#guest-')===0)location.replace('/app'+location.hash);</script>
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`).join('\n')}
@@ -118,7 +119,7 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 <body data-hi-title="${esc(hiTitle)}">
 <a class="skip" href="#main"${hi('मुख्य हिस्से पर जाएं')}>Skip to content</a>
 <header class="top" id="top"><div class="wrap">
-  <a class="brand" href="/"><span class="mk">${ic('tent')}</span>${esc(brand)}</a>
+  <a class="brand" href="/"><span class="mk">${MARK}</span>${esc(brand)}</a>
   <nav class="nav" id="nav" aria-label="Main">${nav.map(([h, l, h2]) => `<a href="${h}"${hi(h2)}>${l}</a>`).join('')}<a href="/app" class="mobile-login"${hi('लॉग इन')}>Log in</a></nav>
   <span class="grow"></span>
   <button class="lang" type="button" id="langBtn" aria-label="भाषा / Language" translate="no"><span data-l="hi">हिं</span><span data-l="en" class="on">EN</span></button>
@@ -130,12 +131,11 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 ${body}
 </main>
 <footer>
-  <div class="canopy thin" aria-hidden="true"></div>
   <div class="wrap">
-    <div class="about-f"><a class="brand" href="/"><span class="mk">${ic('tent')}</span>${esc(brand)}</a>
-      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('टेंट हाउस, कैटरर, इवेंट मैनेजर और डॉक्टरों के लिए बुकिंग, स्टॉक, जीएसटी बिल, पेमेंट, स्टाफ़ और मरीज़ों का एक आसान ऐप।')}>Bookings, stock, GST bills, payments, staff and patients in one simple app for tent houses, caterers, event managers and doctors.</p>
+    <div class="about-f"><a class="brand" href="/"><span class="mk">${MARK}</span>${esc(brand)}</a>
+      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('बुकिंग, बिल, पेमेंट, स्टाफ़ और ग्राहक, एक आसान ऐप में। किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में।')}>Bookings, bills, payments, staff and customers in one simple app. On any phone, in Hindi and English.</p>
       ${social ? `<div class="social">${social}</div>` : ''}</div>
-    <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
+    <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/events"${hi('टेंट, कैटरिंग, इवेंट')}>Tent, catering, events</a></li><li><a href="/doctors"${hi('डॉक्टर और क्लिनिक')}>Doctors and clinics</a></li><li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
     <div><h4${hi('संपर्क')}>Contact</h4><ul>
       ${s.phone ? `<li><a href="tel:+${waNum(s.phone)}">${esc(s.phone)}</a></li>` : ''}
       ${waN ? `<li><a href="${esc(wa(waN, 'Namaste, I want to know more about ' + brand + '.'))}" target="_blank" rel="noopener"${hi('व्हाट्सऐप')}>WhatsApp</a></li>` : ''}
@@ -157,34 +157,38 @@ function homePage({ s, plat, posts }) {
   const brand = s.brandName || 'SabManage'; const trial = +plat.trialDays || 0; const signup = plat.allowSignup !== false;
   const waN = s.whatsapp || s.phone;
   const startBtn = signup ? `<a class="btn primary" href="/app#signup"${hi(trial ? `${trial} दिन का फ़्री ट्रायल शुरू करें` : 'फ़्री में शुरू करें')}>${trial ? `Start ${trial}-day free trial` : 'Start free'}</a>` : `<a class="btn primary" href="#contact"${hi('डेमो लें')}>Book a demo</a>`;
-  const waBtn = waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('व्हाट्सऐप पर डेमो')}>Demo on WhatsApp</span></a>` : `<a class="btn" href="#contact"${hi('डेमो लें')}>Book a demo</a>`;
-  const who = [
-    ['tent', '#2563EB', 'Tent houses', 'टेंट हाउस', 'Know what is in the godown, what is out on rent and what is short for Saturday’s wedding.', 'गोदाम में क्या है, क्या किराए पर बाहर है और शनिवार की शादी के लिए क्या कम है, सब पता रहे।',
-      [['Date-wise stock for every shamiana, chair and DG set', 'हर शामियाना, कुर्सी और डीजी सेट का तारीख के हिसाब से स्टॉक'], ['Truck loading list and delivery challan', 'ट्रक लोडिंग लिस्ट और डिलीवरी चालान'], ['Damage and missing items charged to the client', 'टूटे और गुम सामान का चार्ज क्लाइंट के बिल में']]],
-    ['pot', '#16A34A', 'Caterers & halwais', 'कैटरर और हलवाई', 'Turn a menu and guest count into the full samagri list and a per-plate price in seconds.', 'मेन्यू और मेहमानों की गिनती से सेकंडों में पूरी सामग्री लिस्ट और प्रति प्लेट रेट निकालें।',
-      [['Ration list with your mandi rates', 'आपके मंडी रेट से राशन लिस्ट'], ['Per-plate cost and margin', 'प्रति प्लेट लागत और मार्जिन'], ['Menu saved to each booking', 'हर बुकिंग में मेन्यू सेव']]],
-    ['sparkle', '#DB2777', 'Event managers', 'इवेंट मैनेजर', 'Run vendors, crew, run-sheets and client updates for every function from one place.', 'हर फ़ंक्शन के वेंडर, क्रू, रन-शीट और क्लाइंट अपडेट एक ही जगह से संभालें।',
-      [['Vendor purchase orders and dues', 'वेंडर के परचेज़ ऑर्डर और बकाया'], ['Live setup tracker for crew', 'क्रू के लिए लाइव सेटअप ट्रैकर'], ['Client page with progress and bill', 'क्लाइंट के लिए प्रोग्रेस और बिल वाला पेज']]],
-    ['steth', '#E11D48', 'Doctors & clinics', 'डॉक्टर और क्लिनिक', 'Every patient’s BP, sugar, weight, reports and photos date-wise, with charts. Patients send readings from home.', 'हर मरीज़ का बीपी, शुगर, वज़न, रिपोर्ट और फ़ोटो तारीख के हिसाब से, ग्राफ़ के साथ। मरीज़ घर से रीडिंग भेजते हैं।',
-      [['Appointments in clinic, on video or WhatsApp', 'क्लिनिक, वीडियो या व्हाट्सऐप पर अपॉइंटमेंट'], ['Patient sends problems with photo or voice', 'मरीज़ फ़ोटो या आवाज़ में परेशानी भेजे'], ['Fees by UPI with reminders', 'यूपीआई से फ़ीस, याद-दिहानी के साथ']], '/doctors']
+  const waLink = waN ? `<a class="btn ghost" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('व्हाट्सऐप पर डेमो')}>Demo on WhatsApp</span></a>` : '';
+  const d = new Date(Date.now() + 5.5 * 3600e3);
+  const DAYS = [['Sunday', 'रविवार'], ['Monday', 'सोमवार'], ['Tuesday', 'मंगलवार'], ['Wednesday', 'बुधवार'], ['Thursday', 'गुरुवार'], ['Friday', 'शुक्रवार'], ['Saturday', 'शनिवार']];
+  const MONTHS = [['January', 'जनवरी'], ['February', 'फ़रवरी'], ['March', 'मार्च'], ['April', 'अप्रैल'], ['May', 'मई'], ['June', 'जून'], ['July', 'जुलाई'], ['August', 'अगस्त'], ['September', 'सितंबर'], ['October', 'अक्टूबर'], ['November', 'नवंबर'], ['December', 'दिसंबर']];
+  const [den, dhi] = DAYS[d.getUTCDay()]; const [men, mhi] = MONTHS[d.getUTCMonth()]; const dn = d.getUTCDate();
+  const custom = s.tagline && s.tagline !== DEFAULT_SITE.tagline;
+  const rows = [
+    ['09:02', 'user', '#0D9488', 'Ramesh reached work', 'रमेश काम पर पहुंचे', 'Attendance', 'हाज़िरी', ''],
+    ['10:15', 'rupee', '#0B9B68', 'Advance received from Verma ji', 'वर्मा जी से एडवांस मिला', '', '', '+₹15,000'],
+    ['11:40', 'calendar', '#1F5EFF', 'New booking for Saturday, 5 pm', 'शनिवार शाम 5 बजे की नई बुकिंग', 'Kapoor family', 'कपूर परिवार', ''],
+    ['12:30', 'receipt', '#7C3AED', 'Bill #241 sent on WhatsApp', 'बिल #241 व्हाट्सऐप पर भेजा', '', '', '₹32,400'],
+    ['16:00', 'bell', '#D97706', 'Payment reminder sent', 'पेमेंट की याद दिलाई', 'Sharma Traders', 'शर्मा ट्रेडर्स', '₹8,500 due']
+  ];
+  const pillars = [
+    ['calendar', 'Customers and bookings', 'ग्राहक और बुकिंग', 'Every enquiry, booking or appointment with its date, time and notes. Nothing lives on paper slips any more.', 'हर इन्क्वायरी, बुकिंग या अपॉइंटमेंट, तारीख, समय और नोट के साथ। अब कुछ भी पर्चियों पर नहीं।'],
+    ['receipt', 'Bills and payments', 'बिल और पेमेंट', 'GST bills with your logo and UPI. See who owes what, and send a polite WhatsApp reminder in one tap.', 'आपके लोगो और यूपीआई वाले जीएसटी बिल। किस पर कितना बाकी है देखें, और एक टैप में व्हाट्सऐप पर याद दिलाएं।'],
+    ['users', 'Staff and attendance', 'स्टाफ़ और हाज़िरी', 'Each person gets their own login and sees only what you allow. Attendance, wages and overtime are worked out for you.', 'हर व्यक्ति का अपना लॉगिन, और उसे सिर्फ़ वही दिखे जो आप चाहें। हाज़िरी, मज़दूरी और ओवरटाइम अपने आप।'],
+    ['bell', 'Updates and alerts', 'अपडेट और अलर्ट', 'Your team’s updates reach your phone within a second. Important alerts ring, even when the phone is on silent.', 'टीम के अपडेट एक सेकंड में आपके फ़ोन पर। ज़रूरी अलर्ट बजते हैं, फ़ोन साइलेंट हो तब भी।']
+  ];
+  const types = [
+    ['tent', 'Tent house', 'टेंट हाउस', 'Godown stock by date, loading lists, challans and damage charges.', 'तारीख के हिसाब से गोदाम का स्टॉक, लोडिंग लिस्ट, चालान और टूट-फूट का चार्ज।', '/events'],
+    ['pot', 'Caterer or halwai', 'कैटरर या हलवाई', 'Menus, ration lists with your mandi rates, and the cost of every plate.', 'मेन्यू, आपके मंडी रेट से राशन लिस्ट, और हर प्लेट की लागत।', '/events'],
+    ['sparkle', 'Event manager', 'इवेंट मैनेजर', 'Vendors, crew, run-sheets and a progress page for your client.', 'वेंडर, क्रू, रन-शीट और क्लाइंट के लिए प्रोग्रेस पेज।', '/events'],
+    ['steth', 'Doctor or clinic', 'डॉक्टर या क्लिनिक', 'Patient records, BP and sugar charts, appointments and fees by UPI.', 'मरीज़ों का रिकॉर्ड, बीपी और शुगर के ग्राफ़, अपॉइंटमेंट और यूपीआई से फ़ीस।', '/doctors']
   ];
   const feats = [
-    ['home', '#1F5EFF', 'Easy home screen', 'आसान होम स्क्रीन', 'Open the app and see today: events, setup done and money to collect. Big buttons for the daily work.', 'ऐप खोलते ही आज की झलक: इवेंट, कितना सेटअप हुआ और कितना पैसा लेना है। रोज़ के काम के बड़े बटन।'],
-    ['calendar', '#7C3AED', 'Booking in 4 things', 'सिर्फ़ 4 चीज़ों में बुकिंग', 'Name, mobile, date and amount. Save ready packages like “Wedding 500 guests” and fill everything in one tap.', 'नाम, मोबाइल, तारीख और रकम। "शादी 500 मेहमान" जैसे तैयार पैकेज से सब एक टैप में भरें।'],
-    ['box', '#2563EB', 'Godown stock', 'गोदाम का स्टॉक', 'See what is free on any date. Stock is held automatically for confirmed bookings.', 'किसी भी तारीख को क्या खाली है, देखें। पक्की बुकिंग के लिए स्टॉक अपने आप रुक जाता है।'],
-    ['pot', '#16A34A', 'Catering calculator', 'कैटरिंग कैलकुलेटर', 'Menu, guests and buffer in; samagri list, raw cost and per-plate price out.', 'मेन्यू, मेहमान और बफ़र डालें; सामग्री लिस्ट, कच्चा खर्च और प्लेट का दाम पाएं।'],
-    ['receipt', '#DB2777', 'GST bills with your logo', 'आपके लोगो वाले जीएसटी बिल', 'Quotations, tax invoices, receipts and challans with your logo, stamp and UPI.', 'आपके लोगो, स्टैम्प और यूपीआई के साथ कोटेशन, टैक्स इनवॉइस, रसीद और चालान।'],
-    ['rupee', '#0B9B68', 'Payments & reminders', 'पेमेंट और याद-दिहानी', 'Record advances, see who owes what and send a polite WhatsApp reminder in one tap.', 'एडवांस दर्ज करें, किस पर कितना बाकी है देखें और एक टैप में व्हाट्सऐप पर याद दिलाएं।'],
-    ['pin', '#0D9488', 'Crew’s own screen', 'क्रू की अपनी स्क्रीन', 'Crew tap “I have reached the site” for attendance and 25% / 50% / Done for their work. Nothing else to learn.', 'क्रू "मैं साइट पर पहुंच गया" दबाकर हाज़िरी लगाते हैं और अपने काम पर 25% / 50% / डन दबाते हैं। और कुछ सीखना नहीं।'],
-    ['pulse', '#0EA5E9', 'Live updates', 'लाइव अपडेट', 'When crew update the setup, the owner’s phone shows it within a second. No calls needed.', 'क्रू सेटअप अपडेट करे तो ओनर के फ़ोन पर एक सेकंड में दिख जाता है। फ़ोन करने की ज़रूरत नहीं।'],
-    ['bell', '#E11D74', 'Alerts that ring', 'बजने वाले अलर्ट', 'Send “Come to the godown” to a worker. It rings with the SabManage tune, even when their phone is on silent (Android app).', 'कर्मचारी को "गोदाम पर आओ" भेजें। सबमैनेज की धुन के साथ बजेगा, फ़ोन साइलेंट हो तब भी (एंड्रॉयड ऐप)।'],
-    ['users', '#0D9488', 'Wages, overtime & kharcha', 'मज़दूरी, ओवरटाइम और खर्चा', 'Duty hours, overtime, extra shifts, advance, food money and bonus. The month’s pay is worked out for you.', 'ड्यूटी के घंटे, ओवरटाइम, एक्स्ट्रा शिफ़्ट, एडवांस, खाने का पैसा और इनाम। महीने की तनख्वाह अपने आप बनती है।'],
-    ['chart', '#0891B2', 'Every cost, real profit', 'हर खर्च, असली मुनाफ़ा', 'Expenses, crew wages, food money and vendor orders in one list, and the true profit of every function.', 'खर्च, क्रू की मज़दूरी, खाने का पैसा और वेंडर के ऑर्डर एक लिस्ट में, और हर फ़ंक्शन का असली मुनाफ़ा।'],
-    ['megaphone', '#E11D74', 'Free marketing tools', 'फ़्री मार्केटिंग टूल', 'Follow-up reminders for enquiries, Google review requests, rate card PDF, QR poster and anniversary wishes to old clients.', 'इन्क्वायरी के फ़ॉलो-अप, गूगल रिव्यू मांगना, रेट कार्ड पीडीएफ़, क्यूआर पोस्टर और पुराने ग्राहकों को सालगिरह की बधाई।'],
-    ['sun', '#F59E0B', 'Morning summary', 'सुबह की झलक', 'At 7:45 every morning: today’s events, tomorrow’s, and who to call back, as a notification.', 'हर सुबह 7:45 बजे नोटिफ़िकेशन: आज के इवेंट, कल के, और किसे फ़ोन करना है।'],
-    ['handshake', '#D97706', 'Vendors & POs', 'वेंडर और पीओ', 'Florists, DJs, dairy and crockery partners with purchase orders and dues.', 'फूल वाले, डीजे, डेयरी और क्रॉकरी पार्टनर, परचेज़ ऑर्डर और बकाया के साथ।'],
-    ['shield', '#475569', 'Who sees what', 'किसे क्या दिखे', 'Each person gets their own login. Switch any section Off, See or Change for them.', 'हर व्यक्ति का अपना लॉगिन। उनके लिए कोई भी सेक्शन बंद, देखे या बदले करें।'],
-    ['globe', '#16A34A', 'Full Hindi + help on every screen', 'पूरी हिंदी + हर स्क्रीन पर मदद', 'The whole app in Hindi (Devanagari) with one tap, and an ⓘ button on every screen that explains it simply.', 'एक टैप में पूरा ऐप हिंदी में, और हर स्क्रीन पर ⓘ बटन जो आसान भाषा में समझाता है।'],
+    ['globe', '#16A34A', 'Hindi, with help on every screen', 'हिंदी में, हर स्क्रीन पर मदद के साथ', 'Switch the whole app to Hindi with one tap. An ⓘ button on every screen explains it in plain words.', 'एक टैप में पूरा ऐप हिंदी में। हर स्क्रीन पर ⓘ बटन आसान शब्दों में समझाता है।'],
+    ['android', '#1F5EFF', 'Any phone, plus an Android app', 'कोई भी फ़ोन, साथ में एंड्रॉयड ऐप', 'Works in the browser on any phone or computer. The Android app adds ringing alerts.', 'किसी भी फ़ोन या कंप्यूटर के ब्राउज़र में चलता है। एंड्रॉयड ऐप में बजने वाले अलर्ट भी।'],
+    ['shield', '#475569', 'You decide who sees what', 'किसे क्या दिखे, आप तय करें', 'Switch any section Off, See or Change for each person. The server enforces it.', 'हर व्यक्ति के लिए कोई भी सेक्शन बंद, देखे या बदले। सर्वर पर लागू होता है।'],
+    ['sun', '#F59E0B', 'A summary every morning', 'हर सुबह की झलक', 'At 7:45 am your phone shows the day ahead and who to call back.', 'सुबह 7:45 बजे फ़ोन पर आज का काम और किसे फ़ोन करना है।'],
+    ['download', '#0891B2', 'Bring your Excel sheets', 'अपनी एक्सेल शीट लाएं', 'Import your old lists of stock, staff and customers instead of typing them again.', 'पुराना स्टॉक, स्टाफ़ और ग्राहकों की लिस्ट दोबारा टाइप करने के बजाय इंपोर्ट करें।'],
+    ['star', '#EAB308', 'Data kept in India, safely', 'डेटा भारत में, सुरक्षित', 'Stored in Mumbai. Download a full backup any time, and protect logins with a 6-digit Authenticator code.', 'मुंबई में स्टोर। कभी भी पूरा बैकअप डाउनलोड करें, और लॉगिन को 6 अंकों के ऑथेंटिकेटर कोड से सुरक्षित करें।']
   ];
   const plans = (plat.plans || []).filter(p => p && p.name);
   const mid = plans.length === 3 ? 1 : -1;
@@ -210,65 +214,51 @@ function homePage({ s, plat, posts }) {
   ].filter(Boolean);
   const wayHi = { WhatsApp: 'व्हाट्सऐप', 'Call us': 'कॉल करें', Email: 'ईमेल', Office: 'ऑफ़िस', 'Working hours': 'काम का समय' };
   const faqs = [
-    ['Do I need to install anything?', 'क्या कुछ इंस्टॉल करना पड़ेगा?', 'No. It opens in the browser on any Android phone, iPhone or computer. You can add it to your home screen so it opens like an app.', 'नहीं। यह किसी भी एंड्रॉयड फ़ोन, आईफ़ोन या कंप्यूटर के ब्राउज़र में खुलता है। होम स्क्रीन पर जोड़ लें तो ऐप की तरह खुलेगा।'],
-    ['Can my staff use it with their own login?', 'क्या मेरा स्टाफ़ अपने लॉगिन से चला सकता है?', 'Yes. You create a login ID and password for each person and choose which sections they can see or change. A crew member can see only their own tasks.', 'हां। आप हर व्यक्ति की लॉगिन आईडी और पासवर्ड बनाते हैं और तय करते हैं कि वे कौन-से सेक्शन देख या बदल सकते हैं। क्रू मेंबर सिर्फ़ अपने काम देख सकता है।'],
-    ['Will my bills show my business name and logo?', 'क्या बिल पर मेरे बिज़नेस का नाम और लोगो आएगा?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID print on every quotation, invoice, receipt and challan.', 'हां। आपका लोगो, स्टैम्प, पता, जीएसटीआईएन, बैंक डिटेल्स और यूपीआई आईडी हर कोटेशन, इनवॉइस, रसीद और चालान पर छपते हैं।'],
-    ['Is my data safe?', 'क्या मेरा डेटा सुरक्षित है?', 'Your data is stored in the cloud and only your team can see it. Every login can be protected with a 6-digit Authenticator code.', 'आपका डेटा क्लाउड में सुरक्षित रहता है और सिर्फ़ आपकी टीम देख सकती है। हर लॉगिन को 6 अंकों के ऑथेंटिकेटर कोड से सुरक्षित किया जा सकता है।'],
-    ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the whole app to Hindi with one tap. Everything is written in Hindi letters, so people who do not read English can use it too.', 'हां। कोई भी एक टैप में पूरा ऐप हिंदी में कर सकता है। सब कुछ हिंदी अक्षरों में लिखा है, ताकि जो अंग्रेज़ी नहीं पढ़ते वे भी चला सकें।'],
-    ['Is there a mobile app?', 'क्या मोबाइल ऐप है?', 'Yes. Download the Android app from sabmanage.com/download (Play Store coming soon). On any other phone, open sabmanage.com/app in Chrome or Safari.', 'हां। एंड्रॉयड ऐप sabmanage.com/download से डाउनलोड करें (प्ले स्टोर पर जल्द)। किसी और फ़ोन पर क्रोम या सफ़ारी में sabmanage.com/app खोलें।'],
-    ['My crew are not good with phones. Will they manage?', 'मेरा क्रू फ़ोन ज़्यादा नहीं चलाता। क्या वे चला पाएंगे?', 'Yes. Crew see only one simple screen: a big “I have reached the site” button and their own work with 25% / 50% / Done buttons.', 'हां। क्रू को सिर्फ़ एक आसान स्क्रीन दिखती है: बड़ा "मैं साइट पर पहुंच गया" बटन और उनका अपना काम, 25% / 50% / डन बटन के साथ।'],
-    ['Is it only for tent houses and events?', 'क्या यह सिर्फ़ टेंट हाउस और इवेंट के लिए है?', 'No. When you sign up you pick your work: tent house, caterer, event manager or doctor / clinic, and the app opens with the right sections. More kinds of business are coming.', 'नहीं। साइन अप करते समय आप अपना काम चुनते हैं: टेंट हाउस, कैटरर, इवेंट मैनेजर या डॉक्टर / क्लिनिक, और ऐप सही सेक्शन के साथ खुलता है। और भी बिज़नेस जल्द जुड़ेंगे।'],
-    ['Is patient data safe?', 'क्या मरीज़ों का डेटा सुरक्षित है?', 'Yes. Every doctor is verified before the clinic opens. Data stays in India, photos and voice notes are private files, each patient’s link opens only their own page, and your staff see only what you allow.', 'हां। क्लिनिक खुलने से पहले हर डॉक्टर की जांच होती है। डेटा भारत में रहता है, फ़ोटो और आवाज़ निजी फ़ाइलें हैं, हर मरीज़ का लिंक सिर्फ़ उसका अपना पेज खोलता है, और स्टाफ़ को सिर्फ़ उतना दिखता है जितना आप चाहें।'],
-    ['What happens when the trial ends?', 'ट्रायल खत्म होने पर क्या होगा?', 'Choose a plan and we renew your account; everything stays as it is. If you do not renew, the app stops, but your data is kept safe for 90 days so you can come back.', 'प्लान चुनें और हम आपका अकाउंट रिन्यू कर देंगे; सब कुछ वैसा ही रहेगा। रिन्यू न करें तो ऐप बंद हो जाता है, पर आपका डेटा 90 दिन तक सुरक्षित रहता है ताकि आप वापस आ सकें।']
+    ['Which businesses can use it?', 'कौन-से बिज़नेस इसे चला सकते हैं?', 'Today: tent houses, caterers, event managers and doctors or clinics. When you create your account you pick your work, and the app opens with the right sections. Shops, salons and more are coming.', 'अभी: टेंट हाउस, कैटरर, इवेंट मैनेजर और डॉक्टर या क्लिनिक। अकाउंट बनाते समय आप अपना काम चुनते हैं, और ऐप सही सेक्शन के साथ खुलता है। दुकान, सैलून और बाकी जल्द।'],
+    ['Do I need to install anything?', 'क्या कुछ इंस्टॉल करना पड़ेगा?', 'No. It opens in the browser on any Android phone, iPhone or computer. On Android you can also download the app from sabmanage.com/download.', 'नहीं। यह किसी भी एंड्रॉयड फ़ोन, आईफ़ोन या कंप्यूटर के ब्राउज़र में खुलता है। एंड्रॉयड पर sabmanage.com/download से ऐप भी डाउनलोड कर सकते हैं।'],
+    ['Can my staff use it with their own login?', 'क्या मेरा स्टाफ़ अपने लॉगिन से चला सकता है?', 'Yes. You create a login for each person and choose which sections they can see or change. Staff who are not good with phones get one simple screen with big buttons.', 'हां। आप हर व्यक्ति का लॉगिन बनाते हैं और तय करते हैं कि वे कौन-से सेक्शन देख या बदल सकते हैं। जो फ़ोन कम चलाते हैं, उन्हें बड़े बटन वाली एक आसान स्क्रीन मिलती है।'],
+    ['Will bills show my business name and logo?', 'क्या बिल पर मेरे बिज़नेस का नाम और लोगो आएगा?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID print on every bill and receipt.', 'हां। आपका लोगो, स्टैम्प, पता, जीएसटीआईएन, बैंक डिटेल्स और यूपीआई आईडी हर बिल और रसीद पर छपते हैं।'],
+    ['Is my data safe?', 'क्या मेरा डेटा सुरक्षित है?', 'Your data is stored in India and only your team can see it, each person only what you allow. You can download a full backup any time.', 'आपका डेटा भारत में रहता है और सिर्फ़ आपकी टीम देख सकती है, हर व्यक्ति सिर्फ़ उतना जितना आप चाहें। आप कभी भी पूरा बैकअप डाउनलोड कर सकते हैं।'],
+    ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the whole app to Hindi with one tap. Everything is in Hindi letters, so people who do not read English can use it too.', 'हां। कोई भी एक टैप में पूरा ऐप हिंदी में कर सकता है। सब कुछ हिंदी अक्षरों में है, ताकि जो अंग्रेज़ी नहीं पढ़ते वे भी चला सकें।'],
+    ['What happens when the trial ends?', 'ट्रायल खत्म होने पर क्या होगा?', 'Choose a plan and we renew your account; everything stays as it is. If you do not renew, the app stops, but your data is kept safe for 90 days so you can come back.', 'प्लान चुनें और हम आपका अकाउंट रिन्यू कर देंगे; सब कुछ वैसा ही रहेगा। रिन्यू न करें तो ऐप बंद हो जाता है, पर आपका डेटा 90 दिन तक सुरक्षित रहता है।']
   ];
   return `
-  <div class="canopy" aria-hidden="true"></div><div class="lights" aria-hidden="true"></div>
-  <section class="hero"><div class="wrap">
-    <div>
-      <h1${hi(s.tagline === DEFAULT_SITE.tagline ? 'अपने बिज़नेस का पूरा हिसाब, एक ऐप में।' : '')}>${esc(s.tagline || DEFAULT_SITE.tagline)}</h1>
-      <p class="lead"${hi('बुकिंग, स्टॉक, बिल, पेमेंट, स्टाफ़ और ग्राहक, सब एक आसान ऐप में। टेंट हाउस, कैटरर, इवेंट मैनेजर, और अब डॉक्टर और क्लिनिक के लिए भी: मरीज़ों का रिकॉर्ड, ग्राफ़, अपॉइंटमेंट और ऑनलाइन फ़ीस।')}>Bookings, stock, bills, payments, staff and customers in one simple app. Made for tent houses, caterers and event managers, and now for doctors and clinics too: patient records with charts, appointments and online fees.</p>
-      <div class="cta">${startBtn}<a class="btn" href="/download">${ic('android')}<span${hi('ऐप डाउनलोड करें')}>Download app</span></a>${waBtn}</div>
-      <ul class="facts"><li>${ic('check')}<span${hi('किसी भी फ़ोन पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('पूरी हिंदी में')}>Full Hindi</span></li><li>${ic('check')}<span${hi('स्टाफ़ के लिए आसान')}>Easy for staff</span></li><li>${ic('check')}<span${hi('डॉक्टरों के लिए भी')}>For doctors too</span></li><li>${ic('check')}<span${hi('आपके लोगो वाले जीएसटी बिल')}>GST bills with your logo</span></li></ul>
+  <section class="hx"><div class="wrap hx-grid">
+    <div class="hx-copy">
+      ${custom ? `<h1>${esc(s.tagline)}</h1>` : `<h1><span class="l1"${hi('अपने बिज़नेस का पूरा हिसाब, एक ऐप में।')}>The whole hisaab of your business, in one app.</span><span class="l2" lang="hi" data-hi="The whole hisaab of your business, in one app.">अपने बिज़नेस का पूरा हिसाब, एक ऐप में।</span></h1>`}
+      <p class="lead"${hi('बुकिंग और अपॉइंटमेंट, बिल, पेमेंट, स्टाफ़ की हाज़िरी और ग्राहकों को याद-दिहानी। किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में, और सिर्फ़ उन सेक्शन के साथ जो आपके काम के हैं।')}>Bookings and appointments, bills, payments, staff attendance and customer reminders. On any phone, in Hindi and English, with only the sections your kind of business needs.</p>
+      <div class="cta">${startBtn}<a class="btn" href="/download">${ic('android')}<span${hi('एंड्रॉयड ऐप')}>Android app</span></a>${waLink}</div>
+      ${trial ? `<p class="note"${hi(`${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।`)}>${trial} days free. No card needed.</p>` : ''}
     </div>
-    <div class="tagstack">
-      <div class="phone"><img src="/img/app-dashboard.webp" width="390" height="780" alt="SabManage app home screen showing money pending from clients, upcoming events and quick actions" fetchpriority="high"></div>
-      <div class="sticker a"><i style="background:#0B9B68">${ic('rupee')}</i><span${hi('पेमेंट मिला<small>एडवांस दर्ज हो गया</small>')}>Payment received<small>Advance recorded</small></span></div>
-      <div class="sticker b"><i style="background:#D6246E">${ic('receipt')}</i><span${hi('जीएसटी बिल तैयार<small>व्हाट्सऐप पर भेजें</small>')}>GST bill ready<small>Send on WhatsApp</small></span></div>
-    </div>
-  </div></section>
-
-  <section class="sec soft" id="who"><div class="wrap">
-    <div class="sec-h"><h2${hi('आपके काम के हिसाब से बना ऐप')}>One app, set up for your kind of business</h2><p${hi('साइन अप करते समय अपना काम चुनें: टेंट हाउस, कैटरर, इवेंट मैनेजर या डॉक्टर। ऐप उसी के हिसाब से खुलता है, फ़ालतू सेक्शन नहीं।')}>Pick your work when you sign up: tent house, caterer, event manager or doctor. The app opens with only the sections you need.</p></div>
-    <div class="who">${who.map(([i, c, t, th, d, dh, list, link]) => `<article style="--c:${c}"><div class="ib">${ic(i)}</div><h3${hi(th)}>${t}</h3><p style="color:var(--ink2);margin-top:8px"${hi(dh)}>${d}</p><ul>${list.map(([e, h]) => `<li>${ic('check')}<span${hi(h)}>${e}</span></li>`).join('')}</ul>${link ? `<a class="more" href="${link}"><span${hi('और जानें')}>Learn more</span> ${ic('arrow')}</a>` : ''}</article>`).join('')}</div>
+    <figure class="today" aria-label="An example of one day in the app">
+      <figcaption><span class="mk">${MARK}</span><b${hi(`आज, ${dhi} ${dn} ${mhi}`)}>Today, ${den} ${dn} ${men}</b></figcaption>
+      <ol>${rows.map(([t, i, c, e, h, se, sh, amt]) => `<li style="--c:${c}"><time>${t}</time><i>${ic(i)}</i><div><b${hi(h)}>${e}</b>${se ? `<span${hi(sh)}>${se}</span>` : ''}</div>${amt ? `<em${amt.includes('due') ? hi(amt.replace(' due', ' बाकी')) : ''} class="${amt.startsWith('+') ? 'in' : ''}">${amt}</em>` : ''}</li>`).join('')}</ol>
+      <div class="tot"><div><span${hi('आज आया')}>Money in today</span><b>₹15,000</b></div><div><span${hi('लेना बाकी')}>Still to collect</span><b>₹8,500</b></div></div>
+    </figure>
   </div></section>
 
   <section class="sec" id="features"><div class="wrap">
-    <div class="sec-h"><h2${hi('रोज़ के काम के लिए सब कुछ')}>Everything the daily work needs</h2><p${hi('इन्क्वायरी से लेकर आखिरी पेमेंट तक, हर कदम एक जगह।')}>From the first enquiry to the last payment, every step in one place.</p></div>
-    <div class="feats">${feats.map(([i, c, t, th, d, dh]) => `<div class="feat" style="--c:${c}"><div class="ib">${ic(i)}</div><div><h3${hi(th)}>${t}</h3><p${hi(dh)}>${d}</p></div></div>`).join('')}</div>
+    <div class="sec-h"><h2${hi('बिज़नेस का हर रोज़ का काम, एक जगह')}>Everything the day runs on, in one place</h2></div>
+    <div class="pillars">${pillars.map(([i, t, th, dd, dh]) => `<div><i>${ic(i)}</i><h3${hi(th)}>${t}</h3><p${hi(dh)}>${dd}</p></div>`).join('')}</div>
   </div></section>
 
-  <section class="sec soft"><div class="wrap">
-    <div class="spot" style="--c:#DB2777"><div class="shot"><img src="/img/app-invoice.webp" width="390" height="780" loading="lazy" alt="A GST tax invoice in the app with the business logo and totals"></div>
-      <div><h3${hi('आपका नाम, आपका लोगो, हर बिल पर')}>Your name and logo on every bill</h3><p${hi('कोटेशन बनाएं, क्लाइंट के हां कहते ही उसे टैक्स इनवॉइस में बदलें, और पीडीएफ़ या व्हाट्सऐप पर भेजें।')}>Make a quotation, turn it into a tax invoice when the client agrees, and send it as a PDF or on WhatsApp.</p>
-      <ul><li${hi('सीजीएसटी/एसजीएसटी या आईजीएसटी अपने आप')}>CGST/SGST or IGST worked out for you</li><li${hi('बिल पर यूपीआई आईडी ताकि क्लाइंट तुरंत पे करे')}>UPI ID on the bill so clients pay faster</li><li${hi('बुक्ड आइटम और मेन्यू एक टैप में बिल में')}>Booked items and the menu added in one tap</li></ul></div></div>
-    <div class="spot flip" style="--c:#0EA5E9"><div class="shot"><img src="/img/app-event.webp" width="390" height="780" loading="lazy" alt="An event page in the app with stage, guests, items and setup progress"></div>
-      <div><h3${hi('हर फ़ंक्शन की पूरी जानकारी एक पेज पर')}>Every function on one page</h3><p${hi('स्टेज, मेहमान, बुक्ड आइटम, रन-शीट, सेटअप के काम, खर्च और पेमेंट, सब उसी इवेंट के अंदर।')}>Stage, guests, booked items, run-sheet, setup tasks, costs and payments, all inside the event.</p>
-      <ul><li${hi('कम स्टॉक की चेतावनी बुकिंग के समय ही')}>Stock shortage warning while you book</li><li${hi('क्लाइंट को लिंक भेजें, वे प्रोग्रेस और बिल देख सकें')}>Share a link so the client sees progress and the bill</li><li${hi('इवेंट के बाद रिव्यू मांगें')}>Ask for a review after the event</li></ul></div></div>
+  <section class="sec soft" id="types"><div class="wrap types-grid">
+    <div class="sec-h"><h2${hi('आपके काम के हिसाब से तैयार')}>Set up for your kind of work</h2><p${hi('अकाउंट बनाते समय आप अपना काम चुनते हैं। ऐप फिर सिर्फ़ वही सेक्शन दिखाता है जो आपके काम आते हैं।')}>When you create your account, you pick what you do. The app then shows only the sections you need.</p></div>
+    <ul class="types">${types.map(([i, t, th, dd, dh, href]) => `<li><a href="${href}"><i>${ic(i)}</i><div><b${hi(th)}>${t}</b><span${hi(dh)}>${dd}</span></div>${ic('arrow', 'ico go')}</a></li>`).join('')}
+      <li class="soon"><a href="#contact"><i>${ic('send')}</i><div><b${hi('कोई और बिज़नेस?')}>A different business?</b><span${hi('दुकान, सैलून, कोचिंग और बाकी जल्द आ रहे हैं। बताइए आपको क्या चाहिए।')}>Shops, salons, coaching and more are on the way. Tell us what you need.</span></div>${ic('arrow', 'ico go')}</a></li></ul>
   </div></section>
 
-  <section class="sec" id="clinics"><div class="wrap">
-    <div class="spot" style="--c:#E11D48"><div class="shot"><img src="/img/app-patient.webp" width="390" height="780" loading="lazy" alt="A patient's page in Hindi with BP, sugar and weight charts and big buttons to send readings"></div>
-      <div><span class="kicker"${hi('नया: डॉक्टरों और क्लिनिक के लिए')}>New: for doctors and clinics</span><h3${hi('हर मरीज़ की सेहत, ग्राफ़ में')}>Every patient’s health, in charts</h3><p${hi('मरीज़ घर से अपना बीपी, शुगर और वज़न भेजते हैं, फ़ोटो या आवाज़ में परेशानी बताते हैं, अपॉइंटमेंट बुक करते हैं और यूपीआई से फ़ीस देते हैं। आप सब कुछ ग्राफ़ और तारीख के हिसाब से देखते हैं।')}>Patients send their BP, sugar and weight from home, tell their problem with a photo or voice note, book an appointment and pay the fee by UPI. You see it all as charts and date-wise records.</p>
-      <ul><li${hi('मरीज़ के लिए कोई ऐप या लॉगिन नहीं, बस एक निजी लिंक')}>No app or login for the patient, just a private link</li><li${hi('वीडियो कॉल, व्हाट्सऐप कॉल या क्लिनिक विज़िट')}>Video call, WhatsApp call or clinic visit</li><li${hi('स्टाफ़ को सिर्फ़ उतना दिखे जितना आप चाहें')}>Staff see only what you allow</li></ul>
-      <a class="btn primary" href="/doctors"${hi('डॉक्टरों के लिए देखें')}>See how it works for doctors</a></div></div>
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2${hi('छोटी बातें, जो रोज़ काम आती हैं')}>Small things that help every day</h2></div>
+    <div class="feats">${feats.map(([i, c, t, th, dd, dh]) => `<div class="feat" style="--c:${c}"><div class="ib">${ic(i)}</div><div><h3${hi(th)}>${t}</h3><p${hi(dh)}>${dd}</p></div></div>`).join('')}</div>
   </div></section>
 
-  <section class="sec" id="how"><div class="wrap">
+  <section class="sec soft" id="how"><div class="wrap">
     <div class="sec-h"><h2${hi('एक दिन में शुरू करें')}>Start in a day</h2></div>
     <ol class="steps">
-      <li><h3${hi('अकाउंट बनाएं')}>Create your account</h3><p${hi('बिज़नेस का नाम और मोबाइल नंबर डालें। आप ओनर बनते हैं।')}>Enter your business name and mobile number. You become the Owner.</p></li>
-      <li><h3${hi('अपना सामान और मेन्यू जोड़ें')}>Add your stock and menu</h3><p${hi('टेंट, कुर्सियां, लाइट, डिश और रेट एक बार डालें। लोगो और जीएसटी डिटेल्स भी।')}>Add tents, chairs, lights, dishes and rates once, plus your logo and GST details.</p></li>
-      <li><h3${hi('टीम को जोड़ें और बुकिंग लें')}>Add your team and take bookings</h3><p${hi('मैनेजर, अकाउंटेंट और क्रू के लॉगिन बनाएं और पहली बुकिंग डालें।')}>Create logins for your manager, accountant and crew, then add your first booking.</p></li>
+      <li><h3${hi('अकाउंट बनाएं और अपना काम चुनें')}>Create your account and pick your work</h3><p${hi('नाम, मोबाइल और बिज़नेस का नाम डालें, और बताएं आप क्या करते हैं। आप ओनर बनते हैं।')}>Enter your name, mobile and business name, and choose what you do. You become the Owner.</p></li>
+      <li><h3${hi('अपनी जानकारी एक बार डालें')}>Add your details once</h3><p${hi('लोगो, जीएसटी, यूपीआई और रेट डालें, या पुरानी एक्सेल शीट इंपोर्ट करें।')}>Add your logo, GST, UPI and rates, or import your old Excel sheets.</p></li>
+      <li><h3${hi('टीम जोड़ें और दिन शुरू करें')}>Add your team and start the day</h3><p${hi('हर व्यक्ति का लॉगिन बनाएं और पहली बुकिंग या अपॉइंटमेंट डालें।')}>Create a login for each person and add your first booking or appointment.</p></li>
     </ol>
   </div></section>
   ${plansHtml}
@@ -295,7 +285,7 @@ function homePage({ s, plat, posts }) {
         <label><span${hi('मोबाइल नंबर')}>Mobile number</span><input name="phone" type="tel" required maxlength="16" autocomplete="tel" inputmode="tel" placeholder="98290 12345"></label>
         <label><span${hi('बिज़नेस का नाम')}>Business name</span><input name="business" maxlength="160" autocomplete="organization"></label>
         <label><span${hi('शहर')}>City</span><input name="city" maxlength="80" autocomplete="address-level2"></label>
-        <label class="full"><span${hi('आपका काम')}>Your business</span><select name="bizType"><option value="Tent house"${hi('टेंट हाउस')}>Tent house</option><option value="Caterer / Halwai"${hi('कैटरर / हलवाई')}>Caterer / Halwai</option><option value="Event manager"${hi('इवेंट मैनेजर')}>Event manager</option><option value="Decorator"${hi('डेकोरेटर')}>Decorator</option><option value="Other"${hi('अन्य')}>Other</option></select></label>
+        <label class="full"><span${hi('आपका काम')}>Your business</span><select name="bizType"><option value="Tent house"${hi('टेंट हाउस')}>Tent house</option><option value="Caterer / Halwai"${hi('कैटरर / हलवाई')}>Caterer / Halwai</option><option value="Event manager"${hi('इवेंट मैनेजर')}>Event manager</option><option value="Decorator"${hi('डेकोरेटर')}>Decorator</option><option value="Doctor / Clinic"${hi('डॉक्टर / क्लिनिक')}>Doctor / Clinic</option><option value="Shop / Store"${hi('दुकान / स्टोर')}>Shop / Store</option><option value="Other"${hi('अन्य')}>Other</option></select></label>
         <label class="full"><span${hi('मैसेज (ज़रूरी नहीं)')}>Message (optional)</span><textarea name="message" rows="3" maxlength="2000"></textarea></label>
         <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('कॉल बैक मांगें')}>Request a call back</button></div>
@@ -305,16 +295,79 @@ function homePage({ s, plat, posts }) {
     </div>
   </div></section>
 
-  <div class="wrap"><div class="band"><div><h2${hi('इस सीज़न का पूरा हिसाब एक जगह रखें')}>Keep this season’s hisaab in one place</h2><p${hi(trial ? `${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}${waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a>` : ''}</div></div></div>`;
+  <div class="wrap"><div class="band"><div><h2${hi('आज से पूरा हिसाब एक जगह रखें')}>Keep the whole hisaab in one place, from today</h2><p${hi(trial ? `${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}</div></div></div>`;
 }
 
+/* ---------- /events: tent houses, caterers and event managers ---------- */
+function eventsPage({ s, plat }) {
+  const brand = s.brandName || 'SabManage'; const trial = +plat.trialDays || 0; const signup = plat.allowSignup !== false; const waN = s.whatsapp || s.phone;
+  const startBtn = signup ? `<a class="btn primary" href="/app#signup"${hi(trial ? `${trial} दिन का फ़्री ट्रायल शुरू करें` : 'फ़्री में शुरू करें')}>${trial ? `Start ${trial}-day free trial` : 'Start free'}</a>` : `<a class="btn primary" href="/#contact"${hi('डेमो लें')}>Book a demo</a>`;
+  const demo = waN ? `<a class="btn ghost" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my tent / catering / event business.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('व्हाट्सऐप पर डेमो')}>Demo on WhatsApp</span></a>` : '';
+  const who = [
+    ['tent', '#2563EB', 'Tent houses', 'टेंट हाउस', 'Know what is in the godown, what is out on rent and what is short for Saturday’s wedding.', 'गोदाम में क्या है, क्या किराए पर बाहर है और शनिवार की शादी के लिए क्या कम है, सब पता रहे।',
+      [['Date-wise stock for every shamiana, chair and DG set', 'हर शामियाना, कुर्सी और डीजी सेट का तारीख के हिसाब से स्टॉक'], ['Truck loading list and delivery challan', 'ट्रक लोडिंग लिस्ट और डिलीवरी चालान'], ['Damage and missing items charged to the client', 'टूटे और गुम सामान का चार्ज क्लाइंट के बिल में']]],
+    ['pot', '#16A34A', 'Caterers & halwais', 'कैटरर और हलवाई', 'Turn a menu and guest count into the full samagri list and a per-plate price in seconds.', 'मेन्यू और मेहमानों की गिनती से सेकंडों में पूरी सामग्री लिस्ट और प्रति प्लेट रेट निकालें।',
+      [['Ration list with your mandi rates', 'आपके मंडी रेट से राशन लिस्ट'], ['Per-plate cost and margin', 'प्रति प्लेट लागत और मार्जिन'], ['Menu saved to each booking', 'हर बुकिंग में मेन्यू सेव']]],
+    ['sparkle', '#DB2777', 'Event managers', 'इवेंट मैनेजर', 'Run vendors, crew, run-sheets and client updates for every function from one place.', 'हर फ़ंक्शन के वेंडर, क्रू, रन-शीट और क्लाइंट अपडेट एक ही जगह से संभालें।',
+      [['Vendor purchase orders and dues', 'वेंडर के परचेज़ ऑर्डर और बकाया'], ['Live setup tracker for crew', 'क्रू के लिए लाइव सेटअप ट्रैकर'], ['Client page with progress and bill', 'क्लाइंट के लिए प्रोग्रेस और बिल वाला पेज']]]
+  ];
+  const feats = [
+    ['home', '#1F5EFF', 'Easy home screen', 'आसान होम स्क्रीन', 'Open the app and see today: events, setup done and money to collect. Big buttons for the daily work.', 'ऐप खोलते ही आज की झलक: इवेंट, कितना सेटअप हुआ और कितना पैसा लेना है। रोज़ के काम के बड़े बटन।'],
+    ['calendar', '#7C3AED', 'Booking in 4 things', 'सिर्फ़ 4 चीज़ों में बुकिंग', 'Name, mobile, date and amount. Save ready packages like “Wedding 500 guests” and fill everything in one tap.', 'नाम, मोबाइल, तारीख और रकम। "शादी 500 मेहमान" जैसे तैयार पैकेज से सब एक टैप में भरें।'],
+    ['box', '#2563EB', 'Godown stock', 'गोदाम का स्टॉक', 'See what is free on any date. Stock is held automatically for confirmed bookings.', 'किसी भी तारीख को क्या खाली है, देखें। पक्की बुकिंग के लिए स्टॉक अपने आप रुक जाता है।'],
+    ['pot', '#16A34A', 'Catering calculator', 'कैटरिंग कैलकुलेटर', 'Menu, guests and buffer in; samagri list, raw cost and per-plate price out.', 'मेन्यू, मेहमान और बफ़र डालें; सामग्री लिस्ट, कच्चा खर्च और प्लेट का दाम पाएं।'],
+    ['receipt', '#DB2777', 'GST bills with your logo', 'आपके लोगो वाले जीएसटी बिल', 'Quotations, tax invoices, receipts and challans with your logo, stamp and UPI.', 'आपके लोगो, स्टैम्प और यूपीआई के साथ कोटेशन, टैक्स इनवॉइस, रसीद और चालान।'],
+    ['rupee', '#0B9B68', 'Payments & reminders', 'पेमेंट और याद-दिहानी', 'Record advances, see who owes what and send a polite WhatsApp reminder in one tap.', 'एडवांस दर्ज करें, किस पर कितना बाकी है देखें और एक टैप में व्हाट्सऐप पर याद दिलाएं।'],
+    ['pin', '#0D9488', 'Crew’s own screen', 'क्रू की अपनी स्क्रीन', 'Crew tap “I have reached the site” for attendance and 25% / 50% / Done for their work. Nothing else to learn.', 'क्रू "मैं साइट पर पहुंच गया" दबाकर हाज़िरी लगाते हैं और अपने काम पर 25% / 50% / डन दबाते हैं। और कुछ सीखना नहीं।'],
+    ['pulse', '#0EA5E9', 'Live updates', 'लाइव अपडेट', 'When crew update the setup, the owner’s phone shows it within a second. No calls needed.', 'क्रू सेटअप अपडेट करे तो ओनर के फ़ोन पर एक सेकंड में दिख जाता है। फ़ोन करने की ज़रूरत नहीं।'],
+    ['bell', '#E11D74', 'Alerts that ring', 'बजने वाले अलर्ट', 'Send “Come to the godown” to a worker. It rings with the SabManage tune, even when their phone is on silent (Android app).', 'कर्मचारी को "गोदाम पर आओ" भेजें। सबमैनेज की धुन के साथ बजेगा, फ़ोन साइलेंट हो तब भी (एंड्रॉयड ऐप)।'],
+    ['users', '#0D9488', 'Wages, overtime & kharcha', 'मज़दूरी, ओवरटाइम और खर्चा', 'Duty hours, overtime, extra shifts, advance, food money and bonus. The month’s pay is worked out for you.', 'ड्यूटी के घंटे, ओवरटाइम, एक्स्ट्रा शिफ़्ट, एडवांस, खाने का पैसा और इनाम। महीने की तनख्वाह अपने आप बनती है।'],
+    ['chart', '#0891B2', 'Every cost, real profit', 'हर खर्च, असली मुनाफ़ा', 'Expenses, crew wages, food money and vendor orders in one list, and the true profit of every function.', 'खर्च, क्रू की मज़दूरी, खाने का पैसा और वेंडर के ऑर्डर एक लिस्ट में, और हर फ़ंक्शन का असली मुनाफ़ा।'],
+    ['megaphone', '#E11D74', 'Free marketing tools', 'फ़्री मार्केटिंग टूल', 'Follow-up reminders for enquiries, Google review requests, rate card PDF, QR poster and anniversary wishes to old clients.', 'इन्क्वायरी के फ़ॉलो-अप, गूगल रिव्यू मांगना, रेट कार्ड पीडीएफ़, क्यूआर पोस्टर और पुराने ग्राहकों को सालगिरह की बधाई।'],
+    ['sun', '#F59E0B', 'Morning summary', 'सुबह की झलक', 'At 7:45 every morning: today’s events, tomorrow’s, and who to call back, as a notification.', 'हर सुबह 7:45 बजे नोटिफ़िकेशन: आज के इवेंट, कल के, और किसे फ़ोन करना है।'],
+    ['handshake', '#D97706', 'Vendors & POs', 'वेंडर और पीओ', 'Florists, DJs, dairy and crockery partners with purchase orders and dues.', 'फूल वाले, डीजे, डेयरी और क्रॉकरी पार्टनर, परचेज़ ऑर्डर और बकाया के साथ।'],
+    ['shield', '#475569', 'Who sees what', 'किसे क्या दिखे', 'Each person gets their own login. Switch any section Off, See or Change for them.', 'हर व्यक्ति का अपना लॉगिन। उनके लिए कोई भी सेक्शन बंद, देखे या बदले करें।'],
+    ['globe', '#16A34A', 'Full Hindi + help on every screen', 'पूरी हिंदी + हर स्क्रीन पर मदद', 'The whole app in Hindi (Devanagari) with one tap, and an ⓘ button on every screen that explains it simply.', 'एक टैप में पूरा ऐप हिंदी में, और हर स्क्रीन पर ⓘ बटन जो आसान भाषा में समझाता है।'],
+  ];
+  return `
+  <section class="hx sub"><div class="wrap hx-grid">
+    <div class="hx-copy">
+      <p class="crumb"><a href="/"${hi('होम')}>Home</a> / <span${hi('टेंट, कैटरिंग और इवेंट')}>Tent, catering and events</span></p>
+      <h1${hi('टेंट, कैटरिंग और इवेंट का पूरा हिसाब।')}>Tent, catering and events, fully in hand.</h1>
+      <p class="lead"${hi('बुकिंग, गोदाम स्टॉक, हलवाई का राशन, जीएसटी बिल, पेमेंट की याद-दिहानी, क्रू की हाज़िरी और हर इवेंट का मुनाफ़ा।')}>Bookings, godown stock, halwai ration, GST bills, payment reminders, crew attendance and the profit of every event.</p>
+      <div class="cta">${startBtn}${demo}</div>
+    </div>
+    <div class="shot-solo"><div class="phone"><img src="/img/app-dashboard.webp" width="390" height="780" alt="SabManage home screen for a tent house with money pending, upcoming events and quick actions" fetchpriority="high"></div></div>
+  </div></section>
+
+  <section class="sec soft"><div class="wrap">
+    <div class="sec-h"><h2${hi('तीन तरह के बिज़नेस, एक ऐप')}>Three kinds of business, one app</h2><p${hi('जो सेक्शन काम का नहीं, उसे सेटिंग्स में बंद कर दें।')}>Switch off any section you don’t need in Settings.</p></div>
+    <div class="who">${who.map(([i, c, t, th, dd, dh, list]) => `<article style="--c:${c}"><div class="ib">${ic(i)}</div><h3${hi(th)}>${t}</h3><p style="color:var(--ink2);margin-top:8px"${hi(dh)}>${dd}</p><ul>${list.map(([e, h]) => `<li>${ic('check')}<span${hi(h)}>${e}</span></li>`).join('')}</ul></article>`).join('')}</div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-h"><h2${hi('रोज़ के काम के लिए सब कुछ')}>Everything the daily work needs</h2><p${hi('इन्क्वायरी से लेकर आखिरी पेमेंट तक, हर कदम एक जगह।')}>From the first enquiry to the last payment, every step in one place.</p></div>
+    <div class="feats">${feats.map(([i, c, t, th, dd, dh]) => `<div class="feat" style="--c:${c}"><div class="ib">${ic(i)}</div><div><h3${hi(th)}>${t}</h3><p${hi(dh)}>${dd}</p></div></div>`).join('')}</div>
+  </div></section>
+
+  <section class="sec soft"><div class="wrap">
+    <div class="spot" style="--c:#DB2777"><div class="shot"><img src="/img/app-invoice.webp" width="390" height="780" loading="lazy" alt="A GST tax invoice in the app with the business logo and totals"></div>
+      <div><h3${hi('आपका नाम, आपका लोगो, हर बिल पर')}>Your name and logo on every bill</h3><p${hi('कोटेशन बनाएं, क्लाइंट के हां कहते ही उसे टैक्स इनवॉइस में बदलें, और पीडीएफ़ या व्हाट्सऐप पर भेजें।')}>Make a quotation, turn it into a tax invoice when the client agrees, and send it as a PDF or on WhatsApp.</p>
+      <ul><li${hi('सीजीएसटी/एसजीएसटी या आईजीएसटी अपने आप')}>CGST/SGST or IGST worked out for you</li><li${hi('बिल पर यूपीआई आईडी ताकि क्लाइंट तुरंत पे करे')}>UPI ID on the bill so clients pay faster</li><li${hi('बुक्ड आइटम और मेन्यू एक टैप में बिल में')}>Booked items and the menu added in one tap</li></ul></div></div>
+    <div class="spot flip" style="--c:#0EA5E9"><div class="shot"><img src="/img/app-event.webp" width="390" height="780" loading="lazy" alt="An event page in the app with stage, guests, items and setup progress"></div>
+      <div><h3${hi('हर फ़ंक्शन की पूरी जानकारी एक पेज पर')}>Every function on one page</h3><p${hi('स्टेज, मेहमान, बुक्ड आइटम, रन-शीट, सेटअप के काम, खर्च और पेमेंट, सब उसी इवेंट के अंदर।')}>Stage, guests, booked items, run-sheet, setup tasks, costs and payments, all inside the event.</p>
+      <ul><li${hi('कम स्टॉक की चेतावनी बुकिंग के समय ही')}>Stock shortage warning while you book</li><li${hi('क्लाइंट को लिंक भेजें, वे प्रोग्रेस और बिल देख सकें')}>Share a link so the client sees progress and the bill</li><li${hi('इवेंट के बाद रिव्यू मांगें')}>Ask for a review after the event</li></ul></div></div>
+  </div></section>
+
+  <div class="wrap"><div class="band"><div><h2${hi('इस सीज़न का पूरा हिसाब एक जगह रखें')}>Keep this season’s hisaab in one place</h2><p${hi(trial ? `${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}</div></div></div>`;
+}
 function postCard(p) {
   return `<a class="pcard" href="/blog/${esc(p.slug)}"${p.lang === 'hi' ? ' lang="hi"' : ''}><div class="im">${p.cover_url ? `<img src="${esc(p.cover_url)}" alt="" loading="lazy">` : ic('sparkle')}</div><div class="tx"><time datetime="${esc(p.published_at)}">${fmtDate(p.published_at)}</time><h3>${esc(p.title)}</h3>${p.excerpt ? `<p>${esc(p.excerpt)}</p>` : ''}</div></a>`;
 }
 
 /* ---------- blog ---------- */
 function blogPage({ s, posts, page, tag, hasMore, allTags }) {
-  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap">
+  return `<div class="wrap">
   <div class="bhead"><h1>${tag ? '#' + esc(tag) : `<span${hi('ब्लॉग')}>Blog</span>`}</h1><p${hi('टेंट, कैटरिंग और इवेंट बिज़नेस चलाने के लिए टिप्स, सीज़न की तैयारी और नए तरीके।')}>Tips, season planning and new ideas for running a tent, catering or event business.</p>
   ${allTags.length ? `<div class="tags"><a href="/blog" class="${tag ? '' : 'on'}"${hi('सभी')}>All</a>${allTags.map(t => `<a href="/blog?tag=${encodeURIComponent(t)}" class="${t === tag ? 'on' : ''}">${esc(t)}</a>`).join('')}</div>` : ''}</div>
   ${posts.length ? `<div class="posts">${posts.map(postCard).join('')}</div>` : `<div class="empty-blog"><h3${hi('जल्द आ रहा है')}>Posts are on the way</h3><p style="margin-top:8px"${hi('पहली पोस्ट जल्द आएगी। तब तक ऐप आज़माएं।')}>The first post is coming soon. Try the app in the meantime.</p><p style="margin-top:18px"><a class="btn primary" href="/"${hi('होम पर जाएं')}>Go to home</a></p></div>`}
@@ -325,7 +378,7 @@ function postPage({ s, plat, p, related, origin }) {
   const words = strip(p.content).split(' ').length; const mins = Math.max(1, Math.round(words / 200));
   const url = origin + '/blog/' + p.slug; const signup = plat.allowSignup !== false;
   const shareText = `${p.title} ${url}`;
-  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap"><article class="article"${p.lang === 'hi' ? ' lang="hi"' : ''}>
+  return `<div class="wrap"><article class="article"${p.lang === 'hi' ? ' lang="hi"' : ''}>
     <div class="crumb"><a href="/blog"${hi('ब्लॉग')}>Blog</a>${(p.tags || []).length ? ` / <a href="/blog?tag=${encodeURIComponent(p.tags[0])}">${esc(p.tags[0])}</a>` : ''}</div>
     <h1>${esc(p.title)}</h1>
     <div class="meta"><time datetime="${esc(p.published_at)}">${fmtDate(p.published_at)}</time>${p.author ? `<span>${esc(p.author)}</span>` : ''}<span${hi(`${mins} मिनट में पढ़ें`)}>${mins} min read</span></div>
@@ -346,7 +399,7 @@ function legalPage(kind, { s, plat = {} }) {
   const city = s.city ? esc(s.city) : 'Jaipur, Rajasthan'; const trial = +plat.trialDays || 14; const grace = +plat.graceDays || 0;
   const updated = '17 October 2026';
   const sum = (items) => `<div class="legal-sum"><h2${hi('सरल भाषा में मुख्य बातें')}>The main points, simply</h2><ul>${items.map(([e, h]) => `<li${hi(h)}>${e}</li>`).join('')}</ul><p class="tiny"${hi('यह सारांश है। पूरी शर्तें नीचे लिखी हैं और वही मान्य हैं।')}>This is a summary. The full text below is what applies.</p></div>`;
-  if (kind === 'privacy') return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1${hi('प्राइवेसी पॉलिसी')}>Privacy policy</h1><p${hi('अपडेट: 17 अक्टूबर 2026')}>Last updated ${updated}</p>
+  if (kind === 'privacy') return `<div class="wrap legaltext"><h1${hi('प्राइवेसी पॉलिसी')}>Privacy policy</h1><p${hi('अपडेट: 17 अक्टूबर 2026')}>Last updated ${updated}</p>
   ${sum([
     ['Your business data belongs to you. We do not sell it or use it for ads.', 'आपके बिज़नेस का डेटा आपका है। हम इसे न बेचते हैं, न विज्ञापन के लिए इस्तेमाल करते हैं।'],
     ['Each person sees only what the owner allows. Data is stored in India (Mumbai).', 'हर व्यक्ति वही देखता है जो ओनर अनुमति दे। डेटा भारत (मुंबई) में रखा जाता है।'],
@@ -392,7 +445,7 @@ function legalPage(kind, { s, plat = {} }) {
   <h2>9. Children</h2><p>${brand} accounts are for businesses and are not meant for anyone under 18. A child’s health details may be recorded by a clinic, and a parent or guardian uses the patient page for the child.</p>
   <h2>10. Changes</h2><p>If we change this policy we will update the date above, and for important changes we will tell owners inside the app.</p>
   <h2>11. Contact and grievance officer</h2><p>For privacy questions or complaints, ${contact}. We reply within 7 days and resolve grievances within 30 days.</p></div>`;
-  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1${hi('इस्तेमाल की शर्तें')}>Terms of use</h1><p${hi(`अपडेट: 17 अक्टूबर 2026 · वर्ज़न ${TERMS_VERSION}`)}>Last updated ${updated} · Version ${TERMS_VERSION}</p>
+  return `<div class="wrap legaltext"><h1${hi('इस्तेमाल की शर्तें')}>Terms of use</h1><p${hi(`अपडेट: 17 अक्टूबर 2026 · वर्ज़न ${TERMS_VERSION}`)}>Last updated ${updated} · Version ${TERMS_VERSION}</p>
   ${sum([
     [`First ${trial} days are free. After that a monthly or yearly plan is needed.`, `पहले ${trial} दिन फ़्री। उसके बाद महीने या साल का प्लान लेना होगा।`],
     [`When the plan ends${grace ? ` (plus ${grace} grace days)` : ''}, the app stops working until you renew. Your data stays safe for 90 days.`, `प्लान खत्म होने पर${grace ? ` (${grace} दिन की छूट के बाद)` : ''} रिन्यू करने तक ऐप बंद रहेगा। आपका डेटा 90 दिन तक सुरक्षित रहेगा।`],
@@ -474,7 +527,6 @@ function doctorsPage({ s, plat }) {
     ['Does the app give medical advice?', 'क्या ऐप मेडिकल सलाह देता है?', 'No. It stores and shows records. Coloured numbers are only a quick hint; you decide. The patient page tells patients to call 108 in an emergency.', 'नहीं। यह रिकॉर्ड रखता और दिखाता है। रंगीन नंबर सिर्फ़ एक इशारा हैं; फ़ैसला आपका। मरीज़ के पेज पर लिखा है कि इमरजेंसी में 108 पर कॉल करें।']
   ];
   return `
-  <div class="canopy" aria-hidden="true"></div>
   <section class="hero"><div class="wrap">
     <div>
       <span class="kicker"${hi('डॉक्टर और क्लिनिक के लिए')}>For doctors and clinics</span>
@@ -526,7 +578,7 @@ function downloadPage({ s }) {
     ['If the phone says “Install unknown apps”, tap Settings and allow it for Chrome (or your file manager), then go back.', 'अगर फ़ोन "अनजान ऐप इंस्टॉल करें" पूछे, तो सेटिंग्स दबाकर क्रोम (या फ़ाइल मैनेजर) के लिए इजाज़त दें, फिर वापस आएं।'],
     ['Tap Install, then Open. Log in with your mobile number and password.', 'इंस्टॉल दबाएं, फिर खोलें। अपने मोबाइल नंबर और पासवर्ड से लॉगिन करें।'],
     ['When asked, tap “Allow” for notifications so alerts can ring.', 'पूछे जाने पर नोटिफ़िकेशन के लिए "Allow" (इजाज़त दें) दबाएं, ताकि अलर्ट बज सकें।']];
-  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext dl-page">
+  return `<div class="wrap legaltext dl-page">
   <h1${hi(`${brand} ऐप डाउनलोड करें`)}>Get the ${brand} app</h1>
   <p class="lead"${hi('एंड्रॉयड फ़ोन के लिए। फ़्री, 2 एमबी, एक मिनट में इंस्टॉल।')}>For Android phones. Free, 2 MB, installs in a minute.</p>
   <div class="cta" style="margin:18px 0 8px"><a class="btn primary" href="/download/SabManage.apk" download>${ic('download')}<span${hi('ऐप डाउनलोड करें')}>Download the app</span></a><a class="btn" href="/app">${ic('globe')}<span${hi('ब्राउज़र में खोलें')}>Open in browser</span></a></div>
@@ -541,7 +593,7 @@ function downloadPage({ s }) {
 }
 function deletePage({ s }) {
   const brand = esc(s.brandName || 'SabManage');
-  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext">
+  return `<div class="wrap legaltext">
   <h1${hi('अकाउंट डिलीट करें')}>Delete your account</h1>
   <p${hi(`आप ${brand} का अपना अकाउंट और उससे जुड़ा डेटा हटाने के लिए कह सकते हैं।`)}>You can ask us to delete your ${brand} account and the data linked to it.</p>
   <h2${hi('ऐप से')}>From the app</h2>
@@ -578,7 +630,7 @@ module.exports = async (req, res) => {
     if (page === 'sitemap' || page === 'rss') {
       const posts = await loadPosts({ limit: 1000 });
       if (page === 'rss') return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>${esc(brand)} blog</title><link>${origin}/blog</link><description>${esc(s.tagline)}</description>${posts.slice(0, 30).map(p => `<item><title>${esc(p.title)}</title><link>${origin}/blog/${esc(p.slug)}</link><guid>${origin}/blog/${esc(p.slug)}</guid><pubDate>${new Date(p.published_at).toUTCString()}</pubDate><description>${esc(p.excerpt)}</description></item>`).join('')}</channel></rss>`, 'application/rss+xml; charset=utf-8');
-      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/download', ''], ['/doctors', ''], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
+      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/download', ''], ['/events', ''], ['/doctors', ''], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
       return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(([u, d]) => `<url><loc>${esc(origin + u)}</loc>${d ? `<lastmod>${String(d).slice(0, 10)}</lastmod>` : ''}</url>`).join('')}</urlset>`, 'application/xml; charset=utf-8');
     }
     const base = { s, plat, origin };
@@ -587,7 +639,7 @@ module.exports = async (req, res) => {
       const org = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: brand, applicationCategory: 'BusinessApplication', operatingSystem: 'Web, Android, iOS', description: 'Bookings, inventory, catering, GST invoices, payments and crew management for tent houses, caterers and event managers.', url: origin,
         offers: (plat.plans || []).filter(p => p.name).map(p => ({ '@type': 'Offer', name: p.name, price: String(+p.price || 0), priceCurrency: 'INR' })) };
       const lb = { '@context': 'https://schema.org', '@type': 'Organization', name: s.legalName || brand, url: origin, ...(s.phone ? { telephone: s.phone } : {}), ...(s.email ? { email: s.email } : {}), ...(s.address ? { address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: s.city, addressCountry: 'IN' } } : {}), sameAs: ['instagram', 'facebook', 'youtube', 'linkedin'].map(k => safeUrl(s[k])).filter(Boolean) };
-      return send(200, shell({ ...base, path: '/', title: `${brand}: business app for tent houses, caterers, events and clinics`, desc: 'Bookings, stock, GST bills, payments, staff and customers in one simple app. For tent houses, caterers, event managers, and doctors and clinics (patient records, charts, appointments, fees). In Hindi and English.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
+      return send(200, shell({ ...base, path: '/', title: `${brand}: the whole hisaab of your business, in one app`, desc: 'Bookings and appointments, GST bills, payments, staff attendance and customer reminders in one simple app for Indian businesses. Works on any phone, in Hindi and English.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
     }
     if (page === 'blog') {
       const pnum = Math.max(1, Math.min(500, parseInt(q.page || '1', 10) || 1));
@@ -600,17 +652,18 @@ module.exports = async (req, res) => {
       const slug = String(q.slug || '').toLowerCase();
       let p = null;
       if (/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) { try { p = (await sb(`blog_posts?select=*&status=eq.published&slug=eq.${slug}&limit=1`))[0] || null; } catch (e) { } }
-      if (!p) return send(404, shell({ ...base, path: '/blog/' + slug, title: `Post not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह पोस्ट नहीं मिली')}>This post is not here</h1><p${hi('हो सकता है इसे हटा दिया गया हो या लिंक बदल गया हो।')}>It may have been removed or the link has changed.</p><a class="btn primary" href="/blog"${hi('सभी पोस्ट देखें')}>See all posts</a></div>` }), 'text/html; charset=utf-8', 's-maxage=30');
+      if (!p) return send(404, shell({ ...base, path: '/blog/' + slug, title: `Post not found | ${brand}`, desc: '', noindex: true, body: `<div class="wrap nf"><h1${hi('यह पोस्ट नहीं मिली')}>This post is not here</h1><p${hi('हो सकता है इसे हटा दिया गया हो या लिंक बदल गया हो।')}>It may have been removed or the link has changed.</p><a class="btn primary" href="/blog"${hi('सभी पोस्ट देखें')}>See all posts</a></div>` }), 'text/html; charset=utf-8', 's-maxage=30');
       const more = (await loadPosts({ limit: 4 })).filter(x => x.slug !== p.slug).slice(0, 3);
       const desc = p.seo_description || p.excerpt || strip(p.content).slice(0, 155);
       const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: desc, datePublished: p.published_at, dateModified: p.updated_at || p.published_at, inLanguage: p.lang === 'hi' ? 'hi-IN' : 'en-IN', mainEntityOfPage: origin + '/blog/' + p.slug, ...(p.cover_url ? { image: [p.cover_url] } : {}), author: { '@type': p.author ? 'Person' : 'Organization', name: p.author || brand }, publisher: { '@type': 'Organization', name: brand } };
       return send(200, shell({ ...base, path: '/blog/' + p.slug, title: `${p.seo_title || p.title} | ${brand}`, desc, image: p.cover_url || origin + '/img/og.jpg', type: 'article', jsonld: [ld], body: postPage({ ...base, p, related: more }) }));
     }
+    if (page === 'events') return send(200, shell({ ...base, path: '/events', title: `${brand} for tent houses, caterers and event managers`, desc: 'Bookings, godown stock by date, catering ration lists, GST bills, payment reminders, crew attendance and the profit of every event. In Hindi and English.', image: origin + '/img/og.jpg', body: eventsPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'doctors') return send(200, shell({ ...base, path: '/doctors', title: `${brand} for doctors: patient records, BP & sugar charts, appointments`, desc: 'A simple clinic app for Indian doctors: patient records with BP, sugar and weight charts, readings sent by patients from home, photos and voice notes, appointments with video calls, and fees by UPI. In Hindi and English.', image: origin + '/img/og.jpg', body: doctorsPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'download') return send(200, shell({ ...base, path: '/download', title: `Download the ${brand} app`, desc: `Download the ${brand} Android app for tent houses, caterers and event managers.`, body: downloadPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'delete') return send(200, shell({ ...base, path: '/delete-account', title: `Delete your account | ${brand}`, desc: `How to delete your ${brand} account and data.`, body: deletePage(base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     if (page === 'privacy' || page === 'terms') return send(200, shell({ ...base, path: '/' + page, title: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} | ${brand}`, desc: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} for ${brand}.`, body: legalPage(page, base) }), 'text/html; charset=utf-8', 's-maxage=3600');
-    return send(404, shell({ ...base, path: '/' + page, title: `Page not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह पेज नहीं मिला')}>This page is not here</h1><p${hi('लिंक शायद पुराना है।')}>The link may be old.</p><a class="btn primary" href="/"${hi('होम पर जाएं')}>Go to home</a></div>` }), 'text/html; charset=utf-8', 's-maxage=60');
+    return send(404, shell({ ...base, path: '/' + page, title: `Page not found | ${brand}`, desc: '', noindex: true, body: `<div class="wrap nf"><h1${hi('यह पेज नहीं मिला')}>This page is not here</h1><p${hi('लिंक शायद पुराना है।')}>The link may be old.</p><a class="btn primary" href="/"${hi('होम पर जाएं')}>Go to home</a></div>` }), 'text/html; charset=utf-8', 's-maxage=60');
   } catch (e) {
     console.error(e);
     return send(500, `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SabManage</title><body style="font-family:system-ui;padding:40px;text-align:center"><h1>Something went wrong</h1><p>Please refresh the page, or <a href="/app">open the app</a>.</p></body>`, 'text/html; charset=utf-8', 's-maxage=5');
