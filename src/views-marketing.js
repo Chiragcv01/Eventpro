@@ -1,9 +1,9 @@
 /* ================= Marketing: free tools to get more bookings =================
    Everything here runs inside the app with the business's own data: no paid service,
-   no extra hosting. Tabs: follow-ups, Google reviews, posters, rate card, clients
+   no extra hosting. Tabs: follow-ups, Google reviews, rate card, clients
    (export, anniversaries, muhurat campaigns), QR poster, refer & share. */
 const QR_SRC = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
-const MK_TABS = [['followup', 'Follow-ups'], ['reviews', 'Google reviews'], ['posters', 'Posters'], ['ratecard', 'Rate card'], ['clients', 'Clients'], ['qr', 'QR poster'], ['share', 'Refer & share']];
+const MK_TABS = [['followup', 'Follow-ups'], ['reviews', 'Google reviews'], ['ratecard', 'Rate card'], ['clients', 'Clients'], ['qr', 'QR poster'], ['share', 'Refer & share']];
 const HI = () => I18N.lang === 'hi';
 const refCode = orgId => String(orgId || '').replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase();
 const phoneDigits = p => { const d = String(p || '').replace(/\D/g, ''); return d.length > 10 ? d.slice(-10) : d; };
@@ -22,7 +22,7 @@ function bizLine() { const st = settings(); return `${st.bizName || ''}${st.phon
 V.marketing = () => {
   const tab = MK_TABS.find(t => t[0] === S.params.tab) ? S.params.tab : 'followup';
   const due = col('events').filter(followDue).length;
-  const head = pageHead('Marketing', 'Free tools to get more bookings: follow-ups, Google reviews, posters, rate card, client list and QR code.');
+  const head = pageHead('Marketing', 'Free tools to get more bookings: follow-ups, Google reviews, rate card, client list and QR code.');
   const tabs = `<div class="tabs">${MK_TABS.map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${k === 'followup' && due ? ` <span class="tabn">${due}</span>` : ''}</button>`).join('')}${tabHelp('mk-' + tab)}</div>`;
   return head + tabs + MK[tab]();
 };
@@ -70,92 +70,14 @@ MK.reviews = () => {
 A.saveMkLinks = async ev => { ev.preventDefault(); try { need('settings', 2); const v = readForm(ev.target); const ok = u => !u || /^https?:\/\/\S+$/i.test(u); if (!ok(v.googleReview) || !ok(v.instagram)) throw new Error('Links must start with https://'); await saveSettingsRec({ googleReview: (v.googleReview || '').trim(), instagram: (v.instagram || '').trim() }); toast('Links saved'); render(); } catch (err) { toast(err.message, 'bad'); } };
 A.reviewAsked = id => { setTimeout(async () => { try { if (!can('bookings', 2)) return; const e = evById(id); e.reviewAskedAt = todayLocal(); await save('events', e); render(); } catch (err) { } }, 300); };
 
-/* ---------- 3. Posters (drawn on a canvas, saved as PNG) ---------- */
-const POSTERS = [
-  { k: 'diwali', name: 'Diwali', c: ['#4A0D1F', '#C2410C'], a: '#FCD34D', m: 'diya', head: ['Happy Diwali', 'शुभ दीपावली'], sub: ['Light up your celebrations with us', 'आपकी हर खुशी को रोशन करें हम'] },
-  { k: 'season', name: 'Wedding season', c: ['#7F1D1D', '#DC2626'], a: '#FDE68A', m: 'marigold', head: ['Shaadi season bookings open', 'शादी के सीज़न की बुकिंग शुरू'], sub: ['Tent, lights, decor and catering. Book your date today.', 'टेंट, लाइट, डेकोर और खाना। आज ही अपनी तारीख बुक करें।'] },
-  { k: 'dates', name: 'Muhurat dates', c: ['#581C87', '#C026D3'], a: '#FDE68A', m: 'marigold', head: ['Big muhurat dates', 'बड़े मुहूर्त की तारीखें'], sub: ['Book early, dates fill fast', 'जल्दी बुक करें, तारीखें तेज़ी से भर रही हैं'] },
-  { k: 'offer', name: 'Special offer', c: ['#1E3A8A', '#0891B2'], a: '#FDE047', m: 'tag', head: ['Special offer', 'स्पेशल ऑफ़र'], sub: ['10% off on bookings made this month', 'इस महीने बुकिंग पर 10% छूट'] },
-  { k: 'navratri', name: 'Navratri', c: ['#9D174D', '#EA580C'], a: '#FDE68A', m: 'rangoli', head: ['Happy Navratri', 'नवरात्रि की शुभकामनाएं'], sub: ['Garba, dandiya and jagran setups', 'गरबा, डांडिया और जागरण के सेटअप'] },
-  { k: 'holi', name: 'Holi', c: ['#7C3AED', '#DB2777'], a: '#FDE047', m: 'colors', head: ['Happy Holi', 'होली की शुभकामनाएं'], sub: ['Colours, music and food for your party', 'आपकी पार्टी के लिए रंग, म्यूज़िक और खाना'] },
-  { k: 'newyear', name: 'New Year', c: ['#0F172A', '#1E3A8A'], a: '#FCD34D', m: 'stars', head: ['Happy New Year', 'नया साल मुबारक'], sub: ['Thank you for a wonderful year', 'शानदार साल के लिए आपका धन्यवाद'] },
-  { k: 'thanks', name: 'Thank you', c: ['#065F46', '#0D9488'], a: '#FDE68A', m: 'rangoli', head: ['Thank you for trusting us', 'आपके भरोसे के लिए धन्यवाद'], sub: ['500+ happy families and counting', 'सैकड़ों खुश परिवार'] }
-];
-function posterState() {
-  if (!S.poster) { const p = POSTERS[0]; S.poster = { k: p.k, size: 'square', head: p.head[HI() ? 1 : 0], sub: p.sub[HI() ? 1 : 0], extra: '' }; }
-  return S.poster;
-}
+/* ---------- drawing helpers (QR poster) ---------- */
 function nextSaaya(limit = 6) { const t = todayLocal(); return (settings().saaya || []).filter(s => s.date >= t).sort(by('date')).slice(0, limit); }
-MK.posters = () => {
-  const ps = posterState(); const tpl = POSTERS.find(p => p.k === ps.k) || POSTERS[0];
-  setTimeout(drawPosterNow, 30);
-  return `<div class="split poster-split"><div class="card pad stack">
-    <div><div class="eyebrow" style="margin-bottom:8px">Pick a design</div><div class="tpl-grid">${POSTERS.map(p => `<button class="tpl ${p.k === tpl.k ? 'on' : ''}" style="--c1:${p.c[0]};--c2:${p.c[1]}" onclick="A.posterTpl('${p.k}')"><span>${p.name}</span></button>`).join('')}</div></div>
-    ${fieldHTML({ name: 'ph', label: 'Big line', value: ps.head })}
-    ${fieldHTML({ name: 'ps', label: 'Small line', value: ps.sub })}
-    ${fieldHTML({ name: 'px', label: tpl.k === 'dates' ? 'Dates (filled from your peak dates in Settings)' : 'Extra line (optional)', value: ps.extra, placeholder: tpl.k === 'offer' ? 'e.g. Valid till 30 November' : '' })}
-    <div class="field"><span>Size</span>${seg('size', [['square', 'Post (square)'], ['story', 'Status / story']], ps.size, 'A.posterSet')}</div>
-    <p class="tiny muted">Your logo, business name and phone are added from Settings. Change the words to Hindi or English as you like.</p>
-  </div>
-  <div class="card pad stack" style="align-items:center"><canvas id="posterCv" class="poster-cv ${ps.size}" width="1080" height="${ps.size === 'story' ? 1920 : 1080}" role="img" aria-label="Poster preview"></canvas>
-    <div class="row-flex" style="justify-content:center"><button class="btn primary" onclick="A.posterSave()">${ic('download')} Download</button>${navigator.share ? `<button class="btn wa" onclick="A.posterShare()">${ic('share')} Share</button>` : ''}</div></div></div>`;
-};
-A.posterTpl = k => { const p = POSTERS.find(x => x.k === k); const ps = posterState(); ps.k = k; ps.head = p.head[HI() ? 1 : 0]; ps.sub = p.sub[HI() ? 1 : 0]; ps.extra = k === 'dates' ? nextSaaya(4).map(s => T(fmtShort(s.date))).join(' · ') : ''; render(); };
-A.posterSet = (k, v) => { posterState()[k] = v; render(); };
-document.addEventListener('input', ev => { const n = ev.target?.name; if (!S.poster || !['ph', 'ps', 'px'].includes(n) || !ev.target.closest('.poster-split')) return; S.poster[{ ph: 'head', ps: 'sub', px: 'extra' }[n]] = ev.target.value; drawPosterNow(); });
 const imgCache = {};
 function loadImg(src) { if (!src) return Promise.resolve(null); if (imgCache[src]) return imgCache[src]; return (imgCache[src] = new Promise(res => { const i = new Image(); if (/^https?:/.test(src)) i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => res(null); i.src = src; })); }
 async function fontsReady(text) { try { await Promise.all(['800 80px "Baloo 2"', '600 40px Mukta', '700 40px Mukta'].map(f => document.fonts.load(f, text))); } catch (e) { } }
-function wrapLines(ctx, text, maxW) { const words = String(text || '').split(/\s+/).filter(Boolean); const lines = []; let line = ''; for (const w of words) { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; } if (line) lines.push(line); return lines; }
-function seeded(n) { let x = n; return () => (x = (x * 9301 + 49297) % 233280) / 233280; }
-function drawMotif(ctx, m, W, H, a) {
-  const rnd = seeded(7); ctx.save();
-  if (m === 'diya') { for (let i = 0; i < 5; i++) { const x = W * (0.12 + i * 0.19), y = H - 250; ctx.fillStyle = '#F59E0B'; ctx.beginPath(); ctx.ellipse(x, y, 62, 26, 0, 0, Math.PI); ctx.fill(); ctx.fillStyle = '#B45309'; ctx.fillRect(x - 62, y - 4, 124, 8); const g = ctx.createRadialGradient(x, y - 50, 4, x, y - 50, 70); g.addColorStop(0, 'rgba(253,224,71,.9)'); g.addColorStop(1, 'rgba(253,224,71,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - 50, 70, 0, 7); ctx.fill(); ctx.fillStyle = '#FDE047'; ctx.beginPath(); ctx.moveTo(x, y - 82); ctx.quadraticCurveTo(x + 18, y - 40, x, y - 16); ctx.quadraticCurveTo(x - 18, y - 40, x, y - 82); ctx.fill(); } }
-  if (m === 'marigold') { for (let r = 0; r < 2; r++) for (let i = 0; i <= 22; i++) { const x = W * i / 22, y = 40 + r * 48 + Math.sin(i / 22 * Math.PI) * 90; ctx.fillStyle = (i + r) % 2 ? '#F59E0B' : '#FB923C'; ctx.beginPath(); ctx.arc(x, y, 26, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.beginPath(); ctx.arc(x, y, 9, 0, 7); ctx.fill(); } }
-  if (m === 'rangoli') { [[0, 0], [W, H]].forEach(([cx, cy]) => { for (let ring = 0; ring < 4; ring++) { const n = 12 + ring * 6, rr = 90 + ring * 70; for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2; ctx.fillStyle = ['rgba(253,224,71,.55)', 'rgba(255,255,255,.35)', 'rgba(251,146,60,.5)', 'rgba(244,114,182,.45)'][ring]; ctx.beginPath(); ctx.ellipse(cx + Math.cos(t) * rr, cy + Math.sin(t) * rr, 22, 10, t, 0, 7); ctx.fill(); } } }); }
-  if (m === 'colors') { const cs = ['#F472B6', '#FDE047', '#34D399', '#60A5FA', '#FB923C', '#A78BFA']; for (let i = 0; i < 26; i++) { ctx.fillStyle = cs[i % cs.length] + 'AA'; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 20 + rnd() * 90, 0, 7); ctx.fill(); } }
-  if (m === 'stars') { for (let i = 0; i < 60; i++) { const x = rnd() * W, y = rnd() * H, r = 2 + rnd() * 5; ctx.fillStyle = i % 5 ? 'rgba(255,255,255,.7)' : a; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); } }
-  if (m === 'tag') { ctx.translate(W - 190, 210); ctx.rotate(-0.25); ctx.fillStyle = a; ctx.beginPath(); ctx.arc(0, 0, 140, 0, 7); ctx.fill(); ctx.fillStyle = '#1E3A8A'; ctx.font = '800 92px "Baloo 2", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('%', 0, 8); }
-  ctx.restore();
-}
-let posterBusy = 0;
-async function drawPosterNow() {
-  const cv = document.getElementById('posterCv'); if (!cv) return; const my = ++posterBusy;
-  const ps = posterState(); const tpl = POSTERS.find(p => p.k === ps.k) || POSTERS[0]; const st = settings();
-  await fontsReady(ps.head + ps.sub + ps.extra + (st.bizName || '')); const logo = await loadImg(st.logo); if (my !== posterBusy) return;
-  const W = 1080, H = ps.size === 'story' ? 1920 : 1080; cv.width = W; cv.height = H; const ctx = cv.getContext('2d');
-  const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, tpl.c[0]); g.addColorStop(1, tpl.c[1]); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.beginPath(); ctx.arc(W * 0.85, H * 0.18, 300, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(W * 0.1, H * 0.75, 240, 0, 7); ctx.fill();
-  drawMotif(ctx, tpl.m, W, H, tpl.a);
-  const footH = 190; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-  // logo + name on top
-  let y = tpl.m === 'marigold' ? 230 : 120;
-  if (logo) { const s = 150; ctx.save(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2 + 8, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2, 0, 7); ctx.clip(); const r = Math.max(s / logo.width, s / logo.height); ctx.drawImage(logo, W / 2 - logo.width * r / 2, y + s / 2 - logo.height * r / 2, logo.width * r, logo.height * r); ctx.restore(); y += s + 60; }
-  ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '700 40px Mukta, sans-serif'; ctx.fillText((st.bizName || '').toUpperCase(), W / 2, y); y += 40;
-  // headline block centred in the free space
-  const top = y, bottom = H - footH - (tpl.m === 'diya' ? 330 : 80);
-  let fs = 128; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; let hl = wrapLines(ctx, ps.head, W - 140);
-  while ((hl.length > 3 || hl.some(l => ctx.measureText(l).width > W - 140)) && fs > 60) { fs -= 6; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; hl = wrapLines(ctx, ps.head, W - 140); }
-  ctx.font = '600 50px Mukta, sans-serif'; const sl = wrapLines(ctx, ps.sub, W - 180);
-  ctx.font = '700 46px Mukta, sans-serif'; const xl = ps.extra ? wrapLines(ctx, ps.extra, W - 200) : [];
-  const blockH = hl.length * fs * 1.08 + 30 + sl.length * 64 + (xl.length ? 40 + xl.length * 62 + 30 : 0);
-  let by = top + Math.max(20, (bottom - top - blockH) / 2) + fs * 0.85;
-  ctx.fillStyle = tpl.a; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 18;
-  hl.forEach(l => { ctx.fillText(l, W / 2, by); by += fs * 1.08; }); ctx.shadowBlur = 0; by += 10;
-  ctx.fillStyle = '#fff'; ctx.font = '600 50px Mukta, sans-serif'; sl.forEach(l => { ctx.fillText(l, W / 2, by); by += 64; });
-  if (xl.length) { by += 20; ctx.font = '700 46px Mukta, sans-serif'; const bw = Math.min(W - 120, Math.max(...xl.map(l => ctx.measureText(l).width)) + 80); const bh = xl.length * 62 + 30; ctx.fillStyle = 'rgba(255,255,255,.95)'; roundRect(ctx, W / 2 - bw / 2, by - 50, bw, bh, 28); ctx.fill(); ctx.fillStyle = tpl.c[0]; xl.forEach(l => { ctx.fillText(l, W / 2, by); by += 62; }); }
-  // footer band
-  ctx.fillStyle = '#fff'; ctx.fillRect(0, H - footH, W, footH); ctx.fillStyle = tpl.c[0];
-  ctx.font = '800 54px "Baloo 2", sans-serif'; ctx.fillText(st.phone ? '📞 ' + st.phone : (st.bizName || ''), W / 2, H - footH + 88);
-  ctx.font = '600 34px Mukta, sans-serif'; ctx.fillStyle = '#475569'; ctx.fillText([st.city, st.instagram ? st.instagram.replace(/^https?:\/\/(www\.)?/, '') : ''].filter(Boolean).join('  ·  ') || (HI() ? 'कॉल या व्हाट्सऐप करें' : 'Call or WhatsApp'), W / 2, H - footH + 145);
-}
 function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-function posterBlob() { return new Promise(res => { const cv = document.getElementById('posterCv'); if (!cv) return res(null); cv.toBlob(b => res(b), 'image/png'); }); }
-const posterName = () => `${(settings().bizName || 'poster').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${S.poster?.k || 'poster'}.png`;
-A.posterSave = async () => { try { await drawPosterNow(); const b = await posterBlob(); if (!b) return; const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = posterName(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); toast('Poster saved'); } catch (err) { toast('Could not save the poster on this device. Take a screenshot instead.', 'bad'); } };
-A.posterShare = async () => { try { await drawPosterNow(); const b = await posterBlob(); const f = new File([b], posterName(), { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f], text: settings().bizName }); else A.posterSave(); } catch (err) { if (err?.name !== 'AbortError') A.posterSave(); } };
 
-/* ---------- 4. Rate card / catalogue ---------- */
+/* ---------- 3. Rate card / catalogue ---------- */
 MK.ratecard = () => {
   const st = settings(); const rc = S.rc = S.rc || { inv: true, menu: true, note: '' };
   const inv = col('inventory').filter(i => +i.rate > 0).sort(by('name')); const cats = [...new Set(inv.map(i => i.category || 'Other'))];
@@ -184,7 +106,7 @@ function rateCardText() {
   return t + `\n📞 ${st.phone || ''}`;
 }
 
-/* ---------- 5. Clients: list, export, anniversaries, muhurat campaigns ---------- */
+/* ---------- 4. Clients: list, export, anniversaries, muhurat campaigns ---------- */
 function anniversaries(days = 30) {
   const t = todayLocal(); const y = +t.slice(0, 4);
   return col('events').filter(e => e.date && ['Wedding', 'Ring Ceremony'].includes(e.type) && e.stage !== 'Cancelled' && +e.date.slice(0, 4) < y).map(e => {
@@ -206,7 +128,7 @@ MK.clients = () => {
   const ann = anniversaries(30); const sa = nextSaaya(3).filter(s => daysBetween(todayLocal(), s.date) <= 60); const money = can('invoices');
   return `<div class="split" style="margin-bottom:14px">
     <div class="card"><div class="card-h"><div><h3>Anniversaries in the next 30 days${info('mk-anni')}</h3><p>Weddings you did in earlier years. A wish brings the next booking.</p></div></div><div class="rows">${ann.map(x => `<div class="row" style="flex-wrap:wrap">${datebox(x.next, '#E11D74')}<div class="main-col" style="min-width:150px"><b>${esc(x.e.client)}</b><div class="sub">${x.d === 0 ? 'Today' : x.d === 1 ? 'Tomorrow' : `In ${x.d} days`} · ${x.years} years · ${esc(x.e.title)}</div></div>${waBtn(anniMsg(x), x.e.phone, 'Send wish')}</div>`).join('') || empty('None in the next 30 days', 'Wedding anniversaries of your past clients show here.', '', 'gift', '#E11D74')}</div></div>
-    <div class="card"><div class="card-h"><div><h3>Muhurat campaign${info('mk-campaign')}</h3><p>From the peak dates in Settings.</p></div>${can('settings', 2) ? `<button class="btn sm" onclick="A.go('settings')">Peak dates</button>` : ''}</div><div class="rows">${sa.map(s => `<div class="row" style="flex-wrap:wrap">${datebox(s.date, '#7C3AED')}<div class="main-col" style="min-width:150px"><b>${esc(s.label || 'Peak date')}</b><div class="sub">${daysBetween(todayLocal(), s.date)} days left · ${all.length} past clients</div></div><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.copy(${esc(JSON.stringify(campaignMsg(s)))})">${ic('copy')} Copy message</button><button class="btn sm" onclick="A.posterTpl('dates');A.setP('tab','posters')">${ic('image')} Poster</button></div></div>`).join('') || empty('No peak date in the next 60 days', 'Add muhurat dates in Settings to get a reminder here.', '', 'calendar', '#7C3AED')}</div></div></div>
+    <div class="card"><div class="card-h"><div><h3>Muhurat campaign${info('mk-campaign')}</h3><p>From the peak dates in Settings.</p></div>${can('settings', 2) ? `<button class="btn sm" onclick="A.go('settings')">Peak dates</button>` : ''}</div><div class="rows">${sa.map(s => `<div class="row" style="flex-wrap:wrap">${datebox(s.date, '#7C3AED')}<div class="main-col" style="min-width:150px"><b>${esc(s.label || 'Peak date')}</b><div class="sub">${daysBetween(todayLocal(), s.date)} days left · ${all.length} past clients</div></div><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.copy(${esc(JSON.stringify(campaignMsg(s)))})">${ic('copy')} Copy message</button></div></div>`).join('') || empty('No peak date in the next 60 days', 'Add muhurat dates in Settings to get a reminder here.', '', 'calendar', '#7C3AED')}</div></div></div>
   <div class="card"><div class="card-h"><div><h3>All clients (${all.length})${info('mk-clients')}</h3><p>Made from your bookings. Download the list for a WhatsApp broadcast or Facebook / Instagram ads.</p></div>${all.length && !FRAMED ? `<button class="btn" onclick="A.exportClients()">${ic('download')} Download list</button>` : ''}</div>
     <div class="sheet-b" style="padding-top:12px"><div class="search"><input type="search" placeholder="Search name or phone" value="${esc(S.filters.mkq || '')}" oninput="A.setF('mkq',this.value)"></div></div>
     <div class="rows">${list.slice(0, 200).map(c => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(c.name))}</div><div class="main-col" style="min-width:160px"><b>${esc(c.name)}</b><div class="sub">${esc(c.phone || '—')} · ${c.events.length} booking${c.events.length > 1 ? 's' : ''}${c.last?.type ? ' · ' + esc(c.last.type) : ''}${c.last?.date ? ' · ' + fmtShort(c.last.date) : ''}${money && c.billed ? ' · ' + inr(c.billed) : ''}</div></div>${c.phone ? waBtn(`Namaste ${c.name} ji 🙏\n`, c.phone, 'Message') : ''}</div>`).join('') || empty('No clients yet', 'Clients are added automatically from your bookings.', '', 'users', '#0D9488')}</div></div>`;
@@ -217,7 +139,7 @@ A.exportClients = () => {
   downloadFile('clients.csv', '﻿' + ['Name,Phone,Email,Last event,Last event date,Bookings,Total billed', ...rows].join('\n'), 'text/csv'); logAct('Downloaded client list');
 };
 
-/* ---------- 6. QR poster ---------- */
+/* ---------- 5. QR poster ---------- */
 async function qrLib() { if (!window.qrcode) await loadScript(QR_SRC); return window.qrcode; }
 /* kept short and in Latin letters so the QR stays small and easy to scan */
 function enquiryLink() { return waLink('Namaste, booking enquiry', settings().phone); }
@@ -254,7 +176,7 @@ async function drawQrNow() {
 A.qrSave = async () => { await drawQrNow(); const cv = document.getElementById('qrCv'); if (!cv) return; cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'qr-poster.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); }, 'image/png'); };
 A.qrPrint = async () => { await drawQrNow(); const cv = document.getElementById('qrCv'); if (!cv) return; modal(`${sheetHead('QR poster')}<div class="sheet-b"><div id="printArea"><img src="${cv.toDataURL('image/png')}" alt="QR poster" style="width:100%;display:block"></div></div><footer class="sheet-f no-print"><span class="grow"></span><button class="btn primary" onclick="window.print()">${ic('print')} Print</button></footer>`, { wide: true }); };
 
-/* ---------- 7. Refer & share ---------- */
+/* ---------- 6. Refer & share ---------- */
 function shareBizText() {
   const st = settings(); const types = (st.bizTypes || []).map(t => ({ tent: HI() ? 'टेंट और डेकोर' : 'Tent & decor', caterer: HI() ? 'कैटरिंग' : 'Catering', event: HI() ? 'इवेंट मैनेजमेंट' : 'Event management' }[t])).filter(Boolean).join(', ');
   return `*${st.bizName || ''}*${st.tagline ? '\n' + st.tagline : ''}\n${types}${st.city ? ' · ' + st.city : ''}\n📞 ${st.phone || ''}${st.googleReview ? `\n⭐ ${HI() ? 'हमारे रिव्यू' : 'Our reviews'}: ${st.googleReview}` : ''}${st.instagram ? `\n📸 ${st.instagram}` : ''}`;

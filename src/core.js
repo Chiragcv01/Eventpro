@@ -549,6 +549,7 @@ async function boot() {
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   try { const ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   const h = location.hash.replace('#', '');
+  if (h.startsWith('alert-')) { try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup' || h === 'login') { S.authTab = h === 'signup' && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
@@ -586,10 +587,14 @@ async function openOrg(orgId, override) {
   S.view = MODULES.find(m => can(m.key))?.key || 'dashboard'; S.params = {};
   initCatering();
   render();
+  if (typeof startAlerts === 'function') startAlerts();
 }
 A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
-  A.closeModal(); await S.adapter.signOut();
+  A.closeModal(); if (typeof stopPush === 'function') { await stopPush(); LS.set('ep_push_on', false); }
+  try { if (typeof alertChan !== 'undefined' && alertChan && S.adapter.sb) S.adapter.sb.removeChannel(alertChan); } catch (e) { }
+  document.getElementById('alertRoot')?.remove(); S.teamAlerts = [];
+  await S.adapter.signOut();
   Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login', mfaPending: null, mfaOn: false });
   if (LS.get('ep3_mode', 'auto') === 'local' && cloudReady()) { LS.set('ep3_mode', 'auto'); S.adapter = CloudDB; try { await CloudDB.init(); } catch (e) { S.adapter = LocalDB; } }
   render();
@@ -631,7 +636,7 @@ function planBanner() {
 function shell(body) {
   const st = settings(); const items = navItems(); const cur = currentModule();
   const groups = [...new Set(items.map(m => m.group))];
-  const alerts = computeAlerts();
+  const alerts = computeAlerts(); const bellN = alerts.length + (typeof pendingForMe === 'function' ? pendingForMe().length : 0);
   const pri = ['dashboard', 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments'].filter(k => can(k));
   const left = pri.slice(0, 2), right = pri.slice(2, 3);
   const roleLabel = S.org ? (S.roles[S.role]?.label || S.role) : '';
@@ -653,7 +658,7 @@ function shell(body) {
       <div class="org grow">${isHome ? `<b class="mobile-only">Namaste, ${esc(first)}</b><b class="desk-only">${esc(bizName)}</b>` : `<b>${esc(bizName)}</b>`}<span class="tiny muted sub1">${isHome ? `<span class="mob-inline">${esc(bizName)} · </span>` : ''}${S.org ? esc(roleLabel || '') : 'All businesses'}${S.super ? ' · Super Admin' : ''}${S.adapter.mode === 'local' ? ' · Offline' : ' · Synced'}</span></div>
       ${creates.length ? `<button class="btn primary sm desk-only" onclick="A.createSheet()">${ic('plus')} Create</button>` : ''}
       ${langSwitch()}
-      <button class="icon-btn" aria-label="Alerts" onclick="A.alertsSheet()">${ic('bell')}${alerts.length ? `<span class="dot">${alerts.length}</span>` : ''}</button>
+      <button class="icon-btn" aria-label="Alerts" onclick="A.alertsSheet()">${ic('bell')}${bellN ? `<span class="dot">${bellN}</span>` : ''}</button>
     </header>
     <main class="content fade">${planBanner()}${body}</main>
   </div>
@@ -670,6 +675,7 @@ function createActions() {
     can('payments', 2) && ['Payment received', 'rupee', MOD.payments.c, 'A.paymentForm()'],
     can('expenses', 2) && ['Expense', 'wallet', MOD.expenses.c, 'A.expenseForm()'],
     can('tasks', 2) && ['Setup task', 'pulse', MOD.tasks.c, 'A.taskForm()'],
+    can('tasks', 2) && ['Alert to team', 'bell', '#E11D74', 'A.alertForm()'],
     can('inventory', 2) && ['Godown item', 'box', MOD.inventory.c, 'A.itemForm()'],
     can('vendors', 2) && ['Vendor PO', 'handshake', MOD.vendors.c, 'A.poForm()'],
     can('staff', 2) && ['Attendance', 'users', MOD.staff.c, `A.go('staff',{tab:'attendance'})`],
@@ -690,6 +696,7 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
+      <button class="tile" onclick="A.testTune()">${ibox('bell', '#E11D74')}<span>Alert tune</span></button>
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
       ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
@@ -702,8 +709,13 @@ A.accountMenu = () => {
 const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'], 'Follow up': ['megaphone', '#E11D74'] };
 function alertCard(a) { const [i, c] = ALERT_STYLE[a.tag] || ['alert', '#E0344B']; return `<div class="alert" style="--c:${c}" onclick="${a.go}">${ibox(i, c, 'sm')}<div class="grow" style="min-width:0"><b>${esc(a.title)}</b><div class="sub">${esc(a.sub || '')}</div></div>${ic('chev', 'go')}</div>`; }
 A.alertsSheet = () => {
-  const al = computeAlerts();
-  modal(`${sheetHead('Alerts & reminders', al.length ? al.length + ' things need attention' : 'All clear')}<div class="sheet-b stack-sm">${al.length ? al.map(alertCard).join('') : empty('Nothing pending', 'Overdue payments, stock shortages and dispatches will show here.', '', 'check', '#0B9B68')}</div>`);
+  const al = computeAlerts(); const team = (S.teamAlerts || []).slice(0, 15); const pend = typeof pendingForMe === 'function' ? pendingForMe().length : 0;
+  modal(`${sheetHead('Alerts & reminders', al.length + pend ? (al.length + pend) + ' things need attention' : 'All clear')}<div class="sheet-b stack-sm">
+    ${typeof pushCard === 'function' ? pushCard() : ''}
+    ${S.org ? `<div class="row-flex" style="justify-content:space-between;margin-top:4px"><h3 style="font-size:16px">Team alerts${info('team-alerts')}</h3><div class="row-flex" style="gap:6px"><button class="btn sm ghost" onclick="A.testTune()">${ic('bell')} Test tune</button>${typeof canSendAlert === 'function' && canSendAlert() ? `<button class="btn sm primary" onclick="A.alertForm()">${ic('send')} Send alert</button>` : ''}</div></div>
+    <div class="card"><div class="rows">${team.map(teamAlertRow).join('') || `<div class="row"><span class="small muted">No team alerts yet. Owners and supervisors can send an alert that rings on the phone of the person.</span></div>`}</div></div>
+    <h3 style="font-size:16px;margin-top:8px">Reminders</h3>` : ''}
+    ${al.length ? al.map(alertCard).join('') : empty('Nothing pending', 'Overdue payments, stock shortages and dispatches will show here.', '', 'check', '#0B9B68')}</div>`);
 };
 
 /* ================= Business logic ================= */

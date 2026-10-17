@@ -531,11 +531,7 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .hrs-in span{font-size:12.5px;color:var(--muted);font-weight:600}
 
 /* marketing */
-.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
-.tpl{border:2px solid transparent;border-radius:14px;min-height:62px;padding:8px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;font:700 13.5px var(--f-body,inherit);text-align:left;display:flex;align-items:flex-end;cursor:pointer;box-shadow:0 2px 6px rgba(15,23,42,.12)}
-.tpl.on{border-color:var(--ink);box-shadow:0 0 0 3px #fff inset,0 4px 14px rgba(15,23,42,.25)}
 .poster-cv{width:100%;max-width:420px;height:auto;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.18);background:#eee;display:block}
-.poster-cv.story{max-width:300px}
 .poster-cv.a4{max-width:380px}
 .share-pre{white-space:pre-wrap;font:500 14px/1.5 var(--f-body,inherit);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0}
 .ratecard .rc-h{margin:16px 0 6px;font-size:14px;color:var(--pb,#1F5EFF);text-transform:uppercase;letter-spacing:.04em}
@@ -548,6 +544,23 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .ratecard .rc-foot{margin-top:18px;text-align:center;font-weight:600}
 .tbl.payroll{min-width:900px}
 .tbl.payroll td:first-child{min-width:190px}
+
+/* team alerts */
+.alert-scrim{position:fixed;inset:0;z-index:1000;background:rgba(18,24,49,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.alert-scrim.urgent{background:rgba(120,10,30,.82);animation:alertPulse 1.2s ease-in-out infinite}
+@keyframes alertPulse{50%{background:rgba(190,18,60,.86)}}
+.alert-card{background:#fff;border-radius:24px;max-width:420px;width:100%;padding:26px 22px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.alert-card h2{font-size:26px;line-height:1.2;margin:0}
+.alert-body{font-size:16.5px;line-height:1.5;margin:0;white-space:pre-wrap}
+.alert-ring{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#FFE4EA;color:#E0344B;animation:ring 1s ease-in-out infinite}
+.alert-ring .ico{width:38px;height:38px}
+@keyframes ring{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+.alert-ok{min-height:54px;font-size:17px;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface2);border-radius:99px;padding:6px 12px;font:600 13.5px var(--f-body);color:var(--ink2);cursor:pointer}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.urgent-check{background:#FFF1F2;border:1px solid #FECDD3;border-radius:12px;padding:10px 12px}
+@media (prefers-reduced-motion: reduce){.alert-ring,.alert-scrim.urgent{animation:none}}
 
 </style>
 </head>
@@ -2396,10 +2409,9 @@ Crew kharcha & bonus | क्रू का खर्चा और इनाम
 
 # ---------- marketing ----------
 Marketing | मार्केटिंग
-Free tools to get more bookings: follow-ups, Google reviews, posters, rate card, client list and QR code. | ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, पोस्टर, रेट कार्ड, ग्राहकों की लिस्ट और क्यूआर कोड।
+Free tools to get more bookings: follow-ups, Google reviews, rate card, client list and QR code. | ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, रेट कार्ड, ग्राहकों की लिस्ट और क्यूआर कोड।
 Follow-ups | फ़ॉलो-अप
 Google reviews | गूगल रिव्यू
-Posters | पोस्टर
 Rate card | रेट कार्ड
 Clients | ग्राहक
 QR poster | क्यूआर पोस्टर
@@ -2431,29 +2443,10 @@ Asked {} | {1} को मांगा
 Ask for review | रिव्यू मांगें
 No finished events yet | अभी कोई इवेंट पूरा नहीं हुआ
 After an event is marked Completed, ask the client for a Google review from here. | इवेंट पूरा मार्क होने के बाद यहां से क्लाइंट से गूगल रिव्यू मांगें।
-Pick a design | डिज़ाइन चुनें
-Diwali | दीवाली
-Wedding season | शादी का सीज़न
-Muhurat dates | मुहूर्त की तारीखें
-Special offer | स्पेशल ऑफ़र
-Navratri | नवरात्रि
-Holi | होली
-New Year | नया साल
 Thank you | धन्यवाद
-Big line | बड़ी लाइन
-Small line | छोटी लाइन
-Extra line (optional) | एक और लाइन (ज़रूरी नहीं)
-Dates (filled from your peak dates in Settings) | तारीखें (सेटिंग्स की पीक तारीखों से भरी गई)
-e.g. Valid till 30 November | जैसे: 30 नवंबर तक
 Size | साइज़
-Post (square) | पोस्ट (चौकोर)
-Status / story | स्टेटस / स्टोरी
-Your logo, business name and phone are added from Settings. Change the words to Hindi or English as you like. | आपका लोगो, बिज़नेस का नाम और फ़ोन सेटिंग्स से अपने आप आते हैं। शब्द हिंदी या अंग्रेज़ी में जैसे चाहें बदलें।
 Download | डाउनलोड
 Share | शेयर करें
-Poster preview | पोस्टर का प्रीव्यू
-Poster saved | पोस्टर सेव हो गया
-Could not save the poster on this device. Take a screenshot instead. | इस फ़ोन पर पोस्टर सेव नहीं हो पाया। स्क्रीनशॉट ले लें।
 Show godown items with rent per day ({}) | गोदाम का सामान रोज़ के किराये के साथ दिखाएं ({1})
 Show menu dishes ({}) | मेन्यू की डिश दिखाएं ({1})
 Packages / offer note (optional) | पैकेज / ऑफ़र का नोट (ज़रूरी नहीं)
@@ -2478,7 +2471,6 @@ Peak date | पीक तारीख
 {} days left | {1} दिन बाकी
 {} past clients | {1} पुराने ग्राहक
 Copy message | मैसेज कॉपी करें
-Poster | पोस्टर
 No peak date in the next 60 days | अगले 60 दिन में कोई पीक तारीख नहीं
 Add muhurat dates in Settings to get a reminder here. | सेटिंग्स में मुहूर्त की तारीखें डालें, यहां याद दिलाया जाएगा।
 All clients ({}) | सभी ग्राहक ({1})
@@ -2517,6 +2509,68 @@ Recommend them to family and friends planning a function. | फ़ंक्श�
 Recommend on WhatsApp | व्हाट्सऐप पर बताएं
 Review on Google | गूगल पर रिव्यू दें
 Instagram | इंस्टाग्राम
+`);
+
+I18N.load(`
+# ---------- team alerts ----------
+Alert to team | टीम को अलर्ट
+Alert tune | अलर्ट की धुन
+This is the alert tune. Keep media volume up. | यह अलर्ट की धुन है। मीडिया की आवाज़ ऊंची रखें।
+Tap anywhere once, then try again. | स्क्रीन पर एक बार कहीं भी टैप करें, फिर दोबारा कोशिश करें।
+Team alerts | टीम अलर्ट
+Test tune | धुन सुनें
+Send alert | अलर्ट भेजें
+Reminders | रिमाइंडर
+No team alerts yet. Owners and supervisors can send an alert that rings on the phone of the person. | अभी कोई टीम अलर्ट नहीं। ओनर और सुपरवाइज़र ऐसा अलर्ट भेज सकते हैं जो उस व्यक्ति के फ़ोन पर बजता है।
+Rings on their phone with the alert tune | उनके फ़ोन पर अलर्ट की धुन के साथ बजेगा
+Nobody else has an app login yet. Add your team in Team & access so they get alerts. | अभी किसी और का ऐप लॉगिन नहीं है। टीम और एक्सेस में अपनी टीम जोड़ें ताकि उन्हें अलर्ट मिलें।
+Send to | किसे भेजें
+Everyone ({}) | सभी को ({1})
+Quick message | जल्दी वाला मैसेज
+Call me now | मुझे अभी फ़ोन करो
+Come to the godown | गोदाम पर आओ
+Truck is leaving, come fast | ट्रक निकल रहा है, जल्दी आओ
+Client is waiting at the site | क्लाइंट साइट पर इंतज़ार कर रहे हैं
+Material short at the site | साइट पर सामान कम पड़ गया
+Start setup now | अभी सेटअप शुरू करो
+Alert | अलर्ट
+e.g. Come to the godown now | जैसे: अभी गोदाम पर आओ
+Details (optional) | पूरी बात (ज़रूरी नहीं)
+About booking (optional) | किस बुकिंग के बारे में (ज़रूरी नहीं)
+Urgent | ज़रूरी
+: keeps ringing until they tap “Seen” | : जब तक वे "देख लिया" न दबाएं, बजता रहेगा
+Crew without the app? Use the WhatsApp button on their card in Staff. | जिस क्रू के पास ऐप नहीं? स्टाफ़ में उनके कार्ड पर व्हाट्सऐप बटन इस्तेमाल करें।
+Write the alert | अलर्ट लिखें
+Your role cannot send alerts. Ask the owner. | आपका रोल अलर्ट नहीं भेज सकता। ओनर से कहें।
+Alert sent. Ringing on {} phone. | अलर्ट भेज दिया। {1} फ़ोन पर बज रहा है।
+Alert sent. Ringing on {} phones. | अलर्ट भेज दिया। {1} फ़ोन पर बज रहा है।
+Alert sent. They will see it when the app is open (phone notifications are not turned on for them yet). | अलर्ट भेज दिया। ऐप खोलते ही उन्हें दिखेगा (उनके फ़ोन पर नोटिफ़िकेशन अभी चालू नहीं हैं)।
+Sent alert: {} | अलर्ट भेजा: {1}
+Urgent alert | ज़रूरी अलर्ट
+1 of {} | {1} में से 1
+From | भेजने वाले:
+Play sound | आवाज़ चलाएं
+Seen, OK | देख लिया, ठीक है
+Open booking | बुकिंग खोलें
+To {} | {1} को
+From {} | {1} से
+Everyone | सभी
+Seen by {} | {1} ने देखा
+Not seen yet | अभी नहीं देखा
+Seen | देख लिया
+Sent | भेजा
+New | नया
+Turn on alert notifications | अलर्ट नोटिफ़िकेशन चालू करें
+So you hear alerts from your team with the SabManage tune, even when the app is closed. | ताकि ऐप बंद होने पर भी टीम के अलर्ट सबमैनेज की धुन के साथ सुनाई दें।
+Turn on | चालू करें
+Hide | छुपाएं
+Phone notifications are on | फ़ोन नोटिफ़िकेशन चालू हो गए
+Notifications not allowed | नोटिफ़िकेशन की इजाज़त नहीं मिली
+Notifications are blocked. Allow them for SabManage in your phone settings. | नोटिफ़िकेशन बंद हैं। फ़ोन की सेटिंग्स में सबमैनेज के लिए चालू करें।
+Phone notifications work in the SabManage app or in Chrome on the live site. | फ़ोन नोटिफ़िकेशन सबमैनेज ऐप में या क्रोम में असली साइट पर चलते हैं।
+Could not turn on notifications: {} | नोटिफ़िकेशन चालू नहीं हो पाए: {1}
+1 new important reminder. Tap the bell. | 1 नया ज़रूरी रिमाइंडर। घंटी दबाएं।
+{} new important reminders. Tap the bell. | {1} नए ज़रूरी रिमाइंडर। घंटी दबाएं।
 `);
 
 'use strict';
@@ -3070,6 +3124,7 @@ async function boot() {
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   try { const ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   const h = location.hash.replace('#', '');
+  if (h.startsWith('alert-')) { try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup' || h === 'login') { S.authTab = h === 'signup' && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
@@ -3107,10 +3162,14 @@ async function openOrg(orgId, override) {
   S.view = MODULES.find(m => can(m.key))?.key || 'dashboard'; S.params = {};
   initCatering();
   render();
+  if (typeof startAlerts === 'function') startAlerts();
 }
 A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
-  A.closeModal(); await S.adapter.signOut();
+  A.closeModal(); if (typeof stopPush === 'function') { await stopPush(); LS.set('ep_push_on', false); }
+  try { if (typeof alertChan !== 'undefined' && alertChan && S.adapter.sb) S.adapter.sb.removeChannel(alertChan); } catch (e) { }
+  document.getElementById('alertRoot')?.remove(); S.teamAlerts = [];
+  await S.adapter.signOut();
   Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login', mfaPending: null, mfaOn: false });
   if (LS.get('ep3_mode', 'auto') === 'local' && cloudReady()) { LS.set('ep3_mode', 'auto'); S.adapter = CloudDB; try { await CloudDB.init(); } catch (e) { S.adapter = LocalDB; } }
   render();
@@ -3152,7 +3211,7 @@ function planBanner() {
 function shell(body) {
   const st = settings(); const items = navItems(); const cur = currentModule();
   const groups = [...new Set(items.map(m => m.group))];
-  const alerts = computeAlerts();
+  const alerts = computeAlerts(); const bellN = alerts.length + (typeof pendingForMe === 'function' ? pendingForMe().length : 0);
   const pri = ['dashboard', 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments'].filter(k => can(k));
   const left = pri.slice(0, 2), right = pri.slice(2, 3);
   const roleLabel = S.org ? (S.roles[S.role]?.label || S.role) : '';
@@ -3174,7 +3233,7 @@ function shell(body) {
       <div class="org grow">${isHome ? `<b class="mobile-only">Namaste, ${esc(first)}</b><b class="desk-only">${esc(bizName)}</b>` : `<b>${esc(bizName)}</b>`}<span class="tiny muted sub1">${isHome ? `<span class="mob-inline">${esc(bizName)} · </span>` : ''}${S.org ? esc(roleLabel || '') : 'All businesses'}${S.super ? ' · Super Admin' : ''}${S.adapter.mode === 'local' ? ' · Offline' : ' · Synced'}</span></div>
       ${creates.length ? `<button class="btn primary sm desk-only" onclick="A.createSheet()">${ic('plus')} Create</button>` : ''}
       ${langSwitch()}
-      <button class="icon-btn" aria-label="Alerts" onclick="A.alertsSheet()">${ic('bell')}${alerts.length ? `<span class="dot">${alerts.length}</span>` : ''}</button>
+      <button class="icon-btn" aria-label="Alerts" onclick="A.alertsSheet()">${ic('bell')}${bellN ? `<span class="dot">${bellN}</span>` : ''}</button>
     </header>
     <main class="content fade">${planBanner()}${body}</main>
   </div>
@@ -3191,6 +3250,7 @@ function createActions() {
     can('payments', 2) && ['Payment received', 'rupee', MOD.payments.c, 'A.paymentForm()'],
     can('expenses', 2) && ['Expense', 'wallet', MOD.expenses.c, 'A.expenseForm()'],
     can('tasks', 2) && ['Setup task', 'pulse', MOD.tasks.c, 'A.taskForm()'],
+    can('tasks', 2) && ['Alert to team', 'bell', '#E11D74', 'A.alertForm()'],
     can('inventory', 2) && ['Godown item', 'box', MOD.inventory.c, 'A.itemForm()'],
     can('vendors', 2) && ['Vendor PO', 'handshake', MOD.vendors.c, 'A.poForm()'],
     can('staff', 2) && ['Attendance', 'users', MOD.staff.c, `A.go('staff',{tab:'attendance'})`],
@@ -3211,6 +3271,7 @@ A.accountMenu = () => {
     <div class="tiles">
       ${S.super ? `<button class="tile" onclick="A.go('admin')">${ibox('shield', '#0F172A')}<span>Super Admin</span></button>` : ''}
       ${S.super || S.platform?.allowSignup !== false ? `<button class="tile" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span>New business</span></button>` : ''}
+      <button class="tile" onclick="A.testTune()">${ibox('bell', '#E11D74')}<span>Alert tune</span></button>
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
       ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
@@ -3223,8 +3284,13 @@ A.accountMenu = () => {
 const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'], 'Follow up': ['megaphone', '#E11D74'] };
 function alertCard(a) { const [i, c] = ALERT_STYLE[a.tag] || ['alert', '#E0344B']; return `<div class="alert" style="--c:${c}" onclick="${a.go}">${ibox(i, c, 'sm')}<div class="grow" style="min-width:0"><b>${esc(a.title)}</b><div class="sub">${esc(a.sub || '')}</div></div>${ic('chev', 'go')}</div>`; }
 A.alertsSheet = () => {
-  const al = computeAlerts();
-  modal(`${sheetHead('Alerts & reminders', al.length ? al.length + ' things need attention' : 'All clear')}<div class="sheet-b stack-sm">${al.length ? al.map(alertCard).join('') : empty('Nothing pending', 'Overdue payments, stock shortages and dispatches will show here.', '', 'check', '#0B9B68')}</div>`);
+  const al = computeAlerts(); const team = (S.teamAlerts || []).slice(0, 15); const pend = typeof pendingForMe === 'function' ? pendingForMe().length : 0;
+  modal(`${sheetHead('Alerts & reminders', al.length + pend ? (al.length + pend) + ' things need attention' : 'All clear')}<div class="sheet-b stack-sm">
+    ${typeof pushCard === 'function' ? pushCard() : ''}
+    ${S.org ? `<div class="row-flex" style="justify-content:space-between;margin-top:4px"><h3 style="font-size:16px">Team alerts${info('team-alerts')}</h3><div class="row-flex" style="gap:6px"><button class="btn sm ghost" onclick="A.testTune()">${ic('bell')} Test tune</button>${typeof canSendAlert === 'function' && canSendAlert() ? `<button class="btn sm primary" onclick="A.alertForm()">${ic('send')} Send alert</button>` : ''}</div></div>
+    <div class="card"><div class="rows">${team.map(teamAlertRow).join('') || `<div class="row"><span class="small muted">No team alerts yet. Owners and supervisors can send an alert that rings on the phone of the person.</span></div>`}</div></div>
+    <h3 style="font-size:16px;margin-top:8px">Reminders</h3>` : ''}
+    ${al.length ? al.map(alertCard).join('') : empty('Nothing pending', 'Overdue payments, stock shortages and dispatches will show here.', '', 'check', '#0B9B68')}</div>`);
 };
 
 /* ================= Business logic ================= */
@@ -3321,6 +3387,177 @@ function computeAlerts() {
 function initCatering() {
   const st = settings();
   S.cat = S.cat && S.cat.orgId === S.org.orgId ? S.cat : { orgId: S.org.orgId, pax: 500, buffer: 10, markup: +st.markup || 30, selected: col('dishes').filter(d => d.default).map(d => d.id), eventId: '' };
+}
+
+/* ================= Team alerts with a ringing tune =================
+   Owner / manager / supervisor sends an alert to one person or the whole team.
+   - App open: it arrives live (Supabase Realtime), a full-screen card shows and the
+     SabManage tune plays (urgent alerts keep ringing until "Seen" is tapped).
+   - App closed: a phone notification is sent (web push through the send-alert
+     edge function). In the Android app (v1.1+) these notifications ring on the
+     ALARM sound channel with the same tune, so they are heard even on silent.
+   - New important reminders (overdue bill, stock short, unconfirmed date…) play the tune once. */
+const VAPID_PUBLIC = 'BNGXdwo0JZ8cN3up625ShVurQkJb0P4k9586IZfrh-RNsBnp1tVSndMfJG7kfRzviMqguzp6Dt0IWlGNesN9o8Y';
+const TUNE_SRC = '/sounds/alert.mp3';
+const QUICK_ALERTS = ['Call me now', 'Come to the godown', 'Truck is leaving, come fast', 'Client is waiting at the site', 'Material short at the site', 'Start setup now'];
+
+/* ---------- sound ---------- */
+const Tune = (() => {
+  let audio = null, unlocked = false, loopUntil = 0, stopTimer = null;
+  const el = () => { if (!audio) { audio = new Audio(TUNE_SRC); audio.preload = 'auto'; } return audio; };
+  function unlock() {
+    if (unlocked) return; const a = el(); a.muted = true;
+    a.play().then(() => { a.pause(); a.currentTime = 0; a.muted = false; unlocked = true; }).catch(() => { a.muted = false; });
+  }
+  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, unlock, { capture: true, passive: true }));
+  function play(loopSecs = 0) {
+    const a = el(); a.loop = loopSecs > 0; a.currentTime = 0; a.volume = 1;
+    clearTimeout(stopTimer); if (loopSecs > 0) { loopUntil = Date.now() + loopSecs * 1000; stopTimer = setTimeout(stop, loopSecs * 1000); }
+    try { navigator.vibrate && navigator.vibrate(loopSecs ? [700, 250, 700, 250, 1000, 400, 700, 250, 700] : [400, 150, 400]); } catch (e) { }
+    return a.play().then(() => true).catch(() => false);
+  }
+  function stop() { clearTimeout(stopTimer); if (audio) { audio.pause(); audio.loop = false; audio.currentTime = 0; } try { navigator.vibrate && navigator.vibrate(0); } catch (e) { } }
+  return { play, stop, unlock, get unlocked() { return unlocked; } };
+})();
+A.testTune = async () => { const ok = await Tune.play(); toast(ok ? 'This is the alert tune. Keep media volume up.' : 'Tap anywhere once, then try again.', ok ? '' : 'warn'); };
+
+/* ---------- storage (cloud table `alerts`; offline mode keeps them on this device) ---------- */
+const AlertsDB = {
+  local() { return LS.get('ep_alerts_' + S.org.orgId, []); },
+  async list() {
+    if (S.adapter.mode !== 'cloud') return this.local();
+    const { data, error } = await S.adapter.sb.from('alerts').select('*').eq('org_id', S.org.orgId).order('created_at', { ascending: false }).limit(60);
+    if (error) throw S.adapter.err(error); return data || [];
+  },
+  async send(rec) {
+    if (S.adapter.mode !== 'cloud') { const r = { id: uid('al_'), org_id: S.org.orgId, from_user: S.user.id, created_at: new Date().toISOString(), acks: {}, ...rec }; LS.set('ep_alerts_' + S.org.orgId, [r, ...this.local()].slice(0, 60)); return r; }
+    const { data, error } = await S.adapter.sb.from('alerts').insert({ org_id: S.org.orgId, from_user: S.user.id, ...rec }).select().single();
+    if (error) throw S.adapter.err(error); return data;
+  },
+  async push(id) {
+    if (S.adapter.mode !== 'cloud') return { sent: 0 };
+    try { const { data, error } = await S.adapter.sb.functions.invoke('send-alert', { body: { alertId: id } }); if (error) throw error; return data || {}; } catch (e) { return { sent: 0, error: e.message }; }
+  },
+  async ack(id) {
+    if (S.adapter.mode !== 'cloud') { const l = this.local(); const a = l.find(x => x.id === id); if (a) { a.acks = { ...(a.acks || {}), [S.user.id]: { at: new Date().toISOString(), name: S.me?.name } }; LS.set('ep_alerts_' + S.org.orgId, l); } return a?.acks; }
+    const { data, error } = await S.adapter.sb.rpc('ack_alert', { p_id: id }); if (error) throw S.adapter.err(error); return data;
+  }
+};
+const forMe = a => a.from_user !== S.user?.id && (!a.to_user || a.to_user === S.user?.id);
+const seenByMe = a => !!(a.acks || {})[S.user?.id];
+const canSendAlert = () => S.adapter?.mode === 'cloud' ? lvl('tasks') >= 2 : !!S.org && lvl('tasks') >= 2;
+
+/* ---------- live updates ---------- */
+let alertChan = null;
+async function startAlerts() {
+  S.teamAlerts = [];
+  if (!S.org || ['suspended', 'expired'].includes(orgState(S.org))) return;
+  try { S.teamAlerts = await AlertsDB.list(); } catch (e) { S.teamAlerts = []; }
+  if (S.adapter.mode === 'cloud') {
+    try { if (alertChan) S.adapter.sb.removeChannel(alertChan); } catch (e) { }
+    alertChan = S.adapter.sb.channel('alerts-' + S.org.orgId)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: 'org_id=eq.' + S.org.orgId }, p => {
+        const a = p.new; if (!a?.id) return; const i = (S.teamAlerts || []).findIndex(x => x.id === a.id);
+        if (i >= 0) S.teamAlerts[i] = a; else S.teamAlerts.unshift(a);
+        if (p.eventType === 'INSERT' && forMe(a)) showAlertOverlay();
+        refreshAlertDot();
+      }).subscribe();
+  }
+  const pending = pendingForMe(); if (pending.length) setTimeout(showAlertOverlay, 400);
+  refreshAlertDot(); chimeForNewReminders(); ensurePush(false);
+}
+const pendingForMe = () => (S.teamAlerts || []).filter(a => forMe(a) && !seenByMe(a) && Date.now() - Date.parse(a.created_at) < 36 * 3600e3);
+function refreshAlertDot() { const b = document.querySelector('.topbar [aria-label="Alerts"] .dot'); const n = computeAlerts().length + pendingForMe().length; if (b) b.textContent = n; else if (n) render(); }
+/* new important reminders → tune once per new item */
+function chimeForNewReminders() {
+  const key = 'ep_seen_rem_' + S.org.orgId; const seen = new Set(LS.get(key, []));
+  const imp = computeAlerts().filter(a => ['Overdue', 'Shortage', 'Confirm', 'Return', 'Dispatch'].includes(a.tag));
+  const ids = imp.map(a => a.tag + '|' + a.title); const fresh = ids.filter(x => !seen.has(x));
+  LS.set(key, ids.slice(0, 200));
+  if (fresh.length && seen.size + fresh.length > 0 && !pendingForMe().length) setTimeout(async () => { await Tune.play(); toast(fresh.length === 1 ? '1 new important reminder. Tap the bell.' : `${fresh.length} new important reminders. Tap the bell.`, 'warn'); }, 900);
+}
+
+/* ---------- the full-screen alert card ---------- */
+function showAlertOverlay() {
+  const list = pendingForMe(); let root = document.getElementById('alertRoot');
+  if (!list.length) { if (root) root.remove(); Tune.stop(); return; }
+  if (!root) { root = document.createElement('div'); root.id = 'alertRoot'; document.body.appendChild(root); }
+  const a = list[0]; const urgent = !!a.urgent;
+  root.innerHTML = `<div class="alert-scrim ${urgent ? 'urgent' : ''}" role="alertdialog" aria-modal="true" aria-labelledby="alT"><div class="alert-card fade">
+    <div class="alert-ring">${ic(urgent ? 'alert' : 'bell')}</div>
+    <div class="eyebrow">${urgent ? 'Urgent alert' : 'Alert'}${list.length > 1 ? ` · 1 of ${list.length}` : ''}</div>
+    <h2 id="alT">${esc(a.title)}</h2>${a.body ? `<p class="alert-body">${esc(a.body)}</p>` : ''}
+    <div class="small muted">From <b>${esc(a.from_name || 'Team')}</b> · ${new Date(a.created_at).toLocaleTimeString(I18N.lang === 'hi' ? 'hi-IN' : 'en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+    ${!Tune.unlocked ? `<button class="btn" onclick="Tune.play(${urgent ? 120 : 0})">${ic('bell')} Play sound</button>` : ''}
+    <button class="btn primary block alert-ok" onclick="A.ackAlert('${a.id}')">${ic('check')} Seen, OK</button>
+    ${a.event_id && evById(a.event_id) ? `<button class="linkbtn" onclick="A.ackAlert('${a.id}','${a.event_id}')">Open booking</button>` : ''}
+  </div></div>`;
+  Tune.play(urgent ? 120 : 0);
+}
+A.ackAlert = async (id, evId) => {
+  Tune.stop();
+  try { const acks = await AlertsDB.ack(id); const a = (S.teamAlerts || []).find(x => x.id === id); if (a) a.acks = acks || { ...(a.acks || {}), [S.user.id]: { at: new Date().toISOString() } }; } catch (e) { toast(e.message, 'bad'); }
+  const rest = pendingForMe(); if (rest.length) showAlertOverlay(); else { document.getElementById('alertRoot')?.remove(); }
+  if (evId) A.go('event', { id: evId }); else render();
+};
+
+/* ---------- send ---------- */
+A.alertForm = (toUser) => {
+  if (!canSendAlert()) { toast('Your role cannot send alerts. Ask the owner.', 'bad'); return; }
+  const people = S.members.filter(m => m.userId && m.userId !== S.user.id);
+  const evs = col('events').filter(e => !['Cancelled', 'Closed', 'Completed'].includes(e.stage) && eventEnd(e) >= addDays(todayLocal(), -1)).sort(by('date'));
+  modal(`<form class="form" onsubmit="A.sendAlert(event)" novalidate>${sheetHead('Send alert', 'Rings on their phone with the alert tune')}<div class="sheet-b stack">
+    ${people.length ? '' : `<div class="banner warn">${ic('alert')}<span>Nobody else has an app login yet. Add your team in Team & access so they get alerts.</span></div>`}
+    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [['', `Everyone (${people.length})`], ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
+    <div class="field"><span>Quick message</span><div class="chips">${QUICK_ALERTS.map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
+    ${fieldHTML({ name: 'title', label: 'Alert', required: true, maxlength: 140, placeholder: 'e.g. Come to the godown now' })}
+    ${fieldHTML({ name: 'body', label: 'Details (optional)', type: 'textarea', maxlength: 600 })}
+    ${evs.length ? fieldHTML({ name: 'event', label: 'About booking (optional)', type: 'select', options: [['', '—'], ...evs.map(e => [e.id, `${e.title} (${fmtShort(e.date)})`])] }) : ''}
+    <label class="check urgent-check"><input type="checkbox" name="urgent" checked> <span><b>Urgent</b>: keeps ringing until they tap “Seen”</span></label>
+    <p class="tiny muted">Crew without the app? Use the WhatsApp button on their card in Staff.</p>
+  </div><footer class="sheet-f"><span class="grow"></span><button type="button" class="btn ghost" onclick="A.closeModal()">Cancel</button><button class="btn primary" type="submit">${ic('send')} Send alert</button></footer></form>`);
+};
+A.sendAlert = e => {
+  e.preventDefault(); const v = readForm(e.target); if (!(v.title || '').trim()) { toast('Write the alert', 'bad'); return; }
+  withBtn(e, async () => {
+    const to = S.members.find(m => m.userId === v.to);
+    const rec = { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, to_user: v.to || null, to_name: to ? to.name : null, from_name: S.me?.name || S.user.name, event_id: v.event || null };
+    const a = await AlertsDB.send(rec); S.teamAlerts = [a, ...(S.teamAlerts || []).filter(x => x.id !== a.id)];
+    const r = await AlertsDB.push(a.id); A.closeModal(); logAct(`Sent alert: ${rec.title}`);
+    toast(r.sent ? `Alert sent. Ringing on ${r.sent} phone${r.sent > 1 ? 's' : ''}.` : 'Alert sent. They will see it when the app is open (phone notifications are not turned on for them yet).');
+    render();
+  });
+};
+
+/* ---------- phone notifications (web push) ---------- */
+const pushOK = () => S.adapter?.mode === 'cloud' && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && location.protocol === 'https:';
+function b64ToU8(s) { const p = '='.repeat((4 - s.length % 4) % 4); const b = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from([...b].map(c => c.charCodeAt(0))); }
+async function ensurePush(ask) {
+  if (!pushOK()) { if (ask) toast('Phone notifications work in the SabManage app or in Chrome on the live site.', 'warn'); return false; }
+  try {
+    if (Notification.permission === 'denied') { if (ask) toast('Notifications are blocked. Allow them for SabManage in your phone settings.', 'bad'); return false; }
+    if (Notification.permission !== 'granted') { if (!ask) return false; const r = await Notification.requestPermission(); if (r !== 'granted') { toast('Notifications not allowed', 'warn'); return false; } }
+    const reg = await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC) });
+    const j = sub.toJSON(); const { error } = await S.adapter.sb.rpc('save_push_sub', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent });
+    if (error) throw S.adapter.err(error);
+    LS.set('ep_push_on', true); if (ask) { toast('Phone notifications are on'); render(); } return true;
+  } catch (e) { if (ask) toast('Could not turn on notifications: ' + e.message, 'bad'); return false; }
+}
+A.enablePush = () => ensurePush(true);
+async function stopPush() { try { if (!pushOK()) return; const reg = await navigator.serviceWorker.getRegistration(); const sub = reg && await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) { } }
+const pushIsOn = () => pushOK() && Notification.permission === 'granted' && LS.get('ep_push_on', false);
+function pushCard() {
+  if (!S.org || !pushOK() || pushIsOn() || LS.get('ep_push_hide', false)) return '';
+  return `<div class="card pad row-flex push-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('bell', '#E11D74')}<div class="grow" style="min-width:0"><b>Turn on alert notifications</b><div class="small muted">So you hear alerts from your team with the SabManage tune, even when the app is closed.</div></div><div class="row-flex" style="gap:6px"><button class="btn primary sm" onclick="A.enablePush()">Turn on</button><button class="icon-btn" style="width:34px;height:34px" aria-label="Hide" onclick="LS.set('ep_push_hide',true);render()">${ic('x')}</button></div></div>`;
+}
+/* service worker tells an open app that a push arrived */
+try { navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', ev => { if (ev.data?.type === 'sm-alert' && S.org) startAlerts(); }); } catch (e) { }
+
+/* ---------- team alerts inside the bell sheet ---------- */
+function teamAlertRow(a) {
+  const acks = Object.values(a.acks || {}); const mine = a.from_user === S.user?.id; const pend = forMe(a) && !seenByMe(a);
+  return `<div class="row ${pend ? 'click' : ''}" ${pend ? 'onclick="A.closeModal();showAlertOverlay()"' : ''}>${ibox(a.urgent ? 'alert' : 'bell', a.urgent ? '#E0344B' : '#E11D74', 'sm')}<div class="main-col"><b>${esc(a.title)}</b><div class="sub"><span>${mine ? `To ${esc(a.to_name || 'Everyone')}` : `From ${esc(a.from_name || 'Team')}`}</span> · <span>${fmtShort(todayLocal(new Date(a.created_at)))}</span> <span>${new Date(a.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>${mine ? ` · <span>${acks.length ? 'Seen by ' + acks.map(x => esc(x.name || '')).join(', ') : 'Not seen yet'}</span>` : ''}</div></div>${pend ? pill('New', 'bad') : mine ? pill(acks.length ? 'Seen' : 'Sent', acks.length ? 'good' : '') : ''}</div>`;
 }
 
 /* ================= ⓘ Help: what each feature is for =================
@@ -3444,8 +3681,8 @@ const HELP = {
     null],
 
   marketing: [['Marketing', 'मार्केटिंग'],
-    ['Free tools to get more bookings from the clients you already have: follow-ups, Google reviews, posters, rate card, client list, QR code and referrals. No extra cost.', 'आपके पुराने और नए ग्राहकों से ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, पोस्टर, रेट कार्ड, ग्राहकों की लिस्ट, क्यूआर कोड और रेफ़रल। कोई अलग खर्च नहीं।'],
-    [['Start with Follow-ups every morning: call back every enquiry.', 'हर सुबह फ़ॉलो-अप से शुरू करें: हर इन्क्वायरी को वापस कॉल करें।'], ['After each event, ask for a Google review.', 'हर इवेंट के बाद गूगल रिव्यू मांगें।'], ['Before festivals and big muhurat dates, post a poster on WhatsApp status.', 'त्योहार और बड़े मुहूर्त से पहले व्हाट्सऐप स्टेटस पर पोस्टर लगाएं।']],
+    ['Free tools to get more bookings from the clients you already have: follow-ups, Google reviews, rate card, client list, QR code and referrals. No extra cost.', 'आपके पुराने और नए ग्राहकों से ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, रेट कार्ड, ग्राहकों की लिस्ट, क्यूआर कोड और रेफ़रल। कोई अलग खर्च नहीं।'],
+    [['Start with Follow-ups every morning: call back every enquiry.', 'हर सुबह फ़ॉलो-अप से शुरू करें: हर इन्क्वायरी को वापस कॉल करें।'], ['After each event, ask for a Google review.', 'हर इवेंट के बाद गूगल रिव्यू मांगें।'], ['Before big muhurat dates, send your offer to past clients from the Clients tab.', 'बड़े मुहूर्त से पहले ग्राहक टैब से पुराने ग्राहकों को ऑफ़र भेजें।']],
     ['Most new bookings come from old clients and their friends. Keep in touch with them.', 'ज़्यादातर नई बुकिंग पुराने ग्राहकों और उनके जानने वालों से आती हैं। उनसे जुड़े रहें।']],
   'mk-followup': [['Follow-ups', 'फ़ॉलो-अप'],
     ['Every enquiry and quotation that is not confirmed yet. Ones not followed up for 2 days are marked Due.', 'हर इन्क्वायरी और कोटेशन जो अभी पक्का नहीं हुआ। जिन्हें 2 दिन से फ़ॉलो-अप नहीं किया, वे "आज करना है" दिखते हैं।'],
@@ -3456,9 +3693,6 @@ const HELP = {
   'mk-glink': [['Google review link', 'गूगल रिव्यू लिंक'],
     ['The link that opens the "write a review" box for your business on Google.', 'वह लिंक जो गूगल पर आपके बिज़नेस का "रिव्यू लिखें" बॉक्स खोलता है।'],
     [['Open Google Maps and search your business name.', 'गूगल मैप्स खोलें और अपने बिज़नेस का नाम ढूंढें।'], ['If you own the listing, tap "Ask for reviews" or "Share review form".', 'अगर लिस्टिंग आपकी है तो "Ask for reviews" या "Share review form" दबाएं।'], ['Copy the link and paste it here.', 'लिंक कॉपी करके यहां डालें।']], ['No Google listing yet? Create a free Google Business Profile first.', 'गूगल पर लिस्टिंग नहीं है? पहले फ़्री गूगल बिज़नेस प्रोफ़ाइल बनाएं।']],
-  'mk-posters': [['Posters', 'पोस्टर'],
-    ['Ready posters with your logo, name and phone for festivals, wedding season and offers. Post them on WhatsApp status, Instagram and Facebook.', 'आपके लोगो, नाम और फ़ोन के साथ त्योहार, शादी के सीज़न और ऑफ़र के तैयार पोस्टर। व्हाट्सऐप स्टेटस, इंस्टाग्राम और फ़ेसबुक पर लगाएं।'],
-    [['Pick a design.', 'डिज़ाइन चुनें।'], ['Change the words if you like.', 'चाहें तो शब्द बदलें।'], ['Choose Post or Status size and tap Download or Share.', 'पोस्ट या स्टेटस का साइज़ चुनें और डाउनलोड या शेयर दबाएं।']], null],
   'mk-ratecard': [['Rate card', 'रेट कार्ड'],
     ['A neat price list of your items and menu with your logo, to send to clients as a PDF or as WhatsApp text.', 'आपके सामान और मेन्यू की साफ़ रेट लिस्ट आपके लोगो के साथ, क्लाइंट को पीडीएफ़ या व्हाट्सऐप टेक्स्ट में भेजने के लिए।'],
     [['Fill "Rent per day" for items in Inventory.', 'इन्वेंटरी में सामान का "रोज़ का किराया" भरें।'], ['Add a package or offer note if you like.', 'चाहें तो पैकेज या ऑफ़र का नोट जोड़ें।'], ['Tap Print / save PDF, or Send as text.', 'प्रिंट / पीडीएफ़ सेव या टेक्स्ट भेजें दबाएं।']], null],
@@ -3478,6 +3712,12 @@ const HELP = {
     ['A short message with your services, phone, Google reviews and Instagram. Send it to new enquiries or post it in groups.', 'आपकी सेवाएं, फ़ोन, गूगल रिव्यू और इंस्टाग्राम वाला छोटा मैसेज। नई इन्क्वायरी को भेजें या ग्रुप में डालें।'], [], null],
   'mk-refer': [['Refer another business', 'दूसरा बिज़नेस रेफ़र करें'],
     ['Your own link. When a tent house, caterer or event manager signs up from it, SabManage knows you referred them.', 'आपका अपना लिंक। इससे कोई टेंट हाउस, कैटरर या इवेंट मैनेजर जुड़े तो सबमैनेज को पता रहता है कि आपने भेजा।'], [], null],
+  'team-alerts': [['Team alerts', 'टीम अलर्ट'],
+    ['Send an alert that rings on the phone of one person or the whole team, with the SabManage tune. Urgent alerts keep ringing until the person taps "Seen", and you can see who has seen it.', 'एक व्यक्ति या पूरी टीम के फ़ोन पर सबमैनेज की धुन के साथ बजने वाला अलर्ट भेजें। ज़रूरी अलर्ट तब तक बजता है जब तक वह व्यक्ति "देख लिया" न दबाए, और आपको दिखता है किसने देखा।'],
+    [['Each person turns on alert notifications once (the pink card on the home screen).', 'हर व्यक्ति एक बार अलर्ट नोटिफ़िकेशन चालू करे (होम स्क्रीन पर गुलाबी कार्ड)।'],
+     ['Tap Send alert, pick the person, write or pick a quick message, keep Urgent ticked.', 'अलर्ट भेजें दबाएं, व्यक्ति चुनें, मैसेज लिखें या चुनें, ज़रूरी पर टिक रहने दें।'],
+     ['In the SabManage Android app the alert rings even when the phone is on silent (it uses the alarm sound). Keep the alarm volume up.', 'सबमैनेज के एंड्रॉयड ऐप में फ़ोन साइलेंट होने पर भी अलर्ट बजता है (यह अलार्म की आवाज़ इस्तेमाल करता है)। अलार्म की आवाज़ ऊंची रखें।']],
+    ['Important reminders like overdue bills and stock shortages also play the tune when they first appear.', 'लेट बिल और कम स्टॉक जैसे ज़रूरी रिमाइंडर पहली बार आने पर भी धुन बजती है।']],
   /* ---------- home screen sections ---------- */
   'dash-upcoming': [['Upcoming events', 'आने वाले इवेंट'],
     ['The next events in date order, with stage, venue and guests. Tap one to open it.', 'तारीख के हिसाब से अगले इवेंट, स्टेज, जगह और मेहमानों के साथ। खोलने के लिए टैप करें।'], [], null],
@@ -3811,7 +4051,7 @@ V.dashboard = () => {
   </div>`;
 
   const evCards = upcoming.slice(0, 8).map(eventCard).join('');
-  return `${startCard()}${hero}${tiles}${stats}
+  return `${pushCard()}${startCard()}${hero}${tiles}${stats}
   <div class="sec-h"><h2>Upcoming events${info('dash-upcoming')}</h2><button class="linkbtn" onclick="A.go('bookings')">See all ${ic('chev')}</button></div>
   ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
   <div class="split" style="margin-top:6px">
@@ -5382,10 +5622,10 @@ function startCard() {
 
 /* ================= Marketing: free tools to get more bookings =================
    Everything here runs inside the app with the business's own data: no paid service,
-   no extra hosting. Tabs: follow-ups, Google reviews, posters, rate card, clients
+   no extra hosting. Tabs: follow-ups, Google reviews, rate card, clients
    (export, anniversaries, muhurat campaigns), QR poster, refer & share. */
 const QR_SRC = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
-const MK_TABS = [['followup', 'Follow-ups'], ['reviews', 'Google reviews'], ['posters', 'Posters'], ['ratecard', 'Rate card'], ['clients', 'Clients'], ['qr', 'QR poster'], ['share', 'Refer & share']];
+const MK_TABS = [['followup', 'Follow-ups'], ['reviews', 'Google reviews'], ['ratecard', 'Rate card'], ['clients', 'Clients'], ['qr', 'QR poster'], ['share', 'Refer & share']];
 const HI = () => I18N.lang === 'hi';
 const refCode = orgId => String(orgId || '').replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase();
 const phoneDigits = p => { const d = String(p || '').replace(/\D/g, ''); return d.length > 10 ? d.slice(-10) : d; };
@@ -5404,7 +5644,7 @@ function bizLine() { const st = settings(); return `${st.bizName || ''}${st.phon
 V.marketing = () => {
   const tab = MK_TABS.find(t => t[0] === S.params.tab) ? S.params.tab : 'followup';
   const due = col('events').filter(followDue).length;
-  const head = pageHead('Marketing', 'Free tools to get more bookings: follow-ups, Google reviews, posters, rate card, client list and QR code.');
+  const head = pageHead('Marketing', 'Free tools to get more bookings: follow-ups, Google reviews, rate card, client list and QR code.');
   const tabs = `<div class="tabs">${MK_TABS.map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${k === 'followup' && due ? ` <span class="tabn">${due}</span>` : ''}</button>`).join('')}${tabHelp('mk-' + tab)}</div>`;
   return head + tabs + MK[tab]();
 };
@@ -5452,92 +5692,14 @@ MK.reviews = () => {
 A.saveMkLinks = async ev => { ev.preventDefault(); try { need('settings', 2); const v = readForm(ev.target); const ok = u => !u || /^https?:\/\/\S+$/i.test(u); if (!ok(v.googleReview) || !ok(v.instagram)) throw new Error('Links must start with https://'); await saveSettingsRec({ googleReview: (v.googleReview || '').trim(), instagram: (v.instagram || '').trim() }); toast('Links saved'); render(); } catch (err) { toast(err.message, 'bad'); } };
 A.reviewAsked = id => { setTimeout(async () => { try { if (!can('bookings', 2)) return; const e = evById(id); e.reviewAskedAt = todayLocal(); await save('events', e); render(); } catch (err) { } }, 300); };
 
-/* ---------- 3. Posters (drawn on a canvas, saved as PNG) ---------- */
-const POSTERS = [
-  { k: 'diwali', name: 'Diwali', c: ['#4A0D1F', '#C2410C'], a: '#FCD34D', m: 'diya', head: ['Happy Diwali', 'शुभ दीपावली'], sub: ['Light up your celebrations with us', 'आपकी हर खुशी को रोशन करें हम'] },
-  { k: 'season', name: 'Wedding season', c: ['#7F1D1D', '#DC2626'], a: '#FDE68A', m: 'marigold', head: ['Shaadi season bookings open', 'शादी के सीज़न की बुकिंग शुरू'], sub: ['Tent, lights, decor and catering. Book your date today.', 'टेंट, लाइट, डेकोर और खाना। आज ही अपनी तारीख बुक करें।'] },
-  { k: 'dates', name: 'Muhurat dates', c: ['#581C87', '#C026D3'], a: '#FDE68A', m: 'marigold', head: ['Big muhurat dates', 'बड़े मुहूर्त की तारीखें'], sub: ['Book early, dates fill fast', 'जल्दी बुक करें, तारीखें तेज़ी से भर रही हैं'] },
-  { k: 'offer', name: 'Special offer', c: ['#1E3A8A', '#0891B2'], a: '#FDE047', m: 'tag', head: ['Special offer', 'स्पेशल ऑफ़र'], sub: ['10% off on bookings made this month', 'इस महीने बुकिंग पर 10% छूट'] },
-  { k: 'navratri', name: 'Navratri', c: ['#9D174D', '#EA580C'], a: '#FDE68A', m: 'rangoli', head: ['Happy Navratri', 'नवरात्रि की शुभकामनाएं'], sub: ['Garba, dandiya and jagran setups', 'गरबा, डांडिया और जागरण के सेटअप'] },
-  { k: 'holi', name: 'Holi', c: ['#7C3AED', '#DB2777'], a: '#FDE047', m: 'colors', head: ['Happy Holi', 'होली की शुभकामनाएं'], sub: ['Colours, music and food for your party', 'आपकी पार्टी के लिए रंग, म्यूज़िक और खाना'] },
-  { k: 'newyear', name: 'New Year', c: ['#0F172A', '#1E3A8A'], a: '#FCD34D', m: 'stars', head: ['Happy New Year', 'नया साल मुबारक'], sub: ['Thank you for a wonderful year', 'शानदार साल के लिए आपका धन्यवाद'] },
-  { k: 'thanks', name: 'Thank you', c: ['#065F46', '#0D9488'], a: '#FDE68A', m: 'rangoli', head: ['Thank you for trusting us', 'आपके भरोसे के लिए धन्यवाद'], sub: ['500+ happy families and counting', 'सैकड़ों खुश परिवार'] }
-];
-function posterState() {
-  if (!S.poster) { const p = POSTERS[0]; S.poster = { k: p.k, size: 'square', head: p.head[HI() ? 1 : 0], sub: p.sub[HI() ? 1 : 0], extra: '' }; }
-  return S.poster;
-}
+/* ---------- drawing helpers (QR poster) ---------- */
 function nextSaaya(limit = 6) { const t = todayLocal(); return (settings().saaya || []).filter(s => s.date >= t).sort(by('date')).slice(0, limit); }
-MK.posters = () => {
-  const ps = posterState(); const tpl = POSTERS.find(p => p.k === ps.k) || POSTERS[0];
-  setTimeout(drawPosterNow, 30);
-  return `<div class="split poster-split"><div class="card pad stack">
-    <div><div class="eyebrow" style="margin-bottom:8px">Pick a design</div><div class="tpl-grid">${POSTERS.map(p => `<button class="tpl ${p.k === tpl.k ? 'on' : ''}" style="--c1:${p.c[0]};--c2:${p.c[1]}" onclick="A.posterTpl('${p.k}')"><span>${p.name}</span></button>`).join('')}</div></div>
-    ${fieldHTML({ name: 'ph', label: 'Big line', value: ps.head })}
-    ${fieldHTML({ name: 'ps', label: 'Small line', value: ps.sub })}
-    ${fieldHTML({ name: 'px', label: tpl.k === 'dates' ? 'Dates (filled from your peak dates in Settings)' : 'Extra line (optional)', value: ps.extra, placeholder: tpl.k === 'offer' ? 'e.g. Valid till 30 November' : '' })}
-    <div class="field"><span>Size</span>${seg('size', [['square', 'Post (square)'], ['story', 'Status / story']], ps.size, 'A.posterSet')}</div>
-    <p class="tiny muted">Your logo, business name and phone are added from Settings. Change the words to Hindi or English as you like.</p>
-  </div>
-  <div class="card pad stack" style="align-items:center"><canvas id="posterCv" class="poster-cv ${ps.size}" width="1080" height="${ps.size === 'story' ? 1920 : 1080}" role="img" aria-label="Poster preview"></canvas>
-    <div class="row-flex" style="justify-content:center"><button class="btn primary" onclick="A.posterSave()">${ic('download')} Download</button>${navigator.share ? `<button class="btn wa" onclick="A.posterShare()">${ic('share')} Share</button>` : ''}</div></div></div>`;
-};
-A.posterTpl = k => { const p = POSTERS.find(x => x.k === k); const ps = posterState(); ps.k = k; ps.head = p.head[HI() ? 1 : 0]; ps.sub = p.sub[HI() ? 1 : 0]; ps.extra = k === 'dates' ? nextSaaya(4).map(s => T(fmtShort(s.date))).join(' · ') : ''; render(); };
-A.posterSet = (k, v) => { posterState()[k] = v; render(); };
-document.addEventListener('input', ev => { const n = ev.target?.name; if (!S.poster || !['ph', 'ps', 'px'].includes(n) || !ev.target.closest('.poster-split')) return; S.poster[{ ph: 'head', ps: 'sub', px: 'extra' }[n]] = ev.target.value; drawPosterNow(); });
 const imgCache = {};
 function loadImg(src) { if (!src) return Promise.resolve(null); if (imgCache[src]) return imgCache[src]; return (imgCache[src] = new Promise(res => { const i = new Image(); if (/^https?:/.test(src)) i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => res(null); i.src = src; })); }
 async function fontsReady(text) { try { await Promise.all(['800 80px "Baloo 2"', '600 40px Mukta', '700 40px Mukta'].map(f => document.fonts.load(f, text))); } catch (e) { } }
-function wrapLines(ctx, text, maxW) { const words = String(text || '').split(/\s+/).filter(Boolean); const lines = []; let line = ''; for (const w of words) { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; } if (line) lines.push(line); return lines; }
-function seeded(n) { let x = n; return () => (x = (x * 9301 + 49297) % 233280) / 233280; }
-function drawMotif(ctx, m, W, H, a) {
-  const rnd = seeded(7); ctx.save();
-  if (m === 'diya') { for (let i = 0; i < 5; i++) { const x = W * (0.12 + i * 0.19), y = H - 250; ctx.fillStyle = '#F59E0B'; ctx.beginPath(); ctx.ellipse(x, y, 62, 26, 0, 0, Math.PI); ctx.fill(); ctx.fillStyle = '#B45309'; ctx.fillRect(x - 62, y - 4, 124, 8); const g = ctx.createRadialGradient(x, y - 50, 4, x, y - 50, 70); g.addColorStop(0, 'rgba(253,224,71,.9)'); g.addColorStop(1, 'rgba(253,224,71,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - 50, 70, 0, 7); ctx.fill(); ctx.fillStyle = '#FDE047'; ctx.beginPath(); ctx.moveTo(x, y - 82); ctx.quadraticCurveTo(x + 18, y - 40, x, y - 16); ctx.quadraticCurveTo(x - 18, y - 40, x, y - 82); ctx.fill(); } }
-  if (m === 'marigold') { for (let r = 0; r < 2; r++) for (let i = 0; i <= 22; i++) { const x = W * i / 22, y = 40 + r * 48 + Math.sin(i / 22 * Math.PI) * 90; ctx.fillStyle = (i + r) % 2 ? '#F59E0B' : '#FB923C'; ctx.beginPath(); ctx.arc(x, y, 26, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.beginPath(); ctx.arc(x, y, 9, 0, 7); ctx.fill(); } }
-  if (m === 'rangoli') { [[0, 0], [W, H]].forEach(([cx, cy]) => { for (let ring = 0; ring < 4; ring++) { const n = 12 + ring * 6, rr = 90 + ring * 70; for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2; ctx.fillStyle = ['rgba(253,224,71,.55)', 'rgba(255,255,255,.35)', 'rgba(251,146,60,.5)', 'rgba(244,114,182,.45)'][ring]; ctx.beginPath(); ctx.ellipse(cx + Math.cos(t) * rr, cy + Math.sin(t) * rr, 22, 10, t, 0, 7); ctx.fill(); } } }); }
-  if (m === 'colors') { const cs = ['#F472B6', '#FDE047', '#34D399', '#60A5FA', '#FB923C', '#A78BFA']; for (let i = 0; i < 26; i++) { ctx.fillStyle = cs[i % cs.length] + 'AA'; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 20 + rnd() * 90, 0, 7); ctx.fill(); } }
-  if (m === 'stars') { for (let i = 0; i < 60; i++) { const x = rnd() * W, y = rnd() * H, r = 2 + rnd() * 5; ctx.fillStyle = i % 5 ? 'rgba(255,255,255,.7)' : a; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); } }
-  if (m === 'tag') { ctx.translate(W - 190, 210); ctx.rotate(-0.25); ctx.fillStyle = a; ctx.beginPath(); ctx.arc(0, 0, 140, 0, 7); ctx.fill(); ctx.fillStyle = '#1E3A8A'; ctx.font = '800 92px "Baloo 2", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('%', 0, 8); }
-  ctx.restore();
-}
-let posterBusy = 0;
-async function drawPosterNow() {
-  const cv = document.getElementById('posterCv'); if (!cv) return; const my = ++posterBusy;
-  const ps = posterState(); const tpl = POSTERS.find(p => p.k === ps.k) || POSTERS[0]; const st = settings();
-  await fontsReady(ps.head + ps.sub + ps.extra + (st.bizName || '')); const logo = await loadImg(st.logo); if (my !== posterBusy) return;
-  const W = 1080, H = ps.size === 'story' ? 1920 : 1080; cv.width = W; cv.height = H; const ctx = cv.getContext('2d');
-  const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, tpl.c[0]); g.addColorStop(1, tpl.c[1]); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.beginPath(); ctx.arc(W * 0.85, H * 0.18, 300, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(W * 0.1, H * 0.75, 240, 0, 7); ctx.fill();
-  drawMotif(ctx, tpl.m, W, H, tpl.a);
-  const footH = 190; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-  // logo + name on top
-  let y = tpl.m === 'marigold' ? 230 : 120;
-  if (logo) { const s = 150; ctx.save(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2 + 8, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2, 0, 7); ctx.clip(); const r = Math.max(s / logo.width, s / logo.height); ctx.drawImage(logo, W / 2 - logo.width * r / 2, y + s / 2 - logo.height * r / 2, logo.width * r, logo.height * r); ctx.restore(); y += s + 60; }
-  ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '700 40px Mukta, sans-serif'; ctx.fillText((st.bizName || '').toUpperCase(), W / 2, y); y += 40;
-  // headline block centred in the free space
-  const top = y, bottom = H - footH - (tpl.m === 'diya' ? 330 : 80);
-  let fs = 128; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; let hl = wrapLines(ctx, ps.head, W - 140);
-  while ((hl.length > 3 || hl.some(l => ctx.measureText(l).width > W - 140)) && fs > 60) { fs -= 6; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; hl = wrapLines(ctx, ps.head, W - 140); }
-  ctx.font = '600 50px Mukta, sans-serif'; const sl = wrapLines(ctx, ps.sub, W - 180);
-  ctx.font = '700 46px Mukta, sans-serif'; const xl = ps.extra ? wrapLines(ctx, ps.extra, W - 200) : [];
-  const blockH = hl.length * fs * 1.08 + 30 + sl.length * 64 + (xl.length ? 40 + xl.length * 62 + 30 : 0);
-  let by = top + Math.max(20, (bottom - top - blockH) / 2) + fs * 0.85;
-  ctx.fillStyle = tpl.a; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 18;
-  hl.forEach(l => { ctx.fillText(l, W / 2, by); by += fs * 1.08; }); ctx.shadowBlur = 0; by += 10;
-  ctx.fillStyle = '#fff'; ctx.font = '600 50px Mukta, sans-serif'; sl.forEach(l => { ctx.fillText(l, W / 2, by); by += 64; });
-  if (xl.length) { by += 20; ctx.font = '700 46px Mukta, sans-serif'; const bw = Math.min(W - 120, Math.max(...xl.map(l => ctx.measureText(l).width)) + 80); const bh = xl.length * 62 + 30; ctx.fillStyle = 'rgba(255,255,255,.95)'; roundRect(ctx, W / 2 - bw / 2, by - 50, bw, bh, 28); ctx.fill(); ctx.fillStyle = tpl.c[0]; xl.forEach(l => { ctx.fillText(l, W / 2, by); by += 62; }); }
-  // footer band
-  ctx.fillStyle = '#fff'; ctx.fillRect(0, H - footH, W, footH); ctx.fillStyle = tpl.c[0];
-  ctx.font = '800 54px "Baloo 2", sans-serif'; ctx.fillText(st.phone ? '📞 ' + st.phone : (st.bizName || ''), W / 2, H - footH + 88);
-  ctx.font = '600 34px Mukta, sans-serif'; ctx.fillStyle = '#475569'; ctx.fillText([st.city, st.instagram ? st.instagram.replace(/^https?:\/\/(www\.)?/, '') : ''].filter(Boolean).join('  ·  ') || (HI() ? 'कॉल या व्हाट्सऐप करें' : 'Call or WhatsApp'), W / 2, H - footH + 145);
-}
 function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-function posterBlob() { return new Promise(res => { const cv = document.getElementById('posterCv'); if (!cv) return res(null); cv.toBlob(b => res(b), 'image/png'); }); }
-const posterName = () => `${(settings().bizName || 'poster').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${S.poster?.k || 'poster'}.png`;
-A.posterSave = async () => { try { await drawPosterNow(); const b = await posterBlob(); if (!b) return; const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = posterName(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); toast('Poster saved'); } catch (err) { toast('Could not save the poster on this device. Take a screenshot instead.', 'bad'); } };
-A.posterShare = async () => { try { await drawPosterNow(); const b = await posterBlob(); const f = new File([b], posterName(), { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f], text: settings().bizName }); else A.posterSave(); } catch (err) { if (err?.name !== 'AbortError') A.posterSave(); } };
 
-/* ---------- 4. Rate card / catalogue ---------- */
+/* ---------- 3. Rate card / catalogue ---------- */
 MK.ratecard = () => {
   const st = settings(); const rc = S.rc = S.rc || { inv: true, menu: true, note: '' };
   const inv = col('inventory').filter(i => +i.rate > 0).sort(by('name')); const cats = [...new Set(inv.map(i => i.category || 'Other'))];
@@ -5566,7 +5728,7 @@ function rateCardText() {
   return t + `\n📞 ${st.phone || ''}`;
 }
 
-/* ---------- 5. Clients: list, export, anniversaries, muhurat campaigns ---------- */
+/* ---------- 4. Clients: list, export, anniversaries, muhurat campaigns ---------- */
 function anniversaries(days = 30) {
   const t = todayLocal(); const y = +t.slice(0, 4);
   return col('events').filter(e => e.date && ['Wedding', 'Ring Ceremony'].includes(e.type) && e.stage !== 'Cancelled' && +e.date.slice(0, 4) < y).map(e => {
@@ -5588,7 +5750,7 @@ MK.clients = () => {
   const ann = anniversaries(30); const sa = nextSaaya(3).filter(s => daysBetween(todayLocal(), s.date) <= 60); const money = can('invoices');
   return `<div class="split" style="margin-bottom:14px">
     <div class="card"><div class="card-h"><div><h3>Anniversaries in the next 30 days${info('mk-anni')}</h3><p>Weddings you did in earlier years. A wish brings the next booking.</p></div></div><div class="rows">${ann.map(x => `<div class="row" style="flex-wrap:wrap">${datebox(x.next, '#E11D74')}<div class="main-col" style="min-width:150px"><b>${esc(x.e.client)}</b><div class="sub">${x.d === 0 ? 'Today' : x.d === 1 ? 'Tomorrow' : `In ${x.d} days`} · ${x.years} years · ${esc(x.e.title)}</div></div>${waBtn(anniMsg(x), x.e.phone, 'Send wish')}</div>`).join('') || empty('None in the next 30 days', 'Wedding anniversaries of your past clients show here.', '', 'gift', '#E11D74')}</div></div>
-    <div class="card"><div class="card-h"><div><h3>Muhurat campaign${info('mk-campaign')}</h3><p>From the peak dates in Settings.</p></div>${can('settings', 2) ? `<button class="btn sm" onclick="A.go('settings')">Peak dates</button>` : ''}</div><div class="rows">${sa.map(s => `<div class="row" style="flex-wrap:wrap">${datebox(s.date, '#7C3AED')}<div class="main-col" style="min-width:150px"><b>${esc(s.label || 'Peak date')}</b><div class="sub">${daysBetween(todayLocal(), s.date)} days left · ${all.length} past clients</div></div><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.copy(${esc(JSON.stringify(campaignMsg(s)))})">${ic('copy')} Copy message</button><button class="btn sm" onclick="A.posterTpl('dates');A.setP('tab','posters')">${ic('image')} Poster</button></div></div>`).join('') || empty('No peak date in the next 60 days', 'Add muhurat dates in Settings to get a reminder here.', '', 'calendar', '#7C3AED')}</div></div></div>
+    <div class="card"><div class="card-h"><div><h3>Muhurat campaign${info('mk-campaign')}</h3><p>From the peak dates in Settings.</p></div>${can('settings', 2) ? `<button class="btn sm" onclick="A.go('settings')">Peak dates</button>` : ''}</div><div class="rows">${sa.map(s => `<div class="row" style="flex-wrap:wrap">${datebox(s.date, '#7C3AED')}<div class="main-col" style="min-width:150px"><b>${esc(s.label || 'Peak date')}</b><div class="sub">${daysBetween(todayLocal(), s.date)} days left · ${all.length} past clients</div></div><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.copy(${esc(JSON.stringify(campaignMsg(s)))})">${ic('copy')} Copy message</button></div></div>`).join('') || empty('No peak date in the next 60 days', 'Add muhurat dates in Settings to get a reminder here.', '', 'calendar', '#7C3AED')}</div></div></div>
   <div class="card"><div class="card-h"><div><h3>All clients (${all.length})${info('mk-clients')}</h3><p>Made from your bookings. Download the list for a WhatsApp broadcast or Facebook / Instagram ads.</p></div>${all.length && !FRAMED ? `<button class="btn" onclick="A.exportClients()">${ic('download')} Download list</button>` : ''}</div>
     <div class="sheet-b" style="padding-top:12px"><div class="search"><input type="search" placeholder="Search name or phone" value="${esc(S.filters.mkq || '')}" oninput="A.setF('mkq',this.value)"></div></div>
     <div class="rows">${list.slice(0, 200).map(c => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(c.name))}</div><div class="main-col" style="min-width:160px"><b>${esc(c.name)}</b><div class="sub">${esc(c.phone || '—')} · ${c.events.length} booking${c.events.length > 1 ? 's' : ''}${c.last?.type ? ' · ' + esc(c.last.type) : ''}${c.last?.date ? ' · ' + fmtShort(c.last.date) : ''}${money && c.billed ? ' · ' + inr(c.billed) : ''}</div></div>${c.phone ? waBtn(`Namaste ${c.name} ji 🙏\n`, c.phone, 'Message') : ''}</div>`).join('') || empty('No clients yet', 'Clients are added automatically from your bookings.', '', 'users', '#0D9488')}</div></div>`;
@@ -5599,7 +5761,7 @@ A.exportClients = () => {
   downloadFile('clients.csv', '﻿' + ['Name,Phone,Email,Last event,Last event date,Bookings,Total billed', ...rows].join('\n'), 'text/csv'); logAct('Downloaded client list');
 };
 
-/* ---------- 6. QR poster ---------- */
+/* ---------- 5. QR poster ---------- */
 async function qrLib() { if (!window.qrcode) await loadScript(QR_SRC); return window.qrcode; }
 /* kept short and in Latin letters so the QR stays small and easy to scan */
 function enquiryLink() { return waLink('Namaste, booking enquiry', settings().phone); }
@@ -5636,7 +5798,7 @@ async function drawQrNow() {
 A.qrSave = async () => { await drawQrNow(); const cv = document.getElementById('qrCv'); if (!cv) return; cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'qr-poster.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); }, 'image/png'); };
 A.qrPrint = async () => { await drawQrNow(); const cv = document.getElementById('qrCv'); if (!cv) return; modal(`${sheetHead('QR poster')}<div class="sheet-b"><div id="printArea"><img src="${cv.toDataURL('image/png')}" alt="QR poster" style="width:100%;display:block"></div></div><footer class="sheet-f no-print"><span class="grow"></span><button class="btn primary" onclick="window.print()">${ic('print')} Print</button></footer>`, { wide: true }); };
 
-/* ---------- 7. Refer & share ---------- */
+/* ---------- 6. Refer & share ---------- */
 function shareBizText() {
   const st = settings(); const types = (st.bizTypes || []).map(t => ({ tent: HI() ? 'टेंट और डेकोर' : 'Tent & decor', caterer: HI() ? 'कैटरिंग' : 'Catering', event: HI() ? 'इवेंट मैनेजमेंट' : 'Event management' }[t])).filter(Boolean).join(', ');
   return `*${st.bizName || ''}*${st.tagline ? '\n' + st.tagline : ''}\n${types}${st.city ? ' · ' + st.city : ''}\n📞 ${st.phone || ''}${st.googleReview ? `\n⭐ ${HI() ? 'हमारे रिव्यू' : 'Our reviews'}: ${st.googleReview}` : ''}${st.instagram ? `\n📸 ${st.instagram}` : ''}`;

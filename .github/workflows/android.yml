@@ -31,7 +31,7 @@ jobs:
             yes | $SDKM --licenses > /dev/null || true
             $SDKM "platforms;android-36" "build-tools;36.0.0" | tail -2
             echo "== Generate"
-            cd android && npm init -y > /dev/null && npm i @bubblewrap/core@1 > /dev/null && node generate.js
+            cd android && npm init -y > /dev/null && npm i @bubblewrap/core@1 > /dev/null && node generate.js && node patch.js
             cd project
             echo "== Target Android 16 (API 36)"
             sed -i -E 's/(compileSdkVersion|targetSdkVersion|compileSdk|targetSdk)([ =]+)[0-9]+/\1\236/' app/build.gradle

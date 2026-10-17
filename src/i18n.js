@@ -1839,10 +1839,9 @@ Crew kharcha & bonus | क्रू का खर्चा और इनाम
 
 # ---------- marketing ----------
 Marketing | मार्केटिंग
-Free tools to get more bookings: follow-ups, Google reviews, posters, rate card, client list and QR code. | ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, पोस्टर, रेट कार्ड, ग्राहकों की लिस्ट और क्यूआर कोड।
+Free tools to get more bookings: follow-ups, Google reviews, rate card, client list and QR code. | ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, रेट कार्ड, ग्राहकों की लिस्ट और क्यूआर कोड।
 Follow-ups | फ़ॉलो-अप
 Google reviews | गूगल रिव्यू
-Posters | पोस्टर
 Rate card | रेट कार्ड
 Clients | ग्राहक
 QR poster | क्यूआर पोस्टर
@@ -1874,29 +1873,10 @@ Asked {} | {1} को मांगा
 Ask for review | रिव्यू मांगें
 No finished events yet | अभी कोई इवेंट पूरा नहीं हुआ
 After an event is marked Completed, ask the client for a Google review from here. | इवेंट पूरा मार्क होने के बाद यहां से क्लाइंट से गूगल रिव्यू मांगें।
-Pick a design | डिज़ाइन चुनें
-Diwali | दीवाली
-Wedding season | शादी का सीज़न
-Muhurat dates | मुहूर्त की तारीखें
-Special offer | स्पेशल ऑफ़र
-Navratri | नवरात्रि
-Holi | होली
-New Year | नया साल
 Thank you | धन्यवाद
-Big line | बड़ी लाइन
-Small line | छोटी लाइन
-Extra line (optional) | एक और लाइन (ज़रूरी नहीं)
-Dates (filled from your peak dates in Settings) | तारीखें (सेटिंग्स की पीक तारीखों से भरी गई)
-e.g. Valid till 30 November | जैसे: 30 नवंबर तक
 Size | साइज़
-Post (square) | पोस्ट (चौकोर)
-Status / story | स्टेटस / स्टोरी
-Your logo, business name and phone are added from Settings. Change the words to Hindi or English as you like. | आपका लोगो, बिज़नेस का नाम और फ़ोन सेटिंग्स से अपने आप आते हैं। शब्द हिंदी या अंग्रेज़ी में जैसे चाहें बदलें।
 Download | डाउनलोड
 Share | शेयर करें
-Poster preview | पोस्टर का प्रीव्यू
-Poster saved | पोस्टर सेव हो गया
-Could not save the poster on this device. Take a screenshot instead. | इस फ़ोन पर पोस्टर सेव नहीं हो पाया। स्क्रीनशॉट ले लें।
 Show godown items with rent per day ({}) | गोदाम का सामान रोज़ के किराये के साथ दिखाएं ({1})
 Show menu dishes ({}) | मेन्यू की डिश दिखाएं ({1})
 Packages / offer note (optional) | पैकेज / ऑफ़र का नोट (ज़रूरी नहीं)
@@ -1921,7 +1901,6 @@ Peak date | पीक तारीख
 {} days left | {1} दिन बाकी
 {} past clients | {1} पुराने ग्राहक
 Copy message | मैसेज कॉपी करें
-Poster | पोस्टर
 No peak date in the next 60 days | अगले 60 दिन में कोई पीक तारीख नहीं
 Add muhurat dates in Settings to get a reminder here. | सेटिंग्स में मुहूर्त की तारीखें डालें, यहां याद दिलाया जाएगा।
 All clients ({}) | सभी ग्राहक ({1})
@@ -1960,4 +1939,66 @@ Recommend them to family and friends planning a function. | फ़ंक्श�
 Recommend on WhatsApp | व्हाट्सऐप पर बताएं
 Review on Google | गूगल पर रिव्यू दें
 Instagram | इंस्टाग्राम
+`);
+
+I18N.load(`
+# ---------- team alerts ----------
+Alert to team | टीम को अलर्ट
+Alert tune | अलर्ट की धुन
+This is the alert tune. Keep media volume up. | यह अलर्ट की धुन है। मीडिया की आवाज़ ऊंची रखें।
+Tap anywhere once, then try again. | स्क्रीन पर एक बार कहीं भी टैप करें, फिर दोबारा कोशिश करें।
+Team alerts | टीम अलर्ट
+Test tune | धुन सुनें
+Send alert | अलर्ट भेजें
+Reminders | रिमाइंडर
+No team alerts yet. Owners and supervisors can send an alert that rings on the phone of the person. | अभी कोई टीम अलर्ट नहीं। ओनर और सुपरवाइज़र ऐसा अलर्ट भेज सकते हैं जो उस व्यक्ति के फ़ोन पर बजता है।
+Rings on their phone with the alert tune | उनके फ़ोन पर अलर्ट की धुन के साथ बजेगा
+Nobody else has an app login yet. Add your team in Team & access so they get alerts. | अभी किसी और का ऐप लॉगिन नहीं है। टीम और एक्सेस में अपनी टीम जोड़ें ताकि उन्हें अलर्ट मिलें।
+Send to | किसे भेजें
+Everyone ({}) | सभी को ({1})
+Quick message | जल्दी वाला मैसेज
+Call me now | मुझे अभी फ़ोन करो
+Come to the godown | गोदाम पर आओ
+Truck is leaving, come fast | ट्रक निकल रहा है, जल्दी आओ
+Client is waiting at the site | क्लाइंट साइट पर इंतज़ार कर रहे हैं
+Material short at the site | साइट पर सामान कम पड़ गया
+Start setup now | अभी सेटअप शुरू करो
+Alert | अलर्ट
+e.g. Come to the godown now | जैसे: अभी गोदाम पर आओ
+Details (optional) | पूरी बात (ज़रूरी नहीं)
+About booking (optional) | किस बुकिंग के बारे में (ज़रूरी नहीं)
+Urgent | ज़रूरी
+: keeps ringing until they tap “Seen” | : जब तक वे "देख लिया" न दबाएं, बजता रहेगा
+Crew without the app? Use the WhatsApp button on their card in Staff. | जिस क्रू के पास ऐप नहीं? स्टाफ़ में उनके कार्ड पर व्हाट्सऐप बटन इस्तेमाल करें।
+Write the alert | अलर्ट लिखें
+Your role cannot send alerts. Ask the owner. | आपका रोल अलर्ट नहीं भेज सकता। ओनर से कहें।
+Alert sent. Ringing on {} phone. | अलर्ट भेज दिया। {1} फ़ोन पर बज रहा है।
+Alert sent. Ringing on {} phones. | अलर्ट भेज दिया। {1} फ़ोन पर बज रहा है।
+Alert sent. They will see it when the app is open (phone notifications are not turned on for them yet). | अलर्ट भेज दिया। ऐप खोलते ही उन्हें दिखेगा (उनके फ़ोन पर नोटिफ़िकेशन अभी चालू नहीं हैं)।
+Sent alert: {} | अलर्ट भेजा: {1}
+Urgent alert | ज़रूरी अलर्ट
+1 of {} | {1} में से 1
+From | भेजने वाले:
+Play sound | आवाज़ चलाएं
+Seen, OK | देख लिया, ठीक है
+Open booking | बुकिंग खोलें
+To {} | {1} को
+From {} | {1} से
+Everyone | सभी
+Seen by {} | {1} ने देखा
+Not seen yet | अभी नहीं देखा
+Seen | देख लिया
+Sent | भेजा
+New | नया
+Turn on alert notifications | अलर्ट नोटिफ़िकेशन चालू करें
+So you hear alerts from your team with the SabManage tune, even when the app is closed. | ताकि ऐप बंद होने पर भी टीम के अलर्ट सबमैनेज की धुन के साथ सुनाई दें।
+Turn on | चालू करें
+Hide | छुपाएं
+Phone notifications are on | फ़ोन नोटिफ़िकेशन चालू हो गए
+Notifications not allowed | नोटिफ़िकेशन की इजाज़त नहीं मिली
+Notifications are blocked. Allow them for SabManage in your phone settings. | नोटिफ़िकेशन बंद हैं। फ़ोन की सेटिंग्स में सबमैनेज के लिए चालू करें।
+Phone notifications work in the SabManage app or in Chrome on the live site. | फ़ोन नोटिफ़िकेशन सबमैनेज ऐप में या क्रोम में असली साइट पर चलते हैं।
+Could not turn on notifications: {} | नोटिफ़िकेशन चालू नहीं हो पाए: {1}
+1 new important reminder. Tap the bell. | 1 नया ज़रूरी रिमाइंडर। घंटी दबाएं।
+{} new important reminders. Tap the bell. | {1} नए ज़रूरी रिमाइंडर। घंटी दबाएं।
 `);

@@ -17,7 +17,7 @@ SabManage (earlier name: EventPro OS) is a multi-tenant SaaS for Indian **tent h
 | Hosting | Vercel project `eventpro-os` (id `prj_rfaKxq9TGcMSEQOVuiBqZTrZapWM`, team `team_Bqpb2KJqrwCkxsphCKF7Rcx8`), Hobby plan, functions region `bom1` | Git-linked: every push to `main` deploys (~30 s) |
 | Database/auth/storage | Supabase project `uregwtavhkjowiltukiq` (Mumbai), org "Chiragcv01's Org", **Free plan** | URL + public anon key are in `src/head.html` and `api/site.js` (public by design; RLS protects data) |
 | Domain | `sabmanage.com` on **Hostinger** (DNS: A @ → 216.198.79.1, 64.29.17.1; CNAME www → Vercel). www redirects to apex |
-| Android | Trusted Web Activity, package `com.sabmanage.app`, v1.0.0 (code 1), minSdk 24, targetSdk 36 | Built by GitHub Actions (unsigned) → signed by owner with upload key |
+| Android | Trusted Web Activity, package `com.sabmanage.app`, v1.1.0 (code 2, notifications on), minSdk 24, targetSdk 36 | Built by GitHub Actions (unsigned) → signed by owner with upload key |
 
 ## Repo layout
 ```
@@ -31,17 +31,19 @@ src/views-money.js   invoices, payments, vendors, staff, live tracker, expenses,
 src/views-admin.js   bill branding, plan card, blocked screen, Super Admin console (businesses, users, plans), employee logins
 src/views-site.js    Super Admin: Website content, Blog editor (+cleanHTML sanitizer), Enquiries, Account deletion; user "Delete my account"
 src/views-import.js  Excel/CSV import (SheetJS from jsDelivr, lazy) + "Get started" card
-src/views-marketing.js  Marketing module: follow-ups, Google review requests, poster maker (canvas PNG), rate card (print/PDF), clients (CSV export, anniversaries, muhurat campaign), QR poster (qrcode-generator from jsDelivr, lazy), refer & share
+src/alerts.js        Team alerts: send/receive, full-screen ringing card, tune (`/sounds/alert.mp3`), Realtime, web push subscribe (VAPID public key here)
+src/views-marketing.js  Marketing module: follow-ups, Google review requests, rate card (print/PDF), clients (CSV export, anniversaries, muhurat campaign), QR poster (qrcode-generator from jsDelivr, lazy), refer & share
 src/app.css          app design (clean white, colourful; Baloo 2 + Mukta fonts)
-build.py             concatenates src → app.html (order: i18n, core, help, auth, views-ops, views-money, views-admin, views-site, views-import, views-marketing)
+build.py             concatenates src → app.html (order: i18n, core, alerts, help, auth, views-ops, views-money, views-admin, views-site, views-import, views-marketing)
 api/site.js          website: home, /blog, /blog/:slug, /privacy, /terms, /delete-account, sitemap, robots, RSS; HTML allow-list sanitizer
 site.css, site.js    website style; language switch, contact form, delete-request form (call Supabase RPCs directly)
-sw.js, offline.html  service worker (offline screen only; no private data cached)
+sw.js, offline.html  service worker (offline screen; push → notification; no private data cached)
+sounds/alert.mp3     the SabManage alert tune (same tune as android/sabmanage_alert.ogg)
 manifest.webmanifest PWA manifest (start_url /app)
 .well-known/assetlinks.json   Android Digital Asset Links (upload key SHA-256; add Play app-signing SHA-256 later)
-android/             twa-manifest.json + generate.js (@bubblewrap/core); built by .github/workflows/android.yml → branch android-build
+android/             twa-manifest.json + generate.js (@bubblewrap/core) + patch.js (adds DelegationService.java + res/raw/sabmanage_alert.ogg); built by .github/workflows/android.yml → branch android-build
 play-store/          LISTING.md (EN + HI text, Data safety answers), icon, feature graphic, 8 screenshots
-supabase/            schema.sql, auth_admin.sql, website.sql, account_deletion.sql, subscriptions.sql, marketing.sql (copies of what was applied)
+supabase/            schema.sql, auth_admin.sql, website.sql, account_deletion.sql, subscriptions.sql, marketing.sql, alerts.sql (copies of what was applied); functions/send-alert (edge function, deployed)
 vercel.json          rewrites (website routes → api/site), redirect old host, headers
 img/                 site screenshots, og.jpg, icons
 ```
@@ -51,6 +53,7 @@ img/                 site screenshots, og.jpg, icons
 - `org_members` (org_id, user_id, role, display_name, email, perms override jsonb, staff_id), `org_roles` (role perms jsonb).
 - `records` (org_id, collection, id, data jsonb) — ALL business data. Collections: events, inventory, dishes, mandi, invoices, counters, payments, vendors, pos, staff, attendance, advances, payouts, tasks, expenses, reviews, settings(main), activity.
 - `invites`, `guest_links` (client page tokens), `platform_admins` (user_id, active), `platform_settings` (id=1, data jsonb: appName, supportName/Phone/Email, trialDays, **graceDays**, allowSignup, plans[{name,price,desc}], site{brandName, tagline, about, aboutHi, legalName, address, city, phone, whatsapp, email, hours, mapUrl, instagram, facebook, youtube, linkedin, showPricing}).
+- `alerts` (org_id, from_user, from_name, to_user null=everyone, to_name, title, body, urgent, event_id, acks jsonb {uid:{at,name}}, created_at) — RLS: members see alerts for them/sent by them (tasks perm 3 sees all); insert needs tasks perm ≥ 2; acknowledge via RPC `ack_alert`. In the `supabase_realtime` publication. `push_subs` (endpoint, user_id, p256dh, auth) saved via RPC `save_push_sub`. VAPID private key lives in Supabase Vault (`vapid_private_key`), read only by service_role through `vapid_keys()`. Edge function `send-alert` (verify_jwt) is called by the sender's app after inserting an alert; it pushes to the recipients' devices and removes dead subscriptions.
 - `blog_posts` (slug, title, excerpt, content HTML, cover_url, tags, lang, status draft/published, seo_*, author, published_at), `contact_messages` (website enquiries), `account_deletions` (requests).
 - Storage bucket `blog` (public read; Super Admin write).
 - Key functions: `perm_for(user, org, module)` → 0–3 (Super Admin 3; suspended 0; **expired + graceDays → 0**); `perm()`, `my_role()`, `is_super_admin()` all require `mfa_ok()` (aal2 when user has a verified TOTP factor). RPCs: `public_signup`, `create_org`, `create_member`, `set_user_password`, `admin_create_business`, `admin_block_user`, `admin_set_super`, `admin_overview`, `admin_users`, `reset_user_mfa`, `guest_view`, `guest_review`, `submit_enquiry` (throttled), `request_account_deletion`, `request_account_deletion_web`. **`admin_delete_account` is written in `supabase/account_deletion.sql` but NOT applied yet** (needs owner approval because it deletes data).
@@ -64,6 +67,7 @@ img/                 site screenshots, og.jpg, icons
 - ⓘ help: `src/help.js` holds `HELP` (English + Hindi side by side, loaded into the dictionary). `pageHead()` adds the ⓘ for the current page (key = `S.view`); tabs use `tabHelp('key')`, cards/sections use `info('key')`. Add a HELP entry for every new page, tab or card.
 - Crew pay: staff have `rate` (wage per duty), `dutyHours` (default 8), `otRate` (blank = rate ÷ dutyHours). Attendance `hours` > duty → `floor(hours/duty)` shifts + leftover hours as overtime (`attPay`). Money to crew lives in collection `advances` with `kind`: advance (cut from pay), food / travel (company cost), bonus (added to pay); old records without kind = advance. Net pay = wages + OT + bonus − advance. Costs everywhere (event profit, Reports, Expenses) = vendor POs + expenses + wages/OT + food/travel/bonus (`crewSpend`). The Expenses page lists crew and vendor lines read-only from Staff/POs (`monthCosts`), never stored twice.
 - Marketing: module key `marketing` (manager default 2). Follow-up due = Enquiry/Quoted, not past, last touch (`followUpAt` or `created`) ≥ 2 days → also a dashboard alert. Settings keys `googleReview`, `instagram` (also returned by `guest_view`). Referral: `?ref=<first 8 chars of org id>` on sabmanage.com or /app is kept in localStorage `ep_ref` and saved as `settings.referredBy` at sign-up; `admin_overview` returns `referredBy`; reward text = platform `referralReward`.
+- Alerts & sound: urgent alerts loop the tune (max 2 min) until "Seen"; new important reminders (Overdue/Shortage/Confirm/Return/Dispatch) play it once. In the Android app (v1.1+) `DelegationService.java` reposts every web notification on channel `sabmanage_team_alerts` with the tune on the ALARM stream (heard on silent/vibrate); urgent ones (title starts with 🚨) get FLAG_INSISTENT. Browsers / the website PWA follow the phone's normal notification sound rules (silent = no sound).
 - Blog HTML is sanitized on save (`cleanHTML` in views-site.js) and on render (`sanitize` in api/site.js).
 - Offline mode: if `supabaseUrl` is empty the app uses LocalDB (localStorage) — used for local testing (`superAdminEmails` in config makes a Super Admin offline).
 
@@ -76,7 +80,7 @@ img/                 site screenshots, og.jpg, icons
 6. Android: bump `appVersionCode` in `android/twa-manifest.json`, push → Actions builds unsigned files to branch `android-build` → sign with the owner's upload key (`jarsigner` for .aab, `apksigner.jar` for .apk). Key file `sabmanage-upload.jks`, alias `upload`, SHA-256 `5B:C1:89:CA:AB:4B:92:11:71:AB:35:49:AF:39:E7:31:CF:12:E1:1F:9A:C9:4B:DB:14:B2:8F:5D:9B:3B:62:3F`. The key and its password are only with the owner — never commit them.
 
 ## Status (17 Oct 2026)
-Done: full app; ⓘ help on every page/tab/card; crew duty hours/overtime/extra shifts + crew money (advance/food/travel/bonus) flowing into Expenses and P&L; Marketing module (follow-ups, Google reviews, posters, rate card, clients export, anniversaries, muhurat campaign, QR poster, refer & share); Hindi fully in Devanagari; roles/permissions; Super Admin console (businesses, users, plans & support, website, blog, enquiries, account deletion); Authenticator; Hindi; website + blog + legal pages + SEO; contact form; Excel import (stock, menu, crew, vendors, bookings); Get-started card; Terms consent at sign-up; subscription controls and blocking; account deletion requests (app + web); PWA + offline screen; Android .aab/.apk v1.0.0 signed; Play Store listing kit; domain sabmanage.com; rebrand to SabManage. Database is clean (only the Super Admin user, 0 businesses).
+Done: full app; team alerts with ringing tune + web push + Android alarm-channel notifications (v1.1.0); ⓘ help on every page/tab/card; crew duty hours/overtime/extra shifts + crew money (advance/food/travel/bonus) flowing into Expenses and P&L; Marketing module (follow-ups, Google reviews, rate card, clients export, anniversaries, muhurat campaign, QR poster, refer & share); Hindi fully in Devanagari; roles/permissions; Super Admin console (businesses, users, plans & support, website, blog, enquiries, account deletion); Authenticator; Hindi; website + blog + legal pages + SEO; contact form; Excel import (stock, menu, crew, vendors, bookings); Get-started card; Terms consent at sign-up; subscription controls and blocking; account deletion requests (app + web); PWA + offline screen; Android .aab/.apk v1.0.0 signed; Play Store listing kit; domain sabmanage.com; rebrand to SabManage. Database is clean (only the Super Admin user, 0 businesses).
 
 Pending (owner): enable Authenticator on Super Admin; change Super Admin password; make repo private; run `supabase/account_deletion.sql`; Play Console account + closed test (12 testers × 14 days) + listing; send Play **app signing** SHA-256 to add to `assetlinks.json`; fill website address/legal name; get Terms/Privacy reviewed; buy Supabase Pro + Vercel Pro before first paying customer.
 

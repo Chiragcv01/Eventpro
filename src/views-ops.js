@@ -34,7 +34,7 @@ V.dashboard = () => {
   </div>`;
 
   const evCards = upcoming.slice(0, 8).map(eventCard).join('');
-  return `${startCard()}${hero}${tiles}${stats}
+  return `${pushCard()}${startCard()}${hero}${tiles}${stats}
   <div class="sec-h"><h2>Upcoming events${info('dash-upcoming')}</h2><button class="linkbtn" onclick="A.go('bookings')">See all ${ic('chev')}</button></div>
   ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
   <div class="split" style="margin-top:6px">
