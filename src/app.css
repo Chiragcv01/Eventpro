@@ -476,3 +476,26 @@ details.card[open] summary{margin-bottom:6px}
 .start-step.ok{opacity:.65}
 .start-step.ok b{text-decoration:line-through}
 .start-step .ico{width:18px;height:18px;color:var(--muted)}
+
+/* ⓘ help buttons + help sheet */
+.info-btn{display:inline-grid;place-items:center;width:26px;height:26px;margin-left:6px;vertical-align:middle;border:0;border-radius:99px;background:color-mix(in srgb,var(--primary) 10%,transparent);color:var(--primary);cursor:pointer;flex:none;padding:0;transition:background .15s,transform .15s}
+.info-btn:hover{background:color-mix(in srgb,var(--primary) 18%,transparent)}
+.info-btn:active{transform:scale(.92)}
+.info-btn .ico{width:17px;height:17px;stroke-width:2.2}
+.info-btn:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+h1 .info-btn{width:28px;height:28px;position:relative;top:-2px}
+h3 .info-btn,h2 .info-btn{width:24px;height:24px;margin-left:4px}
+h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
+.tab-help{display:inline-flex;align-items:center;padding-left:14px;margin-left:auto;position:sticky;right:0;background:linear-gradient(90deg,transparent,var(--bg,#F6F7FB) 12px)}
+.tab-help .info-btn{margin-left:0;width:34px;height:34px}
+.help-b{display:flex;flex-direction:column;gap:12px}
+.help-what{font-size:16.5px;line-height:1.6;color:var(--ink)}
+.help-b h4{font-size:15px;margin-top:4px}
+.help-steps{margin:0;padding:0;list-style:none;counter-reset:hs;display:flex;flex-direction:column;gap:9px}
+.help-steps li{counter-increment:hs;display:flex;gap:10px;align-items:flex-start;line-height:1.5;font-size:15px}
+.help-steps li::before{content:counter(hs);flex:none;width:24px;height:24px;border-radius:99px;background:var(--primary);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center;margin-top:1px}
+.help-tip{display:flex;gap:10px;align-items:flex-start;background:#FFF8E6;border:1px solid #F5D98B;border-radius:14px;padding:12px 14px;color:#6B4E00;line-height:1.5;font-size:14.5px}
+.help-tip .ico{width:18px;height:18px;flex:none;margin-top:2px;color:#D29A00}
+.help-tip b{display:block;font-size:13px;letter-spacing:.02em}
+.tabs .tab-help .info-btn{border:0;padding:0;background:#E6EDFF;color:var(--primary);width:36px;height:36px;border-radius:99px}
+.tabs .tab-help .info-btn .ico{width:19px;height:19px}

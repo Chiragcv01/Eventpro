@@ -1,11 +1,11 @@
 # SabManage — handover notes for Claude / developers
 
-Read this first. It is the full context of the project as of 16 Oct 2026, so a new session can continue without the original chat.
+Read this first. It is the full context of the project as of 17 Oct 2026, so a new session can continue without the original chat.
 
 ## What it is
 SabManage (earlier name: EventPro OS) is a multi-tenant SaaS for Indian **tent houses, caterers/halwais, decorators and event managers**: bookings, godown stock with date-wise availability, catering ration calculator, GST invoices/quotations/challans/receipts with the business's own logo, payments and WhatsApp reminders, vendors and POs, crew attendance and wages, live setup tracker, reports/P&L, reviews, a client (guest) page, and per-person access control.
 
-- Owner of the platform (Super Admin): **Chirag Sharma** — login `chiragsharma98873@gmail.com`, support WhatsApp 9950653247. He communicates in **Hinglish**; reply in Hinglish, keep UI copy in plain English with the Hindi dictionary.
+- Owner of the platform (Super Admin): **Chirag Sharma** — login `chiragsharma98873@gmail.com`, support WhatsApp 9950653247. He communicates in **Hinglish**; reply in Hinglish, keep UI copy in plain English with the Hindi dictionary (Hindi side fully in Devanagari).
 - Live: website https://sabmanage.com · app https://sabmanage.com/app · old https://eventpro-os.vercel.app redirects here.
 - Repo: https://github.com/Chiragcv01/Eventpro (branch `main`; currently public — owner was advised to make it private).
 
@@ -24,6 +24,7 @@ SabManage (earlier name: EventPro OS) is a multi-tenant SaaS for Indian **tent h
 src/head.html        config (Supabase URL/key), fonts, title
 src/i18n.js          Hindi engine (MutationObserver translator) + dictionary "English | हिंदी"
 src/core.js          utils, icons, constants, LocalDB + CloudDB adapters, state S, actions A, permissions, shell, alerts, business logic
+src/help.js          ⓘ help texts (HELP map, English + Hindi) + info()/tabHelp()/A.help sheet
 src/auth.js          login/sign-up (Terms checkbox), forgot password, guest (client) portal, Authenticator (TOTP)
 src/views-ops.js     dashboard, bookings, event page, inventory, catering
 src/views-money.js   invoices, payments, vendors, staff, live tracker, expenses, reports, reviews, tools, team, settings
@@ -31,7 +32,7 @@ src/views-admin.js   bill branding, plan card, blocked screen, Super Admin conso
 src/views-site.js    Super Admin: Website content, Blog editor (+cleanHTML sanitizer), Enquiries, Account deletion; user "Delete my account"
 src/views-import.js  Excel/CSV import (SheetJS from jsDelivr, lazy) + "Get started" card
 src/app.css          app design (clean white, colourful; Baloo 2 + Mukta fonts)
-build.py             concatenates src → app.html (order: i18n, core, auth, views-ops, views-money, views-admin, views-site, views-import)
+build.py             concatenates src → app.html (order: i18n, core, help, auth, views-ops, views-money, views-admin, views-site, views-import)
 api/site.js          website: home, /blog, /blog/:slug, /privacy, /terms, /delete-account, sitemap, robots, RSS; HTML allow-list sanitizer
 site.css, site.js    website style; language switch, contact form, delete-request form (call Supabase RPCs directly)
 sw.js, offline.html  service worker (offline screen only; no private data cached)
@@ -58,7 +59,8 @@ img/                 site screenshots, og.jpg, icons
 - Permissions: levels 0 none, 1 view, 2 edit, 3 full(delete). Owner = 3 everywhere. `lvl()`/`can()`/`need()` in core.js mirror the DB.
 - Subscription: plan validity ends → after `graceDays` the business is fully blocked (DB returns no data; UI shows `V.blocked` "Your plan has ended" with renew WhatsApp). Grace period shows a red banner. Super Admin can change plan/status/date, ± validity, special price, bulk change validity, edit up to 6 plans.
 - Owners cannot reset their own password; only Super Admin. Owners reset employees' passwords.
-- Hindi: `I18N` translates text nodes/placeholders via the dictionary; `.paper` (bills) and `[translate=no]` are never translated. `I18N.missing()` lists untranslated visible strings. Common English words stay English by design.
+- Hindi: `I18N` translates text nodes/placeholders via the dictionary; `.paper` (bills) and `[translate=no]` are never translated. `I18N.missing()` lists untranslated visible strings. **Hindi must be fully in Devanagari** (owner's rule: many users cannot read English letters). Words people say in English are written as spoken: बुकिंग, इनवॉइस, जीएसटी, पेमेंट, लॉगिन, स्टॉक. Only things a user must type exactly (ERASE), file names (.xlsx), URLs and sample codes stay Latin. Dates get Hindi month/day names (`dateHi`). Patterns: the most specific pattern wins.
+- ⓘ help: `src/help.js` holds `HELP` (English + Hindi side by side, loaded into the dictionary). `pageHead()` adds the ⓘ for the current page (key = `S.view`); tabs use `tabHelp('key')`, cards/sections use `info('key')`. Add a HELP entry for every new page, tab or card.
 - Blog HTML is sanitized on save (`cleanHTML` in views-site.js) and on render (`sanitize` in api/site.js).
 - Offline mode: if `supabaseUrl` is empty the app uses LocalDB (localStorage) — used for local testing (`superAdminEmails` in config makes a Super Admin offline).
 
@@ -70,9 +72,11 @@ img/                 site screenshots, og.jpg, icons
 5. Commit with a clear message and push to `main` → live.
 6. Android: bump `appVersionCode` in `android/twa-manifest.json`, push → Actions builds unsigned files to branch `android-build` → sign with the owner's upload key (`jarsigner` for .aab, `apksigner.jar` for .apk). Key file `sabmanage-upload.jks`, alias `upload`, SHA-256 `5B:C1:89:CA:AB:4B:92:11:71:AB:35:49:AF:39:E7:31:CF:12:E1:1F:9A:C9:4B:DB:14:B2:8F:5D:9B:3B:62:3F`. The key and its password are only with the owner — never commit them.
 
-## Status (16 Oct 2026)
-Done: full app; roles/permissions; Super Admin console (businesses, users, plans & support, website, blog, enquiries, account deletion); Authenticator; Hindi; website + blog + legal pages + SEO; contact form; Excel import (stock, menu, crew, vendors, bookings); Get-started card; Terms consent at sign-up; subscription controls and blocking; account deletion requests (app + web); PWA + offline screen; Android .aab/.apk v1.0.0 signed; Play Store listing kit; domain sabmanage.com; rebrand to SabManage. Database is clean (only the Super Admin user, 0 businesses).
+## Status (17 Oct 2026)
+Done: full app; ⓘ help on every page/tab/card; Hindi fully in Devanagari; roles/permissions; Super Admin console (businesses, users, plans & support, website, blog, enquiries, account deletion); Authenticator; Hindi; website + blog + legal pages + SEO; contact form; Excel import (stock, menu, crew, vendors, bookings); Get-started card; Terms consent at sign-up; subscription controls and blocking; account deletion requests (app + web); PWA + offline screen; Android .aab/.apk v1.0.0 signed; Play Store listing kit; domain sabmanage.com; rebrand to SabManage. Database is clean (only the Super Admin user, 0 businesses).
 
 Pending (owner): enable Authenticator on Super Admin; change Super Admin password; make repo private; run `supabase/account_deletion.sql`; Play Console account + closed test (12 testers × 14 days) + listing; send Play **app signing** SHA-256 to add to `assetlinks.json`; fill website address/legal name; get Terms/Privacy reviewed; buy Supabase Pro + Vercel Pro before first paying customer.
+
+Marketing ideas suggested to the owner on 17 Oct 2026 (NOT built — build only the ones he picks): business mini-website + enquiry form into Bookings, Google review request links, festival/offer posters with the business logo, shareable catalogue/rate card, enquiry follow-up reminders, referral link on the client page, anniversary reminders to past clients, client list export for WhatsApp broadcast, enquiry QR poster, saaya-date campaign reminders, "Powered by SabManage" + business referral programme.
 
 Next features (agreed order): Razorpay online renewal (needs owner's Razorpay KYC) → stronger password rule (8 chars + number) → GSTR-1/Tally export → automatic WhatsApp reminders (WhatsApp Business API) → offline crew updates → lead/error alerts → iPhone app, multi-branch, client CRM.

@@ -180,7 +180,7 @@ const importBtn = kind => can(IMPORTS[kind].mod, 2) ? `<button class="btn" oncli
 function importCard() {
   const kinds = Object.keys(IMPORTS).filter(k => can(IMPORTS[k].mod, 2) && moduleOn(IMPORTS[k].mod));
   if (!kinds.length) return '';
-  return `<div class="card"><div class="card-h"><div><h3>Import from Excel</h3><p>Bring your existing stock, menu, crew, vendors and bookings in one go. Download the sample sheet, fill it, upload.</p></div></div>
+  return `<div class="card"><div class="card-h"><div><h3>Import from Excel${info('set-import')}</h3><p>Bring your existing stock, menu, crew, vendors and bookings in one go. Download the sample sheet, fill it, upload.</p></div></div>
   <div class="sheet-b" style="padding-top:12px"><div class="tiles">${kinds.map(k => `<button class="tile" onclick="A.importSheet('${k}')">${ibox(IMPORTS[k].icon, MOD[IMPORTS[k].mod].c)}<span>${esc(IMPORTS[k].label)}</span></button>`).join('')}</div></div></div>`;
 }
 
@@ -195,6 +195,6 @@ function startCard() {
     ['Add your team', 'Logins for manager, accountant, crew', S.members.length > 1, 'A.memberForm()', 'users', '#0D9488'],
     ['Create your first booking', 'Or import your diary', col('events').length > 0, 'A.eventForm()', 'calendar', '#7C3AED']].filter(Boolean);
   const done = steps.filter(s => s[2]).length; if (done === steps.length) return '';
-  return `<div class="card pad stack-sm start-card"><div class="row-flex" style="justify-content:space-between"><div><h3>Get started</h3><p class="small muted">${done} of ${steps.length} done</p></div><button class="linkbtn" onclick="LS.set('ep_start_done_${S.org.orgId}',true);render()">Hide</button></div>${prog(done / steps.length * 100)}
+  return `<div class="card pad stack-sm start-card"><div class="row-flex" style="justify-content:space-between"><div><h3>Get started${info('start')}</h3><p class="small muted">${done} of ${steps.length} done</p></div><button class="linkbtn" onclick="LS.set('ep_start_done_${S.org.orgId}',true);render()">Hide</button></div>${prog(done / steps.length * 100)}
     <div class="stack-sm" style="margin-top:4px">${steps.map(([t, sub, ok, fn, i, c]) => `<button class="start-step ${ok ? 'ok' : ''}" onclick="${fn}">${ok ? `<span class="ibox sm" style="--c:#0B9B68">${ic('check')}</span>` : ibox(i, c, 'sm')}<span class="grow" style="text-align:left"><b>${esc(t)}</b><span class="tiny muted" style="display:block">${esc(sub)}</span></span>${ok ? '' : ic('chev')}</button>`).join('')}</div></div>`;
 }

@@ -43,6 +43,7 @@ const LS = (() => { const mem = {}; return {
 /* Icons */
 const ICONS = {
   home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
+  info: 'M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0zM12 11v5M12 7.6v.4',
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
   box: 'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10',
   pot: 'M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 6c0-1 1-2 1-3M14 6c0-1 1-2 1-3',
@@ -466,7 +467,7 @@ const datebox = (d, c) => `<span class="datebox" style="--c:${c || '#1F5EFF'}"><
 const empty = (title, text, action = '', icon = 'sparkle', c = '#94A3B8') => `<div class="empty">${ibox(icon, c, 'lg')}<b>${esc(title)}</b><span>${esc(text)}</span>${action}</div>`;
 function pageHead(title, sub, actions = '', back = '', icon) {
   const m = MOD[currentModule()]; const [i, c] = icon || (m ? [m.icon, m.c] : ['grid', '#1F5EFF']);
-  return `${back ? `<button class="back" onclick="${back}">${ic('back')} Back</button>` : ''}<div class="phead"><div class="t">${ibox(i, c, 'lg')}<div style="min-width:0"><h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div></div><div class="row-flex">${actions}</div></div>`;
+  return `${back ? `<button class="back" onclick="${back}">${ic('back')} Back</button>` : ''}<div class="phead"><div class="t">${ibox(i, c, 'lg')}<div style="min-width:0"><h1>${esc(title)}${typeof info === 'function' ? info(S.view) : ''}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div></div><div class="row-flex">${actions}</div></div>`;
 }
 function kpi(label, value, sub = '', tone = '', icon = '', c = '') { return `<div class="kpi ${tone}"><div class="kt">${icon ? ibox(icon, c, 'sm') : ''}<div class="eyebrow">${esc(label)}</div></div><div class="v">${value}</div>${sub ? `<div class="s">${sub}</div>` : ''}</div>`; }
 const waBtn = (text, phone, label = 'WhatsApp', cls = 'btn wa sm') => `<a class="${cls}" href="${esc(waLink(text, phone))}" target="_blank" rel="noopener">${ic('wa')} ${esc(label)}</a>`;

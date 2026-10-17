@@ -84,7 +84,7 @@ async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
 /* ---------- page shell ---------- */
 function shell({ s, plat, origin, path, title, desc, image, body, type = 'website', jsonld = [], noindex = false, hiTitle = '' }) {
   const brand = s.brandName || 'SabManage'; const url = origin + path;
-  const nav = [['/#features', 'Features', 'सुविधाएं'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/blog', 'Blog', 'Blog'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
+  const nav = [['/#features', 'Features', 'सुविधाएं'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
   const waN = s.whatsapp || s.phone;
   const social = [['instagram', 'insta', 'Instagram'], ['facebook', 'fb', 'Facebook'], ['youtube', 'yt', 'YouTube'], ['linkedin', 'li', 'LinkedIn']].filter(([k]) => safeUrl(s[k])).map(([k, i, l]) => `<a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" aria-label="${l}">${ic(i)}</a>`).join('');
   return `<!doctype html>
@@ -112,11 +112,11 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 <a class="skip" href="#main"${hi('मुख्य हिस्से पर जाएं')}>Skip to content</a>
 <header class="top" id="top"><div class="wrap">
   <a class="brand" href="/"><span class="mk">${ic('tent')}</span>${esc(brand)}</a>
-  <nav class="nav" id="nav" aria-label="Main">${nav.map(([h, l, h2]) => `<a href="${h}"${hi(h2)}>${l}</a>`).join('')}<a href="/app" class="mobile-login"${hi('Log in')}>Log in</a></nav>
+  <nav class="nav" id="nav" aria-label="Main">${nav.map(([h, l, h2]) => `<a href="${h}"${hi(h2)}>${l}</a>`).join('')}<a href="/app" class="mobile-login"${hi('लॉग इन')}>Log in</a></nav>
   <span class="grow"></span>
   <button class="lang" type="button" id="langBtn" aria-label="भाषा / Language" translate="no"><span data-l="hi">हिं</span><span data-l="en" class="on">EN</span></button>
-  <a class="btn sm login" href="/app" data-app-link${hi('Log in')}>Log in</a>
-  ${plat.allowSignup !== false ? `<a class="btn sm primary start" href="/app#signup"${hi('Free trial शुरू करें')}>Start free trial</a>` : `<a class="btn sm primary start" href="/#contact"${hi('Demo लें')}>Book a demo</a>`}
+  <a class="btn sm login" href="/app" data-app-link${hi('लॉग इन')}>Log in</a>
+  ${plat.allowSignup !== false ? `<a class="btn sm primary start" href="/app#signup"${hi('फ़्री ट्रायल शुरू करें')}>Start free trial</a>` : `<a class="btn sm primary start" href="/#contact"${hi('डेमो लें')}>Book a demo</a>`}
   <button class="menu-btn" type="button" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="nav">${ic('menu')}</button>
 </div></header>
 <main id="main">
@@ -126,16 +126,16 @@ ${body}
   <div class="canopy thin" aria-hidden="true"></div>
   <div class="wrap">
     <div class="about-f"><a class="brand" href="/"><span class="mk">${ic('tent')}</span>${esc(brand)}</a>
-      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('टेंट हाउस, कैटरर और इवेंट मैनेजर के लिए bookings, stock, राशन, GST bill, payments और crew का app।')}>Bookings, stock, ration, GST bills, payments and crew in one app for tent houses, caterers and event managers.</p>
+      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('टेंट हाउस, कैटरर और इवेंट मैनेजर के लिए बुकिंग, स्टॉक, राशन, जीएसटी बिल, पेमेंट और क्रू का ऐप।')}>Bookings, stock, ration, GST bills, payments and crew in one app for tent houses, caterers and event managers.</p>
       ${social ? `<div class="social">${social}</div>` : ''}</div>
-    <div><h4${hi('Pages')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/app"${hi('Log in')}>Log in</a></li></ul></div>
+    <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
     <div><h4${hi('संपर्क')}>Contact</h4><ul>
       ${s.phone ? `<li><a href="tel:+${waNum(s.phone)}">${esc(s.phone)}</a></li>` : ''}
       ${waN ? `<li><a href="${esc(wa(waN, 'Namaste, I want to know more about ' + brand + '.'))}" target="_blank" rel="noopener">WhatsApp</a></li>` : ''}
       ${s.email ? `<li><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>` : ''}
       ${s.address ? `<li style="color:var(--ink2)">${esc(s.address)}</li>` : ''}
     </ul></div>
-    <div class="legal"><span>© ${new Date().getFullYear()} ${esc(s.legalName || brand)}</span><span><a href="/privacy"${hi('Privacy policy')}>Privacy policy</a> &nbsp; <a href="/terms"${hi('नियम और शर्तें')}>Terms of use</a> &nbsp; <a href="/delete-account"${hi('Account delete करें')}>Delete account</a></span></div>
+    <div class="legal"><span>© ${new Date().getFullYear()} ${esc(s.legalName || brand)}</span><span><a href="/privacy"${hi('प्राइवेसी पॉलिसी')}>Privacy policy</a> &nbsp; <a href="/terms"${hi('नियम और शर्तें')}>Terms of use</a> &nbsp; <a href="/delete-account"${hi('अकाउंट डिलीट करें')}>Delete account</a></span></div>
   </div>
 </footer>
 ${waN ? `<a class="wa-float" href="${esc(wa(waN, 'Namaste, I want to know more about ' + brand + '.'))}" target="_blank" rel="noopener" aria-label="WhatsApp">${ic('wa')}</a>` : ''}
@@ -149,41 +149,41 @@ ${waN ? `<a class="wa-float" href="${esc(wa(waN, 'Namaste, I want to know more a
 function homePage({ s, plat, posts }) {
   const brand = s.brandName || 'SabManage'; const trial = +plat.trialDays || 0; const signup = plat.allowSignup !== false;
   const waN = s.whatsapp || s.phone;
-  const startBtn = signup ? `<a class="btn primary" href="/app#signup"${hi(trial ? `${trial} दिन का free trial शुरू करें` : 'Free में शुरू करें')}>${trial ? `Start ${trial}-day free trial` : 'Start free'}</a>` : `<a class="btn primary" href="#contact"${hi('Demo लें')}>Book a demo</a>`;
-  const waBtn = waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('WhatsApp पर demo')}>Demo on WhatsApp</span></a>` : `<a class="btn" href="#contact"${hi('Demo लें')}>Book a demo</a>`;
+  const startBtn = signup ? `<a class="btn primary" href="/app#signup"${hi(trial ? `${trial} दिन का फ़्री ट्रायल शुरू करें` : 'फ़्री में शुरू करें')}>${trial ? `Start ${trial}-day free trial` : 'Start free'}</a>` : `<a class="btn primary" href="#contact"${hi('डेमो लें')}>Book a demo</a>`;
+  const waBtn = waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}<span${hi('व्हाट्सऐप पर डेमो')}>Demo on WhatsApp</span></a>` : `<a class="btn" href="#contact"${hi('डेमो लें')}>Book a demo</a>`;
   const who = [
-    ['tent', '#2563EB', 'Tent houses', 'टेंट हाउस', 'Know what is in the godown, what is out on rent and what is short for Saturday’s wedding.', 'Godown में क्या है, क्या किराए पर बाहर है और शनिवार की शादी के लिए क्या कम है, सब पता रहे।',
-      [['Date-wise stock for every shamiana, chair and DG set', 'हर शामियाना, कुर्सी और DG set का तारीख के हिसाब से stock'], ['Truck loading list and delivery challan', 'Truck loading list और delivery challan'], ['Damage and missing items charged to the client', 'टूटे और गुम सामान का charge client के bill में']]],
-    ['pot', '#16A34A', 'Caterers & halwais', 'कैटरर और हलवाई', 'Turn a menu and guest count into the full samagri list and a per-plate price in seconds.', 'Menu और मेहमानों की गिनती से सेकंडों में पूरी सामग्री list और प्रति plate rate निकालें।',
-      [['Ration list with your mandi rates', 'आपके मंडी rate से राशन list'], ['Per-plate cost and margin', 'प्रति plate लागत और margin'], ['Menu saved to each booking', 'हर booking में menu save']]],
-    ['sparkle', '#DB2777', 'Event managers', 'इवेंट मैनेजर', 'Run vendors, crew, run-sheets and client updates for every function from one place.', 'हर function के vendors, crew, run-sheet और client updates एक ही जगह से संभालें।',
-      [['Vendor purchase orders and dues', 'Vendor के purchase order और बकाया'], ['Live setup tracker for crew', 'Crew के लिए live setup tracker'], ['Client page with progress and bill', 'Client के लिए progress और bill वाला page']]]
+    ['tent', '#2563EB', 'Tent houses', 'टेंट हाउस', 'Know what is in the godown, what is out on rent and what is short for Saturday’s wedding.', 'गोदाम में क्या है, क्या किराए पर बाहर है और शनिवार की शादी के लिए क्या कम है, सब पता रहे।',
+      [['Date-wise stock for every shamiana, chair and DG set', 'हर शामियाना, कुर्सी और डीजी सेट का तारीख के हिसाब से स्टॉक'], ['Truck loading list and delivery challan', 'ट्रक लोडिंग लिस्ट और डिलीवरी चालान'], ['Damage and missing items charged to the client', 'टूटे और गुम सामान का चार्ज क्लाइंट के बिल में']]],
+    ['pot', '#16A34A', 'Caterers & halwais', 'कैटरर और हलवाई', 'Turn a menu and guest count into the full samagri list and a per-plate price in seconds.', 'मेन्यू और मेहमानों की गिनती से सेकंडों में पूरी सामग्री लिस्ट और प्रति प्लेट रेट निकालें।',
+      [['Ration list with your mandi rates', 'आपके मंडी रेट से राशन लिस्ट'], ['Per-plate cost and margin', 'प्रति प्लेट लागत और मार्जिन'], ['Menu saved to each booking', 'हर बुकिंग में मेन्यू सेव']]],
+    ['sparkle', '#DB2777', 'Event managers', 'इवेंट मैनेजर', 'Run vendors, crew, run-sheets and client updates for every function from one place.', 'हर फ़ंक्शन के वेंडर, क्रू, रन-शीट और क्लाइंट अपडेट एक ही जगह से संभालें।',
+      [['Vendor purchase orders and dues', 'वेंडर के परचेज़ ऑर्डर और बकाया'], ['Live setup tracker for crew', 'क्रू के लिए लाइव सेटअप ट्रैकर'], ['Client page with progress and bill', 'क्लाइंट के लिए प्रोग्रेस और बिल वाला पेज']]]
   ];
   const feats = [
-    ['calendar', '#7C3AED', 'Bookings & calendar', 'Bookings और calendar', 'Every enquiry, quotation and confirmed event in one diary, with peak saaya dates marked.', 'हर enquiry, quotation और पक्का event एक diary में, साया की तारीखें अलग दिखती हैं।'],
-    ['box', '#2563EB', 'Godown stock', 'Godown stock', 'See what is free on any date. Stock is held automatically for confirmed bookings.', 'किसी भी तारीख को क्या खाली है, देखें। पक्की bookings के लिए stock अपने आप रुकता है।'],
-    ['pot', '#16A34A', 'Catering calculator', 'Catering calculator', 'Menu, guests and buffer in; samagri list, raw cost and per-plate price out.', 'Menu, मेहमान और buffer डालें; सामग्री list, लागत और प्रति plate rate पाएं।'],
-    ['receipt', '#DB2777', 'GST bills with your logo', 'आपके logo वाले GST bill', 'Quotations, tax invoices, receipts and challans with your logo, stamp and UPI.', 'आपके logo, stamp और UPI के साथ quotation, tax invoice, रसीद और challan।'],
-    ['rupee', '#0B9B68', 'Payments & reminders', 'Payments और याद-दिहानी', 'Record advances, see who owes what and send a polite WhatsApp reminder in one tap.', 'Advance दर्ज करें, किस पर कितना बाकी है देखें और एक tap में WhatsApp पर याद दिलाएं।'],
-    ['handshake', '#D97706', 'Vendors & POs', 'Vendors और PO', 'Florists, DJs, dairy and crockery partners with purchase orders and dues.', 'फूल वाले, DJ, dairy और crockery partners, purchase order और बकाया के साथ।'],
-    ['users', '#0D9488', 'Crew & wages', 'Crew और मज़दूरी', 'Daily attendance by event, advances and month-end payout for every worker.', 'Event के हिसाब से रोज़ की हाज़िरी, advance और हर कारीगर की महीने की तनख्वाह।'],
-    ['pulse', '#0EA5E9', 'Live setup tracker', 'Live setup tracker', 'Crew update progress from their phones, so you know the pandal is ready before you reach.', 'Crew अपने phone से progress update करती है, आपके पहुंचने से पहले पता रहता है कि pandal तैयार है।'],
-    ['chart', '#0891B2', 'Profit by event', 'हर event का मुनाफ़ा', 'Billing minus vendors, expenses and wages: the real profit of every function.', 'Bill में से vendors, खर्च और मज़दूरी घटाकर हर function का असली मुनाफ़ा।'],
-    ['shield', '#475569', 'Staff logins & access', 'Staff login और access', 'Give each person their own login and decide exactly which sections they can see.', 'हर व्यक्ति को अपना login दें और तय करें कि वे कौन-से sections देख सकते हैं।']
+    ['calendar', '#7C3AED', 'Bookings & calendar', 'बुकिंग और कैलेंडर', 'Every enquiry, quotation and confirmed event in one diary, with peak saaya dates marked.', 'हर इन्क्वायरी, कोटेशन और पक्का इवेंट एक डायरी में, साया की तारीखें अलग दिखती हैं।'],
+    ['box', '#2563EB', 'Godown stock', 'गोदाम का स्टॉक', 'See what is free on any date. Stock is held automatically for confirmed bookings.', 'किसी भी तारीख को क्या खाली है, देखें। पक्की बुकिंग के लिए स्टॉक अपने आप रुकता है।'],
+    ['pot', '#16A34A', 'Catering calculator', 'कैटरिंग कैलकुलेटर', 'Menu, guests and buffer in; samagri list, raw cost and per-plate price out.', 'मेन्यू, मेहमान और बफ़र डालें; सामग्री लिस्ट, लागत और प्रति प्लेट रेट पाएं।'],
+    ['receipt', '#DB2777', 'GST bills with your logo', 'आपके लोगो वाले जीएसटी बिल', 'Quotations, tax invoices, receipts and challans with your logo, stamp and UPI.', 'आपके लोगो, स्टैम्प और यूपीआई के साथ कोटेशन, टैक्स इनवॉइस, रसीद और चालान।'],
+    ['rupee', '#0B9B68', 'Payments & reminders', 'पेमेंट और याद-दिहानी', 'Record advances, see who owes what and send a polite WhatsApp reminder in one tap.', 'एडवांस दर्ज करें, किस पर कितना बाकी है देखें और एक टैप में व्हाट्सऐप पर याद दिलाएं।'],
+    ['handshake', '#D97706', 'Vendors & POs', 'वेंडर और पीओ', 'Florists, DJs, dairy and crockery partners with purchase orders and dues.', 'फूल वाले, डीजे, डेयरी और क्रॉकरी पार्टनर, परचेज़ ऑर्डर और बकाया के साथ।'],
+    ['users', '#0D9488', 'Crew & wages', 'क्रू और मज़दूरी', 'Daily attendance by event, advances and month-end payout for every worker.', 'इवेंट के हिसाब से रोज़ की हाज़िरी, एडवांस और हर कारीगर की महीने की तनख्वाह।'],
+    ['pulse', '#0EA5E9', 'Live setup tracker', 'लाइव सेटअप ट्रैकर', 'Crew update progress from their phones, so you know the pandal is ready before you reach.', 'क्रू अपने फ़ोन से प्रोग्रेस अपडेट करती है, आपके पहुंचने से पहले पता रहता है कि पंडाल तैयार है।'],
+    ['chart', '#0891B2', 'Profit by event', 'हर इवेंट का मुनाफ़ा', 'Billing minus vendors, expenses and wages: the real profit of every function.', 'बिल में से वेंडर, खर्च और मज़दूरी घटाकर हर फ़ंक्शन का असली मुनाफ़ा।'],
+    ['shield', '#475569', 'Staff logins & access', 'स्टाफ़ लॉगिन और एक्सेस', 'Give each person their own login and decide exactly which sections they can see.', 'हर व्यक्ति को अपना लॉगिन दें और तय करें कि वे कौन-से सेक्शन देख सकते हैं।']
   ];
   const plans = (plat.plans || []).filter(p => p && p.name);
   const mid = plans.length === 3 ? 1 : -1;
   const plansHtml = s.showPricing !== false && plans.length ? `
   <section class="sec" id="pricing"><div class="wrap">
-    <div class="sec-h"><h2${hi('सीधी कीमत, कोई छुपा charge नहीं')}>Simple monthly pricing</h2><p${hi('सभी plans में पूरा app मिलता है। आपकी team के हिसाब से plan चुनें।')}>Every plan includes the full app. Pick the one that fits the size of your team.</p></div>
+    <div class="sec-h"><h2${hi('सीधी कीमत, कोई छुपा चार्ज नहीं')}>Simple monthly pricing</h2><p${hi('सभी प्लान में पूरा ऐप मिलता है। आपकी टीम के हिसाब से प्लान चुनें।')}>Every plan includes the full app. Pick the one that fits the size of your team.</p></div>
     <div class="plans">${plans.map((p, i) => `<div class="plan ${i === mid ? 'hl' : ''}"><h3>${esc(p.name)}</h3><div class="pr">${inr(p.price)}<small${hi(' / महीना')}> / month</small></div>
-      ${p.desc ? `<ul>${String(p.desc).split(/[,\n]/).map(x => x.trim()).filter(Boolean).slice(0, 8).map(x => `<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul>` : `<ul><li>${ic('check')}<span${hi('सभी sections और GST bills')}>All sections and GST bills</span></li><li>${ic('check')}<span${hi('Staff logins और access control')}>Staff logins and access control</span></li><li>${ic('check')}<span${hi('Cloud backup, किसी भी phone पर')}>Cloud backup, works on any phone</span></li></ul>`}
-      ${signup ? `<a class="btn ${i === mid ? 'primary' : ''}" href="/app#signup"${hi('Free trial शुरू करें')}>Start free trial</a>` : `<a class="btn ${i === mid ? 'primary' : ''}" href="#contact"${hi('बात करें')}>Talk to us</a>`}</div>`).join('')}</div>
-    ${trial ? `<div class="trial">${ic('star')}<span${hi(`पहले ${trial} दिन free। Card की ज़रूरत नहीं। Trial के बाद plan चुनें, आपका data वैसा ही रहेगा।`)}>First ${trial} days are free. No card needed. Choose a plan after the trial; your data stays as it is.</span></div>` : ''}
+      ${p.desc ? `<ul>${String(p.desc).split(/[,\n]/).map(x => x.trim()).filter(Boolean).slice(0, 8).map(x => `<li>${ic('check')}<span>${esc(x)}</span></li>`).join('')}</ul>` : `<ul><li>${ic('check')}<span${hi('सभी सेक्शन और जीएसटी बिल')}>All sections and GST bills</span></li><li>${ic('check')}<span${hi('स्टाफ़ लॉगिन और एक्सेस कंट्रोल')}>Staff logins and access control</span></li><li>${ic('check')}<span${hi('क्लाउड बैकअप, किसी भी फ़ोन पर')}>Cloud backup, works on any phone</span></li></ul>`}
+      ${signup ? `<a class="btn ${i === mid ? 'primary' : ''}" href="/app#signup"${hi('फ़्री ट्रायल शुरू करें')}>Start free trial</a>` : `<a class="btn ${i === mid ? 'primary' : ''}" href="#contact"${hi('बात करें')}>Talk to us</a>`}</div>`).join('')}</div>
+    ${trial ? `<div class="trial">${ic('star')}<span${hi(`पहले ${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं। ट्रायल के बाद प्लान चुनें, आपका डेटा वैसा ही रहेगा।`)}>First ${trial} days are free. No card needed. Choose a plan after the trial; your data stays as it is.</span></div>` : ''}
   </div></section>` : '';
   const blogHtml = posts.length ? `
   <section class="sec soft" id="blog"><div class="wrap">
-    <div class="sec-h" style="display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;max-width:none"><div><h2${hi('Blog से')}>From the blog</h2><p${hi('Season की तैयारी, pricing और business बढ़ाने के तरीके।')}>Season planning, pricing and ways to grow your business.</p></div><a class="btn" href="/blog"${hi('सभी posts')}>All posts</a></div>
+    <div class="sec-h" style="display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;max-width:none"><div><h2${hi('ब्लॉग से')}>From the blog</h2><p${hi('सीज़न की तैयारी, दाम और बिज़नेस बढ़ाने के तरीके।')}>Season planning, pricing and ways to grow your business.</p></div><a class="btn" href="/blog"${hi('सभी पोस्ट')}>All posts</a></div>
     <div class="posts">${posts.slice(0, 3).map(postCard).join('')}</div>
   </div></section>` : '';
   const ways = [
@@ -193,56 +193,56 @@ function homePage({ s, plat, posts }) {
     s.address && ['pin', '#D6246E', 'Office', esc(s.address) + (s.city && !s.address.includes(s.city) ? ', ' + esc(s.city) : ''), safeUrl(s.mapUrl)],
     s.hours && ['clock', '#D97706', 'Working hours', esc(s.hours), '']
   ].filter(Boolean);
-  const wayHi = { WhatsApp: 'WhatsApp', 'Call us': 'Call करें', Email: 'Email', Office: 'Office', 'Working hours': 'काम का समय' };
+  const wayHi = { WhatsApp: 'व्हाट्सऐप', 'Call us': 'कॉल करें', Email: 'ईमेल', Office: 'ऑफ़िस', 'Working hours': 'काम का समय' };
   const faqs = [
-    ['Do I need to install anything?', 'क्या कुछ install करना पड़ेगा?', 'No. It opens in the browser on any Android phone, iPhone or computer. You can add it to your home screen so it opens like an app.', 'नहीं। यह किसी भी Android phone, iPhone या computer के browser में खुलता है। Home screen पर जोड़ लें तो app की तरह खुलेगा।'],
-    ['Can my staff use it with their own login?', 'क्या मेरा staff अपने login से चला सकता है?', 'Yes. You create a login ID and password for each person and choose which sections they can see or change. A crew member can see only their own tasks.', 'हां। आप हर व्यक्ति की login ID और password बनाते हैं और तय करते हैं कि वे कौन-से sections देख या बदल सकते हैं। Crew member सिर्फ़ अपने काम देख सकता है।'],
-    ['Will my bills show my business name and logo?', 'क्या bill पर मेरे business का नाम और logo आएगा?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID print on every quotation, invoice, receipt and challan.', 'हां। आपका logo, stamp, पता, GSTIN, bank details और UPI ID हर quotation, invoice, रसीद और challan पर छपते हैं।'],
-    ['Is my data safe?', 'क्या मेरा data सुरक्षित है?', 'Your data is stored in the cloud and only your team can see it. Every login can be protected with a 6-digit Authenticator code.', 'आपका data cloud में सुरक्षित रहता है और सिर्फ़ आपकी team देख सकती है। हर login को 6 अंकों के Authenticator code से सुरक्षित किया जा सकता है।'],
-    ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the app between Hindi and English with one tap. Everyday words like Booking, Invoice and GST stay in English, the way people say them.', 'हां। कोई भी एक tap में app को हिंदी या English में कर सकता है। Booking, Invoice, GST जैसे आम शब्द English में ही रहते हैं, जैसे लोग बोलते हैं।'],
-    ['What happens when the trial ends?', 'Trial खत्म होने पर क्या होगा?', 'You can still log in and see all your data. To keep adding bookings and bills, choose a plan and we renew your account.', 'आप login करके अपना पूरा data देख सकते हैं। Bookings और bills जोड़ते रहने के लिए plan चुनें, हम आपका account renew कर देंगे।']
+    ['Do I need to install anything?', 'क्या कुछ इंस्टॉल करना पड़ेगा?', 'No. It opens in the browser on any Android phone, iPhone or computer. You can add it to your home screen so it opens like an app.', 'नहीं। यह किसी भी एंड्रॉयड फ़ोन, आईफ़ोन या कंप्यूटर के ब्राउज़र में खुलता है। होम स्क्रीन पर जोड़ लें तो ऐप की तरह खुलेगा।'],
+    ['Can my staff use it with their own login?', 'क्या मेरा स्टाफ़ अपने लॉगिन से चला सकता है?', 'Yes. You create a login ID and password for each person and choose which sections they can see or change. A crew member can see only their own tasks.', 'हां। आप हर व्यक्ति की लॉगिन आईडी और पासवर्ड बनाते हैं और तय करते हैं कि वे कौन-से सेक्शन देख या बदल सकते हैं। क्रू मेंबर सिर्फ़ अपने काम देख सकता है।'],
+    ['Will my bills show my business name and logo?', 'क्या बिल पर मेरे बिज़नेस का नाम और लोगो आएगा?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID print on every quotation, invoice, receipt and challan.', 'हां। आपका लोगो, स्टैम्प, पता, जीएसटीआईएन, बैंक डिटेल्स और यूपीआई आईडी हर कोटेशन, इनवॉइस, रसीद और चालान पर छपते हैं।'],
+    ['Is my data safe?', 'क्या मेरा डेटा सुरक्षित है?', 'Your data is stored in the cloud and only your team can see it. Every login can be protected with a 6-digit Authenticator code.', 'आपका डेटा क्लाउड में सुरक्षित रहता है और सिर्फ़ आपकी टीम देख सकती है। हर लॉगिन को 6 अंकों के ऑथेंटिकेटर कोड से सुरक्षित किया जा सकता है।'],
+    ['Can I use it in Hindi?', 'क्या यह हिंदी में चलता है?', 'Yes. Anyone can switch the app between Hindi and English with one tap. Everyday words like Booking, Invoice and GST stay in English, the way people say them.', 'हां। कोई भी एक टैप में ऐप को हिंदी या अंग्रेज़ी में कर सकता है। बुकिंग, इनवॉइस, जीएसटी जैसे आम शब्द अंग्रेज़ी में ही रहते हैं, जैसे लोग बोलते हैं।'],
+    ['What happens when the trial ends?', 'ट्रायल खत्म होने पर क्या होगा?', 'You can still log in and see all your data. To keep adding bookings and bills, choose a plan and we renew your account.', 'आप लॉगिन करके अपना पूरा डेटा देख सकते हैं। बुकिंग और बिल जोड़ते रहने के लिए प्लान चुनें, हम आपका अकाउंट रिन्यू कर देंगे।']
   ];
   return `
   <div class="canopy" aria-hidden="true"></div><div class="lights" aria-hidden="true"></div>
   <section class="hero"><div class="wrap">
     <div>
-      <h1${hi(s.tagline === DEFAULT_SITE.tagline ? 'Tent, catering और event का पूरा हिसाब, एक app में।' : '')}>${esc(s.tagline || DEFAULT_SITE.tagline)}</h1>
-      <p class="lead"${hi('Bookings, godown stock, हलवाई का राशन, GST bill, payment की याद-दिहानी, crew की हाज़िरी और हर event का मुनाफ़ा। टेंट हाउस, कैटरर और इवेंट मैनेजर के लिए बना।')}>Bookings, godown stock, halwai ration, GST bills, payment reminders, crew attendance and the profit of every event. Made for tent houses, caterers and event managers.</p>
+      <h1${hi(s.tagline === DEFAULT_SITE.tagline ? 'टेंट, कैटरिंग और इवेंट का पूरा हिसाब, एक ऐप में।' : '')}>${esc(s.tagline || DEFAULT_SITE.tagline)}</h1>
+      <p class="lead"${hi('बुकिंग, गोदाम स्टॉक, हलवाई का राशन, जीएसटी बिल, पेमेंट की याद-दिहानी, क्रू की हाज़िरी और हर इवेंट का मुनाफ़ा। टेंट हाउस, कैटरर और इवेंट मैनेजर के लिए बना।')}>Bookings, godown stock, halwai ration, GST bills, payment reminders, crew attendance and the profit of every event. Made for tent houses, caterers and event managers.</p>
       <div class="cta">${startBtn}${waBtn}</div>
-      <ul class="facts"><li>${ic('check')}<span${hi('किसी भी phone पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('हिंदी और English')}>Hindi and English</span></li><li>${ic('check')}<span${hi('आपके logo वाले GST bill')}>GST bills with your logo</span></li></ul>
+      <ul class="facts"><li>${ic('check')}<span${hi('किसी भी फ़ोन पर')}>Works on any phone</span></li><li>${ic('check')}<span${hi('हिंदी और अंग्रेज़ी')}>Hindi and English</span></li><li>${ic('check')}<span${hi('आपके लोगो वाले जीएसटी बिल')}>GST bills with your logo</span></li></ul>
     </div>
     <div class="tagstack">
       <div class="phone"><img src="/img/app-dashboard.webp" width="390" height="780" alt="SabManage app home screen showing money pending from clients, upcoming events and quick actions" fetchpriority="high"></div>
-      <div class="sticker a"><i style="background:#0B9B68">${ic('rupee')}</i><span${hi('Payment मिला<small>Advance दर्ज हो गया</small>')}>Payment received<small>Advance recorded</small></span></div>
-      <div class="sticker b"><i style="background:#D6246E">${ic('receipt')}</i><span${hi('GST bill तैयार<small>WhatsApp पर भेजें</small>')}>GST bill ready<small>Send on WhatsApp</small></span></div>
+      <div class="sticker a"><i style="background:#0B9B68">${ic('rupee')}</i><span${hi('पेमेंट मिला<small>एडवांस दर्ज हो गया</small>')}>Payment received<small>Advance recorded</small></span></div>
+      <div class="sticker b"><i style="background:#D6246E">${ic('receipt')}</i><span${hi('जीएसटी बिल तैयार<small>व्हाट्सऐप पर भेजें</small>')}>GST bill ready<small>Send on WhatsApp</small></span></div>
     </div>
   </div></section>
 
   <section class="sec soft" id="who"><div class="wrap">
-    <div class="sec-h"><h2${hi('शादी और event का काम करने वालों के लिए')}>Built for the people who run weddings and events</h2><p${hi('एक ही app, तीन तरह के business। जो section काम का नहीं, उसे बंद कर दें।')}>One app for three kinds of business. Switch off any section you don’t need.</p></div>
+    <div class="sec-h"><h2${hi('शादी और इवेंट का काम करने वालों के लिए')}>Built for the people who run weddings and events</h2><p${hi('एक ही ऐप, तीन तरह के बिज़नेस। जो सेक्शन काम का नहीं, उसे बंद कर दें।')}>One app for three kinds of business. Switch off any section you don’t need.</p></div>
     <div class="who">${who.map(([i, c, t, th, d, dh, list]) => `<article style="--c:${c}"><div class="ib">${ic(i)}</div><h3${hi(th)}>${t}</h3><p style="color:var(--ink2);margin-top:8px"${hi(dh)}>${d}</p><ul>${list.map(([e, h]) => `<li>${ic('check')}<span${hi(h)}>${e}</span></li>`).join('')}</ul></article>`).join('')}</div>
   </div></section>
 
   <section class="sec" id="features"><div class="wrap">
-    <div class="sec-h"><h2${hi('रोज़ के काम के लिए सब कुछ')}>Everything the daily work needs</h2><p${hi('Enquiry से लेकर आखिरी payment तक, हर कदम एक जगह।')}>From the first enquiry to the last payment, every step in one place.</p></div>
+    <div class="sec-h"><h2${hi('रोज़ के काम के लिए सब कुछ')}>Everything the daily work needs</h2><p${hi('इन्क्वायरी से लेकर आखिरी पेमेंट तक, हर कदम एक जगह।')}>From the first enquiry to the last payment, every step in one place.</p></div>
     <div class="feats">${feats.map(([i, c, t, th, d, dh]) => `<div class="feat" style="--c:${c}"><div class="ib">${ic(i)}</div><div><h3${hi(th)}>${t}</h3><p${hi(dh)}>${d}</p></div></div>`).join('')}</div>
   </div></section>
 
   <section class="sec soft"><div class="wrap">
     <div class="spot" style="--c:#DB2777"><div class="shot"><img src="/img/app-invoice.webp" width="390" height="780" loading="lazy" alt="A GST tax invoice in the app with the business logo and totals"></div>
-      <div><h3${hi('आपका नाम, आपका logo, हर bill पर')}>Your name and logo on every bill</h3><p${hi('Quotation बनाएं, client के हां कहते ही उसे tax invoice में बदलें, और PDF या WhatsApp पर भेजें।')}>Make a quotation, turn it into a tax invoice when the client agrees, and send it as a PDF or on WhatsApp.</p>
-      <ul><li${hi('CGST/SGST या IGST अपने आप')}>CGST/SGST or IGST worked out for you</li><li${hi('Bill पर UPI ID ताकि client तुरंत pay करे')}>UPI ID on the bill so clients pay faster</li><li${hi('Booked items और menu एक tap में bill में')}>Booked items and the menu added in one tap</li></ul></div></div>
+      <div><h3${hi('आपका नाम, आपका लोगो, हर बिल पर')}>Your name and logo on every bill</h3><p${hi('कोटेशन बनाएं, क्लाइंट के हां कहते ही उसे टैक्स इनवॉइस में बदलें, और पीडीएफ़ या व्हाट्सऐप पर भेजें।')}>Make a quotation, turn it into a tax invoice when the client agrees, and send it as a PDF or on WhatsApp.</p>
+      <ul><li${hi('सीजीएसटी/एसजीएसटी या आईजीएसटी अपने आप')}>CGST/SGST or IGST worked out for you</li><li${hi('बिल पर यूपीआई आईडी ताकि क्लाइंट तुरंत पे करे')}>UPI ID on the bill so clients pay faster</li><li${hi('बुक्ड आइटम और मेन्यू एक टैप में बिल में')}>Booked items and the menu added in one tap</li></ul></div></div>
     <div class="spot flip" style="--c:#0EA5E9"><div class="shot"><img src="/img/app-event.webp" width="390" height="780" loading="lazy" alt="An event page in the app with stage, guests, items and setup progress"></div>
-      <div><h3${hi('हर function की पूरी जानकारी एक page पर')}>Every function on one page</h3><p${hi('Stage, मेहमान, booked items, run-sheet, setup के काम, खर्च और payments, सब उसी event के अंदर।')}>Stage, guests, booked items, run-sheet, setup tasks, costs and payments, all inside the event.</p>
-      <ul><li${hi('कम stock की चेतावनी booking के समय ही')}>Stock shortage warning while you book</li><li${hi('Client को link भेजें, वे progress और bill देख सकें')}>Share a link so the client sees progress and the bill</li><li${hi('Event के बाद review मांगें')}>Ask for a review after the event</li></ul></div></div>
+      <div><h3${hi('हर फ़ंक्शन की पूरी जानकारी एक पेज पर')}>Every function on one page</h3><p${hi('स्टेज, मेहमान, बुक्ड आइटम, रन-शीट, सेटअप के काम, खर्च और पेमेंट, सब उसी इवेंट के अंदर।')}>Stage, guests, booked items, run-sheet, setup tasks, costs and payments, all inside the event.</p>
+      <ul><li${hi('कम स्टॉक की चेतावनी बुकिंग के समय ही')}>Stock shortage warning while you book</li><li${hi('क्लाइंट को लिंक भेजें, वे प्रोग्रेस और बिल देख सकें')}>Share a link so the client sees progress and the bill</li><li${hi('इवेंट के बाद रिव्यू मांगें')}>Ask for a review after the event</li></ul></div></div>
   </div></section>
 
   <section class="sec" id="how"><div class="wrap">
     <div class="sec-h"><h2${hi('एक दिन में शुरू करें')}>Start in a day</h2></div>
     <ol class="steps">
-      <li><h3${hi('Account बनाएं')}>Create your account</h3><p${hi('Business का नाम और mobile नंबर डालें। आप Owner बनते हैं।')}>Enter your business name and mobile number. You become the Owner.</p></li>
-      <li><h3${hi('अपना सामान और menu जोड़ें')}>Add your stock and menu</h3><p${hi('Tent, कुर्सियां, lights, dishes और rate एक बार डालें। Logo और GST details भी।')}>Add tents, chairs, lights, dishes and rates once, plus your logo and GST details.</p></li>
-      <li><h3${hi('Team को जोड़ें और booking लें')}>Add your team and take bookings</h3><p${hi('Manager, accountant और crew के login बनाएं और पहली booking डालें।')}>Create logins for your manager, accountant and crew, then add your first booking.</p></li>
+      <li><h3${hi('अकाउंट बनाएं')}>Create your account</h3><p${hi('बिज़नेस का नाम और मोबाइल नंबर डालें। आप ओनर बनते हैं।')}>Enter your business name and mobile number. You become the Owner.</p></li>
+      <li><h3${hi('अपना सामान और मेन्यू जोड़ें')}>Add your stock and menu</h3><p${hi('टेंट, कुर्सियां, लाइट, डिश और रेट एक बार डालें। लोगो और जीएसटी डिटेल्स भी।')}>Add tents, chairs, lights, dishes and rates once, plus your logo and GST details.</p></li>
+      <li><h3${hi('टीम को जोड़ें और बुकिंग लें')}>Add your team and take bookings</h3><p${hi('मैनेजर, अकाउंटेंट और क्रू के लॉगिन बनाएं और पहली बुकिंग डालें।')}>Create logins for your manager, accountant and crew, then add your first booking.</p></li>
     </ol>
   </div></section>
   ${plansHtml}
@@ -250,9 +250,9 @@ function homePage({ s, plat, posts }) {
   <section class="sec" id="about"><div class="wrap about">
     <div class="txt"><h2 style="margin-bottom:18px"${hi('हमारे बारे में')}>About us</h2><p${hi(s.aboutHi || '')}>${esc(s.about || DEFAULT_SITE.about)}</p></div>
     <dl>
-      <div><dt${hi(`${s.city || 'भारत'} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय शादियों और events के असली काम को समझकर बनाया गया।')}>Designed around how Indian weddings and events are really run.</dd></div>
-      <div><dt${hi('आपकी भाषा में')}>In your language</dt><dd${hi('पूरा app हिंदी और English में, एक tap में बदलें।')}>The whole app works in Hindi and English, switch with one tap.</dd></div>
-      <div><dt${hi('आपका data, आपकी team')}>Your data stays with your team</dt><dd${hi('हर व्यक्ति वही देखता है जो आप अनुमति देते हैं।')}>Each person sees only what you allow.</dd></div>
+      <div><dt${hi(`${s.city || 'भारत'} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय शादियों और इवेंट के असली काम को समझकर बनाया गया।')}>Designed around how Indian weddings and events are really run.</dd></div>
+      <div><dt${hi('आपकी भाषा में')}>In your language</dt><dd${hi('पूरा ऐप हिंदी और अंग्रेज़ी में, एक टैप में बदलें।')}>The whole app works in Hindi and English, switch with one tap.</dd></div>
+      <div><dt${hi('आपका डेटा, आपकी टीम')}>Your data stays with your team</dt><dd${hi('हर व्यक्ति वही देखता है जो आप अनुमति देते हैं।')}>Each person sees only what you allow.</dd></div>
     </dl>
   </div></section>
 
@@ -262,24 +262,24 @@ function homePage({ s, plat, posts }) {
   </div></section>
 
   <section class="sec" id="contact"><div class="wrap">
-    <div class="sec-h"><h2${hi('संपर्क करें')}>Contact us</h2><p${hi('अपना नंबर छोड़ें, हमारी team आपको call करके free demo देगी।')}>Leave your number and our team will call you for a free demo.</p></div>
+    <div class="sec-h"><h2${hi('संपर्क करें')}>Contact us</h2><p${hi('अपना नंबर छोड़ें, हमारी टीम आपको कॉल करके फ़्री डेमो देगी।')}>Leave your number and our team will call you for a free demo.</p></div>
     <div class="contact">
       <form class="cform" id="enqForm" novalidate>
         <label><span${hi('आपका नाम')}>Your name</span><input name="name" required maxlength="120" autocomplete="name"></label>
-        <label><span${hi('Mobile नंबर')}>Mobile number</span><input name="phone" type="tel" required maxlength="16" autocomplete="tel" inputmode="tel" placeholder="98290 12345"></label>
-        <label><span${hi('Business का नाम')}>Business name</span><input name="business" maxlength="160" autocomplete="organization"></label>
+        <label><span${hi('मोबाइल नंबर')}>Mobile number</span><input name="phone" type="tel" required maxlength="16" autocomplete="tel" inputmode="tel" placeholder="98290 12345"></label>
+        <label><span${hi('बिज़नेस का नाम')}>Business name</span><input name="business" maxlength="160" autocomplete="organization"></label>
         <label><span${hi('शहर')}>City</span><input name="city" maxlength="80" autocomplete="address-level2"></label>
         <label class="full"><span${hi('आपका काम')}>Your business</span><select name="bizType"><option value="Tent house"${hi('टेंट हाउस')}>Tent house</option><option value="Caterer / Halwai"${hi('कैटरर / हलवाई')}>Caterer / Halwai</option><option value="Event manager"${hi('इवेंट मैनेजर')}>Event manager</option><option value="Decorator"${hi('डेकोरेटर')}>Decorator</option><option value="Other"${hi('अन्य')}>Other</option></select></label>
-        <label class="full"><span${hi('Message (ज़रूरी नहीं)')}>Message (optional)</span><textarea name="message" rows="3" maxlength="2000"></textarea></label>
+        <label class="full"><span${hi('मैसेज (ज़रूरी नहीं)')}>Message (optional)</span><textarea name="message" rows="3" maxlength="2000"></textarea></label>
         <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-        <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('Call back मांगें')}>Request a call back</button></div>
+        <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('कॉल बैक मांगें')}>Request a call back</button></div>
         <div class="msg" id="enqMsg" hidden role="status"></div>
       </form>
       <div class="cways">${ways.map(([i, c, t, v, href]) => `${href ? `<a class="cway" style="--c:${c}" href="${esc(href)}"${/^https/.test(href) ? ' target="_blank" rel="noopener"' : ''}>` : `<div class="cway" style="--c:${c}">`}<i>${ic(i)}</i><div><b${hi(wayHi[t])}>${t}</b><span>${v}</span></div>${href ? '</a>' : '</div>'}`).join('')}</div>
     </div>
   </div></section>
 
-  <div class="wrap"><div class="band"><div><h2${hi('इस season का पूरा हिसाब एक जगह रखें')}>Keep this season’s hisaab in one place</h2><p${hi(trial ? `${trial} दिन free। Card की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}${waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a>` : ''}</div></div></div>`;
+  <div class="wrap"><div class="band"><div><h2${hi('इस सीज़न का पूरा हिसाब एक जगह रखें')}>Keep this season’s hisaab in one place</h2><p${hi(trial ? `${trial} दिन फ़्री। कार्ड की ज़रूरत नहीं।` : 'आज ही शुरू करें।')}>${trial ? `${trial} days free. No card needed.` : 'Start today.'}</p></div><div style="display:flex;gap:12px;flex-wrap:wrap">${startBtn}${waN ? `<a class="btn wa" href="${esc(wa(waN, `Namaste, I want a demo of ${brand} for my business.`))}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a>` : ''}</div></div></div>`;
 }
 
 function postCard(p) {
@@ -289,10 +289,10 @@ function postCard(p) {
 /* ---------- blog ---------- */
 function blogPage({ s, posts, page, tag, hasMore, allTags }) {
   return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap">
-  <div class="bhead"><h1>${tag ? '#' + esc(tag) : `<span${hi('Blog')}>Blog</span>`}</h1><p${hi('Tent, catering और event business चलाने के लिए tips, season की तैयारी और नए तरीके।')}>Tips, season planning and new ideas for running a tent, catering or event business.</p>
+  <div class="bhead"><h1>${tag ? '#' + esc(tag) : `<span${hi('ब्लॉग')}>Blog</span>`}</h1><p${hi('टेंट, कैटरिंग और इवेंट बिज़नेस चलाने के लिए टिप्स, सीज़न की तैयारी और नए तरीके।')}>Tips, season planning and new ideas for running a tent, catering or event business.</p>
   ${allTags.length ? `<div class="tags"><a href="/blog" class="${tag ? '' : 'on'}"${hi('सभी')}>All</a>${allTags.map(t => `<a href="/blog?tag=${encodeURIComponent(t)}" class="${t === tag ? 'on' : ''}">${esc(t)}</a>`).join('')}</div>` : ''}</div>
-  ${posts.length ? `<div class="posts">${posts.map(postCard).join('')}</div>` : `<div class="empty-blog"><h3${hi('जल्द आ रहा है')}>Posts are on the way</h3><p style="margin-top:8px"${hi('पहली post जल्द आएगी। तब तक app आज़माएं।')}>The first post is coming soon. Try the app in the meantime.</p><p style="margin-top:18px"><a class="btn primary" href="/"${hi('Home पर जाएं')}>Go to home</a></p></div>`}
-  ${page > 1 || hasMore ? `<div class="pager">${page > 1 ? `<a class="btn" href="/blog?page=${page - 1}${tag ? '&tag=' + encodeURIComponent(tag) : ''}"${hi('नए posts')}>Newer posts</a>` : ''}${hasMore ? `<a class="btn" href="/blog?page=${page + 1}${tag ? '&tag=' + encodeURIComponent(tag) : ''}"${hi('पुराने posts')}>Older posts</a>` : ''}</div>` : ''}
+  ${posts.length ? `<div class="posts">${posts.map(postCard).join('')}</div>` : `<div class="empty-blog"><h3${hi('जल्द आ रहा है')}>Posts are on the way</h3><p style="margin-top:8px"${hi('पहली पोस्ट जल्द आएगी। तब तक ऐप आज़माएं।')}>The first post is coming soon. Try the app in the meantime.</p><p style="margin-top:18px"><a class="btn primary" href="/"${hi('होम पर जाएं')}>Go to home</a></p></div>`}
+  ${page > 1 || hasMore ? `<div class="pager">${page > 1 ? `<a class="btn" href="/blog?page=${page - 1}${tag ? '&tag=' + encodeURIComponent(tag) : ''}"${hi('नए पोस्ट')}>Newer posts</a>` : ''}${hasMore ? `<a class="btn" href="/blog?page=${page + 1}${tag ? '&tag=' + encodeURIComponent(tag) : ''}"${hi('पुराने पोस्ट')}>Older posts</a>` : ''}</div>` : ''}
   </div>`;
 }
 function postPage({ s, plat, p, related, origin }) {
@@ -300,13 +300,13 @@ function postPage({ s, plat, p, related, origin }) {
   const url = origin + '/blog/' + p.slug; const signup = plat.allowSignup !== false;
   const shareText = `${p.title} ${url}`;
   return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap"><article class="article"${p.lang === 'hi' ? ' lang="hi"' : ''}>
-    <div class="crumb"><a href="/blog"${hi('Blog')}>Blog</a>${(p.tags || []).length ? ` / <a href="/blog?tag=${encodeURIComponent(p.tags[0])}">${esc(p.tags[0])}</a>` : ''}</div>
+    <div class="crumb"><a href="/blog"${hi('ब्लॉग')}>Blog</a>${(p.tags || []).length ? ` / <a href="/blog?tag=${encodeURIComponent(p.tags[0])}">${esc(p.tags[0])}</a>` : ''}</div>
     <h1>${esc(p.title)}</h1>
     <div class="meta"><time datetime="${esc(p.published_at)}">${fmtDate(p.published_at)}</time>${p.author ? `<span>${esc(p.author)}</span>` : ''}<span${hi(`${mins} मिनट में पढ़ें`)}>${mins} min read</span></div>
     ${p.cover_url ? `<div class="cover"><img src="${esc(p.cover_url)}" alt="" fetchpriority="high"></div>` : '<div style="height:26px"></div>'}
     <div class="post-body">${sanitize(p.content)}</div>
-    <div class="share"><b${hi('Share करें')}>Share</b><a class="btn sm wa" href="https://wa.me/?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a><a class="btn sm" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}" target="_blank" rel="noopener">${ic('fb')}Facebook</a><button class="btn sm" type="button" data-copy="${esc(url)}">${ic('copy')}<span${hi('Link copy करें')}>Copy link</span></button></div>
-    <div class="cta-box"><div><h3${hi(`अपना business ${s.brandName || 'SabManage'} पर चलाएं`)}>Run your business on ${esc(s.brandName || 'SabManage')}</h3><p${hi('Bookings, stock, catering, GST bills और payments एक app में।')}>Bookings, stock, catering, GST bills and payments in one app.</p></div>${signup ? `<a class="btn primary" href="/app#signup"${hi('Free trial शुरू करें')}>Start free trial</a>` : `<a class="btn primary" href="/#contact"${hi('Demo लें')}>Book a demo</a>`}</div>
+    <div class="share"><b${hi('शेयर करें')}>Share</b><a class="btn sm wa" href="https://wa.me/?text=${encodeURIComponent(shareText)}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a><a class="btn sm" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}" target="_blank" rel="noopener">${ic('fb')}Facebook</a><button class="btn sm" type="button" data-copy="${esc(url)}">${ic('copy')}<span${hi('लिंक कॉपी करें')}>Copy link</span></button></div>
+    <div class="cta-box"><div><h3${hi(`अपना बिज़नेस ${s.brandName || 'SabManage'} पर चलाएं`)}>Run your business on ${esc(s.brandName || 'SabManage')}</h3><p${hi('बुकिंग, स्टॉक, कैटरिंग, जीएसटी बिल और पेमेंट एक ऐप में।')}>Bookings, stock, catering, GST bills and payments in one app.</p></div>${signup ? `<a class="btn primary" href="/app#signup"${hi('फ़्री ट्रायल शुरू करें')}>Start free trial</a>` : `<a class="btn primary" href="/#contact"${hi('डेमो लें')}>Book a demo</a>`}</div>
   </article>
   ${related.length ? `<div style="margin-top:60px"><h2 style="font-size:30px;margin-bottom:22px"${hi('और पढ़ें')}>Read next</h2><div class="posts">${related.map(postCard).join('')}</div></div>` : ''}
   </div>`;
@@ -341,26 +341,26 @@ function legalPage(kind, { s }) {
 function deletePage({ s }) {
   const brand = esc(s.brandName || 'SabManage');
   return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext">
-  <h1${hi('Account delete करें')}>Delete your account</h1>
-  <p${hi(`आप ${brand} का अपना account और उससे जुड़ा data हटाने के लिए कह सकते हैं।`)}>You can ask us to delete your ${brand} account and the data linked to it.</p>
-  <h2${hi('App से')}>From the app</h2>
-  <p${hi('Login करें, ऊपर अपने नाम पर tap करें, फिर नीचे "Delete my account" दबाएं।')}>Log in, tap your name at the top, then tap “Delete my account” at the bottom.</p>
-  <h2${hi('या यह form भरें')}>Or use this form</h2>
+  <h1${hi('अकाउंट डिलीट करें')}>Delete your account</h1>
+  <p${hi(`आप ${brand} का अपना अकाउंट और उससे जुड़ा डेटा हटाने के लिए कह सकते हैं।`)}>You can ask us to delete your ${brand} account and the data linked to it.</p>
+  <h2${hi('ऐप से')}>From the app</h2>
+  <p${hi('लॉगिन करें, ऊपर अपने नाम पर टैप करें, फिर नीचे "डिलीट मेरा अकाउंट" दबाएं।')}>Log in, tap your name at the top, then tap “Delete my account” at the bottom.</p>
+  <h2${hi('या यह फ़ॉर्म भरें')}>Or use this form</h2>
   <form class="cform" id="delForm" novalidate style="margin-top:12px">
-    <label class="full"><span${hi('Login ID (mobile नंबर या email)')}>Login ID (mobile number or email)</span><input name="login" required maxlength="160" autocomplete="username"></label>
+    <label class="full"><span${hi('लॉगिन आईडी (मोबाइल नंबर या ईमेल)')}>Login ID (mobile number or email)</span><input name="login" required maxlength="160" autocomplete="username"></label>
     <label><span${hi('आपका नाम')}>Your name</span><input name="name" maxlength="120" autocomplete="name"></label>
-    <label><span${hi('Call के लिए mobile नंबर')}>Mobile number to call you</span><input name="phone" type="tel" required maxlength="16" inputmode="tel" autocomplete="tel"></label>
-    <label class="full"><span${hi('Business का नाम')}>Business name</span><input name="business" maxlength="160"></label>
+    <label><span${hi('कॉल के लिए मोबाइल नंबर')}>Mobile number to call you</span><input name="phone" type="tel" required maxlength="16" inputmode="tel" autocomplete="tel"></label>
+    <label class="full"><span${hi('बिज़नेस का नाम')}>Business name</span><input name="business" maxlength="160"></label>
     <label class="full"><span${hi('कारण (ज़रूरी नहीं)')}>Reason (optional)</span><textarea name="reason" rows="2" maxlength="1000"></textarea></label>
-    <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('Delete करने का request भेजें')}>Send deletion request</button></div>
+    <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('डिलीट करने का रिक्वेस्ट भेजें')}>Send deletion request</button></div>
     <div class="msg" id="delMsg" hidden role="status"></div>
   </form>
   <h2${hi('क्या हटाया जाता है')}>What is deleted</h2>
-  <ul><li${hi('आपका login, नाम, mobile नंबर और email।')}>Your login, name, mobile number and email.</li>
-  <li${hi('अगर आप business के अकेले owner हैं: उस business की bookings, clients, stock, menu, invoices, payments, vendors, staff, हाज़िरी और सभी staff logins।')}>If you are the only owner of a business: its bookings, clients, stock, menus, invoices, payments, vendors, staff, attendance and all staff logins.</li>
-  <li${hi('अगर आप कर्मचारी हैं: सिर्फ़ आपका login। Business का data owner के पास रहता है।')}>If you are an employee: only your login. The business data stays with the owner.</li></ul>
+  <ul><li${hi('आपका लॉगिन, नाम, मोबाइल नंबर और ईमेल।')}>Your login, name, mobile number and email.</li>
+  <li${hi('अगर आप बिज़नेस के अकेले ओनर हैं: उस बिज़नेस की बुकिंग, क्लाइंट, स्टॉक, मेन्यू, इनवॉइस, पेमेंट, वेंडर, स्टाफ़, हाज़िरी और सभी स्टाफ़ लॉगिन।')}>If you are the only owner of a business: its bookings, clients, stock, menus, invoices, payments, vendors, staff, attendance and all staff logins.</li>
+  <li${hi('अगर आप कर्मचारी हैं: सिर्फ़ आपका लॉगिन। बिज़नेस का डेटा ओनर के पास रहता है।')}>If you are an employee: only your login. The business data stays with the owner.</li></ul>
   <h2${hi('कितना समय लगता है')}>How long it takes</h2>
-  <p${hi('हम आपको call करके पुष्टि करते हैं और 7 दिन के अंदर account हटा देते हैं। कानून के हिसाब से ज़रूरी कुछ बिल रिकॉर्ड 8 साल तक रखे जा सकते हैं।')}>We call you to confirm and delete the account within 7 days. Some invoice records may be kept for up to 8 years where tax law requires it.</p>
+  <p${hi('हम आपको कॉल करके पुष्टि करते हैं और 7 दिन के अंदर अकाउंट हटा देते हैं। कानून के हिसाब से ज़रूरी कुछ बिल रिकॉर्ड 8 साल तक रखे जा सकते हैं।')}>We call you to confirm and delete the account within 7 days. Some invoice records may be kept for up to 8 years where tax law requires it.</p>
   </div>`;
 }
 
@@ -399,7 +399,7 @@ module.exports = async (req, res) => {
       const slug = String(q.slug || '').toLowerCase();
       let p = null;
       if (/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) { try { p = (await sb(`blog_posts?select=*&status=eq.published&slug=eq.${slug}&limit=1`))[0] || null; } catch (e) { } }
-      if (!p) return send(404, shell({ ...base, path: '/blog/' + slug, title: `Post not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह post नहीं मिली')}>This post is not here</h1><p${hi('हो सकता है इसे हटा दिया गया हो या link बदल गया हो।')}>It may have been removed or the link has changed.</p><a class="btn primary" href="/blog"${hi('सभी posts देखें')}>See all posts</a></div>` }), 'text/html; charset=utf-8', 's-maxage=30');
+      if (!p) return send(404, shell({ ...base, path: '/blog/' + slug, title: `Post not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह पोस्ट नहीं मिली')}>This post is not here</h1><p${hi('हो सकता है इसे हटा दिया गया हो या लिंक बदल गया हो।')}>It may have been removed or the link has changed.</p><a class="btn primary" href="/blog"${hi('सभी पोस्ट देखें')}>See all posts</a></div>` }), 'text/html; charset=utf-8', 's-maxage=30');
       const more = (await loadPosts({ limit: 4 })).filter(x => x.slug !== p.slug).slice(0, 3);
       const desc = p.seo_description || p.excerpt || strip(p.content).slice(0, 155);
       const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: desc, datePublished: p.published_at, dateModified: p.updated_at || p.published_at, inLanguage: p.lang === 'hi' ? 'hi-IN' : 'en-IN', mainEntityOfPage: origin + '/blog/' + p.slug, ...(p.cover_url ? { image: [p.cover_url] } : {}), author: { '@type': p.author ? 'Person' : 'Organization', name: p.author || brand }, publisher: { '@type': 'Organization', name: brand } };
@@ -407,7 +407,7 @@ module.exports = async (req, res) => {
     }
     if (page === 'delete') return send(200, shell({ ...base, path: '/delete-account', title: `Delete your account | ${brand}`, desc: `How to delete your ${brand} account and data.`, body: deletePage(base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     if (page === 'privacy' || page === 'terms') return send(200, shell({ ...base, path: '/' + page, title: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} | ${brand}`, desc: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} for ${brand}.`, body: legalPage(page, base) }), 'text/html; charset=utf-8', 's-maxage=3600');
-    return send(404, shell({ ...base, path: '/' + page, title: `Page not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह page नहीं मिला')}>This page is not here</h1><p${hi('Link शायद पुराना है।')}>The link may be old.</p><a class="btn primary" href="/"${hi('Home पर जाएं')}>Go to home</a></div>` }), 'text/html; charset=utf-8', 's-maxage=60');
+    return send(404, shell({ ...base, path: '/' + page, title: `Page not found | ${brand}`, desc: '', noindex: true, body: `<div class="canopy thin" aria-hidden="true"></div><div class="wrap nf"><h1${hi('यह पेज नहीं मिला')}>This page is not here</h1><p${hi('लिंक शायद पुराना है।')}>The link may be old.</p><a class="btn primary" href="/"${hi('होम पर जाएं')}>Go to home</a></div>` }), 'text/html; charset=utf-8', 's-maxage=60');
   } catch (e) {
     console.error(e);
     return send(500, `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SabManage</title><body style="font-family:system-ui;padding:40px;text-align:center"><h1>Something went wrong</h1><p>Please refresh the page, or <a href="/app">open the app</a>.</p></body>`, 'text/html; charset=utf-8', 's-maxage=5');

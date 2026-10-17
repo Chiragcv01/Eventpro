@@ -35,15 +35,15 @@ V.dashboard = () => {
 
   const evCards = upcoming.slice(0, 8).map(eventCard).join('');
   return `${startCard()}${hero}${tiles}${stats}
-  <div class="sec-h"><h2>Upcoming events</h2><button class="linkbtn" onclick="A.go('bookings')">See all ${ic('chev')}</button></div>
+  <div class="sec-h"><h2>Upcoming events${info('dash-upcoming')}</h2><button class="linkbtn" onclick="A.go('bookings')">See all ${ic('chev')}</button></div>
   ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
   <div class="split" style="margin-top:6px">
     <div class="stack" style="gap:0">
-      <div class="sec-h"><h2>Needs attention</h2>${alerts.length ? pill(alerts.length + ' open', 'bad') : pill('All clear', 'good')}</div>
+      <div class="sec-h"><h2>Needs attention${info('dash-attention')}</h2>${alerts.length ? pill(alerts.length + ' open', 'bad') : pill('All clear', 'good')}</div>
       <div class="stack-sm">${alerts.slice(0, 6).map(alertCard).join('') || `<div class="card">${empty('Nothing pending', 'Overdue bills, stock shortages and dispatches show here.', '', 'check', '#0B9B68')}</div>`}</div>
       ${myTasks.length ? `<div class="sec-h"><h2>My tasks</h2></div><div class="card"><div class="rows">${myTasks.map(taskRow).join('')}</div></div>` : ''}
     </div>
-    ${can('tasks') ? `<div class="stack" style="gap:0"><div class="sec-h"><h2>Live setup</h2><button class="linkbtn" onclick="A.go('tasks')">Tracker ${ic('chev')}</button></div>
+    ${can('tasks') ? `<div class="stack" style="gap:0"><div class="sec-h"><h2>Live setup${info('dash-live')}</h2><button class="linkbtn" onclick="A.go('tasks')">Tracker ${ic('chev')}</button></div>
       <div class="card"><div class="rows">${upcoming.filter(e => eventProgress(e) != null).slice(0, 5).map(e => { const p = Math.round(eventProgress(e)); const [i, c] = evStyle(e); return `<div class="row click" onclick="A.go('event',{id:'${e.id}',tab:'tasks'})">${ibox(i, c, 'sm')}<div class="main-col"><b>${esc(e.title)}</b><div style="margin-top:7px">${prog(p)}</div></div><b class="num" style="font:800 17px var(--f-display)">${p}%</b></div>`; }).join('') || empty('No tasks yet', 'Add setup tasks inside a booking.', '', 'pulse', MOD.tasks.c)}</div></div></div>` : ''}
   </div>`;
 };
@@ -151,7 +151,7 @@ V.event = () => {
   <div class="stepper" style="margin-top:4px">${STAGES.slice(0, 7).map((s, i) => `<button class="step ${i < si ? 'done' : i === si ? 'cur' : ''}" ${edit ? `onclick="A.setStage('${e.id}','${s}')"` : 'disabled'}><i></i>${s}</button>`).join('')}</div>
   <div class="row-flex">${waBtn(`Namaste ${e.client} ji, this is ${settings().bizName} regarding your ${e.type} on ${fmtDate(e.date)}.`, e.phone, 'Message')}${edit ? `<button class="btn sm" onclick="A.eventForm('${e.id}')">${ic('edit')} Edit</button>` : ''}<span class="grow"></span>${edit && e.stage !== 'Cancelled' ? `<button class="btn sm ghost danger" onclick="A.setStage('${e.id}','Cancelled')">Cancel event</button>` : ''}</div></div></div>`;
   const stepper = '';
-  const tabBar = `<div class="tabs">${tabs.map(([k, l]) => `<button class="${k === tab ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}</div>`;
+  const tabBar = `<div class="tabs">${tabs.map(([k, l]) => `<button class="${k === tab ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}${tabHelp('ev-' + tab)}</div>`;
   return head + stepper + tabBar + EV_TABS[tab](e);
 };
 const EV_TABS = {};
