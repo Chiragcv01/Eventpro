@@ -243,16 +243,18 @@ A.memberForm = () => {
   const roleOpts = Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => [k, r.label]);
   formModal({ title: 'Add employee', sub: 'Create their login. You decide what they can see and do.', fields: [
     { name: 'name', label: 'Full name', required: true, autofocus: true },
-    { name: 'role', label: 'Role', type: 'select', options: roleOpts, value: 'staff' },
+    { type: 'html', full: true, html: `<div class="field"><span>Their job</span>${roleCards('staff')}</div>` },
     { name: 'email', label: 'Login ID: mobile number or email', required: true, placeholder: '98290 12345', hint: 'They type this on the login screen' },
     { name: 'password', label: 'Password', type: 'text', required: true, value: genPass(), minlength: 6, hint: 'Change it if you like. Minimum 6 characters.' },
-    { name: 'staffId', label: 'Link to crew record (for “My tasks”)', type: 'select', options: [['', '— Not linked —'], ...col('staff').map(s => [s.id, s.name])] },
-    { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('key')}<span>After adding, tap <b>Access</b> next to their name to give or remove access to any section.</span></div>` }],
+    { name: 'staffId', label: 'Crew name (for their own work list)', type: 'select', options: [['', '— New crew name (made for you) —'], ...col('staff').map(s => [s.id, s.name])], hint: 'Crew logins see only the work given to this name' },
+    { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('key')}<span>Later, tap “What they see” next to their name to switch any section on or off.</span></div>` }],
     submit: 'Create login', onSubmit: async v => {
       need('team', 2); const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter a 10-digit mobile number or an email');
       if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
-      const m = await S.adapter.createMember(S.org.orgId, { name: v.name, email, password: v.password, role: v.role, staffId: v.staffId });
-      S.members.push(m); logAct(`Added ${v.name} as ${S.roles[v.role]?.label}`); render();
+      const role = v.role || 'staff'; let staffId = v.staffId;
+      if (!staffId && role === 'staff' && can('staff', 2)) { const sr = { id: uid('st_'), name: v.name, phone: String(v.email).replace(/\D/g, '').slice(-10), role: 'Crew', rate: 0, dutyHours: 8 }; await save('staff', sr, `Added crew ${v.name}`); staffId = sr.id; }
+      const m = await S.adapter.createMember(S.org.orgId, { name: v.name, email, password: v.password, role, staffId });
+      S.members.push(m); logAct(`Added ${v.name} as ${S.roles[role]?.label}`); render();
       setTimeout(() => credSheet('Login created', v.name, email, v.password), 60);
     } });
 };

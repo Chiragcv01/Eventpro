@@ -431,7 +431,7 @@ function need(mod, l = 2) { if (lvl(mod) < l) throw new Error(S.org && orgState(
 
 async function save(coll, rec, msg) {
   need(COLL_MODULE[coll] || 'settings', 2);
-  rec.updatedAt = Date.now(); rec.updatedBy = S.me?.name || S.user?.name;
+  rec.updatedAt = Date.now(); rec.updatedBy = S.me?.name || S.user?.name; rec.updatedById = S.user?.id;
   const arr = col(coll); const i = arr.findIndex(x => x.id === rec.id);
   if (i >= 0) arr[i] = rec; else arr.unshift(rec);
   await S.adapter.put(S.org.orgId, coll, rec);
@@ -503,6 +503,7 @@ function readForm(form) {
   const v = {};
   for (const el of form.elements) {
     if (!el.name) continue;
+    if (el.type === 'radio') { if (el.checked) v[el.name] = el.value; else if (!(el.name in v)) v[el.name] = ''; continue; }
     if (el.type === 'checkbox') { if (el.dataset.multi) { (v[el.name] = v[el.name] || []); if (el.checked) v[el.name].push(el.value); } else v[el.name] = el.checked; }
     else if (el.type === 'number') v[el.name] = el.value === '' ? '' : Number(el.value);
     else if (el.type === 'password') v[el.name] = el.value;
@@ -536,7 +537,7 @@ function fallbackCopy(text) { modal(`${sheetHead('Copy this text')}<div class="s
 function applyTheme() { document.documentElement.setAttribute('data-theme', 'light'); }
 A.setTheme = t => { LS.set('ep3_theme', t); applyTheme(); render(); };
 
-A.toggleLang = () => { const to = I18N.lang === 'hi' ? 'en' : 'hi'; I18N.set(to); A.closeModal(); render(); toast(to === 'hi' ? 'भाषा: हिंदी' : 'Language: English'); };
+A.toggleLang = () => { const to = I18N.lang === 'hi' ? 'en' : 'hi'; I18N.set(to); A.closeModal(); render(); if (typeof pushIsOn === 'function' && pushIsOn()) ensurePush(false); toast(to === 'hi' ? 'भाषा: हिंदी' : 'Language: English'); };
 
 /* ================= Boot & session ================= */
 async function boot() {
@@ -593,6 +594,7 @@ A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
   A.closeModal(); if (typeof stopPush === 'function') { await stopPush(); LS.set('ep_push_on', false); }
   try { if (typeof alertChan !== 'undefined' && alertChan && S.adapter.sb) S.adapter.sb.removeChannel(alertChan); } catch (e) { }
+  try { if (typeof liveChan !== 'undefined' && liveChan && S.adapter.sb) S.adapter.sb.removeChannel(liveChan); } catch (e) { }
   document.getElementById('alertRoot')?.remove(); S.teamAlerts = [];
   await S.adapter.signOut();
   Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login', mfaPending: null, mfaOn: false });
@@ -670,7 +672,7 @@ function shell(body) {
 function createActions() {
   if (!S.org) return [];
   return [
-    can('bookings', 2) && ['New booking', 'calendar', MOD.bookings.c, 'A.eventForm()'],
+    can('bookings', 2) && ['New booking', 'calendar', MOD.bookings.c, 'A.newBooking()'],
     can('invoices', 2) && ['Quotation / bill', 'receipt', MOD.invoices.c, 'A.newInvoice()'],
     can('payments', 2) && ['Payment received', 'rupee', MOD.payments.c, 'A.paymentForm()'],
     can('expenses', 2) && ['Expense', 'wallet', MOD.expenses.c, 'A.expenseForm()'],

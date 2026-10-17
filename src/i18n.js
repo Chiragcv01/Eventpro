@@ -2033,3 +2033,102 @@ Could not send the test: {} | टेस्ट नहीं भेज पाए: 
 Notifications on | नोटिफ़िकेशन चालू
 Notifications off | नोटिफ़िकेशन बंद
 `);
+
+I18N.load(`
+# ---------- easy home, crew home, quick booking, simple access ----------
+Today | आज
+Events today | आज के इवेंट
+Tomorrow | कल
+Setup done | सेटअप हुआ
+Call back | फ़ोन करना है
+To collect | लेना बाकी
+New booking | नई बुकिंग
+4 things to fill | सिर्फ़ 4 चीज़ें भरें
+Payment received | पैसा आया
+Attendance | हाज़िरी
+Stock | स्टॉक
+Bill / quotation | बिल / कोटेशन
+Alert to team | टीम को अलर्ट
+Today & tomorrow | आज और कल
+All bookings | सभी बुकिंग
+No event today or tomorrow | आज या कल कोई इवेंट नहीं
+Your next bookings will show here with live setup progress. | आपकी अगली बुकिंग यहां लाइव सेटअप के साथ दिखेंगी।
+See all ({}) | सब देखें ({1})
+All sections | सभी सेक्शन
+Show the full home screen | पूरी होम स्क्रीन दिखाएं
+Switch to easy home | आसान होम पर जाएं
+Full app is on. All sections are on the home screen. | पूरा ऐप चालू है। सभी सेक्शन होम स्क्रीन पर हैं।
+Easy home is on. | आसान होम चालू है।
+{} crew at site | साइट पर {1} क्रू
+Attendance marked | हाज़िरी लग गई
+Today at {} | आज {1} बजे
+I have reached the site | मैं साइट पर पहुंच गया
+Tap when you reach. Your attendance is marked for today. | पहुंचते ही दबाएं। आज की हाज़िरी लग जाएगी।
+Which event | कौन-सा इवेंट
+Your login is not linked to a crew name yet. Ask the owner to link it in Team & access. | आपका लॉगिन अभी किसी क्रू नाम से नहीं जुड़ा। ओनर से कहें कि टीम और एक्सेस में जोड़ दें।
+Your login is not linked to a crew name. Ask the owner to link it in Team. | आपका लॉगिन किसी क्रू नाम से नहीं जुड़ा। ओनर से कहें कि टीम में जोड़ दें।
+My work | मेरा काम
+No work given to you | आपको अभी कोई काम नहीं दिया गया
+When the owner gives you setup work, it shows here. | ओनर जब सेटअप का काम देंगे, यहां दिखेगा।
+Today’s events | आज के इवेंट
+Map | नक्शा
+Alert the owner | ओनर को अलर्ट भेजें
+Call the owner | ओनर को फ़ोन करें
+Attendance marked. Have a good day! | हाज़िरी लग गई। आपका दिन अच्छा रहे!
+You can update only your own work | आप सिर्फ़ अपना काम बदल सकते हैं
+Work done | काम पूरा
+{} reached at {} | {1} {2} बजे पहुंच गए
+New booking: {} | नई बुकिंग: {1}
+Payment received: {} | पैसा आया: {1}
+Only 4 things. Add the rest later if you want. | सिर्फ़ 4 चीज़ें। बाकी चाहें तो बाद में भरें।
+Package (optional) | पैकेज (ज़रूरी नहीं)
+Client name | क्लाइंट का नाम
+Event date | इवेंट की तारीख
+Total amount ₹ | कुल रकम ₹
+e.g. 150000 | जैसे: 150000
+Type | किस तरह का
+Advance received now ₹ (optional) | अभी मिला एडवांस ₹ (ज़रूरी नहीं)
+Booking becomes Confirmed and the advance is saved in Payments | बुकिंग पक्की हो जाएगी और एडवांस पेमेंट में सेव हो जाएगा
+Booking is confirmed (pakki) | बुकिंग पक्की है
+More details | और जानकारी भरें
+Save booking | बुकिंग सेव करें
+Write the client name | क्लाइंट का नाम लिखें
+Pick the event date | इवेंट की तारीख चुनें
+Booking saved with {} advance | {1} एडवांस के साथ बुकिंग सेव हो गई
+Booking saved | बुकिंग सेव हो गई
+Save as package | पैकेज के रूप में सेव करें
+Next time, one tap fills these items, menu and amount | अगली बार एक टैप में यही सामान, मेन्यू और रकम भर जाएगी
+Package name | पैकेज का नाम
+e.g. Wedding 500 guests | जैसे: शादी 500 मेहमान
+Package amount ₹ | पैकेज की रकम ₹
+Package saved | पैकेज सेव हो गया
+Saved package {} | पैकेज सेव किया: {1}
+Delete this package? | यह पैकेज डिलीट करें?
+Booking packages | बुकिंग पैकेज
+Ready sets of items, menu and amount. Pick one while making a booking. | सामान, मेन्यू और रकम के तैयार सेट। बुकिंग बनाते समय चुनें।
+{} items | {1} सामान
+{} dishes | {1} डिश
+No packages yet. Open any booking and tap “Save as package”. | अभी कोई पैकेज नहीं। कोई भी बुकिंग खोलें और "पैकेज के रूप में सेव करें" दबाएं।
+Delete package | पैकेज डिलीट करें
+Their job | उनका काम
+Runs bookings, stock, catering and crew. Sees bills; cannot change team or settings. | बुकिंग, स्टॉक, कैटरिंग और क्रू संभालते हैं। बिल देख सकते हैं; टीम या सेटिंग्स नहीं बदल सकते।
+Bills, payments and expenses. Sees bookings and reports. | बिल, पेमेंट और खर्च। बुकिंग और रिपोर्ट देख सकते हैं।
+Site work: bookings, setup tasks, stock out and in, attendance. | साइट का काम: बुकिंग, सेटअप के काम, सामान भेजना-लाना, हाज़िरी।
+Crew: sees only their own work and marks attendance. | क्रू: सिर्फ़ अपना काम देखते हैं और हाज़िरी लगाते हैं।
+Custom role | अपना बनाया रोल
+Crew name (for their own work list) | क्रू का नाम (उनके काम की लिस्ट के लिए)
+— New crew name (made for you) — | — नया क्रू नाम (अपने आप बनेगा) —
+Crew logins see only the work given to this name | क्रू लॉगिन को सिर्फ़ इसी नाम को दिया गया काम दिखता है
+Later, tap “What they see” next to their name to switch any section on or off. | बाद में उनके नाम के आगे "क्या दिखे" दबाकर कोई भी सेक्शन चालू या बंद करें।
+What they see | क्या दिखे
+What {} can see | {1} को क्या दिखे
+Tap to change. Saves for this person only. | बदलने के लिए टैप करें। सिर्फ़ इसी व्यक्ति के लिए सेव होगा।
+Job | काम
+Off | बंद
+See | देखे
+Change | बदले
+Off = section hidden. See = can look only. Change = can add and edit. Only the owner can delete. | बंद = सेक्शन छुपा रहेगा। देखे = सिर्फ़ देख सकते हैं। बदले = जोड़ और बदल सकते हैं। डिलीट सिर्फ़ ओनर कर सकते हैं।
+Password & more | पासवर्ड और बाकी
+Access saved | एक्सेस सेव हो गया
+Updated access for {} | {1} का एक्सेस बदला
+`);

@@ -193,7 +193,7 @@ function startCard() {
     moduleOn('inventory') && ['Import your godown stock', 'From Excel, in one go', col('inventory').length > 0, "A.importSheet('inventory')", 'box', '#2563EB'],
     moduleOn('catering') && ['Add your menu', 'Dishes with ingredients per guest', col('dishes').length > 0, "A.importSheet('dishes')", 'pot', '#16A34A'],
     ['Add your team', 'Logins for manager, accountant, crew', S.members.length > 1, 'A.memberForm()', 'users', '#0D9488'],
-    ['Create your first booking', 'Or import your diary', col('events').length > 0, 'A.eventForm()', 'calendar', '#7C3AED']].filter(Boolean);
+    ['Create your first booking', 'Or import your diary', col('events').length > 0, 'A.newBooking()', 'calendar', '#7C3AED']].filter(Boolean);
   const done = steps.filter(s => s[2]).length; if (done === steps.length) return '';
   return `<div class="card pad stack-sm start-card"><div class="row-flex" style="justify-content:space-between"><div><h3>Get started${info('start')}</h3><p class="small muted">${done} of ${steps.length} done</p></div><button class="linkbtn" onclick="LS.set('ep_start_done_${S.org.orgId}',true);render()">Hide</button></div>${prog(done / steps.length * 100)}
     <div class="stack-sm" style="margin-top:4px">${steps.map(([t, sub, ok, fn, i, c]) => `<button class="start-step ${ok ? 'ok' : ''}" onclick="${fn}">${ok ? `<span class="ibox sm" style="--c:#0B9B68">${ic('check')}</span>` : ibox(i, c, 'sm')}<span class="grow" style="text-align:left"><b>${esc(t)}</b><span class="tiny muted" style="display:block">${esc(sub)}</span></span>${ok ? '' : ic('chev')}</button>`).join('')}</div></div>`;

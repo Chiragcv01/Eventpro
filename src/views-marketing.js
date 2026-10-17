@@ -48,7 +48,7 @@ MK.followup = () => {
     <div class="row-flex" style="gap:6px;flex-wrap:wrap;justify-content:flex-end">${stagePill(e.stage)}${dueNow ? pill('Due today', 'bad') : ''}${waBtn(followMsg(e), e.phone, 'Message')}${e.phone ? `<a class="btn sm" href="tel:${esc(phoneDigits(e.phone))}">${ic('phone')} Call</a>` : ''}${edit ? `<button class="btn sm" onclick="A.followDone('${e.id}')">${ic('check')} Done</button><button class="btn sm ghost" onclick="A.go('event',{id:'${e.id}'})">Open</button>` : ''}</div></div>`;
   }).join('');
   return `<div class="banner" style="margin-bottom:12px">${ic('megaphone')}<span>Most bookings are lost because nobody called back. Every enquiry and quotation shows here; after you follow up, tap Done and it comes back after 2 days if the client has still not confirmed.</span></div>
-  <div class="card"><div class="rows">${rows || empty('No open enquiries', 'New enquiries and quotations will show here for follow-up.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} New booking</button>` : '', 'megaphone', '#E11D74')}</div></div>`;
+  <div class="card"><div class="rows">${rows || empty('No open enquiries', 'New enquiries and quotations will show here for follow-up.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.newBooking()">${ic('plus')} New booking</button>` : '', 'megaphone', '#E11D74')}</div></div>`;
 };
 A.followDone = async id => { try { need('bookings', 2); const e = evById(id); e.followUpAt = todayLocal(); e.followCount = (+e.followCount || 0) + 1; await save('events', e, `Followed up with ${e.client}`); toast('Done. It will come back in 2 days if not confirmed.'); render(); } catch (err) { toast(err.message, 'bad'); } };
 

@@ -7,11 +7,11 @@
 const HELP = {
   /* ---------- pages ---------- */
   dashboard: [['Home screen', 'होम स्क्रीन'],
-    ['Your whole business at a glance: money pending from clients, events coming up, and anything that needs your attention today.', 'आपके पूरे बिज़नेस की झलक: क्लाइंट से कितना पैसा बाकी है, कौन-से इवेंट आने वाले हैं, और आज किस चीज़ पर ध्यान देना है।'],
-    [['Check the top card for money pending and collected this month.', 'ऊपर वाले कार्ड में देखें कि कितना पैसा बाकी है और इस महीने कितना आया।'],
-     ['Tap any colourful box to open that section.', 'किसी भी रंगीन बॉक्स पर टैप करके वह सेक्शन खोलें।'],
-     ['"Needs attention" lists late bills, low stock and pending dispatches.', '"ध्यान देना है" में लेट बिल, कम स्टॉक और बाकी डिस्पैच दिखते हैं।']],
-    ['Open this screen every morning. Two minutes here tells you what to do today.', 'हर सुबह यह स्क्रीन खोलें। दो मिनट में पता चल जाएगा कि आज क्या करना है।']],
+    ['Today at a glance: events today and tomorrow with live setup progress, money to collect, and big buttons for the daily work.', 'आज की पूरी झलक: आज और कल के इवेंट और उनका लाइव सेटअप, लेना बाकी पैसा, और रोज़ के काम के बड़े बटन।'],
+    [['New booking needs only 4 things: name, mobile, date, amount.', 'नई बुकिंग में सिर्फ़ 4 चीज़ें: नाम, मोबाइल, तारीख, रकम।'],
+     ['Setup progress updates by itself when your crew taps 25% / 50% / Done on their phone.', 'क्रू अपने फ़ोन पर 25% / 50% / डन दबाता है तो सेटअप यहां अपने आप बदल जाता है।'],
+     ['"All sections" opens everything else; nothing is removed.', '"सभी सेक्शन" से बाकी सब खुलता है; कुछ भी हटाया नहीं गया।']],
+    ['Want the old detailed home? Tap "Show the full home screen" at the bottom.', 'पुरानी पूरी होम स्क्रीन चाहिए? नीचे "पूरी होम स्क्रीन दिखाएं" दबाएं।']],
   bookings: [['Bookings', 'बुकिंग'],
     ['Your booking diary. Every enquiry, quotation and confirmed event is kept here with date, client, venue and guests.', 'आपकी बुकिंग की डायरी। हर इन्क्वायरी, कोटेशन और पक्का इवेंट तारीख, क्लाइंट, जगह और मेहमानों के साथ यहां रहता है।'],
     [['Tap "New booking" and fill the client name, mobile, date and venue.', '"नई बुकिंग" दबाएं और क्लाइंट का नाम, मोबाइल, तारीख और जगह भरें।'],
@@ -250,6 +250,9 @@ const HELP = {
     ['Download a full backup of your business data any time, and keep it safe on your computer.', 'कभी भी अपने बिज़नेस डेटा का पूरा बैकअप डाउनलोड करें और कंप्यूटर में संभालकर रखें।'], [], null],
   'set-plan': [['Your plan', 'आपका प्लान'],
     ['Your current plan and the date it is valid till. Renew before it ends; after a few grace days the app stops working.', 'आपका अभी का प्लान और कब तक वैलिड है। खत्म होने से पहले रिन्यू करें; कुछ ग्रेस दिनों के बाद ऐप बंद हो जाता है।'], [], null],
+  'set-packages': [['Booking packages', 'बुकिंग पैकेज'],
+    ['A package is a ready set of items, menu and amount, like "Wedding 500 guests". Pick it while making a booking and everything fills in one tap.', 'पैकेज सामान, मेन्यू और रकम का तैयार सेट है, जैसे "शादी 500 मेहमान"। बुकिंग बनाते समय इसे चुनें, सब एक टैप में भर जाएगा।'],
+    [['Open a booking that has the right items and menu.', 'सही सामान और मेन्यू वाली कोई बुकिंग खोलें।'], ['Tap "Save as package" and give it a name.', '"पैकेज के रूप में सेव करें" दबाएं और नाम दें।']], null],
   start: [['Get started', 'शुरू करें'],
     ['Five quick steps to set up a new business. Each step opens the right screen; ticks appear as you finish.', 'नया बिज़नेस सेट करने के पांच आसान कदम। हर कदम सही स्क्रीन खोलता है; पूरा होते ही टिक लग जाता है।'], [], null]
 };

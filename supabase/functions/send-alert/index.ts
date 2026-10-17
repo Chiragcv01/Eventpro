@@ -28,7 +28,9 @@ Deno.serve(async (req) => {
     let users: string[] = [];
     if (a.to_user) users = [a.to_user];
     else {
-      const { data: m } = await admin.from("org_members").select("user_id").eq("org_id", a.org_id);
+      let q = admin.from("org_members").select("user_id").eq("org_id", a.org_id);
+      if (a.to_role === "managers") q = q.in("role", ["owner", "manager", "supervisor"]);
+      const { data: m } = await q;
       users = (m || []).map((x: { user_id: string }) => x.user_id).filter((x: string) => x !== a.from_user);
     }
     if (!users.length) return json({ sent: 0, devices: 0 });
@@ -38,8 +40,8 @@ Deno.serve(async (req) => {
     const { data: keys } = await admin.rpc("vapid_keys");
     webpush.setVapidDetails("https://sabmanage.com", keys.public, keys.private);
     const payload = JSON.stringify({
-      id: a.id, urgent: !!a.urgent,
-      title: (a.urgent ? "🚨 " : "🔔 ") + a.title,
+      id: a.id, urgent: a.kind !== "update" && !!a.urgent, kind: a.kind || "alert",
+      title: (a.kind === "update" ? "✅ " : a.urgent ? "🚨 " : "🔔 ") + a.title,
       body: [a.from_name, a.body].filter(Boolean).join(": ").slice(0, 400),
       url: "/app#alert-" + a.id,
     });

@@ -565,6 +565,58 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .notif-state.on{background:#ECFDF5;border-color:#A7F3D0}
 .notif-state.denied{background:#FFF1F2;border-color:#FECDD3}
 
+/* easy home */
+.today-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:14px}
+.today-strip>div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.today-strip b{font:800 24px var(--f-display);line-height:1.1}
+.today-strip span{font-size:13px;color:var(--muted);font-weight:600}
+.big-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:760px){.big-grid{grid-template-columns:repeat(3,1fr)}.big-grid.two{grid-template-columns:repeat(2,1fr)}}
+.big-btn{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:16px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(160deg,color-mix(in srgb,var(--c) 9%,#fff),#fff 70%);cursor:pointer;text-align:left;min-height:118px;color:var(--ink);text-decoration:none;box-shadow:0 1px 2px rgba(15,23,42,.04);transition:transform .12s}
+.big-btn:active{transform:scale(.97)}
+.big-btn b{font:800 18px/1.2 var(--f-display)}
+.big-btn span{font-size:13px;color:var(--muted)}
+.live-ev{width:100%;border:0;background:none;text-align:left;font:inherit;color:inherit}
+.easy-foot{display:flex;flex-direction:column;align-items:center;gap:8px;margin:20px 0 8px}
+.easy-switch{display:flex;justify-content:flex-end;margin:-6px 0 8px}
+/* crew home */
+.crew-att{display:flex;flex-direction:column;gap:10px;align-items:stretch;margin-bottom:6px}
+.crew-att.done{flex-direction:row;align-items:center;background:#ECFDF5;border-color:#A7F3D0}
+.crew-reach{min-height:64px;font-size:19px;background:#0B9B68;border-color:#0B9B68}
+.crew-task{display:flex;flex-direction:column;gap:10px}
+.crew-task-t{font-size:17px}
+.crew-pct{font:800 22px var(--f-display)}
+.pct-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pct-btns button{min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font:700 15px var(--f-body);cursor:pointer;color:var(--ink2);display:flex;align-items:center;justify-content:center;gap:4px}
+.pct-btns button.on{background:color-mix(in srgb,var(--primary) 12%,#fff);border-color:var(--primary);color:var(--primary)}
+.pct-btns button.done{background:#0B9B68;border-color:#0B9B68;color:#fff}
+.pct-btns button .ico{width:16px;height:16px}
+/* quick booking */
+.chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.chip-radio{display:inline-flex;cursor:pointer}
+.chip-radio input{position:absolute;opacity:0;pointer-events:none}
+.chip-radio span{border:1px solid var(--line);background:var(--surface2);border-radius:99px;padding:7px 13px;font:600 14px var(--f-body);color:var(--ink2)}
+.chip-radio input:checked+span{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip-radio input:focus-visible+span{outline:2px solid var(--primary);outline-offset:2px}
+/* simple access */
+.role-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.role-card{display:flex;cursor:pointer}
+.role-card input{position:absolute;opacity:0;pointer-events:none}
+.role-card span{flex:1;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:var(--surface)}
+.role-card small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.role-card input:checked+span{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 7%,#fff);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 25%,transparent)}
+.acc-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.acc-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line2)}
+.acc-row:last-child{border-bottom:0}
+.acc-row b{flex:1;min-width:0;font-weight:600}
+.acc-seg{display:flex;flex:none}
+.acc-seg label{cursor:pointer}
+.acc-seg input{position:absolute;opacity:0;pointer-events:none}
+.acc-seg span{display:block;padding:7px 11px;font:700 13px var(--f-body);color:var(--ink2);border-radius:9px}
+.acc-seg input:checked+span{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.15)}
+.acc-seg input[value="0"]:checked+span{color:#B4182F}
+.acc-seg input[value="2"]:checked+span{color:#08744E}
+
 </style>
 </head>
 <body>
@@ -2607,6 +2659,105 @@ Notifications on | नोटिफ़िकेशन चालू
 Notifications off | नोटिफ़िकेशन बंद
 `);
 
+I18N.load(`
+# ---------- easy home, crew home, quick booking, simple access ----------
+Today | आज
+Events today | आज के इवेंट
+Tomorrow | कल
+Setup done | सेटअप हुआ
+Call back | फ़ोन करना है
+To collect | लेना बाकी
+New booking | नई बुकिंग
+4 things to fill | सिर्फ़ 4 चीज़ें भरें
+Payment received | पैसा आया
+Attendance | हाज़िरी
+Stock | स्टॉक
+Bill / quotation | बिल / कोटेशन
+Alert to team | टीम को अलर्ट
+Today & tomorrow | आज और कल
+All bookings | सभी बुकिंग
+No event today or tomorrow | आज या कल कोई इवेंट नहीं
+Your next bookings will show here with live setup progress. | आपकी अगली बुकिंग यहां लाइव सेटअप के साथ दिखेंगी।
+See all ({}) | सब देखें ({1})
+All sections | सभी सेक्शन
+Show the full home screen | पूरी होम स्क्रीन दिखाएं
+Switch to easy home | आसान होम पर जाएं
+Full app is on. All sections are on the home screen. | पूरा ऐप चालू है। सभी सेक्शन होम स्क्रीन पर हैं।
+Easy home is on. | आसान होम चालू है।
+{} crew at site | साइट पर {1} क्रू
+Attendance marked | हाज़िरी लग गई
+Today at {} | आज {1} बजे
+I have reached the site | मैं साइट पर पहुंच गया
+Tap when you reach. Your attendance is marked for today. | पहुंचते ही दबाएं। आज की हाज़िरी लग जाएगी।
+Which event | कौन-सा इवेंट
+Your login is not linked to a crew name yet. Ask the owner to link it in Team & access. | आपका लॉगिन अभी किसी क्रू नाम से नहीं जुड़ा। ओनर से कहें कि टीम और एक्सेस में जोड़ दें।
+Your login is not linked to a crew name. Ask the owner to link it in Team. | आपका लॉगिन किसी क्रू नाम से नहीं जुड़ा। ओनर से कहें कि टीम में जोड़ दें।
+My work | मेरा काम
+No work given to you | आपको अभी कोई काम नहीं दिया गया
+When the owner gives you setup work, it shows here. | ओनर जब सेटअप का काम देंगे, यहां दिखेगा।
+Today’s events | आज के इवेंट
+Map | नक्शा
+Alert the owner | ओनर को अलर्ट भेजें
+Call the owner | ओनर को फ़ोन करें
+Attendance marked. Have a good day! | हाज़िरी लग गई। आपका दिन अच्छा रहे!
+You can update only your own work | आप सिर्फ़ अपना काम बदल सकते हैं
+Work done | काम पूरा
+{} reached at {} | {1} {2} बजे पहुंच गए
+New booking: {} | नई बुकिंग: {1}
+Payment received: {} | पैसा आया: {1}
+Only 4 things. Add the rest later if you want. | सिर्फ़ 4 चीज़ें। बाकी चाहें तो बाद में भरें।
+Package (optional) | पैकेज (ज़रूरी नहीं)
+Client name | क्लाइंट का नाम
+Event date | इवेंट की तारीख
+Total amount ₹ | कुल रकम ₹
+e.g. 150000 | जैसे: 150000
+Type | किस तरह का
+Advance received now ₹ (optional) | अभी मिला एडवांस ₹ (ज़रूरी नहीं)
+Booking becomes Confirmed and the advance is saved in Payments | बुकिंग पक्की हो जाएगी और एडवांस पेमेंट में सेव हो जाएगा
+Booking is confirmed (pakki) | बुकिंग पक्की है
+More details | और जानकारी भरें
+Save booking | बुकिंग सेव करें
+Write the client name | क्लाइंट का नाम लिखें
+Pick the event date | इवेंट की तारीख चुनें
+Booking saved with {} advance | {1} एडवांस के साथ बुकिंग सेव हो गई
+Booking saved | बुकिंग सेव हो गई
+Save as package | पैकेज के रूप में सेव करें
+Next time, one tap fills these items, menu and amount | अगली बार एक टैप में यही सामान, मेन्यू और रकम भर जाएगी
+Package name | पैकेज का नाम
+e.g. Wedding 500 guests | जैसे: शादी 500 मेहमान
+Package amount ₹ | पैकेज की रकम ₹
+Package saved | पैकेज सेव हो गया
+Saved package {} | पैकेज सेव किया: {1}
+Delete this package? | यह पैकेज डिलीट करें?
+Booking packages | बुकिंग पैकेज
+Ready sets of items, menu and amount. Pick one while making a booking. | सामान, मेन्यू और रकम के तैयार सेट। बुकिंग बनाते समय चुनें।
+{} items | {1} सामान
+{} dishes | {1} डिश
+No packages yet. Open any booking and tap “Save as package”. | अभी कोई पैकेज नहीं। कोई भी बुकिंग खोलें और "पैकेज के रूप में सेव करें" दबाएं।
+Delete package | पैकेज डिलीट करें
+Their job | उनका काम
+Runs bookings, stock, catering and crew. Sees bills; cannot change team or settings. | बुकिंग, स्टॉक, कैटरिंग और क्रू संभालते हैं। बिल देख सकते हैं; टीम या सेटिंग्स नहीं बदल सकते।
+Bills, payments and expenses. Sees bookings and reports. | बिल, पेमेंट और खर्च। बुकिंग और रिपोर्ट देख सकते हैं।
+Site work: bookings, setup tasks, stock out and in, attendance. | साइट का काम: बुकिंग, सेटअप के काम, सामान भेजना-लाना, हाज़िरी।
+Crew: sees only their own work and marks attendance. | क्रू: सिर्फ़ अपना काम देखते हैं और हाज़िरी लगाते हैं।
+Custom role | अपना बनाया रोल
+Crew name (for their own work list) | क्रू का नाम (उनके काम की लिस्ट के लिए)
+— New crew name (made for you) — | — नया क्रू नाम (अपने आप बनेगा) —
+Crew logins see only the work given to this name | क्रू लॉगिन को सिर्फ़ इसी नाम को दिया गया काम दिखता है
+Later, tap “What they see” next to their name to switch any section on or off. | बाद में उनके नाम के आगे "क्या दिखे" दबाकर कोई भी सेक्शन चालू या बंद करें।
+What they see | क्या दिखे
+What {} can see | {1} को क्या दिखे
+Tap to change. Saves for this person only. | बदलने के लिए टैप करें। सिर्फ़ इसी व्यक्ति के लिए सेव होगा।
+Job | काम
+Off | बंद
+See | देखे
+Change | बदले
+Off = section hidden. See = can look only. Change = can add and edit. Only the owner can delete. | बंद = सेक्शन छुपा रहेगा। देखे = सिर्फ़ देख सकते हैं। बदले = जोड़ और बदल सकते हैं। डिलीट सिर्फ़ ओनर कर सकते हैं।
+Password & more | पासवर्ड और बाकी
+Access saved | एक्सेस सेव हो गया
+Updated access for {} | {1} का एक्सेस बदला
+`);
+
 'use strict';
 /* ================= SabManage v3 — core ================= */
 const APP_VERSION = '3.0.0';
@@ -3040,7 +3191,7 @@ function need(mod, l = 2) { if (lvl(mod) < l) throw new Error(S.org && orgState(
 
 async function save(coll, rec, msg) {
   need(COLL_MODULE[coll] || 'settings', 2);
-  rec.updatedAt = Date.now(); rec.updatedBy = S.me?.name || S.user?.name;
+  rec.updatedAt = Date.now(); rec.updatedBy = S.me?.name || S.user?.name; rec.updatedById = S.user?.id;
   const arr = col(coll); const i = arr.findIndex(x => x.id === rec.id);
   if (i >= 0) arr[i] = rec; else arr.unshift(rec);
   await S.adapter.put(S.org.orgId, coll, rec);
@@ -3112,6 +3263,7 @@ function readForm(form) {
   const v = {};
   for (const el of form.elements) {
     if (!el.name) continue;
+    if (el.type === 'radio') { if (el.checked) v[el.name] = el.value; else if (!(el.name in v)) v[el.name] = ''; continue; }
     if (el.type === 'checkbox') { if (el.dataset.multi) { (v[el.name] = v[el.name] || []); if (el.checked) v[el.name].push(el.value); } else v[el.name] = el.checked; }
     else if (el.type === 'number') v[el.name] = el.value === '' ? '' : Number(el.value);
     else if (el.type === 'password') v[el.name] = el.value;
@@ -3145,7 +3297,7 @@ function fallbackCopy(text) { modal(`${sheetHead('Copy this text')}<div class="s
 function applyTheme() { document.documentElement.setAttribute('data-theme', 'light'); }
 A.setTheme = t => { LS.set('ep3_theme', t); applyTheme(); render(); };
 
-A.toggleLang = () => { const to = I18N.lang === 'hi' ? 'en' : 'hi'; I18N.set(to); A.closeModal(); render(); toast(to === 'hi' ? 'भाषा: हिंदी' : 'Language: English'); };
+A.toggleLang = () => { const to = I18N.lang === 'hi' ? 'en' : 'hi'; I18N.set(to); A.closeModal(); render(); if (typeof pushIsOn === 'function' && pushIsOn()) ensurePush(false); toast(to === 'hi' ? 'भाषा: हिंदी' : 'Language: English'); };
 
 /* ================= Boot & session ================= */
 async function boot() {
@@ -3202,6 +3354,7 @@ A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
   A.closeModal(); if (typeof stopPush === 'function') { await stopPush(); LS.set('ep_push_on', false); }
   try { if (typeof alertChan !== 'undefined' && alertChan && S.adapter.sb) S.adapter.sb.removeChannel(alertChan); } catch (e) { }
+  try { if (typeof liveChan !== 'undefined' && liveChan && S.adapter.sb) S.adapter.sb.removeChannel(liveChan); } catch (e) { }
   document.getElementById('alertRoot')?.remove(); S.teamAlerts = [];
   await S.adapter.signOut();
   Object.assign(S, { user: null, org: null, me: null, role: null, data: {}, orgs: [], view: 'dashboard', params: {}, super: false, admin: null, authTab: 'login', mfaPending: null, mfaOn: false });
@@ -3279,7 +3432,7 @@ function shell(body) {
 function createActions() {
   if (!S.org) return [];
   return [
-    can('bookings', 2) && ['New booking', 'calendar', MOD.bookings.c, 'A.eventForm()'],
+    can('bookings', 2) && ['New booking', 'calendar', MOD.bookings.c, 'A.newBooking()'],
     can('invoices', 2) && ['Quotation / bill', 'receipt', MOD.invoices.c, 'A.newInvoice()'],
     can('payments', 2) && ['Payment received', 'rupee', MOD.payments.c, 'A.paymentForm()'],
     can('expenses', 2) && ['Expense', 'wallet', MOD.expenses.c, 'A.expenseForm()'],
@@ -3478,6 +3631,7 @@ const AlertsDB = {
   }
 };
 const forMe = a => a.from_user !== S.user?.id && (!a.to_user || a.to_user === S.user?.id);
+const isRing = a => (a.kind || 'alert') === 'alert';
 const seenByMe = a => !!(a.acks || {})[S.user?.id];
 const canSendAlert = () => S.adapter?.mode === 'cloud' ? lvl('tasks') >= 2 : !!S.org && lvl('tasks') >= 2;
 
@@ -3493,14 +3647,15 @@ async function startAlerts() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: 'org_id=eq.' + S.org.orgId }, p => {
         const a = p.new; if (!a?.id) return; const i = (S.teamAlerts || []).findIndex(x => x.id === a.id);
         if (i >= 0) S.teamAlerts[i] = a; else S.teamAlerts.unshift(a);
-        if (p.eventType === 'INSERT' && forMe(a)) showAlertOverlay();
+        if (p.eventType === 'INSERT' && forMe(a)) { if (isRing(a)) showAlertOverlay(); else toast('✅ ' + a.title + (a.body ? ' · ' + a.body : '')); }
         refreshAlertDot();
       }).subscribe();
   }
   const pending = pendingForMe(); if (pending.length) setTimeout(showAlertOverlay, 400);
   refreshAlertDot(); chimeForNewReminders(); maybeAskPush();
+  if (typeof startLiveSync === 'function') startLiveSync();
 }
-const pendingForMe = () => (S.teamAlerts || []).filter(a => forMe(a) && !seenByMe(a) && Date.now() - Date.parse(a.created_at) < 36 * 3600e3);
+const pendingForMe = () => (S.teamAlerts || []).filter(a => isRing(a) && forMe(a) && !seenByMe(a) && Date.now() - Date.parse(a.created_at) < 36 * 3600e3);
 function refreshAlertDot() { const b = document.querySelector('.topbar [aria-label="Alerts"] .dot'); const n = computeAlerts().length + pendingForMe().length; if (b) b.textContent = n; else if (n) render(); }
 /* new important reminders → tune once per new item */
 function chimeForNewReminders() {
@@ -3573,7 +3728,7 @@ async function ensurePush(ask) {
     if (Notification.permission !== 'granted') { if (!ask) return false; const r = await Notification.requestPermission(); if (r !== 'granted') { toast('Notifications not allowed', 'warn'); return false; } }
     const reg = await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
     if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC) });
-    const j = sub.toJSON(); const { error } = await S.adapter.sb.rpc('save_push_sub', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent });
+    const j = sub.toJSON(); const { error } = await S.adapter.sb.rpc('save_push_sub', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent, p_lang: I18N.lang });
     if (error) throw S.adapter.err(error);
     LS.set('ep_push_on', true); if (ask) { toast('Phone notifications are on'); render(); } return true;
   } catch (e) { if (ask) toast('Could not turn on notifications: ' + e.message, 'bad'); return false; }
@@ -3619,7 +3774,7 @@ try { navigator.serviceWorker && navigator.serviceWorker.addEventListener('messa
 /* ---------- team alerts inside the bell sheet ---------- */
 function teamAlertRow(a) {
   const acks = Object.values(a.acks || {}); const mine = a.from_user === S.user?.id; const pend = forMe(a) && !seenByMe(a);
-  return `<div class="row ${pend ? 'click' : ''}" ${pend ? 'onclick="A.closeModal();showAlertOverlay()"' : ''}>${ibox(a.urgent ? 'alert' : 'bell', a.urgent ? '#E0344B' : '#E11D74', 'sm')}<div class="main-col"><b>${esc(a.title)}</b><div class="sub"><span>${mine ? `To ${esc(a.to_name || 'Everyone')}` : `From ${esc(a.from_name || 'Team')}`}</span> · <span>${fmtShort(todayLocal(new Date(a.created_at)))}</span> <span>${new Date(a.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>${mine ? ` · <span>${acks.length ? 'Seen by ' + acks.map(x => esc(x.name || '')).join(', ') : 'Not seen yet'}</span>` : ''}</div></div>${pend ? pill('New', 'bad') : mine ? pill(acks.length ? 'Seen' : 'Sent', acks.length ? 'good' : '') : ''}</div>`;
+  return `<div class="row ${pend ? 'click' : ''}" ${pend ? 'onclick="A.closeModal();showAlertOverlay()"' : ''}>${ibox(!isRing(a) ? 'check' : a.urgent ? 'alert' : 'bell', !isRing(a) ? '#0B9B68' : a.urgent ? '#E0344B' : '#E11D74', 'sm')}<div class="main-col"><b>${esc(a.title)}</b><div class="sub"><span>${mine ? `To ${esc(a.to_name || 'Everyone')}` : `From ${esc(a.from_name || 'Team')}`}</span> · <span>${fmtShort(todayLocal(new Date(a.created_at)))}</span> <span>${new Date(a.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>${mine ? ` · <span>${acks.length ? 'Seen by ' + acks.map(x => esc(x.name || '')).join(', ') : 'Not seen yet'}</span>` : ''}</div></div>${pend ? pill('New', 'bad') : mine ? pill(acks.length ? 'Seen' : 'Sent', acks.length ? 'good' : '') : ''}</div>`;
 }
 
 /* ================= ⓘ Help: what each feature is for =================
@@ -3631,11 +3786,11 @@ function teamAlertRow(a) {
 const HELP = {
   /* ---------- pages ---------- */
   dashboard: [['Home screen', 'होम स्क्रीन'],
-    ['Your whole business at a glance: money pending from clients, events coming up, and anything that needs your attention today.', 'आपके पूरे बिज़नेस की झलक: क्लाइंट से कितना पैसा बाकी है, कौन-से इवेंट आने वाले हैं, और आज किस चीज़ पर ध्यान देना है।'],
-    [['Check the top card for money pending and collected this month.', 'ऊपर वाले कार्ड में देखें कि कितना पैसा बाकी है और इस महीने कितना आया।'],
-     ['Tap any colourful box to open that section.', 'किसी भी रंगीन बॉक्स पर टैप करके वह सेक्शन खोलें।'],
-     ['"Needs attention" lists late bills, low stock and pending dispatches.', '"ध्यान देना है" में लेट बिल, कम स्टॉक और बाकी डिस्पैच दिखते हैं।']],
-    ['Open this screen every morning. Two minutes here tells you what to do today.', 'हर सुबह यह स्क्रीन खोलें। दो मिनट में पता चल जाएगा कि आज क्या करना है।']],
+    ['Today at a glance: events today and tomorrow with live setup progress, money to collect, and big buttons for the daily work.', 'आज की पूरी झलक: आज और कल के इवेंट और उनका लाइव सेटअप, लेना बाकी पैसा, और रोज़ के काम के बड़े बटन।'],
+    [['New booking needs only 4 things: name, mobile, date, amount.', 'नई बुकिंग में सिर्फ़ 4 चीज़ें: नाम, मोबाइल, तारीख, रकम।'],
+     ['Setup progress updates by itself when your crew taps 25% / 50% / Done on their phone.', 'क्रू अपने फ़ोन पर 25% / 50% / डन दबाता है तो सेटअप यहां अपने आप बदल जाता है।'],
+     ['"All sections" opens everything else; nothing is removed.', '"सभी सेक्शन" से बाकी सब खुलता है; कुछ भी हटाया नहीं गया।']],
+    ['Want the old detailed home? Tap "Show the full home screen" at the bottom.', 'पुरानी पूरी होम स्क्रीन चाहिए? नीचे "पूरी होम स्क्रीन दिखाएं" दबाएं।']],
   bookings: [['Bookings', 'बुकिंग'],
     ['Your booking diary. Every enquiry, quotation and confirmed event is kept here with date, client, venue and guests.', 'आपकी बुकिंग की डायरी। हर इन्क्वायरी, कोटेशन और पक्का इवेंट तारीख, क्लाइंट, जगह और मेहमानों के साथ यहां रहता है।'],
     [['Tap "New booking" and fill the client name, mobile, date and venue.', '"नई बुकिंग" दबाएं और क्लाइंट का नाम, मोबाइल, तारीख और जगह भरें।'],
@@ -3874,6 +4029,9 @@ const HELP = {
     ['Download a full backup of your business data any time, and keep it safe on your computer.', 'कभी भी अपने बिज़नेस डेटा का पूरा बैकअप डाउनलोड करें और कंप्यूटर में संभालकर रखें।'], [], null],
   'set-plan': [['Your plan', 'आपका प्लान'],
     ['Your current plan and the date it is valid till. Renew before it ends; after a few grace days the app stops working.', 'आपका अभी का प्लान और कब तक वैलिड है। खत्म होने से पहले रिन्यू करें; कुछ ग्रेस दिनों के बाद ऐप बंद हो जाता है।'], [], null],
+  'set-packages': [['Booking packages', 'बुकिंग पैकेज'],
+    ['A package is a ready set of items, menu and amount, like "Wedding 500 guests". Pick it while making a booking and everything fills in one tap.', 'पैकेज सामान, मेन्यू और रकम का तैयार सेट है, जैसे "शादी 500 मेहमान"। बुकिंग बनाते समय इसे चुनें, सब एक टैप में भर जाएगा।'],
+    [['Open a booking that has the right items and menu.', 'सही सामान और मेन्यू वाली कोई बुकिंग खोलें।'], ['Tap "Save as package" and give it a name.', '"पैकेज के रूप में सेव करें" दबाएं और नाम दें।']], null],
   start: [['Get started', 'शुरू करें'],
     ['Five quick steps to set up a new business. Each step opens the right screen; ticks appear as you finish.', 'नया बिज़नेस सेट करने के पांच आसान कदम। हर कदम सही स्क्रीन खोलता है; पूरा होते ही टिक लग जाता है।'], [], null]
 };
@@ -4115,7 +4273,7 @@ V.dashboard = () => {
   const evCards = upcoming.slice(0, 8).map(eventCard).join('');
   return `${pushCard()}${startCard()}${hero}${tiles}${stats}
   <div class="sec-h"><h2>Upcoming events${info('dash-upcoming')}</h2><button class="linkbtn" onclick="A.go('bookings')">See all ${ic('chev')}</button></div>
-  ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
+  ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.newBooking()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
   <div class="split" style="margin-top:6px">
     <div class="stack" style="gap:0">
       <div class="sec-h"><h2>Needs attention${info('dash-attention')}</h2>${alerts.length ? pill(alerts.length + ' open', 'bad') : pill('All clear', 'good')}</div>
@@ -4141,7 +4299,7 @@ function eventRow(e) {
 /* ================= Bookings ================= */
 V.bookings = () => {
   const mode = S.params.mode || 'list';
-  const actions = can('bookings', 2) ? `${importBtn('events')}<button class="btn primary" onclick="A.eventForm()">${ic('plus')} New booking</button>` : '';
+  const actions = can('bookings', 2) ? `${importBtn('events')}<button class="btn primary" onclick="A.newBooking()">${ic('plus')} New booking</button>` : '';
   return pageHead('Bookings', 'Every enquiry, quotation and confirmed event in one diary.', actions) +
     `<div class="toolbar">${seg('mode', [['list', 'List'], ['calendar', 'Calendar'], ['board', 'Pipeline']], mode, 'A.setP')}</div>` +
     (mode === 'calendar' ? calendarView() : mode === 'board' ? boardView() : listViewEvents());
@@ -4236,7 +4394,7 @@ V.event = () => {
 const EV_TABS = {};
 EV_TABS.overview = e => {
   const m = eventMoney(e); const p = eventProgress(e);
-  return `<div class="split"><div class="card"><div class="card-h"><h3>Details</h3></div><div class="sheet-b" style="padding-top:12px"><table class="tbl"><tbody>
+  return `${can('settings', 2) ? `<div class="row-flex" style="justify-content:flex-end;margin-bottom:10px"><button class="btn sm" onclick="A.savePackage('${e.id}')">${ic('gift')} Save as package</button></div>` : ''}<div class="split"><div class="card"><div class="card-h"><h3>Details</h3></div><div class="sheet-b" style="padding-top:12px"><table class="tbl"><tbody>
     <tr><td class="muted">Client</td><td><b>${esc(e.client)}</b><div class="small muted">${esc(e.phone || '')} ${e.email ? '· ' + esc(e.email) : ''}</div></td></tr>
     <tr><td class="muted">When</td><td>${fmtDay(e.date)}${e.endDate && e.endDate !== e.date ? ' to ' + fmtDay(e.endDate) : ''} ${e.time ? '· ' + esc(e.time) : ''}</td></tr>
     <tr><td class="muted">Venue</td><td>${esc(e.venue || '—')}</td></tr><tr><td class="muted">Guests</td><td class="num">${num(e.pax)}</td></tr>
@@ -4857,7 +5015,7 @@ V.team = () => {
   if (tab === 'activity') return head + tabs + `<div class="card"><div class="rows">${col('activity').slice().sort((a, b) => b.ts - a.ts).slice(0, 150).map(a => `<div class="row"><div class="avatar" style="width:30px;height:30px;font-size:12px">${esc(initials(a.who))}</div><div class="main-col"><b style="font-weight:600">${esc(a.msg)}</b><div class="sub">${esc(a.who)} · ${new Date(a.ts).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</div></div></div>`).join('') || empty('No activity yet', '')}</div></div>`;
   return head + tabs + `<div class="card" style="margin-bottom:14px"><div class="rows">${S.members.map(m => { const self = m.userId === S.user.id; const isOwner = m.role === 'owner'; const st = getById('staff', m.staffId);
     return `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(m.name))}</div><div class="main-col" style="min-width:160px"><b>${esc(m.name || m.email)}${self ? ' (you)' : ''}</b><div class="sub">${esc(displayId(m.email || ''))}${st ? ' · crew: ' + esc(st.name) : ''}</div><div class="tiny muted" style="margin-top:3px">${esc(accessSummary(m))}${m.perms && Object.keys(m.perms).length ? ' ' + pill('Custom access', 'accent') : ''}</div></div>
-    <div class="row-flex" style="gap:6px">${owner && !isOwner && !self ? `<select class="inline-in" style="width:auto" onchange="A.setRole('${m.userId}',this.value)">${roleOpts.map(([k, l]) => `<option value="${k}" ${m.role === k ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select><button class="btn sm" onclick="A.memberMore('${m.userId}')">${ic('key')} Access</button>` : pill(S.roles[m.role]?.label || m.role, isOwner ? 'accent' : 'primary')}</div></div>`; }).join('')}</div></div>`;
+    <div class="row-flex" style="gap:6px">${owner && !isOwner && !self ? `<select class="inline-in" style="width:auto" onchange="A.setRole('${m.userId}',this.value)">${roleOpts.map(([k, l]) => `<option value="${k}" ${m.role === k ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select><button class="btn sm" onclick="A.accessSheet('${m.userId}')">${ic('key')} What they see</button>` : pill(S.roles[m.role]?.label || m.role, isOwner ? 'accent' : 'primary')}</div></div>`; }).join('')}</div></div>`;
 };
 A.revoke = async code => { await S.adapter.revokeInvite(code); S.invitesLoaded = false; render(); };
 A.setRole = async (uidv, role) => { try { need('team', 3); await S.adapter.updateMember(S.org.orgId, uidv, { role }); const m = S.members.find(x => x.userId === uidv); m.role = role; logAct(`Changed ${m.name}'s role to ${S.roles[role]?.label}`); toast('Role updated'); } catch (err) { toast(err.message, 'bad'); render(); } };
@@ -4880,6 +5038,7 @@ V.settings = () => {
     ${f('markup', 'Default catering margin %', { type: 'number', min: 0 })}<div></div>${f('terms', 'Terms printed on bills', { type: 'textarea', full: true })}</div>
   ${edit ? `<footer class="sheet-f" style="position:static"><span class="grow"></span><button class="btn primary" type="submit">Save settings</button></footer>` : ''}</form>
 
+  ${packagesCard()}
   <div class="card"><div class="card-h"><div><h3>Business type & sections${info('set-modules')}</h3><p>Hide what you don’t use. A tent house can switch off catering, a caterer can switch off inventory.</p></div></div><div class="sheet-b stack" style="padding-top:12px">
     <div class="row-flex">${BIZ_TYPES.map(([k, l]) => `<label class="check"><input type="checkbox" ${ro} ${(st.bizTypes || []).includes(k) ? 'checked' : ''} onchange="A.bizType('${k}',this.checked)"> <span>${l}</span></label>`).join('')}</div>
     <div class="grid g3" style="gap:8px">${MODULES.filter(m => !['dashboard', 'settings', 'team'].includes(m.key)).map(m => `<label class="check"><input type="checkbox" ${ro} ${moduleOn(m.key) ? 'checked' : ''} onchange="A.modToggle('${m.key}',this.checked)"> <span>${esc(m.label)}</span></label>`).join('')}</div></div></div>
@@ -5149,16 +5308,18 @@ A.memberForm = () => {
   const roleOpts = Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => [k, r.label]);
   formModal({ title: 'Add employee', sub: 'Create their login. You decide what they can see and do.', fields: [
     { name: 'name', label: 'Full name', required: true, autofocus: true },
-    { name: 'role', label: 'Role', type: 'select', options: roleOpts, value: 'staff' },
+    { type: 'html', full: true, html: `<div class="field"><span>Their job</span>${roleCards('staff')}</div>` },
     { name: 'email', label: 'Login ID: mobile number or email', required: true, placeholder: '98290 12345', hint: 'They type this on the login screen' },
     { name: 'password', label: 'Password', type: 'text', required: true, value: genPass(), minlength: 6, hint: 'Change it if you like. Minimum 6 characters.' },
-    { name: 'staffId', label: 'Link to crew record (for “My tasks”)', type: 'select', options: [['', '— Not linked —'], ...col('staff').map(s => [s.id, s.name])] },
-    { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('key')}<span>After adding, tap <b>Access</b> next to their name to give or remove access to any section.</span></div>` }],
+    { name: 'staffId', label: 'Crew name (for their own work list)', type: 'select', options: [['', '— New crew name (made for you) —'], ...col('staff').map(s => [s.id, s.name])], hint: 'Crew logins see only the work given to this name' },
+    { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('key')}<span>Later, tap “What they see” next to their name to switch any section on or off.</span></div>` }],
     submit: 'Create login', onSubmit: async v => {
       need('team', 2); const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter a 10-digit mobile number or an email');
       if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
-      const m = await S.adapter.createMember(S.org.orgId, { name: v.name, email, password: v.password, role: v.role, staffId: v.staffId });
-      S.members.push(m); logAct(`Added ${v.name} as ${S.roles[v.role]?.label}`); render();
+      const role = v.role || 'staff'; let staffId = v.staffId;
+      if (!staffId && role === 'staff' && can('staff', 2)) { const sr = { id: uid('st_'), name: v.name, phone: String(v.email).replace(/\D/g, '').slice(-10), role: 'Crew', rate: 0, dutyHours: 8 }; await save('staff', sr, `Added crew ${v.name}`); staffId = sr.id; }
+      const m = await S.adapter.createMember(S.org.orgId, { name: v.name, email, password: v.password, role, staffId });
+      S.members.push(m); logAct(`Added ${v.name} as ${S.roles[role]?.label}`); render();
       setTimeout(() => credSheet('Login created', v.name, email, v.password), 60);
     } });
 };
@@ -5676,7 +5837,7 @@ function startCard() {
     moduleOn('inventory') && ['Import your godown stock', 'From Excel, in one go', col('inventory').length > 0, "A.importSheet('inventory')", 'box', '#2563EB'],
     moduleOn('catering') && ['Add your menu', 'Dishes with ingredients per guest', col('dishes').length > 0, "A.importSheet('dishes')", 'pot', '#16A34A'],
     ['Add your team', 'Logins for manager, accountant, crew', S.members.length > 1, 'A.memberForm()', 'users', '#0D9488'],
-    ['Create your first booking', 'Or import your diary', col('events').length > 0, 'A.eventForm()', 'calendar', '#7C3AED']].filter(Boolean);
+    ['Create your first booking', 'Or import your diary', col('events').length > 0, 'A.newBooking()', 'calendar', '#7C3AED']].filter(Boolean);
   const done = steps.filter(s => s[2]).length; if (done === steps.length) return '';
   return `<div class="card pad stack-sm start-card"><div class="row-flex" style="justify-content:space-between"><div><h3>Get started${info('start')}</h3><p class="small muted">${done} of ${steps.length} done</p></div><button class="linkbtn" onclick="LS.set('ep_start_done_${S.org.orgId}',true);render()">Hide</button></div>${prog(done / steps.length * 100)}
     <div class="stack-sm" style="margin-top:4px">${steps.map(([t, sub, ok, fn, i, c]) => `<button class="start-step ${ok ? 'ok' : ''}" onclick="${fn}">${ok ? `<span class="ibox sm" style="--c:#0B9B68">${ic('check')}</span>` : ibox(i, c, 'sm')}<span class="grow" style="text-align:left"><b>${esc(t)}</b><span class="tiny muted" style="display:block">${esc(sub)}</span></span>${ok ? '' : ic('chev')}</button>`).join('')}</div></div>`;
@@ -5732,7 +5893,7 @@ MK.followup = () => {
     <div class="row-flex" style="gap:6px;flex-wrap:wrap;justify-content:flex-end">${stagePill(e.stage)}${dueNow ? pill('Due today', 'bad') : ''}${waBtn(followMsg(e), e.phone, 'Message')}${e.phone ? `<a class="btn sm" href="tel:${esc(phoneDigits(e.phone))}">${ic('phone')} Call</a>` : ''}${edit ? `<button class="btn sm" onclick="A.followDone('${e.id}')">${ic('check')} Done</button><button class="btn sm ghost" onclick="A.go('event',{id:'${e.id}'})">Open</button>` : ''}</div></div>`;
   }).join('');
   return `<div class="banner" style="margin-bottom:12px">${ic('megaphone')}<span>Most bookings are lost because nobody called back. Every enquiry and quotation shows here; after you follow up, tap Done and it comes back after 2 days if the client has still not confirmed.</span></div>
-  <div class="card"><div class="rows">${rows || empty('No open enquiries', 'New enquiries and quotations will show here for follow-up.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} New booking</button>` : '', 'megaphone', '#E11D74')}</div></div>`;
+  <div class="card"><div class="rows">${rows || empty('No open enquiries', 'New enquiries and quotations will show here for follow-up.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.newBooking()">${ic('plus')} New booking</button>` : '', 'megaphone', '#E11D74')}</div></div>`;
 };
 A.followDone = async id => { try { need('bookings', 2); const e = evById(id); e.followUpAt = todayLocal(); e.followCount = (+e.followCount || 0) + 1; await save('events', e, `Followed up with ${e.client}`); toast('Done. It will come back in 2 days if not confirmed.'); render(); } catch (err) { toast(err.message, 'bad'); } };
 
@@ -5871,6 +6032,215 @@ MK.share = () => {
   return `<div class="grid g-auto">
     <div class="card pad stack">${ibox('share', '#0B9B68', 'lg')}<h3>Share your business${info('mk-sharebiz')}</h3><p class="small muted">A ready message with your services, phone, Google reviews and Instagram. Send it to new enquiries or post it in WhatsApp groups.</p><pre class="share-pre">${esc(shareBizText())}</pre><div class="row-flex">${waBtn(shareBizText(), '', 'Send on WhatsApp', 'btn wa')}<button class="btn" onclick="A.copy(${esc(JSON.stringify(shareBizText()))})">${ic('copy')} Copy</button></div></div>
     ${S.role === 'owner' ? `<div class="card pad stack">${ibox('gift', '#E11D74', 'lg')}<h3>Refer another business${info('mk-refer')}</h3><p class="small muted">Know another tent house, caterer or event manager? Send them your link. When they join, we know you referred them.${P.referralReward ? ' ' + esc(P.referralReward) : ''}</p><div class="banner"><span class="mono small" style="overflow-wrap:anywhere">${esc(link)}</span></div><div class="row-flex">${waBtn(msg, '', 'Send on WhatsApp', 'btn wa')}<button class="btn" onclick="A.copy('${link}')">${ic('copy')} Copy link</button></div></div>` : ''}</div>`;
+};
+
+/* ================= Easy mode, crew screen, quick booking, live updates =================
+   Goal: a tent-house owner or a crew member should be able to use the app in seconds.
+   - Easy home (default): today at a glance + 4–6 big buttons. "Full app" is one tap away
+     and nothing is removed (A.setFull).
+   - Crew home: "I reached" (self attendance), my tasks with big % buttons, call/alert owner.
+   - Quick booking: 4 fields (+ optional advance, + saved packages).
+   - Live updates: changes made by anyone (e.g. crew sets setup to 40%) show on every open
+     phone within a second (Supabase Realtime on `records`), plus a refresh when the app
+     comes back to the screen. */
+
+/* ---------- mode ---------- */
+const isSimple = () => !!S.org && !LS.get('ep_full_' + S.org.orgId, false);
+const isCrewUser = () => !!S.org && S.role !== 'owner' && (S.role === 'staff' || (!!S.me?.staffId && lvl('bookings') < 2));
+A.setFull = on => { LS.set('ep_full_' + S.org.orgId, !!on); A.closeModal(); A.go('dashboard'); toast(on ? 'Full app is on. All sections are on the home screen.' : 'Easy home is on.'); };
+A.newBooking = () => (isSimple() && can('bookings', 2) ? A.quickBooking() : A.eventForm());
+
+/* ---------- live updates ---------- */
+let liveChan = null, liveRenderT = null, lastFullLoad = Date.now();
+function startLiveSync() {
+  lastFullLoad = Date.now();
+  if (S.adapter?.mode !== 'cloud' || !S.org) return;
+  try { if (liveChan) S.adapter.sb.removeChannel(liveChan); } catch (e) { }
+  const org = S.org.orgId;
+  liveChan = S.adapter.sb.channel('rec-' + org).on('postgres_changes', { event: '*', schema: 'public', table: 'records', filter: 'org_id=eq.' + org }, p => {
+    if (!S.org || S.org.orgId !== org) return;
+    const row = p.eventType === 'DELETE' ? p.old : p.new; if (!row || !row.collection) return;
+    if (p.eventType === 'DELETE') { S.data[row.collection] = col(row.collection).filter(x => x.id !== row.id); }
+    else {
+      const rec = row.data; if (!rec || !rec.id) return; const arr = col(row.collection); const i = arr.findIndex(x => x.id === rec.id);
+      const old = i >= 0 ? arr[i] : null; if (i >= 0) arr[i] = rec; else arr.push(rec);
+      if (rec.updatedById && rec.updatedById !== S.user?.id) liveNotice(row.collection, rec, old);
+    }
+    liveRender();
+  }).subscribe();
+}
+function liveRender() {
+  clearTimeout(liveRenderT);
+  liveRenderT = setTimeout(() => { const a = document.activeElement; if (a && a.closest && a.closest('#app') && ['INPUT', 'TEXTAREA', 'SELECT'].includes(a.tagName)) { liveRender(); return; } render(); }, 350);
+}
+function liveNotice(coll, rec, old) {
+  const who = rec.updatedBy || 'Team';
+  if (coll === 'tasks' && (lvl('tasks') >= 3 || S.role === 'owner') && (!old || old.progress !== rec.progress)) { const e = evById(rec.eventId); toast(`${who}: ${rec.title} ${rec.progress}%${e ? ' · ' + e.title : ''}`); }
+  else if (coll === 'attendance' && rec.selfAt && (!old || old.selfAt !== rec.selfAt) && can('staff')) { const s = getById('staff', rec.staffId); toast(`${s?.name || who} reached at ${rec.selfAt}`); }
+  else if (coll === 'events' && !old && can('bookings')) toast(`New booking: ${rec.title}`);
+  else if (coll === 'payments' && !old && can('payments')) toast(`Payment received: ${inr(rec.amount)}`);
+}
+async function liveRefresh() {
+  if (!S.org || S.adapter?.mode !== 'cloud' || Date.now() - lastFullLoad < 90e3) return;
+  if (['suspended', 'expired'].includes(orgState(S.org))) return;
+  try { const { data, members } = await S.adapter.loadOrg(S.org.orgId); S.data = data; S.members = members; lastFullLoad = Date.now(); liveRender(); } catch (e) { }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') liveRefresh(); });
+
+/* ---------- easy home (owner / manager) ---------- */
+const evToday = () => { const t = todayLocal(); return col('events').filter(e => !['Cancelled', 'Closed'].includes(e.stage) && e.date && e.date <= t && eventEnd(e) >= t); };
+const evTomorrow = () => { const t = addDays(todayLocal(), 1); return col('events').filter(e => !['Cancelled', 'Closed'].includes(e.stage) && e.date === t); };
+function bigBtn(label, icon, color, fn, sub = '') { return `<button class="big-btn" style="--c:${color}" onclick="${fn}">${ibox(icon, color, 'lg')}<b>${esc(label)}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</button>`; }
+function liveEventRow(e) {
+  const p = eventProgress(e); const [i, c] = evStyle(e); const present = col('attendance').filter(a => a.date === todayLocal() && a.eventId === e.id && a.status !== 'A').length;
+  return `<button class="row click live-ev" onclick="A.go('event',{id:'${e.id}'})">${datebox(e.date, c)}<div class="main-col"><b>${esc(e.title)}</b><div class="sub"><span>${esc((e.venue || '—').split(',')[0])}</span>${e.time ? ' · <span>' + esc(e.time) + '</span>' : ''}${present ? ` · <span>${present} crew at site</span>` : ''}</div>${p != null ? `<div class="row-flex" style="gap:8px;margin-top:6px;flex-wrap:nowrap"><div style="flex:1">${prog(p)}</div><b class="num small">${Math.round(p)}%</b></div>` : ''}</div>${stagePill(e.stage)}</button>`;
+}
+function simpleHome() {
+  const t = todayLocal(); const today = evToday(); const tom = evTomorrow();
+  const money = can('invoices'); const due = money ? sum(col('invoices').filter(i => i.type === 'invoice'), i => Math.max(0, invCalc(i).balance)) : 0;
+  const al = computeAlerts(); const follow = col('events').filter(followDue).length;
+  const setup = today.map(eventProgress).filter(x => x != null); const setupAvg = setup.length ? Math.round(sum(setup, x => x) / setup.length) : null;
+  const btns = [
+    can('bookings', 2) && bigBtn('New booking', 'calendar', MOD.bookings.c, 'A.newBooking()', '4 things to fill'),
+    can('payments', 2) && bigBtn('Payment received', 'rupee', '#0B9B68', 'A.paymentForm()'),
+    can('staff', 2) && bigBtn('Attendance', 'users', MOD.staff.c, "A.go('staff',{tab:'attendance'})"),
+    can('inventory') && bigBtn('Stock', 'box', MOD.inventory.c, "A.go('inventory')"),
+    can('invoices', 2) && bigBtn('Bill / quotation', 'receipt', MOD.invoices.c, 'A.newInvoice()'),
+    can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()')].filter(Boolean);
+  return `${pushCard()}
+  <div class="today-strip">
+    <div><b>${today.length}</b><span>Events today</span></div>
+    <div><b>${tom.length}</b><span>Tomorrow</span></div>
+    ${setupAvg != null ? `<div><b>${setupAvg}%</b><span>Setup done</span></div>` : follow ? `<div><b>${follow}</b><span>Call back</span></div>` : ''}
+    ${money ? `<div><b>${inr(due)}</b><span>To collect</span></div>` : ''}
+  </div>
+  <div class="big-grid">${btns.join('')}</div>
+  ${today.length || tom.length ? `<div class="sec-h"><h2>Today & tomorrow${info('dash-live')}</h2><button class="linkbtn" onclick="A.go('bookings')">All bookings ${ic('chev')}</button></div>
+  <div class="card"><div class="rows">${[...today, ...tom].map(liveEventRow).join('')}</div></div>` : `<div class="card" style="margin-top:14px">${empty('No event today or tomorrow', 'Your next bookings will show here with live setup progress.', '', 'calendar', MOD.bookings.c)}</div>`}
+  ${al.length ? `<div class="sec-h"><h2>Needs attention${info('dash-attention')}</h2><button class="linkbtn" onclick="A.alertsSheet()">See all (${al.length}) ${ic('chev')}</button></div><div class="stack-sm">${al.slice(0, 3).map(alertCard).join('')}</div>` : ''}
+  <div class="easy-foot"><button class="btn block" onclick="A.moreSheet()">${ic('grid')} All sections</button><button class="linkbtn" onclick="A.setFull(true)">Show the full home screen</button></div>`;
+}
+
+/* ---------- crew home ---------- */
+function crewHome() {
+  const sid = S.me?.staffId; const t = todayLocal(); const st = settings();
+  const mine = sid ? col('tasks').filter(x => x.assignee === sid && (x.progress < 100 || (x.updatedAt && todayLocal(new Date(x.updatedAt)) === t))) : [];
+  const evIds = [...new Set(mine.map(x => x.eventId).filter(Boolean))];
+  const evs = [...new Set([...evIds.map(evById).filter(Boolean), ...evToday()])];
+  const marked = LS.get('ep_att_' + S.org.orgId + '_' + t, null);
+  const owner = S.members.find(m => m.role === 'owner' && m.userId !== S.user.id);
+  return `${pushCard()}
+  <div class="card pad crew-att ${marked ? 'done' : ''}">${marked
+    ? `${ibox('check', '#0B9B68', 'lg')}<div><b>Attendance marked</b><div class="small muted"><span>Today at ${esc(marked.at)}</span>${marked.ev ? ' · <span>' + esc(marked.ev) + '</span>' : ''}</div></div>`
+    : sid ? `<button class="btn primary block crew-reach" onclick="A.iReached()">${ic('pin')} I have reached the site</button>${evs.length > 1 ? `<select id="reachEv" class="inline-in" aria-label="Which event">${evs.map(e => `<option value="${e.id}">${esc(e.title)}</option>`).join('')}</select>` : ''}<div class="tiny muted">Tap when you reach. Your attendance is marked for today.</div>`
+    : `<div class="banner warn">${ic('alert')}<span>Your login is not linked to a crew name yet. Ask the owner to link it in Team & access.</span></div>`}</div>
+  <div class="sec-h"><h2>My work</h2></div>
+  ${mine.length ? `<div class="stack-sm">${mine.map(x => { const e = evById(x.eventId); return `<div class="card pad crew-task"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><div style="min-width:0"><b class="crew-task-t">${esc(x.title)}</b><div class="small muted">${e ? esc(e.title) + (e.venue ? ' · ' + esc(e.venue.split(',')[0]) : '') : ''}</div></div><b class="num crew-pct">${x.progress}%</b></div>${prog(x.progress)}
+    <div class="pct-btns">${[25, 50, 75].map(v => `<button class="${x.progress >= v ? 'on' : ''}" onclick="A.crewProg('${x.id}',${v})">${v}%</button>`).join('')}<button class="done ${x.progress >= 100 ? 'on' : ''}" onclick="A.crewProg('${x.id}',100)">${ic('check')} Done</button></div></div>`; }).join('')}</div>`
+    : `<div class="card">${empty('No work given to you', 'When the owner gives you setup work, it shows here.', '', 'pulse', MOD.tasks.c)}</div>`}
+  ${evs.length ? `<div class="sec-h"><h2>Today’s events</h2></div><div class="card"><div class="rows">${evs.map(e => `<div class="row">${datebox(e.date, evStyle(e)[1])}<div class="main-col"><b>${esc(e.title)}</b><div class="sub">${esc(e.venue || '')}${e.time ? ' · ' + esc(e.time) : ''}</div></div>${e.venue ? `<a class="btn sm" target="_blank" rel="noopener" href="https://maps.google.com/?q=${encodeURIComponent(e.venue)}">${ic('pin')} Map</a>` : ''}</div>`).join('')}</div></div>` : ''}
+  <div class="big-grid two" style="margin-top:14px">${canSendAlert() ? bigBtn('Alert the owner', 'bell', '#E11D74', `A.alertForm('${owner?.userId || ''}')`) : ''}${st.phone ? `<a class="big-btn" style="--c:#0B9B68" href="tel:${esc(String(st.phone).replace(/\s/g, ''))}">${ibox('phone', '#0B9B68', 'lg')}<b>Call the owner</b></a>` : ''}</div>`;
+}
+A.iReached = async () => {
+  try {
+    const evId = document.getElementById('reachEv')?.value || (evToday()[0]?.id || '');
+    let rec;
+    if (S.adapter.mode === 'cloud') { const { data, error } = await S.adapter.sb.rpc('mark_my_attendance', { p_org: S.org.orgId, p_event: evId }); if (error) throw S.adapter.err(error); rec = data; }
+    else { const d = todayLocal(); rec = { id: d + '_' + S.me.staffId, staffId: S.me.staffId, date: d, status: 'P', eventId: evId, selfAt: new Date().toTimeString().slice(0, 5) }; const arr = col('attendance'); const i = arr.findIndex(x => x.id === rec.id); if (i >= 0) arr[i] = { ...arr[i], ...rec }; else arr.push(rec); await S.adapter.put(S.org.orgId, 'attendance', rec); }
+    LS.set('ep_att_' + S.org.orgId + '_' + todayLocal(), { at: rec.selfAt, ev: evById(evId)?.title || '' });
+    toast('Attendance marked. Have a good day!'); render();
+  } catch (e) { toast(e.message, 'bad'); }
+};
+A.crewProg = async (id, v) => {
+  const t = getById('tasks', id); if (!t) return; if (!canTask(t)) { toast('You can update only your own work', 'bad'); return; }
+  const was = t.progress; await A.taskProg(id, v);
+  if (v >= 100 && was < 100) notifyManagers(`${T('Work done')}: ${t.title}`, evById(t.eventId)?.title || '');
+};
+/* quiet "update" to owner/manager/supervisor phones (no ringing) */
+async function notifyManagers(title, body) {
+  try { if (S.adapter.mode !== 'cloud' || lvl('tasks') < 2) return; const a = await AlertsDB.send({ kind: 'update', to_role: 'managers', title: title.slice(0, 140), body: body || null, urgent: false, from_name: S.me?.name || S.user.name }); await AlertsDB.push(a.id); } catch (e) { }
+}
+
+/* ---------- quick booking (4 fields) + packages ---------- */
+A.quickBooking = () => {
+  const pk = settings().packages || []; const pay = can('payments', 2);
+  modal(`<form class="form" onsubmit="A.saveQuickBooking(event)" novalidate>${sheetHead('New booking', 'Only 4 things. Add the rest later if you want.')}<div class="sheet-b stack">
+    ${pk.length ? `<div class="field"><span>Package (optional)</span><div class="chips">${pk.map(p => `<button type="button" class="chip" data-pk="${p.id}" onclick="A.pickPackage(this,'${p.id}')">${esc(p.name)}${p.budget ? ' · ' + inr(p.budget) : ''}</button>`).join('')}</div><input type="hidden" name="pkg"></div>` : ''}
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'client', label: 'Client name', required: true, autofocus: true })}${fieldHTML({ name: 'phone', label: 'Mobile', type: 'tel', placeholder: '98290 12345' })}
+    ${fieldHTML({ name: 'date', label: 'Event date', type: 'date', required: true, value: todayLocal() })}${fieldHTML({ name: 'budget', label: 'Total amount ₹', type: 'number', min: 0, placeholder: 'e.g. 150000' })}</div>
+    <div class="field"><span>Type</span><div class="chips type-chips">${['Wedding', 'Reception', 'Sangeet & Mehendi', 'Birthday / Anniversary', 'Religious / Jagran', 'Corporate Event', 'Other'].map((x, i) => `<label class="chip-radio"><input type="radio" name="type" value="${esc(x)}" ${i === 0 ? 'checked' : ''}><span>${esc(x)}</span></label>`).join('')}</div></div>
+    ${pay ? fieldHTML({ name: 'advance', label: 'Advance received now ₹ (optional)', type: 'number', min: 0, hint: 'Booking becomes Confirmed and the advance is saved in Payments' }) : ''}
+    <label class="check"><input type="checkbox" name="confirmed"> <span>Booking is confirmed (pakki)</span></label>
+  </div><footer class="sheet-f"><button type="button" class="linkbtn" onclick="A.closeModal();A.eventForm()">More details</button><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save booking</button></footer></form>`);
+};
+A.pickPackage = (btn, id) => {
+  const f = btn.form; const p = (settings().packages || []).find(x => x.id === id); if (!p) return;
+  f.querySelectorAll('[data-pk]').forEach(b => b.classList.toggle('on', b === btn)); f.pkg.value = id;
+  if (p.budget && !f.budget.value) f.budget.value = p.budget;
+  if (p.type) { const r = [...f.querySelectorAll('input[name=type]')].find(x => x.value === p.type); if (r) r.checked = true; }
+};
+A.saveQuickBooking = e => {
+  e.preventDefault(); const v = readForm(e.target);
+  if (!(v.client || '').trim()) { toast('Write the client name', 'bad'); return; }
+  if (!v.date) { toast('Pick the event date', 'bad'); return; }
+  withBtn(e, async () => {
+    const p = (settings().packages || []).find(x => x.id === v.pkg); const adv = +v.advance || 0;
+    const stage = v.confirmed || adv > 0 ? 'Confirmed' : 'Enquiry'; const type = v.type || 'Wedding';
+    const rec = { id: uid('e_'), created: Date.now(), client: v.client.trim(), phone: v.phone || '', date: v.date, type, stage, budget: +v.budget || 0, pax: p?.pax || 0, venue: '', title: `${v.client.trim().split(' ').slice(-1)[0]} ${type}`,
+      items: p?.items ? JSON.parse(JSON.stringify(p.items)) : [], schedule: [], menu: { dishIds: [...(p?.dishIds || [])], pax: p?.pax || 0 }, dispatch: {} };
+    await save('events', rec, `Created booking ${rec.title}`);
+    if (adv > 0 && can('payments', 2)) await save('payments', { id: uid('p_'), invoiceId: '', eventId: rec.id, amount: adv, date: todayLocal(), mode: 'Cash', ref: 'Advance', by: S.me?.name }, `Recorded payment ${inr(adv)}`);
+    A.closeModal(); toast(adv > 0 ? `Booking saved with ${inr(adv)} advance` : 'Booking saved'); A.go('event', { id: rec.id });
+  });
+};
+A.savePackage = evId => {
+  const e = evById(evId); if (!e) return; need('settings', 2);
+  formModal({ title: 'Save as package', sub: 'Next time, one tap fills these items, menu and amount', fields: [{ name: 'name', label: 'Package name', required: true, value: `${e.type} ${e.pax || ''}`.trim(), full: true, placeholder: 'e.g. Wedding 500 guests' }, { name: 'budget', label: 'Package amount ₹', type: 'number', min: 0, value: e.budget || '' }],
+    onSubmit: async v => { const st = settings(); const pk = { id: uid('pk_'), name: v.name.trim(), type: e.type, budget: +v.budget || 0, pax: e.pax || 0, items: (e.items || []).map(x => ({ ...x })), dishIds: [...(e.menu?.dishIds || [])] };
+      await saveSettingsRec({ packages: [...(st.packages || []), pk] }); logAct(`Saved package ${pk.name}`); toast('Package saved'); render(); } });
+};
+A.delPackage = id => confirmBox('Delete this package?', '', 'Delete', async () => { const st = settings(); await saveSettingsRec({ packages: (st.packages || []).filter(p => p.id !== id) }); render(); });
+function packagesCard() {
+  const pk = settings().packages || []; const edit = can('settings', 2);
+  return `<div class="card"><div class="card-h"><div><h3>Booking packages${info('set-packages')}</h3><p>Ready sets of items, menu and amount. Pick one while making a booking.</p></div></div><div class="rows">${pk.map(p => `<div class="row">${ibox('gift', '#7C3AED', 'sm')}<div class="main-col"><b>${esc(p.name)}</b><div class="sub">${p.budget ? inr(p.budget) + ' · ' : ''}${(p.items || []).length} items · ${(p.dishIds || []).length} dishes${p.pax ? ' · ' + p.pax + ' guests' : ''}</div></div>${edit ? `<button class="icon-btn" style="width:36px;height:36px" aria-label="Delete package" onclick="A.delPackage('${p.id}')">${ic('trash')}</button>` : ''}</div>`).join('') || `<div class="row"><span class="small muted">No packages yet. Open any booking and tap “Save as package”.</span></div>`}</div></div>`;
+}
+
+/* ---------- simple access: who sees what ---------- */
+const ROLE_HELP = {
+  manager: 'Runs bookings, stock, catering and crew. Sees bills; cannot change team or settings.',
+  accountant: 'Bills, payments and expenses. Sees bookings and reports.',
+  supervisor: 'Site work: bookings, setup tasks, stock out and in, attendance.',
+  staff: 'Crew: sees only their own work and marks attendance.'
+};
+function roleCards(cur, name = 'role') {
+  return `<div class="role-cards">${Object.entries(S.roles).filter(([k]) => k !== 'owner').map(([k, r]) => `<label class="role-card"><input type="radio" name="${name}" value="${k}" ${cur === k ? 'checked' : ''}><span><b>${esc(r.label)}</b><small>${esc(ROLE_HELP[k] || 'Custom role')}</small></span></label>`).join('')}</div>`;
+}
+const LV3 = [[0, 'Off'], [1, 'See'], [2, 'Change']];
+A.accessSheet = uidv => {
+  const m = S.members.find(x => x.userId === uidv); if (!m) return; const rp = S.roles[m.role]?.perms || {}; const eff = { ...rp, ...(m.perms || {}) };
+  modal(`<form class="form" onsubmit="A.saveAccess(event,'${uidv}')" novalidate>${sheetHead('What ' + (m.name || '').split(' ')[0] + ' can see', 'Tap to change. Saves for this person only.')}<div class="sheet-b stack">
+    <div class="field"><span>Job</span>${roleCards(m.role)}</div>
+    <div class="acc-list">${MODULES.filter(md => moduleOn(md.key)).map(md => { const cur = Math.min(2, +(eff[md.key] || 0)); return `<div class="acc-row">${ibox(md.icon, md.c, 'sm')}<b>${esc(md.label)}</b><div class="seg acc-seg">${LV3.map(([v, l]) => `<label><input type="radio" name="a_${md.key}" value="${v}" ${cur === v ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div></div>`; }).join('')}</div>
+    <p class="tiny muted">Off = section hidden. See = can look only. Change = can add and edit. Only the owner can delete.</p>
+  </div><footer class="sheet-f"><button type="button" class="linkbtn" onclick="A.memberMore('${uidv}')">Password & more</button><span class="grow"></span><button class="btn primary" type="submit">Save</button></footer></form>`, { wide: true });
+  document.querySelectorAll('.role-cards input').forEach(r => r.addEventListener('change', () => { const p = S.roles[r.value]?.perms || {}; MODULES.forEach(md => { const x = document.querySelector(`input[name="a_${md.key}"][value="${Math.min(2, +(p[md.key] || 0))}"]`); if (x) x.checked = true; }); }));
+};
+A.saveAccess = (e, uidv) => {
+  e.preventDefault(); const f = e.target; const m = S.members.find(x => x.userId === uidv);
+  withBtn(e, async () => {
+    need('team', 3); const role = f.querySelector('input[name=role]:checked')?.value || m.role; const rp = S.roles[role]?.perms || {}; const perms = {};
+    MODULES.forEach(md => { const x = f.querySelector(`input[name="a_${md.key}"]:checked`); if (!x) return; const v = +x.value; const def = Math.min(2, +(rp[md.key] || 0)); if (v !== def) perms[md.key] = v; });
+    await S.adapter.updateMember(S.org.orgId, uidv, { staffId: m.staffId || '', perms, role });
+    Object.assign(m, { perms: Object.keys(perms).length ? perms : null, role });
+    logAct(`Updated access for ${m.name}`); A.closeModal(); toast('Access saved'); render();
+  });
+};
+
+/* ---------- home screen switch (nothing removed: full home is one tap away) ---------- */
+const fullDashboard = V.dashboard;
+V.dashboard = () => {
+  if (isSimple()) return isCrewUser() ? crewHome() : `<div class="sec-h" style="margin-top:0"><h2>Today${info('dashboard')}</h2></div>` + simpleHome();
+  return `<div class="easy-switch"><button class="linkbtn" onclick="A.setFull(false)">${ic('home')} Switch to easy home</button></div>` + fullDashboard();
 };
 
 boot();

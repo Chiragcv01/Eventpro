@@ -53,6 +53,7 @@ const AlertsDB = {
   }
 };
 const forMe = a => a.from_user !== S.user?.id && (!a.to_user || a.to_user === S.user?.id);
+const isRing = a => (a.kind || 'alert') === 'alert';
 const seenByMe = a => !!(a.acks || {})[S.user?.id];
 const canSendAlert = () => S.adapter?.mode === 'cloud' ? lvl('tasks') >= 2 : !!S.org && lvl('tasks') >= 2;
 
@@ -68,14 +69,15 @@ async function startAlerts() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: 'org_id=eq.' + S.org.orgId }, p => {
         const a = p.new; if (!a?.id) return; const i = (S.teamAlerts || []).findIndex(x => x.id === a.id);
         if (i >= 0) S.teamAlerts[i] = a; else S.teamAlerts.unshift(a);
-        if (p.eventType === 'INSERT' && forMe(a)) showAlertOverlay();
+        if (p.eventType === 'INSERT' && forMe(a)) { if (isRing(a)) showAlertOverlay(); else toast('✅ ' + a.title + (a.body ? ' · ' + a.body : '')); }
         refreshAlertDot();
       }).subscribe();
   }
   const pending = pendingForMe(); if (pending.length) setTimeout(showAlertOverlay, 400);
   refreshAlertDot(); chimeForNewReminders(); maybeAskPush();
+  if (typeof startLiveSync === 'function') startLiveSync();
 }
-const pendingForMe = () => (S.teamAlerts || []).filter(a => forMe(a) && !seenByMe(a) && Date.now() - Date.parse(a.created_at) < 36 * 3600e3);
+const pendingForMe = () => (S.teamAlerts || []).filter(a => isRing(a) && forMe(a) && !seenByMe(a) && Date.now() - Date.parse(a.created_at) < 36 * 3600e3);
 function refreshAlertDot() { const b = document.querySelector('.topbar [aria-label="Alerts"] .dot'); const n = computeAlerts().length + pendingForMe().length; if (b) b.textContent = n; else if (n) render(); }
 /* new important reminders → tune once per new item */
 function chimeForNewReminders() {
@@ -148,7 +150,7 @@ async function ensurePush(ask) {
     if (Notification.permission !== 'granted') { if (!ask) return false; const r = await Notification.requestPermission(); if (r !== 'granted') { toast('Notifications not allowed', 'warn'); return false; } }
     const reg = await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
     if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC) });
-    const j = sub.toJSON(); const { error } = await S.adapter.sb.rpc('save_push_sub', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent });
+    const j = sub.toJSON(); const { error } = await S.adapter.sb.rpc('save_push_sub', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent, p_lang: I18N.lang });
     if (error) throw S.adapter.err(error);
     LS.set('ep_push_on', true); if (ask) { toast('Phone notifications are on'); render(); } return true;
   } catch (e) { if (ask) toast('Could not turn on notifications: ' + e.message, 'bad'); return false; }
@@ -194,5 +196,5 @@ try { navigator.serviceWorker && navigator.serviceWorker.addEventListener('messa
 /* ---------- team alerts inside the bell sheet ---------- */
 function teamAlertRow(a) {
   const acks = Object.values(a.acks || {}); const mine = a.from_user === S.user?.id; const pend = forMe(a) && !seenByMe(a);
-  return `<div class="row ${pend ? 'click' : ''}" ${pend ? 'onclick="A.closeModal();showAlertOverlay()"' : ''}>${ibox(a.urgent ? 'alert' : 'bell', a.urgent ? '#E0344B' : '#E11D74', 'sm')}<div class="main-col"><b>${esc(a.title)}</b><div class="sub"><span>${mine ? `To ${esc(a.to_name || 'Everyone')}` : `From ${esc(a.from_name || 'Team')}`}</span> · <span>${fmtShort(todayLocal(new Date(a.created_at)))}</span> <span>${new Date(a.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>${mine ? ` · <span>${acks.length ? 'Seen by ' + acks.map(x => esc(x.name || '')).join(', ') : 'Not seen yet'}</span>` : ''}</div></div>${pend ? pill('New', 'bad') : mine ? pill(acks.length ? 'Seen' : 'Sent', acks.length ? 'good' : '') : ''}</div>`;
+  return `<div class="row ${pend ? 'click' : ''}" ${pend ? 'onclick="A.closeModal();showAlertOverlay()"' : ''}>${ibox(!isRing(a) ? 'check' : a.urgent ? 'alert' : 'bell', !isRing(a) ? '#0B9B68' : a.urgent ? '#E0344B' : '#E11D74', 'sm')}<div class="main-col"><b>${esc(a.title)}</b><div class="sub"><span>${mine ? `To ${esc(a.to_name || 'Everyone')}` : `From ${esc(a.from_name || 'Team')}`}</span> · <span>${fmtShort(todayLocal(new Date(a.created_at)))}</span> <span>${new Date(a.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>${mine ? ` · <span>${acks.length ? 'Seen by ' + acks.map(x => esc(x.name || '')).join(', ') : 'Not seen yet'}</span>` : ''}</div></div>${pend ? pill('New', 'bad') : mine ? pill(acks.length ? 'Seen' : 'Sent', acks.length ? 'good' : '') : ''}</div>`;
 }

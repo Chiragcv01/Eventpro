@@ -36,7 +36,7 @@ V.dashboard = () => {
   const evCards = upcoming.slice(0, 8).map(eventCard).join('');
   return `${pushCard()}${startCard()}${hero}${tiles}${stats}
   <div class="sec-h"><h2>Upcoming events${info('dash-upcoming')}</h2><button class="linkbtn" onclick="A.go('bookings')">See all ${ic('chev')}</button></div>
-  ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
+  ${evCards ? `<div class="hscroll">${evCards}</div>` : `<div class="card">${empty('No upcoming events', 'New bookings will appear here.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.newBooking()">${ic('plus')} Add booking</button>` : '', 'calendar', MOD.bookings.c)}</div>`}
   <div class="split" style="margin-top:6px">
     <div class="stack" style="gap:0">
       <div class="sec-h"><h2>Needs attention${info('dash-attention')}</h2>${alerts.length ? pill(alerts.length + ' open', 'bad') : pill('All clear', 'good')}</div>
@@ -62,7 +62,7 @@ function eventRow(e) {
 /* ================= Bookings ================= */
 V.bookings = () => {
   const mode = S.params.mode || 'list';
-  const actions = can('bookings', 2) ? `${importBtn('events')}<button class="btn primary" onclick="A.eventForm()">${ic('plus')} New booking</button>` : '';
+  const actions = can('bookings', 2) ? `${importBtn('events')}<button class="btn primary" onclick="A.newBooking()">${ic('plus')} New booking</button>` : '';
   return pageHead('Bookings', 'Every enquiry, quotation and confirmed event in one diary.', actions) +
     `<div class="toolbar">${seg('mode', [['list', 'List'], ['calendar', 'Calendar'], ['board', 'Pipeline']], mode, 'A.setP')}</div>` +
     (mode === 'calendar' ? calendarView() : mode === 'board' ? boardView() : listViewEvents());
@@ -157,7 +157,7 @@ V.event = () => {
 const EV_TABS = {};
 EV_TABS.overview = e => {
   const m = eventMoney(e); const p = eventProgress(e);
-  return `<div class="split"><div class="card"><div class="card-h"><h3>Details</h3></div><div class="sheet-b" style="padding-top:12px"><table class="tbl"><tbody>
+  return `${can('settings', 2) ? `<div class="row-flex" style="justify-content:flex-end;margin-bottom:10px"><button class="btn sm" onclick="A.savePackage('${e.id}')">${ic('gift')} Save as package</button></div>` : ''}<div class="split"><div class="card"><div class="card-h"><h3>Details</h3></div><div class="sheet-b" style="padding-top:12px"><table class="tbl"><tbody>
     <tr><td class="muted">Client</td><td><b>${esc(e.client)}</b><div class="small muted">${esc(e.phone || '')} ${e.email ? '· ' + esc(e.email) : ''}</div></td></tr>
     <tr><td class="muted">When</td><td>${fmtDay(e.date)}${e.endDate && e.endDate !== e.date ? ' to ' + fmtDay(e.endDate) : ''} ${e.time ? '· ' + esc(e.time) : ''}</td></tr>
     <tr><td class="muted">Venue</td><td>${esc(e.venue || '—')}</td></tr><tr><td class="muted">Guests</td><td class="num">${num(e.pax)}</td></tr>

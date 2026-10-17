@@ -9,10 +9,10 @@ import android.os.Build;
 import androidx.core.app.NotificationManagerCompat;
 
 /**
- * SabManage: every notification from sabmanage.com (team alerts, important reminders)
- * is posted on our own "Team alerts" channel. That channel plays the SabManage tune on the
+ * SabManage: team alerts from sabmanage.com (title starts with the bell or siren emoji)
+ * are posted on our own "Team alerts" channel; other notifications use the normal channel. That channel plays the SabManage tune on the
  * ALARM sound stream, so it is heard even when the phone is on silent / vibrate.
- * Urgent alerts (title starts with the siren emoji) repeat the tune until the notification is opened.
+ * Urgent alerts (siren emoji) repeat the tune until the notification is opened.
  */
 public class DelegationService extends com.google.androidbrowserhelper.trusted.DelegationService {
     static final String CHANNEL = "sabmanage_team_alerts";
@@ -67,7 +67,11 @@ public class DelegationService extends com.google.androidbrowserhelper.trusted.D
             if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) return false;
             NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             CharSequence title = notification.extras != null ? notification.extras.getCharSequence(Notification.EXTRA_TITLE) : null;
-            boolean urgent = title != null && title.toString().startsWith("🚨");
+            String t = title == null ? "" : title.toString();
+            boolean urgent = t.startsWith("\uD83D\uDEA8");
+            boolean ring = urgent || t.startsWith("\uD83D\uDD14");
+            // morning summary, "work done" updates etc. use the normal notification sound
+            if (!ring) return super.onNotifyNotificationWithChannel(platformTag, platformId, notification, channelName);
             Notification.Builder b = Notification.Builder.recoverBuilder(this, notification)
                     .setCategory(Notification.CATEGORY_ALARM)
                     .setVisibility(Notification.VISIBILITY_PUBLIC);
