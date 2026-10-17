@@ -327,3 +327,13 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px
 @media (max-width:980px){.pillars{grid-template-columns:repeat(2,minmax(0,1fr))}.types-grid{grid-template-columns:minmax(0,1fr);gap:28px}.types-grid .sec-h{position:static}}
 @media (max-width:900px){.hx-grid{grid-template-columns:minmax(0,1fr);gap:40px}.hx{padding:40px 0 60px}}
 @media (max-width:560px){.pillars{grid-template-columns:minmax(0,1fr);gap:28px}.today li{grid-template-columns:40px 30px minmax(0,1fr);padding:11px 14px;gap:10px}.today li em{grid-column:3;justify-self:start;margin-top:-4px}.today li i{width:30px;height:30px}.today .tot b{font-size:21px}}
+
+/* ---------- see the app ---------- */
+.showcase{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1fr);gap:36px;align-items:start}
+.showcase figure{margin:0}
+.showcase figcaption{margin-top:16px;color:var(--ink2);font-size:16px;line-height:1.45;max-width:30ch}
+.showcase .doc img{width:100%;height:auto;border-radius:14px;background:#fff;box-shadow:0 1px 2px rgba(14,26,51,.06),0 30px 60px -30px rgba(14,26,51,.35)}
+.showcase .ph .phone{width:100%;max-width:280px;justify-self:start;border-radius:38px;padding:9px}
+.showcase .ph .phone img{border-radius:30px}
+@media (max-width:980px){.showcase{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.showcase .doc{grid-column:1/-1}}
+@media (max-width:520px){.showcase{gap:22px}.showcase .ph .phone{border-radius:28px;padding:6px}.showcase .ph .phone img{border-radius:23px}.showcase figcaption{font-size:14.5px}}

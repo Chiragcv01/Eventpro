@@ -3,7 +3,7 @@
    Content comes from Supabase (public, read-only data). */
 const SB_URL = process.env.SUPABASE_URL || 'https://uregwtavhkjowiltukiq.supabase.co';
 const SB_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZWd3dGF2aGtqb3dpbHR1a2lxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNTA1MjksImV4cCI6MjEwNzcyNjUyOX0.bVRTpmkE_c30j-_pegk0HLdGaSeSNqQ3pwtBjeRoAIw';
-const V = '7';
+const V = '8';
 const PER_PAGE = 9;
 
 /* ---------- helpers ---------- */
@@ -74,9 +74,9 @@ const MARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"
 const ic = (n, cls = 'ico') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n] || ''}"/></svg>`;
 
 /* ---------- data ---------- */
-const DEFAULT_SITE = { brandName: 'SabManage', tagline: 'Apne business ka poora hisaab, ek app mein.', about: 'SabManage is built in Jaipur for Indian businesses that run on people and phones: tent houses, caterers, halwais, decorators, event managers, and now doctors and clinics. We sat with them in godowns, kitchens, wedding lawns and clinics to understand how the daily work is really done, and turned that into one simple app that works on any phone, in Hindi and English.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
+const DEFAULT_SITE = { brandName: 'SabManage', tagline: 'Apne business ka poora hisaab, ek app mein.', about: 'SabManage is built in Jaipur for Indian businesses that run on people and phones. We spent time with owners, their staff and their customers to understand how the daily work is really done, and turned it into one simple app that works on any phone, in Hindi and English.', aboutHi: '', legalName: '', address: '', city: 'Jaipur', phone: '', whatsapp: '', email: '', hours: 'Mon–Sat, 10 am – 7 pm', mapUrl: '', instagram: '', facebook: '', youtube: '', linkedin: '', showPricing: true };
 /* texts that were the old defaults (never edited in Super Admin) move to the new defaults */
-const OLD_DEFAULTS = { tagline: ['Tent, catering aur event ka poora hisaab, ek app mein.'], about: ['SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.'] };
+const OLD_DEFAULTS = { tagline: ['Tent, catering aur event ka poora hisaab, ek app mein.'], about: ['SabManage is built in Jaipur for Indian businesses that run on people and phones: tent houses, caterers, halwais, decorators, event managers, and now doctors and clinics. We sat with them in godowns, kitchens, wedding lawns and clinics to understand how the daily work is really done, and turned that into one simple app that works on any phone, in Hindi and English.', 'SabManage is built in Jaipur for the people who make Indian weddings and events happen: tent houses, caterers, halwais, decorators and event managers. We spent time in godowns, kitchens and wedding lawns to understand how bookings, stock, ration, crew and payments are really handled, and turned that into one simple app that works on any phone.'] };
 async function loadSettings() {
   let plat = {};
   try { const r = await sb('platform_settings?id=eq.1&select=data'); plat = (r[0] && r[0].data) || {}; } catch (e) { }
@@ -92,7 +92,7 @@ async function loadPosts({ limit = PER_PAGE, offset = 0, tag = '' } = {}) {
 /* ---------- page shell ---------- */
 function shell({ s, plat, origin, path, title, desc, image, body, type = 'website', jsonld = [], noindex = false, hiTitle = '' }) {
   const brand = s.brandName || 'SabManage'; const url = origin + path;
-  const nav = [['/#features', 'Features', 'सुविधाएं'], ['/#types', 'Who it’s for', 'किसके लिए'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/blog', 'Blog', 'ब्लॉग'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
+  const nav = [['/#features', 'Features', 'सुविधाएं'], ['/#app', 'See the app', 'ऐप देखें'], ...(s.showPricing !== false && (plat.plans || []).length ? [['/#pricing', 'Pricing', 'कीमत']] : []), ['/download', 'Android app', 'एंड्रॉयड ऐप'], ['/#about', 'About us', 'हमारे बारे में'], ['/#contact', 'Contact', 'संपर्क']];
   const waN = s.whatsapp || s.phone;
   const social = [['instagram', 'insta', 'Instagram'], ['facebook', 'fb', 'Facebook'], ['youtube', 'yt', 'YouTube'], ['linkedin', 'li', 'LinkedIn']].filter(([k]) => safeUrl(s[k])).map(([k, i, l]) => `<a href="${esc(safeUrl(s[k]))}" target="_blank" rel="noopener" aria-label="${l}">${ic(i)}</a>`).join('');
   return `<!doctype html>
@@ -135,7 +135,7 @@ ${body}
     <div class="about-f"><a class="brand" href="/"><span class="mk">${MARK}</span>${esc(brand)}</a>
       <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('बुकिंग, बिल, पेमेंट, स्टाफ़ और ग्राहक, एक आसान ऐप में। किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में।')}>Bookings, bills, payments, staff and customers in one simple app. On any phone, in Hindi and English.</p>
       ${social ? `<div class="social">${social}</div>` : ''}</div>
-    <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/events"${hi('टेंट, कैटरिंग, इवेंट')}>Tent, catering, events</a></li><li><a href="/doctors"${hi('डॉक्टर और क्लिनिक')}>Doctors and clinics</a></li><li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
+    <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/blog"${hi('ब्लॉग')}>Blog</a></li><li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
     <div><h4${hi('संपर्क')}>Contact</h4><ul>
       ${s.phone ? `<li><a href="tel:+${waNum(s.phone)}">${esc(s.phone)}</a></li>` : ''}
       ${waN ? `<li><a href="${esc(wa(waN, 'Namaste, I want to know more about ' + brand + '.'))}" target="_blank" rel="noopener"${hi('व्हाट्सऐप')}>WhatsApp</a></li>` : ''}
@@ -176,12 +176,6 @@ function homePage({ s, plat, posts }) {
     ['users', 'Staff and attendance', 'स्टाफ़ और हाज़िरी', 'Each person gets their own login and sees only what you allow. Attendance, wages and overtime are worked out for you.', 'हर व्यक्ति का अपना लॉगिन, और उसे सिर्फ़ वही दिखे जो आप चाहें। हाज़िरी, मज़दूरी और ओवरटाइम अपने आप।'],
     ['bell', 'Updates and alerts', 'अपडेट और अलर्ट', 'Your team’s updates reach your phone within a second. Important alerts ring, even when the phone is on silent.', 'टीम के अपडेट एक सेकंड में आपके फ़ोन पर। ज़रूरी अलर्ट बजते हैं, फ़ोन साइलेंट हो तब भी।']
   ];
-  const types = [
-    ['tent', 'Tent house', 'टेंट हाउस', 'Godown stock by date, loading lists, challans and damage charges.', 'तारीख के हिसाब से गोदाम का स्टॉक, लोडिंग लिस्ट, चालान और टूट-फूट का चार्ज।', '/events'],
-    ['pot', 'Caterer or halwai', 'कैटरर या हलवाई', 'Menus, ration lists with your mandi rates, and the cost of every plate.', 'मेन्यू, आपके मंडी रेट से राशन लिस्ट, और हर प्लेट की लागत।', '/events'],
-    ['sparkle', 'Event manager', 'इवेंट मैनेजर', 'Vendors, crew, run-sheets and a progress page for your client.', 'वेंडर, क्रू, रन-शीट और क्लाइंट के लिए प्रोग्रेस पेज।', '/events'],
-    ['steth', 'Doctor or clinic', 'डॉक्टर या क्लिनिक', 'Patient records, BP and sugar charts, appointments and fees by UPI.', 'मरीज़ों का रिकॉर्ड, बीपी और शुगर के ग्राफ़, अपॉइंटमेंट और यूपीआई से फ़ीस।', '/doctors']
-  ];
   const feats = [
     ['globe', '#16A34A', 'Hindi, with help on every screen', 'हिंदी में, हर स्क्रीन पर मदद के साथ', 'Switch the whole app to Hindi with one tap. An ⓘ button on every screen explains it in plain words.', 'एक टैप में पूरा ऐप हिंदी में। हर स्क्रीन पर ⓘ बटन आसान शब्दों में समझाता है।'],
     ['android', '#1F5EFF', 'Any phone, plus an Android app', 'कोई भी फ़ोन, साथ में एंड्रॉयड ऐप', 'Works in the browser on any phone or computer. The Android app adds ringing alerts.', 'किसी भी फ़ोन या कंप्यूटर के ब्राउज़र में चलता है। एंड्रॉयड ऐप में बजने वाले अलर्ट भी।'],
@@ -214,7 +208,7 @@ function homePage({ s, plat, posts }) {
   ].filter(Boolean);
   const wayHi = { WhatsApp: 'व्हाट्सऐप', 'Call us': 'कॉल करें', Email: 'ईमेल', Office: 'ऑफ़िस', 'Working hours': 'काम का समय' };
   const faqs = [
-    ['Which businesses can use it?', 'कौन-से बिज़नेस इसे चला सकते हैं?', 'Today: tent houses, caterers, event managers and doctors or clinics. When you create your account you pick your work, and the app opens with the right sections. Shops, salons and more are coming.', 'अभी: टेंट हाउस, कैटरर, इवेंट मैनेजर और डॉक्टर या क्लिनिक। अकाउंट बनाते समय आप अपना काम चुनते हैं, और ऐप सही सेक्शन के साथ खुलता है। दुकान, सैलून और बाकी जल्द।'],
+    ['Will it fit my kind of business?', 'क्या यह मेरे काम के हिसाब से चलेगा?', 'Yes. When you create your account you tell us what you do, and the app opens with the sections that fit your work. You can switch off anything you do not need. If something is missing, tell us.', 'हां। अकाउंट बनाते समय आप बताते हैं कि आप क्या काम करते हैं, और ऐप उसी हिसाब के सेक्शन के साथ खुलता है। जो ज़रूरी न हो उसे बंद कर सकते हैं। कुछ कम लगे तो हमें बताइए।'],
     ['Do I need to install anything?', 'क्या कुछ इंस्टॉल करना पड़ेगा?', 'No. It opens in the browser on any Android phone, iPhone or computer. On Android you can also download the app from sabmanage.com/download.', 'नहीं। यह किसी भी एंड्रॉयड फ़ोन, आईफ़ोन या कंप्यूटर के ब्राउज़र में खुलता है। एंड्रॉयड पर sabmanage.com/download से ऐप भी डाउनलोड कर सकते हैं।'],
     ['Can my staff use it with their own login?', 'क्या मेरा स्टाफ़ अपने लॉगिन से चला सकता है?', 'Yes. You create a login for each person and choose which sections they can see or change. Staff who are not good with phones get one simple screen with big buttons.', 'हां। आप हर व्यक्ति का लॉगिन बनाते हैं और तय करते हैं कि वे कौन-से सेक्शन देख या बदल सकते हैं। जो फ़ोन कम चलाते हैं, उन्हें बड़े बटन वाली एक आसान स्क्रीन मिलती है।'],
     ['Will bills show my business name and logo?', 'क्या बिल पर मेरे बिज़नेस का नाम और लोगो आएगा?', 'Yes. Your logo, stamp, address, GSTIN, bank details and UPI ID print on every bill and receipt.', 'हां। आपका लोगो, स्टैम्प, पता, जीएसटीआईएन, बैंक डिटेल्स और यूपीआई आईडी हर बिल और रसीद पर छपते हैं।'],
@@ -242,10 +236,13 @@ function homePage({ s, plat, posts }) {
     <div class="pillars">${pillars.map(([i, t, th, dd, dh]) => `<div><i>${ic(i)}</i><h3${hi(th)}>${t}</h3><p${hi(dh)}>${dd}</p></div>`).join('')}</div>
   </div></section>
 
-  <section class="sec soft" id="types"><div class="wrap types-grid">
-    <div class="sec-h"><h2${hi('आपके काम के हिसाब से तैयार')}>Set up for your kind of work</h2><p${hi('अकाउंट बनाते समय आप अपना काम चुनते हैं। ऐप फिर सिर्फ़ वही सेक्शन दिखाता है जो आपके काम आते हैं।')}>When you create your account, you pick what you do. The app then shows only the sections you need.</p></div>
-    <ul class="types">${types.map(([i, t, th, dd, dh, href]) => `<li><a href="${href}"><i>${ic(i)}</i><div><b${hi(th)}>${t}</b><span${hi(dh)}>${dd}</span></div>${ic('arrow', 'ico go')}</a></li>`).join('')}
-      <li class="soon"><a href="#contact"><i>${ic('send')}</i><div><b${hi('कोई और बिज़नेस?')}>A different business?</b><span${hi('दुकान, सैलून, कोचिंग और बाकी जल्द आ रहे हैं। बताइए आपको क्या चाहिए।')}>Shops, salons, coaching and more are on the way. Tell us what you need.</span></div>${ic('arrow', 'ico go')}</a></li></ul>
+  <section class="sec soft" id="app"><div class="wrap">
+    <div class="sec-h"><h2${hi('ऐप की असली स्क्रीन')}>See the app</h2><p${hi('ये असली स्क्रीन हैं। जो अंग्रेज़ी में है, वही एक टैप में हिंदी में।')}>These are real screens. Everything you see in English is one tap away in Hindi.</p></div>
+    <div class="showcase">
+      <figure class="doc"><img src="/img/shot-bill.webp" width="766" height="852" loading="lazy" alt="A GST tax invoice made in the app, with the business name, GST number, bank details and UPI ID"><figcaption${hi('आपके नाम, जीएसटी, बैंक और यूपीआई वाला बिल, पीडीएफ़ या व्हाट्सऐप पर')}>A GST bill with your name, bank and UPI details, sent as PDF or on WhatsApp</figcaption></figure>
+      <figure class="ph"><div class="phone"><img src="/img/shot-payments.webp" width="390" height="780" loading="lazy" alt="The payments screen showing money due by age and a WhatsApp reminder button for each customer"></div><figcaption${hi('किस पर कितना बाकी, और एक टैप में याद-दिहानी')}>Who owes what, with a reminder in one tap</figcaption></figure>
+      <figure class="ph"><div class="phone"><img src="/img/shot-staff-hi.webp" width="390" height="780" loading="lazy" alt="The staff screen in Hindi with each person’s duty hours, shifts and pay"></div><figcaption${hi('स्टाफ़, ड्यूटी और तनख्वाह, पूरी हिंदी में')}>Staff, duty and pay, fully in Hindi</figcaption></figure>
+    </div>
   </div></section>
 
   <section class="sec"><div class="wrap">
@@ -262,9 +259,8 @@ function homePage({ s, plat, posts }) {
     </ol>
   </div></section>
   ${plansHtml}
-  ${blogHtml}
   <section class="sec" id="about"><div class="wrap about">
-    <div class="txt"><h2 style="margin-bottom:18px"${hi('हमारे बारे में')}>About us</h2><p${hi(s.aboutHi || (s.about === DEFAULT_SITE.about ? 'सबमैनेज जयपुर में उन भारतीय बिज़नेस के लिए बना है जो लोगों और फ़ोन से चलते हैं: टेंट हाउस, कैटरर, हलवाई, डेकोरेटर, इवेंट मैनेजर, और अब डॉक्टर और क्लिनिक। हमने गोदामों, रसोइयों, शादी के लॉन और क्लिनिकों में बैठकर समझा कि रोज़ का काम असल में कैसे होता है, और उसे एक आसान ऐप में बदला जो किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में चलता है।' : ''))}>${esc(s.about || DEFAULT_SITE.about)}</p></div>
+    <div class="txt"><h2 style="margin-bottom:18px"${hi('हमारे बारे में')}>About us</h2><p${hi(s.aboutHi || (s.about === DEFAULT_SITE.about ? 'सबमैनेज जयपुर में उन भारतीय बिज़नेस के लिए बना है जो लोगों और फ़ोन से चलते हैं। हमने मालिकों, उनके स्टाफ़ और ग्राहकों के साथ समय बिताकर समझा कि रोज़ का काम असल में कैसे होता है, और उसे एक आसान ऐप में बदला जो किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में चलता है।' : ''))}>${esc(s.about || DEFAULT_SITE.about)}</p></div>
     <dl>
       <div><dt${hi(`${/^jaipur$/i.test(s.city || '') ? 'जयपुर' : (s.city || 'भारत')} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय बिज़नेस के असली रोज़ के काम को समझकर बनाया गया।')}>Designed around how Indian businesses really work, day to day.</dd></div>
       <div><dt${hi('आपकी भाषा में')}>In your language</dt><dd${hi('पूरा ऐप हिंदी और अंग्रेज़ी में, एक टैप में बदलें।')}>The whole app works in Hindi and English, switch with one tap.</dd></div>
@@ -285,7 +281,7 @@ function homePage({ s, plat, posts }) {
         <label><span${hi('मोबाइल नंबर')}>Mobile number</span><input name="phone" type="tel" required maxlength="16" autocomplete="tel" inputmode="tel" placeholder="98290 12345"></label>
         <label><span${hi('बिज़नेस का नाम')}>Business name</span><input name="business" maxlength="160" autocomplete="organization"></label>
         <label><span${hi('शहर')}>City</span><input name="city" maxlength="80" autocomplete="address-level2"></label>
-        <label class="full"><span${hi('आपका काम')}>Your business</span><select name="bizType"><option value="Tent house"${hi('टेंट हाउस')}>Tent house</option><option value="Caterer / Halwai"${hi('कैटरर / हलवाई')}>Caterer / Halwai</option><option value="Event manager"${hi('इवेंट मैनेजर')}>Event manager</option><option value="Decorator"${hi('डेकोरेटर')}>Decorator</option><option value="Doctor / Clinic"${hi('डॉक्टर / क्लिनिक')}>Doctor / Clinic</option><option value="Shop / Store"${hi('दुकान / स्टोर')}>Shop / Store</option><option value="Other"${hi('अन्य')}>Other</option></select></label>
+        <label class="full"><span${hi('आपका काम')}>What does your business do?</span><input name="bizType" maxlength="120"></label>
         <label class="full"><span${hi('मैसेज (ज़रूरी नहीं)')}>Message (optional)</span><textarea name="message" rows="3" maxlength="2000"></textarea></label>
         <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
         <div class="full"><button class="btn primary" type="submit" style="width:100%"${hi('कॉल बैक मांगें')}>Request a call back</button></div>
@@ -630,13 +626,13 @@ module.exports = async (req, res) => {
     if (page === 'sitemap' || page === 'rss') {
       const posts = await loadPosts({ limit: 1000 });
       if (page === 'rss') return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>${esc(brand)} blog</title><link>${origin}/blog</link><description>${esc(s.tagline)}</description>${posts.slice(0, 30).map(p => `<item><title>${esc(p.title)}</title><link>${origin}/blog/${esc(p.slug)}</link><guid>${origin}/blog/${esc(p.slug)}</guid><pubDate>${new Date(p.published_at).toUTCString()}</pubDate><description>${esc(p.excerpt)}</description></item>`).join('')}</channel></rss>`, 'application/rss+xml; charset=utf-8');
-      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/download', ''], ['/events', ''], ['/doctors', ''], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
+      const urls = [['/', ''], ['/blog', posts[0]?.published_at], ['/download', ''], ['/privacy', ''], ['/terms', ''], ['/delete-account', ''], ...posts.map(p => ['/blog/' + p.slug, p.updated_at || p.published_at])];
       return send(200, `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(([u, d]) => `<url><loc>${esc(origin + u)}</loc>${d ? `<lastmod>${String(d).slice(0, 10)}</lastmod>` : ''}</url>`).join('')}</urlset>`, 'application/xml; charset=utf-8');
     }
     const base = { s, plat, origin };
     if (page === 'home') {
       const posts = await loadPosts({ limit: 3 });
-      const org = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: brand, applicationCategory: 'BusinessApplication', operatingSystem: 'Web, Android, iOS', description: 'Business app for Indian businesses: bookings and appointments, GST bills, payments, staff and customer reminders, in Hindi and English. Set up for tent houses, caterers, event managers and clinics.', url: origin,
+      const org = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: brand, applicationCategory: 'BusinessApplication', operatingSystem: 'Web, Android, iOS', description: 'Business app for Indian businesses: bookings and appointments, GST bills, payments, staff and customer reminders, in Hindi and English.', url: origin,
         offers: (plat.plans || []).filter(p => p.name).map(p => ({ '@type': 'Offer', name: p.name, price: String(+p.price || 0), priceCurrency: 'INR' })) };
       const lb = { '@context': 'https://schema.org', '@type': 'Organization', name: s.legalName || brand, url: origin, ...(s.phone ? { telephone: s.phone } : {}), ...(s.email ? { email: s.email } : {}), ...(s.address ? { address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: s.city, addressCountry: 'IN' } } : {}), sameAs: ['instagram', 'facebook', 'youtube', 'linkedin'].map(k => safeUrl(s[k])).filter(Boolean) };
       return send(200, shell({ ...base, path: '/', title: `${brand}: the whole hisaab of your business, in one app`, desc: 'Bookings and appointments, GST bills, payments, staff attendance and customer reminders in one simple app for Indian businesses. Works on any phone, in Hindi and English.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
@@ -658,8 +654,8 @@ module.exports = async (req, res) => {
       const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: p.title, description: desc, datePublished: p.published_at, dateModified: p.updated_at || p.published_at, inLanguage: p.lang === 'hi' ? 'hi-IN' : 'en-IN', mainEntityOfPage: origin + '/blog/' + p.slug, ...(p.cover_url ? { image: [p.cover_url] } : {}), author: { '@type': p.author ? 'Person' : 'Organization', name: p.author || brand }, publisher: { '@type': 'Organization', name: brand } };
       return send(200, shell({ ...base, path: '/blog/' + p.slug, title: `${p.seo_title || p.title} | ${brand}`, desc, image: p.cover_url || origin + '/img/og.jpg', type: 'article', jsonld: [ld], body: postPage({ ...base, p, related: more }) }));
     }
-    if (page === 'events') return send(200, shell({ ...base, path: '/events', title: `${brand} for tent houses, caterers and event managers`, desc: 'Bookings, godown stock by date, catering ration lists, GST bills, payment reminders, crew attendance and the profit of every event. In Hindi and English.', image: origin + '/img/og.jpg', body: eventsPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
-    if (page === 'doctors') return send(200, shell({ ...base, path: '/doctors', title: `${brand} for doctors: patient records, BP & sugar charts, appointments`, desc: 'A simple clinic app for Indian doctors: patient records with BP, sugar and weight charts, readings sent by patients from home, photos and voice notes, appointments with video calls, and fees by UPI. In Hindi and English.', image: origin + '/img/og.jpg', body: doctorsPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
+    if (page === 'events') return send(200, shell({ ...base, path: '/events', title: `${brand} for tent houses, caterers and event managers`, desc: 'Bookings, godown stock by date, catering ration lists, GST bills, payment reminders, crew attendance and the profit of every event. In Hindi and English.', image: origin + '/img/og.jpg', body: eventsPage(base), noindex: true }), 'text/html; charset=utf-8', 's-maxage=600');
+    if (page === 'doctors') return send(200, shell({ ...base, path: '/doctors', title: `${brand} for doctors: patient records, BP & sugar charts, appointments`, desc: 'A simple clinic app for Indian doctors: patient records with BP, sugar and weight charts, readings sent by patients from home, photos and voice notes, appointments with video calls, and fees by UPI. In Hindi and English.', image: origin + '/img/og.jpg', body: doctorsPage(base), noindex: true }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'download') return send(200, shell({ ...base, path: '/download', title: `Download the ${brand} app`, desc: `Download the ${brand} Android app for tent houses, caterers and event managers.`, body: downloadPage(base) }), 'text/html; charset=utf-8', 's-maxage=600');
     if (page === 'delete') return send(200, shell({ ...base, path: '/delete-account', title: `Delete your account | ${brand}`, desc: `How to delete your ${brand} account and data.`, body: deletePage(base) }), 'text/html; charset=utf-8', 's-maxage=3600');
     if (page === 'privacy' || page === 'terms') return send(200, shell({ ...base, path: '/' + page, title: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} | ${brand}`, desc: `${page === 'privacy' ? 'Privacy policy' : 'Terms of use'} for ${brand}.`, body: legalPage(page, base) }), 'text/html; charset=utf-8', 's-maxage=3600');

@@ -62,7 +62,7 @@ const I18N = (() => {
     const lead = s.match(/^\s*/)[0], trail = s.match(/\s*$/)[0];
     return lead + out + trail;
   }
-  const SKIP = 'script,style,textarea,code,pre,.paper,[translate="no"],[contenteditable="true"],.notr';
+  const SKIP = 'script,style,textarea,code,pre,.paper,[translate="no"],[contenteditable="true"],.notr,.avatar';
   const ATTRS = ['placeholder', 'title', 'aria-label', 'alt'];
   function doEl(el) {
     if (el.closest && el.closest(SKIP)) return;

@@ -80,7 +80,8 @@ download/SabManage.apk  the signed Android app served at sabmanage.com/download/
 - Offline mode: if `supabaseUrl` is empty the app uses LocalDB (localStorage) — used for local testing (`superAdminEmails` in config makes a Super Admin offline).
 
 ## Brand and website (17 Oct 2026 redesign)
-- Owner's rule: the website home and the app's opening screen must NOT feel like tent/catering or doctors; they are for every business. The business type is asked only at sign-up. Industry details live on /events and /doctors.
+- Owner's rule (repeated twice): the main website and the app's opening screen must NOT name any business type (no tent, catering, events, doctors, clinics, weddings) anywhere: hero, nav, FAQ, About, contact form, footer, structured data. The type is asked only at sign-up. /events and /doctors still exist for direct sharing but are unlinked, noindex and out of the sitemap. Blog is only in the footer (posts are wedding-related); the home page has no blog section.
+- Home sections: hero (bilingual headline + 'Today' panel), pillars, 'See the app' (img/shot-bill.webp, shot-payments.webp, shot-staff-hi.webp from a neutral demo business 'Sharma Enterprises'), small helps, steps, pricing, about, FAQ, contact.
 - Mark = three rounded tiles + a tick (`icon.svg`, `MARK` in api/site.js, `MARK_SVG` in core.js, PNGs in img/icons, play-store/app-icon-512.png). og.jpg and the Play feature graphic use the same 'Today' panel design.
 - Website fonts: Anek Devanagari (headings, font-stretch ~84–92%) + Mukta (text). Palette: ink #0E1A33, blue #1F5EFF, green #0B9B68, mist #F4F6FA. The festive canopy/bunting is removed (`.canopy` hidden). Bump `V` in api/site.js when site.css/site.js change.
 
