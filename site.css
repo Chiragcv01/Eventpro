@@ -256,3 +256,7 @@ footer .legal{grid-column:1/-1;border-top:1px solid var(--line);padding-top:18px
 .dl-page .cta{display:flex;gap:10px;flex-wrap:wrap}
 .dl-steps{display:flex;flex-direction:column;gap:10px;padding-left:22px}
 .dl-steps li{line-height:1.6;font-size:16px}
+.legal-sum{background:var(--soft);border:1px solid var(--line);border-radius:18px;padding:16px 20px;margin:18px 0 8px}
+.legal-sum h2{margin:0 0 8px;font-size:20px}
+.legal-sum ul{display:flex;flex-direction:column;gap:6px}
+.legal-sum li{color:var(--ink)}

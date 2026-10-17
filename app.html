@@ -2777,6 +2777,22 @@ Android app | एंड्रॉयड ऐप
 Close | बंद करें
 Log in with your mobile number and the password the owner gives you. | अपने मोबाइल नंबर और ओनर के दिए पासवर्ड से लॉगिन करें।
 `);
+I18N.load(`
+Updated terms of use | इस्तेमाल की नई शर्तें
+Please read and accept to continue | आगे बढ़ने के लिए पढ़ें और स्वीकार करें
+We have updated our Terms of use and Privacy policy so they match everything the app does now: crew money and attendance, team alerts and notifications, marketing and WhatsApp messages, and what happens when a plan ends. | हमने इस्तेमाल की शर्तें और प्राइवेसी पॉलिसी अपडेट की हैं ताकि वे ऐप की सभी नई सुविधाओं से मेल खाएं: क्रू का पैसा और हाज़िरी, टीम अलर्ट और नोटिफ़िकेशन, मार्केटिंग और व्हाट्सऐप मैसेज, और प्लान खत्म होने पर क्या होता है।
+Your business data stays yours. We do not sell it. | आपके बिज़नेस का डेटा आपका ही रहता है। हम इसे बेचते नहीं हैं।
+You are responsible for client and crew details you add, and for messages you send. | आप जो क्लाइंट और क्रू की जानकारी डालते हैं और जो मैसेज भेजते हैं, उनकी ज़िम्मेदारी आपकी है।
+Bills, GST and wage figures are a help; please check them. | बिल, जीएसटी और मज़दूरी के आंकड़े मदद के लिए हैं; कृपया इन्हें जांच लें।
+Notifications can be late; do not depend on them in an emergency. | नोटिफ़िकेशन देर से आ सकते हैं; इमरजेंसी में इन पर निर्भर न रहें।
+When a plan ends, the app stops until you renew. Data is kept safe for 90 days. | प्लान खत्म होने पर रिन्यू करने तक ऐप बंद रहता है। डेटा 90 दिन तक सुरक्षित रखा जाता है।
+Terms of use | इस्तेमाल की शर्तें
+Privacy policy | प्राइवेसी पॉलिसी
+I have read and agree to the Terms of use and Privacy policy for my business. | मैंने अपने बिज़नेस के लिए इस्तेमाल की शर्तें और प्राइवेसी पॉलिसी पढ़ ली हैं और मैं इनसे सहमत हूं।
+I agree | मैं सहमत हूं
+Please tick the box to agree | सहमति के लिए बॉक्स पर टिक करें
+Thank you | धन्यवाद
+`);
 
 'use strict';
 /* ================= SabManage v3 — core ================= */
@@ -3369,7 +3385,28 @@ async function openOrg(orgId, override) {
   initCatering();
   render();
   if (typeof startAlerts === 'function') startAlerts();
+  maybeAskTerms();
 }
+/* Terms: the owner accepts at signup; when TERMS_VERSION changes, owners are asked once to accept the new version */
+const TERMS_VERSION = '2026-10-17';
+function maybeAskTerms() {
+  const meOwner = S.members.some(m => m.userId === S.user?.id && m.role === 'owner');
+  if (!S.org || !meOwner || settings().termsVersion === TERMS_VERSION) return;
+  setTimeout(() => {
+    if (document.getElementById('alertRoot')) return;
+    modal(`<form class="form terms-sheet" onsubmit="A.acceptTerms(event)">${sheetHead('Updated terms of use', 'Please read and accept to continue')}<div class="sheet-b stack">
+      <p>We have updated our Terms of use and Privacy policy so they match everything the app does now: crew money and attendance, team alerts and notifications, marketing and WhatsApp messages, and what happens when a plan ends.</p>
+      <ul class="terms-points"><li>Your business data stays yours. We do not sell it.</li><li>You are responsible for client and crew details you add, and for messages you send.</li><li>Bills, GST and wage figures are a help; please check them.</li><li>Notifications can be late; do not depend on them in an emergency.</li><li>When a plan ends, the app stops until you renew. Data is kept safe for 90 days.</li></ul>
+      <div class="row-flex"><a class="btn sm" href="/terms" target="_blank" rel="noopener">${ic('receipt')} Terms of use</a><a class="btn sm" href="/privacy" target="_blank" rel="noopener">${ic('shield')} Privacy policy</a></div>
+      <label class="check terms"><input type="checkbox" name="ok" value="1"> <span>I have read and agree to the Terms of use and Privacy policy for my business.</span></label>
+    </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} I agree</button></footer></form>`);
+  }, 600);
+}
+A.acceptTerms = async e => {
+  e.preventDefault(); if (!e.target.querySelector('[name=ok]')?.checked) { toast('Please tick the box to agree', 'bad'); return; }
+  try { await save('settings', { ...settings(), id: 'main', termsAcceptedAt: new Date().toISOString(), termsVersion: TERMS_VERSION }); logAct('Accepted updated terms of use'); A.closeModal(); toast('Thank you'); S.pushAsked = false; if (typeof maybeAskPush === 'function') maybeAskPush(); }
+  catch (err) { toast(err.message, 'bad'); }
+};
 A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
   A.closeModal(); if (typeof stopPush === 'function') { await stopPush(); LS.set('ep_push_on', false); }
@@ -3487,6 +3524,7 @@ A.accountMenu = () => {
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>
     <button class="linkbtn" style="align-self:center;color:var(--muted);font-weight:600" onclick="A.deleteAccountSheet()">${ic('trash')} Delete my account</button>
+    <p class="tiny" style="text-align:center"><a href="/terms" target="_blank" rel="noopener">Terms of use</a> · <a href="/privacy" target="_blank" rel="noopener">Privacy policy</a></p>
     <p class="tiny muted" style="text-align:center">SabManage v${APP_VERSION} · ${S.adapter.mode === 'local' ? 'Offline mode: data is saved on this device only.' : 'Cloud sync is on.'}</p></div>`);
 };
 const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'], 'Follow up': ['megaphone', '#E11D74'] };
@@ -4136,7 +4174,7 @@ A.doSignup = e => {
     const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter an email or a 10-digit mobile number');
     if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
     const st = defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: v.bizTypes });
-    st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = '2026-10';
+    st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = TERMS_VERSION;
     try { const ref = localStorage.getItem('ep_ref'); if (ref) st.referredBy = ref; } catch (x) { }
     await S.adapter.signUpBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: ROLE_DEFAULTS, settings: st });
     S.user = await S.adapter.signIn(email, v.password); await afterLogin(); toast('Business created. You are the Owner.');

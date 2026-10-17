@@ -589,7 +589,28 @@ async function openOrg(orgId, override) {
   initCatering();
   render();
   if (typeof startAlerts === 'function') startAlerts();
+  maybeAskTerms();
 }
+/* Terms: the owner accepts at signup; when TERMS_VERSION changes, owners are asked once to accept the new version */
+const TERMS_VERSION = '2026-10-17';
+function maybeAskTerms() {
+  const meOwner = S.members.some(m => m.userId === S.user?.id && m.role === 'owner');
+  if (!S.org || !meOwner || settings().termsVersion === TERMS_VERSION) return;
+  setTimeout(() => {
+    if (document.getElementById('alertRoot')) return;
+    modal(`<form class="form terms-sheet" onsubmit="A.acceptTerms(event)">${sheetHead('Updated terms of use', 'Please read and accept to continue')}<div class="sheet-b stack">
+      <p>We have updated our Terms of use and Privacy policy so they match everything the app does now: crew money and attendance, team alerts and notifications, marketing and WhatsApp messages, and what happens when a plan ends.</p>
+      <ul class="terms-points"><li>Your business data stays yours. We do not sell it.</li><li>You are responsible for client and crew details you add, and for messages you send.</li><li>Bills, GST and wage figures are a help; please check them.</li><li>Notifications can be late; do not depend on them in an emergency.</li><li>When a plan ends, the app stops until you renew. Data is kept safe for 90 days.</li></ul>
+      <div class="row-flex"><a class="btn sm" href="/terms" target="_blank" rel="noopener">${ic('receipt')} Terms of use</a><a class="btn sm" href="/privacy" target="_blank" rel="noopener">${ic('shield')} Privacy policy</a></div>
+      <label class="check terms"><input type="checkbox" name="ok" value="1"> <span>I have read and agree to the Terms of use and Privacy policy for my business.</span></label>
+    </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} I agree</button></footer></form>`);
+  }, 600);
+}
+A.acceptTerms = async e => {
+  e.preventDefault(); if (!e.target.querySelector('[name=ok]')?.checked) { toast('Please tick the box to agree', 'bad'); return; }
+  try { await save('settings', { ...settings(), id: 'main', termsAcceptedAt: new Date().toISOString(), termsVersion: TERMS_VERSION }); logAct('Accepted updated terms of use'); A.closeModal(); toast('Thank you'); S.pushAsked = false; if (typeof maybeAskPush === 'function') maybeAskPush(); }
+  catch (err) { toast(err.message, 'bad'); }
+};
 A.switchOrg = async id => { A.closeModal(); await openOrg(id); };
 A.logout = async () => {
   A.closeModal(); if (typeof stopPush === 'function') { await stopPush(); LS.set('ep_push_on', false); }
@@ -707,6 +728,7 @@ A.accountMenu = () => {
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>
     <button class="linkbtn" style="align-self:center;color:var(--muted);font-weight:600" onclick="A.deleteAccountSheet()">${ic('trash')} Delete my account</button>
+    <p class="tiny" style="text-align:center"><a href="/terms" target="_blank" rel="noopener">Terms of use</a> · <a href="/privacy" target="_blank" rel="noopener">Privacy policy</a></p>
     <p class="tiny muted" style="text-align:center">SabManage v${APP_VERSION} · ${S.adapter.mode === 'local' ? 'Offline mode: data is saved on this device only.' : 'Cloud sync is on.'}</p></div>`);
 };
 const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'], 'Follow up': ['megaphone', '#E11D74'] };

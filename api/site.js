@@ -322,27 +322,100 @@ function postPage({ s, plat, p, related, origin }) {
 }
 
 /* ---------- legal ---------- */
-function legalPage(kind, { s }) {
+const TERMS_VERSION = '2026-10-17';
+function legalPage(kind, { s, plat = {} }) {
   const org = esc(s.legalName || s.brandName || 'SabManage'); const brand = esc(s.brandName || 'SabManage');
-  const contact = [s.email && `email <a href="mailto:${esc(s.email)}">${esc(s.email)}</a>`, s.phone && `call ${esc(s.phone)}`].filter(Boolean).join(' or ') || 'use the contact form on our website';
-  const updated = 'October 2026';
-  if (kind === 'privacy') return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1>Privacy policy</h1><p>Last updated ${updated}</p>
-  <p>This policy explains what ${org} (“we”) collects when you use ${brand}, and how it is used.</p>
-  <h2>What we collect</h2><ul><li>Account details: your name, mobile number or email, and business name.</li><li>Business data you enter in the app: bookings, clients, stock, menus, invoices, payments, vendors, staff and attendance.</li><li>Website enquiries: the name, number and message you send through our contact form.</li><li>Basic technical data needed to keep the service running, such as login times.</li></ul>
-  <h2>How we use it</h2><ul><li>To run the app for you and your team.</li><li>To contact you about your account, renewals and support requests.</li><li>To keep the service secure and fix problems.</li></ul><p>We do not sell your data. Your business data is visible only to people you give access to, and to our support team when you ask for help.</p>
-  <h2>Your clients’ information</h2><p>You control the client details you enter. A client link shows that client only their own event and bill.</p>
-  <h2>Storage and security</h2><p>Data is stored with our cloud database provider and protected by access rules for every business. Logins can be protected with an Authenticator code.</p>
-  <h2>Your choices</h2><p>You can download a backup of your business data from Settings at any time. To delete your account, use “Delete my account” in the app’s account menu or the form on our <a href="/delete-account">account deletion page</a>. We confirm with you and delete within 7 days. Some invoice records may be kept where tax law requires it.</p>
-  <h2>Contact</h2><p>For privacy questions, ${contact}.</p></div>`;
-  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1>Terms of use</h1><p>Last updated ${updated}</p>
-  <p>These terms apply when you use ${brand}, provided by ${org}.</p>
-  <h2>Your account</h2><ul><li>Keep your password private. You are responsible for logins you create for your staff.</li><li>Give correct business details, including GST details printed on your bills.</li></ul>
-  <h2>Plans and payment</h2><ul><li>New businesses may get a free trial. After it ends, the account becomes read-only until a plan is chosen.</li><li>Plan prices are shown on our website or shared with you. Fees already paid are not refundable unless we agree otherwise in writing.</li><li>We may pause an account with unpaid dues or misuse, after informing you.</li></ul>
-  <h2>Your data</h2><p>The business data you enter belongs to you. You can download a backup from Settings at any time.</p>
-  <h2>Fair use</h2><p>Do not use the service for anything unlawful, to send spam, or to try to access another business’s data.</p>
-  <h2>Bills and tax</h2><p>The app helps you prepare invoices. You remain responsible for the accuracy of your bills and your tax filings.</p>
-  <h2>Changes and availability</h2><p>We work to keep the service available but cannot promise it will never be interrupted. We may update these terms and will show the new date here.</p>
-  <h2>Contact</h2><p>Questions about these terms: ${contact}.</p></div>`;
+  const contact = [s.email && `email <a href="mailto:${esc(s.email)}">${esc(s.email)}</a>`, s.phone && `call or WhatsApp ${esc(s.phone)}`].filter(Boolean).join(' or ') || 'use the contact form on our website';
+  const city = s.city ? esc(s.city) : 'Jaipur, Rajasthan'; const trial = +plat.trialDays || 14; const grace = +plat.graceDays || 0;
+  const updated = '17 October 2026';
+  const sum = (items) => `<div class="legal-sum"><h2${hi('सरल भाषा में मुख्य बातें')}>The main points, simply</h2><ul>${items.map(([e, h]) => `<li${hi(h)}>${e}</li>`).join('')}</ul><p class="tiny"${hi('यह सारांश है। पूरी शर्तें नीचे लिखी हैं और वही मान्य हैं।')}>This is a summary. The full text below is what applies.</p></div>`;
+  if (kind === 'privacy') return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1${hi('प्राइवेसी पॉलिसी')}>Privacy policy</h1><p${hi('अपडेट: 17 अक्टूबर 2026')}>Last updated ${updated}</p>
+  ${sum([
+    ['Your business data belongs to you. We do not sell it or use it for ads.', 'आपके बिज़नेस का डेटा आपका है। हम इसे न बेचते हैं, न विज्ञापन के लिए इस्तेमाल करते हैं।'],
+    ['Each person sees only what the owner allows. Data is stored in India (Mumbai).', 'हर व्यक्ति वही देखता है जो ओनर अनुमति दे। डेटा भारत (मुंबई) में रखा जाता है।'],
+    ['We do not track your location and do not read your phone contacts.', 'हम आपकी लोकेशन ट्रैक नहीं करते और फ़ोन के कॉन्टैक्ट नहीं पढ़ते।'],
+    ['Notifications need your permission; you can turn them off any time in phone settings.', 'नोटिफ़िकेशन आपकी इजाज़त से आते हैं; फ़ोन की सेटिंग्स से कभी भी बंद कर सकते हैं।'],
+    ['You are responsible for the client and crew details you enter, and for having their permission.', 'आप जो क्लाइंट और क्रू की जानकारी डालते हैं, उसकी और उनकी इजाज़त की ज़िम्मेदारी आपकी है।'],
+    ['You can download a backup any time, and ask us to delete your account.', 'आप कभी भी बैकअप डाउनलोड कर सकते हैं और अकाउंट डिलीट करने को कह सकते हैं।']])}
+  <p>This policy explains what ${org} (“we”, “us”) collects when you use ${brand} (the app at sabmanage.com/app, the Android app and the website), why, and what choices you have. It is written to follow the Digital Personal Data Protection Act, 2023 and the Information Technology Act, 2000 of India.</p>
+  <h2>1. Our role</h2><p>For your own account (name, login, plan) we decide how the data is used. For the business data you and your team enter (clients, crew, events, bills), <b>your business decides</b> what is entered and why, and we process it only to run the service for you. In the language of the DPDP Act, your business is the Data Fiduciary for that data and we act as its Data Processor.</p>
+  <h2>2. What we collect</h2><ul>
+    <li><b>Account details:</b> name, mobile number or email used to log in, business name, role in the business, and the date you accepted our terms. Passwords are stored only in hashed form.</li>
+    <li><b>Business data you enter:</b> bookings, client names, phone numbers and addresses, stock, menus, quotations, invoices, payments, vendors and purchase orders, expenses, crew names, phone numbers, wages, attendance, hours, advances and payouts, setup tasks, reviews, packages and settings such as your logo, stamp, GSTIN and bank/UPI details.</li>
+    <li><b>Team alerts and activity:</b> alerts sent inside your business, who has seen them, and a log of changes made by each login.</li>
+    <li><b>Attendance from crew phones:</b> when a crew member taps “I have reached the site”, we record the date and time. <b>We do not collect GPS location.</b></li>
+    <li><b>Notifications:</b> if you allow notifications, your phone or browser gives us a notification address (push subscription) and we store it with your app language.</li>
+    <li><b>Technical data:</b> login times, browser/app type and basic logs needed to keep the service secure and working. The app keeps small settings (language, last business opened) on your device.</li>
+    <li><b>Website:</b> the name, number and message you send through our contact form; account-deletion requests; a referral code if you came through another business’s link.</li></ul>
+  <p>We do not access your phone’s contacts, photos (except a logo or picture you choose to upload), microphone, camera or location.</p>
+  <h2>3. Why we use it</h2><ul>
+    <li>To run the service: show your data to the people you give access to, calculate bills, stock, wages and profit, and keep your team in sync.</li>
+    <li>To send notifications you allowed: team alerts, “work done” updates and a morning summary.</li>
+    <li>To contact you about your account, renewals, support and important changes.</li>
+    <li>To keep the service secure, prevent misuse and fix problems.</li></ul>
+  <p>We do not sell personal data, show ads, or use your business data to train advertising or AI models.</p>
+  <h2>4. Who else handles the data</h2><p>We use trusted providers only to run the service:</p><ul>
+    <li><b>Supabase</b> (database, login and file storage), with your data stored in the Mumbai, India region.</li>
+    <li><b>Vercel</b> (website and app hosting).</li>
+    <li><b>Google, Apple or Mozilla push services</b>, which carry encrypted notifications to your phone.</li>
+    <li>Public content networks (jsDelivr, Google Fonts) that deliver app code and fonts; they do not receive your business data.</li></ul>
+  <p>Messages you send through WhatsApp buttons open in your own WhatsApp and are sent by you; we do not see them. We may share data if required by Indian law or a valid order of a court or authority.</p>
+  <h2>5. Your clients’ and crew’s information</h2><p>You control the client and crew details you enter. You confirm that you have a lawful reason and, where needed, their consent to store them and to message them, and that you will tell them how their details are used. A client link shows that client only their own event, programme and bill. Lists you download (for example the client list) leave our system and are then your responsibility.</p>
+  <h2>6. How we protect it</h2><p>All traffic is encrypted (HTTPS). Every business is separated by database access rules checked on the server, and every person sees only the sections the owner allows. Logins can be protected with an Authenticator code. Notification keys are kept in an encrypted vault.</p>
+  <h2>7. How long we keep it</h2><ul>
+    <li>While your account is active.</li>
+    <li>If a plan ends and is not renewed, the business is blocked but data is kept for 90 days so you can renew. After that we may delete it, after telling you on WhatsApp or email.</li>
+    <li>When you ask us to delete your account, we confirm with you and delete it within 7 days. Copies in backups are removed within 30 days.</li>
+    <li>Where tax or other law requires records to be kept, you should keep your own copies (download a backup from Settings).</li></ul>
+  <h2>8. Your rights</h2><p>You can see and correct your data in the app at any time, download a full backup from Settings, withdraw notification permission in phone settings, ask us to delete your account (in the app: your name → Delete my account, or the <a href="/delete-account">account deletion page</a>), and raise a grievance with us. Crew and clients whose details a business entered should first contact that business; we will help the business respond.</p>
+  <h2>9. Children</h2><p>${brand} is for businesses and is not meant for anyone under 18.</p>
+  <h2>10. Changes</h2><p>If we change this policy we will update the date above, and for important changes we will tell owners inside the app.</p>
+  <h2>11. Contact and grievance officer</h2><p>For privacy questions or complaints, ${contact}. We reply within 7 days and resolve grievances within 30 days.</p></div>`;
+  return `<div class="canopy thin" aria-hidden="true"></div><div class="wrap legaltext"><h1${hi('इस्तेमाल की शर्तें')}>Terms of use</h1><p${hi(`अपडेट: 17 अक्टूबर 2026 · वर्ज़न ${TERMS_VERSION}`)}>Last updated ${updated} · Version ${TERMS_VERSION}</p>
+  ${sum([
+    [`First ${trial} days are free. After that a monthly or yearly plan is needed.`, `पहले ${trial} दिन फ़्री। उसके बाद महीने या साल का प्लान लेना होगा।`],
+    [`When the plan ends${grace ? ` (plus ${grace} grace days)` : ''}, the app stops working until you renew. Your data stays safe for 90 days.`, `प्लान खत्म होने पर${grace ? ` (${grace} दिन की छूट के बाद)` : ''} रिन्यू करने तक ऐप बंद रहेगा। आपका डेटा 90 दिन तक सुरक्षित रहेगा।`],
+    ['Paid fees are not refunded unless we agree in writing.', 'दिया गया पैसा वापस नहीं होगा, जब तक हम लिखकर न मानें।'],
+    ['Your data is yours. Keep passwords safe; you are responsible for the logins you make for your staff.', 'आपका डेटा आपका है। पासवर्ड संभालकर रखें; स्टाफ़ के लिए बनाए लॉगिन की ज़िम्मेदारी आपकी है।'],
+    ['Bills, GST, wages and messages you send are your responsibility; the app helps you prepare them.', 'बिल, जीएसटी, मज़दूरी और भेजे गए मैसेज आपकी ज़िम्मेदारी हैं; ऐप सिर्फ़ उन्हें बनाने में मदद करता है।'],
+    ['Do not send messages to people who have not agreed, and do not ask for fake reviews.', 'जिन्होंने इजाज़त न दी हो उन्हें मार्केटिंग मैसेज न भेजें, और नकली रिव्यू न मंगवाएं।'],
+    ['Notifications can be late or missed; do not depend on them for emergencies.', 'नोटिफ़िकेशन देर से आ सकते हैं या छूट सकते हैं; इमरजेंसी के लिए इन पर निर्भर न रहें।'],
+    [`Any dispute is under Indian law, courts at ${city}.`, `कोई भी विवाद भारतीय कानून के तहत, ${/jaipur/i.test(city) ? 'जयपुर' : city} की अदालतों में।`]])}
+  <p>These terms are an agreement between you (and the business you represent) and ${org} (“we”, “us”) for using ${brand}: the app at sabmanage.com/app, the Android app and the website. By creating an account, ticking “I agree” or using ${brand}, you accept these terms. If you use it for a business, you confirm you are allowed to accept them for that business. You must be at least 18.</p>
+  <h2>1. The service</h2><p>${brand} helps tent houses, caterers, decorators and event managers manage bookings, stock, catering, bills, payments, vendors, crew, expenses, reports, marketing and team alerts. We keep improving it and may add, change or remove features. Where a change removes something important you rely on, we will tell you in advance where possible.</p>
+  <h2>2. Accounts and logins</h2><ul>
+    <li>The person who signs up becomes the Owner of the business account and controls who can log in and what each person can see or change.</li>
+    <li>Keep passwords private. You are responsible for everything done through logins you create, and for removing access when a person leaves.</li>
+    <li>Give correct details, including the business, GST, bank and UPI details printed on your bills.</li>
+    <li>Tell us quickly if you think a login was misused.</li></ul>
+  <h2>3. Free trial, plans and payment</h2><ul>
+    <li>New businesses get a free trial of ${trial} days unless we say otherwise.</li>
+    <li>After the trial, a paid plan is needed. Prices are shown on our website or agreed with you in writing (a special price applies only to that business). Taxes such as GST are added where applicable.</li>
+    <li>Plans are paid in advance for the period chosen. Fees already paid are not refundable, except where we agree in writing or the law requires it.</li>
+    <li>We may change plan prices for future periods with at least 30 days’ notice. A price change does not affect a period you have already paid for.</li></ul>
+  <h2>4. When a plan ends</h2><p>When the plan’s validity ends${grace ? ` and the ${grace}-day grace period passes` : ''}, the business is blocked: no one in it can open its data until the plan is renewed. Your data is kept for 90 days after the end date. After that we may delete it, after informing the owner on WhatsApp or email. Download a backup from Settings if you do not plan to renew.</p>
+  <h2>5. Your data</h2><ul>
+    <li>The business data you enter belongs to you. You give us permission to store and process it only to provide the service to you and your team.</li>
+    <li>You are responsible for the data you enter, including personal details of clients and crew, and for having a lawful reason and any consent needed under the Digital Personal Data Protection Act, 2023. Our <a href="/privacy">privacy policy</a> explains how we handle data.</li>
+    <li>You can download a backup at any time from Settings, and ask us to delete your account from the app or our <a href="/delete-account">account deletion page</a>.</li></ul>
+  <h2>6. Bills, tax, wages and money</h2><p>${brand} helps you prepare quotations, GST invoices, receipts, challans, payroll, overtime, expense and profit figures from the data you enter. You remain responsible for checking them, for your GST and tax filings, for paying your staff correctly under applicable labour laws, and for the money you collect and pay. We do not handle your payments to or from your clients.</p>
+  <h2>7. Messages, marketing and reviews</h2><ul>
+    <li>WhatsApp, call and share buttons open your own apps; messages are sent by you, from your number.</li>
+    <li>Send marketing or broadcast messages only to people who have agreed to hear from you, stop when they ask, and follow WhatsApp’s and Meta’s rules.</li>
+    <li>Ask only real clients for reviews and follow Google’s review rules. Do not offer rewards for reviews or post fake reviews.</li>
+    <li>Client lists you download are your responsibility once downloaded.</li></ul>
+  <h2>8. Notifications and alerts</h2><p>Team alerts, updates and the morning summary depend on the phone, its settings, internet, battery-saver settings and services run by Google, Apple and others. They may be delayed or not delivered. In the Android app, team alerts may ring with an alarm-type sound even when the phone is on silent; each person can change this in the phone’s notification settings. Do not rely on ${brand} notifications for emergencies or safety.</p>
+  <h2>9. Fair use</h2><p>Do not use ${brand} for anything unlawful; to send spam; to store data you have no right to store; to try to access another business’s data; to break, overload, copy or reverse-engineer the service; or to resell it without our written permission. We may suspend a login or business that breaks these rules, and will tell the owner why unless the law prevents it.</p>
+  <h2>10. The Android app</h2><p>Install the Android app only from sabmanage.com/download or Google Play. Apps from other sources are not ours.</p>
+  <h2>11. Referrals</h2><p>If we offer a reward for referring another business, it applies only when that business joins through your link and takes a paid plan, has no cash value, cannot be combined with other offers unless we say so, and may be changed or stopped. Self-referrals and misuse are not rewarded.</p>
+  <h2>12. Availability and backups</h2><p>We work to keep ${brand} available and our provider keeps database backups, but we cannot promise the service will never be interrupted or that data can always be restored. Keep your own backup from Settings, especially before the wedding season.</p>
+  <h2>13. Our rights</h2><p>${brand}, its design, code and name belong to us. Your logo, stamp and business data remain yours.</p>
+  <h2>14. Limitation of liability</h2><p>To the extent the law allows, we are not liable for indirect or consequential losses such as lost bookings, profit, goodwill or data caused by using or not being able to use ${brand}. Our total liability for any claim is limited to the fees you paid us in the 3 months before the claim.</p>
+  <h2>15. Indemnity</h2><p>You will compensate us for claims and costs caused by your misuse of the service, the data you enter, or messages you send in breach of these terms or the law.</p>
+  <h2>16. Ending the agreement</h2><p>You can stop at any time and ask us to delete your account. We may end or suspend the service for non-payment or serious breach of these terms, after informing you where possible. Sections 5, 6, 14, 15 and 18 continue after the agreement ends.</p>
+  <h2>17. Changes to these terms</h2><p>We may update these terms. We will change the date and version above. For important changes, owners will be asked to accept the new terms in the app; continuing to use ${brand} after that means you accept them.</p>
+  <h2>18. Law and disputes</h2><p>These terms are governed by the laws of India. We will first try to resolve any dispute by talking to you. If that does not work, the courts at ${city} have exclusive jurisdiction.</p>
+  <h2>19. Contact and grievance officer</h2><p>Questions or complaints about these terms: ${contact}. We reply within 7 days.</p></div>`;
 }
 
 

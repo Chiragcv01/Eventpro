@@ -56,7 +56,7 @@ A.doSignup = e => {
     const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter an email or a 10-digit mobile number');
     if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
     const st = defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: v.bizTypes });
-    st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = '2026-10';
+    st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = TERMS_VERSION;
     try { const ref = localStorage.getItem('ep_ref'); if (ref) st.referredBy = ref; } catch (x) { }
     await S.adapter.signUpBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: ROLE_DEFAULTS, settings: st });
     S.user = await S.adapter.signIn(email, v.password); await afterLogin(); toast('Business created. You are the Owner.');

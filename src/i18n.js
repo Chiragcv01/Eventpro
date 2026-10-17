@@ -2147,3 +2147,19 @@ Android app | एंड्रॉयड ऐप
 Close | बंद करें
 Log in with your mobile number and the password the owner gives you. | अपने मोबाइल नंबर और ओनर के दिए पासवर्ड से लॉगिन करें।
 `);
+I18N.load(`
+Updated terms of use | इस्तेमाल की नई शर्तें
+Please read and accept to continue | आगे बढ़ने के लिए पढ़ें और स्वीकार करें
+We have updated our Terms of use and Privacy policy so they match everything the app does now: crew money and attendance, team alerts and notifications, marketing and WhatsApp messages, and what happens when a plan ends. | हमने इस्तेमाल की शर्तें और प्राइवेसी पॉलिसी अपडेट की हैं ताकि वे ऐप की सभी नई सुविधाओं से मेल खाएं: क्रू का पैसा और हाज़िरी, टीम अलर्ट और नोटिफ़िकेशन, मार्केटिंग और व्हाट्सऐप मैसेज, और प्लान खत्म होने पर क्या होता है।
+Your business data stays yours. We do not sell it. | आपके बिज़नेस का डेटा आपका ही रहता है। हम इसे बेचते नहीं हैं।
+You are responsible for client and crew details you add, and for messages you send. | आप जो क्लाइंट और क्रू की जानकारी डालते हैं और जो मैसेज भेजते हैं, उनकी ज़िम्मेदारी आपकी है।
+Bills, GST and wage figures are a help; please check them. | बिल, जीएसटी और मज़दूरी के आंकड़े मदद के लिए हैं; कृपया इन्हें जांच लें।
+Notifications can be late; do not depend on them in an emergency. | नोटिफ़िकेशन देर से आ सकते हैं; इमरजेंसी में इन पर निर्भर न रहें।
+When a plan ends, the app stops until you renew. Data is kept safe for 90 days. | प्लान खत्म होने पर रिन्यू करने तक ऐप बंद रहता है। डेटा 90 दिन तक सुरक्षित रखा जाता है।
+Terms of use | इस्तेमाल की शर्तें
+Privacy policy | प्राइवेसी पॉलिसी
+I have read and agree to the Terms of use and Privacy policy for my business. | मैंने अपने बिज़नेस के लिए इस्तेमाल की शर्तें और प्राइवेसी पॉलिसी पढ़ ली हैं और मैं इनसे सहमत हूं।
+I agree | मैं सहमत हूं
+Please tick the box to agree | सहमति के लिए बॉक्स पर टिक करें
+Thank you | धन्यवाद
+`);

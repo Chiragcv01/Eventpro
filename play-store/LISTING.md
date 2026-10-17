@@ -170,4 +170,6 @@ The app needs a login, so Play asks for one. Create a demo business from Super A
 | Financial info → Other financial info (invoices, payments you record) | Collected · Required · App functionality |
 | Photos (business logo, stamp, optional) | Collected · Optional · App functionality |
 | App activity → Other user-generated content (bookings, notes, reviews) | Collected · Required · App functionality |
-| Location, contacts, messages, device IDs | Not collected |
+| Device or other IDs → notification address (push subscription), only if the user allows notifications | Collected · Optional · App functionality |
+| App activity → In-app actions (team alerts sent/seen, attendance check-in time) | Collected · Required · App functionality |
+| Location, contacts, SMS/messages, advertising ID | Not collected |
