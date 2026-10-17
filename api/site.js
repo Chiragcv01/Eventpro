@@ -266,7 +266,7 @@ function homePage({ s, plat, posts }) {
   <section class="sec" id="about"><div class="wrap about">
     <div class="txt"><h2 style="margin-bottom:18px"${hi('हमारे बारे में')}>About us</h2><p${hi(s.aboutHi || (s.about === DEFAULT_SITE.about ? 'सबमैनेज जयपुर में उन भारतीय बिज़नेस के लिए बना है जो लोगों और फ़ोन से चलते हैं: टेंट हाउस, कैटरर, हलवाई, डेकोरेटर, इवेंट मैनेजर, और अब डॉक्टर और क्लिनिक। हमने गोदामों, रसोइयों, शादी के लॉन और क्लिनिकों में बैठकर समझा कि रोज़ का काम असल में कैसे होता है, और उसे एक आसान ऐप में बदला जो किसी भी फ़ोन पर, हिंदी और अंग्रेज़ी में चलता है।' : ''))}>${esc(s.about || DEFAULT_SITE.about)}</p></div>
     <dl>
-      <div><dt${hi(`${s.city || 'भारत'} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय बिज़नेस के असली रोज़ के काम को समझकर बनाया गया।')}>Designed around how Indian businesses really work, day to day.</dd></div>
+      <div><dt${hi(`${/^jaipur$/i.test(s.city || '') ? 'जयपुर' : (s.city || 'भारत')} में बना`)}>Made in ${esc(s.city || 'India')}</dt><dd${hi('भारतीय बिज़नेस के असली रोज़ के काम को समझकर बनाया गया।')}>Designed around how Indian businesses really work, day to day.</dd></div>
       <div><dt${hi('आपकी भाषा में')}>In your language</dt><dd${hi('पूरा ऐप हिंदी और अंग्रेज़ी में, एक टैप में बदलें।')}>The whole app works in Hindi and English, switch with one tap.</dd></div>
       <div><dt${hi('आपका डेटा, आपकी टीम')}>Your data stays with your team</dt><dd${hi('हर व्यक्ति वही देखता है जो आप अनुमति देते हैं।')}>Each person sees only what you allow.</dd></div>
     </dl>
@@ -636,7 +636,7 @@ module.exports = async (req, res) => {
     const base = { s, plat, origin };
     if (page === 'home') {
       const posts = await loadPosts({ limit: 3 });
-      const org = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: brand, applicationCategory: 'BusinessApplication', operatingSystem: 'Web, Android, iOS', description: 'Bookings, inventory, catering, GST invoices, payments and crew management for tent houses, caterers and event managers.', url: origin,
+      const org = { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: brand, applicationCategory: 'BusinessApplication', operatingSystem: 'Web, Android, iOS', description: 'Business app for Indian businesses: bookings and appointments, GST bills, payments, staff and customer reminders, in Hindi and English. Set up for tent houses, caterers, event managers and clinics.', url: origin,
         offers: (plat.plans || []).filter(p => p.name).map(p => ({ '@type': 'Offer', name: p.name, price: String(+p.price || 0), priceCurrency: 'INR' })) };
       const lb = { '@context': 'https://schema.org', '@type': 'Organization', name: s.legalName || brand, url: origin, ...(s.phone ? { telephone: s.phone } : {}), ...(s.email ? { email: s.email } : {}), ...(s.address ? { address: { '@type': 'PostalAddress', streetAddress: s.address, addressLocality: s.city, addressCountry: 'IN' } } : {}), sameAs: ['instagram', 'facebook', 'youtube', 'linkedin'].map(k => safeUrl(s[k])).filter(Boolean) };
       return send(200, shell({ ...base, path: '/', title: `${brand}: the whole hisaab of your business, in one app`, desc: 'Bookings and appointments, GST bills, payments, staff attendance and customer reminders in one simple app for Indian businesses. Works on any phone, in Hindi and English.', image: origin + '/img/og.jpg', body: homePage({ ...base, posts }), jsonld: [org, lb] }));
