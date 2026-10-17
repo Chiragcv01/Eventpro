@@ -133,7 +133,7 @@ ${body}
   <div class="canopy thin" aria-hidden="true"></div>
   <div class="wrap">
     <div class="about-f"><a class="brand" href="/"><span class="mk">${ic('tent')}</span>${esc(brand)}</a>
-      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('टेंट हाउस, कैटरर और इवेंट मैनेजर के लिए बुकिंग, स्टॉक, राशन, जीएसटी बिल, पेमेंट और क्रू का ऐप।')}>Bookings, stock, ration, GST bills, payments and crew in one app for tent houses, caterers and event managers.</p>
+      <p style="color:var(--ink2);margin-top:12px;max-width:30em"${hi('टेंट हाउस, कैटरर, इवेंट मैनेजर और डॉक्टरों के लिए बुकिंग, स्टॉक, जीएसटी बिल, पेमेंट, स्टाफ़ और मरीज़ों का एक आसान ऐप।')}>Bookings, stock, GST bills, payments, staff and patients in one simple app for tent houses, caterers, event managers and doctors.</p>
       ${social ? `<div class="social">${social}</div>` : ''}</div>
     <div><h4${hi('पेज')}>Pages</h4><ul>${nav.map(([h, l, h2]) => `<li><a href="${h}"${hi(h2)}>${l}</a></li>`).join('')}<li><a href="/app"${hi('लॉग इन')}>Log in</a></li></ul></div>
     <div><h4${hi('संपर्क')}>Contact</h4><ul>
