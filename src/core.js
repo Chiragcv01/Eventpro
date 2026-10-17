@@ -44,6 +44,11 @@ const LS = (() => { const mem = {}; return {
 const ICONS = {
   home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
   info: 'M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0zM12 11v5M12 7.6v.4',
+  megaphone: 'M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1zM17 8a5 5 0 0 1 0 8M7 15l1.5 5h2.5l-1.3-4.3',
+  qr: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM16 16h2v2h-2z',
+  image: 'M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5M15 9.5h.01',
+  share: 'M18 8a3 3 0 1 0-3-3M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4',
+  gift: 'M4 11h16v10H4zM3 7h18v4H3zM12 7v14M12 7c-1-3-5-4-5-1.5S10 7 12 7zM12 7c1-3 5-4 5-1.5S14 7 12 7z',
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
   box: 'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10',
   pot: 'M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 6c0-1 1-2 1-3M14 6c0-1 1-2 1-3',
@@ -102,10 +107,11 @@ const MODULES = [
   { key: 'expenses', label: 'Expenses', icon: 'wallet', group: 'Money' },
   { key: 'reports', label: 'Reports & P&L', icon: 'chart', group: 'Money' },
   { key: 'reviews', label: 'Reviews', icon: 'star', group: 'Business' },
+  { key: 'marketing', label: 'Marketing', icon: 'megaphone', group: 'Business' },
   { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business' },
   { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business' }
 ];
-const MOD_COLOR = { dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', team: '#475569', settings: '#64748B' };
+const MOD_COLOR = { dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
 MODULES.forEach(m => { m.c = MOD_COLOR[m.key]; });
 const MOD = Object.fromEntries(MODULES.map(m => [m.key, m]));
 const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C026D3'], 'Sangeet & Mehendi': ['music', '#F59E0B'], 'Ring Ceremony': ['rings', '#8B5CF6'], 'Corporate Event': ['briefcase', '#2563EB'], 'Birthday / Anniversary': ['cake', '#F97316'], 'Religious / Jagran': ['diya', '#EA580C'], 'Exhibition': ['store', '#0891B2'], 'Other': ['calendar', '#64748B'] };
@@ -117,10 +123,10 @@ const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
   owner: { label: 'Owner', perms: allPerms(3), locked: true },
-  manager: { label: 'Manager', perms: { dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, team: 1, settings: 1 } },
-  accountant: { label: 'Accountant', perms: { dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, team: 0, settings: 1 } },
-  supervisor: { label: 'Site Supervisor', perms: { dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, team: 0, settings: 0 } },
-  staff: { label: 'Crew / Staff', perms: { dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, team: 0, settings: 0 } }
+  manager: { label: 'Manager', perms: { dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
+  accountant: { label: 'Accountant', perms: { dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
+  supervisor: { label: 'Site Supervisor', perms: { dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
+  staff: { label: 'Crew / Staff', perms: { dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const STAGES = ['Enquiry', 'Quoted', 'Confirmed', 'Setup', 'Live', 'Completed', 'Closed', 'Cancelled'];
 const RESERVING = ['Confirmed', 'Setup', 'Live'];
@@ -148,7 +154,7 @@ function defaultSettings(o = {}) {
 const MOBILE_DOMAIN = 'mobile.eventpro.app';
 function loginId(v) { v = String(v || '').trim(); if (v.includes('@')) return v.toLowerCase(); const d = v.replace(/\D/g, ''); return d.length >= 10 ? d.slice(-10) + '@' + MOBILE_DOMAIN : v.toLowerCase(); }
 function displayId(e) { e = String(e || ''); return e.endsWith('@' + MOBILE_DOMAIN) ? '+91 ' + e.split('@')[0] : e; }
-const DEFAULT_PLATFORM = { appName: 'SabManage', supportName: 'SabManage Support', supportPhone: '', supportEmail: '', trialDays: 14, plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
+const DEFAULT_PLATFORM = { appName: 'SabManage', supportName: 'SabManage Support', supportPhone: '', supportEmail: '', trialDays: 14, referralReward: 'You get 1 month free when they take a paid plan.', plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
 const superEmails = () => (CFG.superAdminEmails || []).map(loginId);
 function graceDays() { return Math.max(0, Math.min(60, +(S.platform?.graceDays || 0))); }
 function orgState(o) { if (!o) return 'active'; if (o.status === 'suspended') return 'suspended'; if (o.expires && o.expires < todayLocal()) return addDays(o.expires, graceDays()) < todayLocal() ? 'expired' : 'grace'; return o.status || 'active'; }
@@ -187,7 +193,7 @@ const LocalDB = (() => {
       const db = load();
       return Object.entries(db.orgs).map(([id, o]) => { const R = db.records[id] || {}; const st = R.settings?.main || {}; const own = db.members.find(m => m.orgId === id && m.role === 'owner');
         const upd = Math.max(o.created || 0, ...Object.values(R).flatMap(c => Object.values(c).map(r => r.updatedAt || 0)));
-        return { orgId: id, name: o.name, created: o.created, ...this.orgMeta(id), ownerName: own?.name, ownerEmail: own?.email, ownerPhone: st.phone, city: st.city, logo: st.logo, members: db.members.filter(m => m.orgId === id).length, bookings: Object.keys(R.events || {}).length, invoices: Object.keys(R.invoices || {}).length, lastActivity: upd }; })
+        return { orgId: id, name: o.name, created: o.created, ...this.orgMeta(id), ownerName: own?.name, ownerEmail: own?.email, ownerPhone: st.phone, city: st.city, logo: st.logo, referredBy: st.referredBy, members: db.members.filter(m => m.orgId === id).length, bookings: Object.keys(R.events || {}).length, invoices: Object.keys(R.invoices || {}).length, lastActivity: upd }; })
         .sort((a, b) => (b.created || 0) - (a.created || 0));
     },
     async adminUpdateOrg(id, patch) { const o = load().orgs[id]; if (!o) throw new Error('Business not found'); Object.assign(o, patch); persist(); },
@@ -541,6 +547,7 @@ async function boot() {
   try { await S.adapter.init(); }
   catch (e) { if (S.adapter === CloudDB) { $('#app').innerHTML = `<div class="auth"><section class="auth-side"><div class="auth-card"><div class="card pad stack">${ibox('alert', '#E0344B', 'lg')}<h2>Cannot connect</h2><p class="muted">Check your internet connection and try again.</p><button class="btn primary" onclick="location.reload()">Try again</button></div></div></section></div>`; return; } }
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
+  try { const ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   const h = location.hash.replace('#', '');
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup' || h === 'login') { S.authTab = h === 'signup' && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
@@ -692,7 +699,7 @@ A.accountMenu = () => {
     <button class="linkbtn" style="align-self:center;color:var(--muted);font-weight:600" onclick="A.deleteAccountSheet()">${ic('trash')} Delete my account</button>
     <p class="tiny muted" style="text-align:center">SabManage v${APP_VERSION} · ${S.adapter.mode === 'local' ? 'Offline mode: data is saved on this device only.' : 'Cloud sync is on.'}</p></div>`);
 };
-const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'] };
+const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'], 'Follow up': ['megaphone', '#E11D74'] };
 function alertCard(a) { const [i, c] = ALERT_STYLE[a.tag] || ['alert', '#E0344B']; return `<div class="alert" style="--c:${c}" onclick="${a.go}">${ibox(i, c, 'sm')}<div class="grow" style="min-width:0"><b>${esc(a.title)}</b><div class="sub">${esc(a.sub || '')}</div></div>${ic('chev', 'go')}</div>`; }
 A.alertsSheet = () => {
   const al = computeAlerts();
@@ -737,7 +744,23 @@ function invStatus(inv, c) {
   return ['Unpaid', 'warn'];
 }
 function eventInvoices(evId) { return col('invoices').filter(i => i.eventId === evId); }
-function wageCost(filter) { const staff = Object.fromEntries(col('staff').map(s => [s.id, s])); return sum(col('attendance').filter(filter), a => (a.status === 'P' ? 1 : a.status === 'H' ? .5 : 0) * (+staff[a.staffId]?.rate || 0)); }
+/* Crew pay for one attendance mark. Full day = the person's duty hours (default 8).
+   Hours worked beyond the duty start a new shift; leftover hours are paid as overtime. */
+const dutyHrs = s => +s?.dutyHours > 0 ? +s.dutyHours : 8;
+const otRateOf = s => +s?.otRate > 0 ? +s.otRate : Math.round((+s?.rate || 0) / dutyHrs(s));
+function attPay(a, s) {
+  const r = { shifts: 0, otHours: 0, wage: 0, ot: 0 }; if (!a || !s) return r;
+  if (a.status === 'A') return r;
+  if (a.status === 'H') { r.shifts = .5; r.wage = .5 * (+s.rate || 0); return r; }
+  const h = +a.hours || 0, d = dutyHrs(s);
+  if (h > d) { r.shifts = Math.floor(h / d); r.otHours = Math.round((h - r.shifts * d) * 10) / 10; } else r.shifts = 1;
+  r.wage = r.shifts * (+s.rate || 0); r.ot = Math.round(r.otHours * otRateOf(s)); return r;
+}
+function wageCost(filter) { const staff = Object.fromEntries(col('staff').map(s => [s.id, s])); return sum(col('attendance').filter(filter), a => { const p = attPay(a, staff[a.staffId]); return p.wage + p.ot; }); }
+/* money given to crew (collection 'advances'): advance = cut from pay; food/travel = company cost; bonus = added to pay */
+const STAFF_MONEY = [['advance', 'Advance (cut from pay)'], ['food', 'Food / khuraki at the event'], ['travel', 'Travel / other spend'], ['bonus', 'Bonus / inaam (added to pay)']];
+const smKind = x => x.kind || 'advance';
+function crewSpend(filter) { return sum(col('advances').filter(x => smKind(x) !== 'advance' && filter(x)), x => x.amount); }
 function eventMoney(e) {
   const invs = eventInvoices(e.id).filter(i => i.type === 'invoice');
   const billed = sum(invs, i => invCalc(i).total);
@@ -746,10 +769,18 @@ function eventMoney(e) {
   const po = sum(col('pos').filter(p => p.eventId === e.id), p => p.amount);
   const exp = sum(col('expenses').filter(x => x.eventId === e.id), x => x.amount);
   const wages = wageCost(a => a.eventId === e.id);
-  const cost = po + exp + wages;
-  return { billed, received, revenue, po, exp, wages, cost, profit: revenue - cost, margin: revenue ? (revenue - cost) / revenue * 100 : 0, due: (billed || +e.budget || 0) - received };
+  const crew = crewSpend(x => x.eventId === e.id);
+  const cost = po + exp + wages + crew;
+  return { billed, received, revenue, po, exp, wages, crew, cost, profit: revenue - cost, margin: revenue ? (revenue - cost) / revenue * 100 : 0, due: (billed || +e.budget || 0) - received };
 }
 function eventProgress(e) { const t = col('tasks').filter(x => x.eventId === e.id); return t.length ? sum(t, x => x.progress) / t.length : null; }
+/* enquiry / quotation that nobody has followed up for 2+ days */
+function followDue(e) {
+  if (!['Enquiry', 'Quoted'].includes(e.stage)) return false;
+  const t = todayLocal(); if (e.date && eventEnd(e) < t) return false;
+  const last = e.followUpAt || (e.created ? todayLocal(new Date(e.created)) : null); if (!last) return true;
+  return daysBetween(last, t) >= 2;
+}
 function computeAlerts() {
   if (!S.org) return [];
   const out = []; const t = todayLocal();
@@ -759,6 +790,7 @@ function computeAlerts() {
     const d = daysBetween(t, e.date);
     if (['Enquiry', 'Quoted'].includes(e.stage) && d >= 0 && d <= 5) out.push({ tag: 'Confirm', tone: 'warn', title: `${e.title} not confirmed yet`, sub: `${fmtDate(e.date)} · ${d} day(s) left. Call ${e.client}.`, go: `A.go('event',{id:'${e.id}'})` });
     if (RESERVING.includes(e.stage) && (e.items || []).length && !e.dispatch?.out && d >= 0 && d <= 1) out.push({ tag: 'Dispatch', tone: 'accent', title: `Load truck for ${e.title}`, sub: `${(e.items || []).length} item types · ${fmtDate(e.date)}`, go: `A.go('event',{id:'${e.id}',tab:'items'})` });
+    if (followDue(e) && !(d >= 0 && d <= 5)) out.push({ tag: 'Follow up', tone: 'info', title: `Follow up with ${e.client}`, sub: `${e.stage} · ${e.title}${e.date ? ' · ' + fmtDate(e.date) : ''}`, go: can('marketing') ? `A.go('marketing',{tab:'followup'})` : `A.go('event',{id:'${e.id}'})` });
     if (e.dispatch?.out && !e.dispatch?.returned && eventEnd(e) < t) out.push({ tag: 'Return', tone: 'warn', title: `Material not back from ${e.title}`, sub: `Event ended ${fmtDate(eventEnd(e))}. Mark the return and log damage.`, go: `A.go('event',{id:'${e.id}',tab:'items'})` });
   });
   return out;

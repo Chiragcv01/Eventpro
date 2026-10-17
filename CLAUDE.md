@@ -31,8 +31,9 @@ src/views-money.js   invoices, payments, vendors, staff, live tracker, expenses,
 src/views-admin.js   bill branding, plan card, blocked screen, Super Admin console (businesses, users, plans), employee logins
 src/views-site.js    Super Admin: Website content, Blog editor (+cleanHTML sanitizer), Enquiries, Account deletion; user "Delete my account"
 src/views-import.js  Excel/CSV import (SheetJS from jsDelivr, lazy) + "Get started" card
+src/views-marketing.js  Marketing module: follow-ups, Google review requests, poster maker (canvas PNG), rate card (print/PDF), clients (CSV export, anniversaries, muhurat campaign), QR poster (qrcode-generator from jsDelivr, lazy), refer & share
 src/app.css          app design (clean white, colourful; Baloo 2 + Mukta fonts)
-build.py             concatenates src → app.html (order: i18n, core, help, auth, views-ops, views-money, views-admin, views-site, views-import)
+build.py             concatenates src → app.html (order: i18n, core, help, auth, views-ops, views-money, views-admin, views-site, views-import, views-marketing)
 api/site.js          website: home, /blog, /blog/:slug, /privacy, /terms, /delete-account, sitemap, robots, RSS; HTML allow-list sanitizer
 site.css, site.js    website style; language switch, contact form, delete-request form (call Supabase RPCs directly)
 sw.js, offline.html  service worker (offline screen only; no private data cached)
@@ -40,7 +41,7 @@ manifest.webmanifest PWA manifest (start_url /app)
 .well-known/assetlinks.json   Android Digital Asset Links (upload key SHA-256; add Play app-signing SHA-256 later)
 android/             twa-manifest.json + generate.js (@bubblewrap/core); built by .github/workflows/android.yml → branch android-build
 play-store/          LISTING.md (EN + HI text, Data safety answers), icon, feature graphic, 8 screenshots
-supabase/            schema.sql, auth_admin.sql, website.sql, account_deletion.sql, subscriptions.sql (copies of what was applied)
+supabase/            schema.sql, auth_admin.sql, website.sql, account_deletion.sql, subscriptions.sql, marketing.sql (copies of what was applied)
 vercel.json          rewrites (website routes → api/site), redirect old host, headers
 img/                 site screenshots, og.jpg, icons
 ```
@@ -61,6 +62,8 @@ img/                 site screenshots, og.jpg, icons
 - Owners cannot reset their own password; only Super Admin. Owners reset employees' passwords.
 - Hindi: `I18N` translates text nodes/placeholders via the dictionary; `.paper` (bills) and `[translate=no]` are never translated. `I18N.missing()` lists untranslated visible strings. **Hindi must be fully in Devanagari** (owner's rule: many users cannot read English letters). Words people say in English are written as spoken: बुकिंग, इनवॉइस, जीएसटी, पेमेंट, लॉगिन, स्टॉक. Only things a user must type exactly (ERASE), file names (.xlsx), URLs and sample codes stay Latin. Dates get Hindi month/day names (`dateHi`). Patterns: the most specific pattern wins.
 - ⓘ help: `src/help.js` holds `HELP` (English + Hindi side by side, loaded into the dictionary). `pageHead()` adds the ⓘ for the current page (key = `S.view`); tabs use `tabHelp('key')`, cards/sections use `info('key')`. Add a HELP entry for every new page, tab or card.
+- Crew pay: staff have `rate` (wage per duty), `dutyHours` (default 8), `otRate` (blank = rate ÷ dutyHours). Attendance `hours` > duty → `floor(hours/duty)` shifts + leftover hours as overtime (`attPay`). Money to crew lives in collection `advances` with `kind`: advance (cut from pay), food / travel (company cost), bonus (added to pay); old records without kind = advance. Net pay = wages + OT + bonus − advance. Costs everywhere (event profit, Reports, Expenses) = vendor POs + expenses + wages/OT + food/travel/bonus (`crewSpend`). The Expenses page lists crew and vendor lines read-only from Staff/POs (`monthCosts`), never stored twice.
+- Marketing: module key `marketing` (manager default 2). Follow-up due = Enquiry/Quoted, not past, last touch (`followUpAt` or `created`) ≥ 2 days → also a dashboard alert. Settings keys `googleReview`, `instagram` (also returned by `guest_view`). Referral: `?ref=<first 8 chars of org id>` on sabmanage.com or /app is kept in localStorage `ep_ref` and saved as `settings.referredBy` at sign-up; `admin_overview` returns `referredBy`; reward text = platform `referralReward`.
 - Blog HTML is sanitized on save (`cleanHTML` in views-site.js) and on render (`sanitize` in api/site.js).
 - Offline mode: if `supabaseUrl` is empty the app uses LocalDB (localStorage) — used for local testing (`superAdminEmails` in config makes a Super Admin offline).
 
@@ -73,10 +76,10 @@ img/                 site screenshots, og.jpg, icons
 6. Android: bump `appVersionCode` in `android/twa-manifest.json`, push → Actions builds unsigned files to branch `android-build` → sign with the owner's upload key (`jarsigner` for .aab, `apksigner.jar` for .apk). Key file `sabmanage-upload.jks`, alias `upload`, SHA-256 `5B:C1:89:CA:AB:4B:92:11:71:AB:35:49:AF:39:E7:31:CF:12:E1:1F:9A:C9:4B:DB:14:B2:8F:5D:9B:3B:62:3F`. The key and its password are only with the owner — never commit them.
 
 ## Status (17 Oct 2026)
-Done: full app; ⓘ help on every page/tab/card; Hindi fully in Devanagari; roles/permissions; Super Admin console (businesses, users, plans & support, website, blog, enquiries, account deletion); Authenticator; Hindi; website + blog + legal pages + SEO; contact form; Excel import (stock, menu, crew, vendors, bookings); Get-started card; Terms consent at sign-up; subscription controls and blocking; account deletion requests (app + web); PWA + offline screen; Android .aab/.apk v1.0.0 signed; Play Store listing kit; domain sabmanage.com; rebrand to SabManage. Database is clean (only the Super Admin user, 0 businesses).
+Done: full app; ⓘ help on every page/tab/card; crew duty hours/overtime/extra shifts + crew money (advance/food/travel/bonus) flowing into Expenses and P&L; Marketing module (follow-ups, Google reviews, posters, rate card, clients export, anniversaries, muhurat campaign, QR poster, refer & share); Hindi fully in Devanagari; roles/permissions; Super Admin console (businesses, users, plans & support, website, blog, enquiries, account deletion); Authenticator; Hindi; website + blog + legal pages + SEO; contact form; Excel import (stock, menu, crew, vendors, bookings); Get-started card; Terms consent at sign-up; subscription controls and blocking; account deletion requests (app + web); PWA + offline screen; Android .aab/.apk v1.0.0 signed; Play Store listing kit; domain sabmanage.com; rebrand to SabManage. Database is clean (only the Super Admin user, 0 businesses).
 
 Pending (owner): enable Authenticator on Super Admin; change Super Admin password; make repo private; run `supabase/account_deletion.sql`; Play Console account + closed test (12 testers × 14 days) + listing; send Play **app signing** SHA-256 to add to `assetlinks.json`; fill website address/legal name; get Terms/Privacy reviewed; buy Supabase Pro + Vercel Pro before first paying customer.
 
-Marketing ideas suggested to the owner on 17 Oct 2026 (NOT built — build only the ones he picks): business mini-website + enquiry form into Bookings, Google review request links, festival/offer posters with the business logo, shareable catalogue/rate card, enquiry follow-up reminders, referral link on the client page, anniversary reminders to past clients, client list export for WhatsApp broadcast, enquiry QR poster, saaya-date campaign reminders, "Powered by SabManage" + business referral programme.
+Mini-website per business (owner wants `businessname.sabmanage.com`, name first): NOT built yet, owner said it is not needed now. Plan when asked: wildcard subdomain `*.sabmanage.com` on Vercel (needs nameservers moved from Hostinger to Vercel, free), `api/site.js` renders a public page from the business's settings + rate card, enquiry form → new Enquiry booking via a throttled RPC. No extra cost on current plans.
 
 Next features (agreed order): Razorpay online renewal (needs owner's Razorpay KYC) → stronger password rule (8 chars + number) → GSTR-1/Tally export → automatic WhatsApp reminders (WhatsApp Business API) → offline crew updates → lead/error alerts → iPhone app, multi-branch, client CRM.

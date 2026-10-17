@@ -1766,3 +1766,198 @@ never logged in | कभी लॉगिन नहीं किया
 e.g. Basic | जैसे: बेसिक
 e.g. Shree Events Pvt Ltd | जैसे: श्री इवेंट्स प्राइवेट लिमिटेड
 `);
+
+I18N.load(`
+# ---------- crew duty hours, overtime, crew money ----------
+Crew roster, duty hours, overtime, attendance by event, advances, kharcha and monthly payout. | क्रू की लिस्ट, ड्यूटी के घंटे, ओवरटाइम, इवेंट के हिसाब से हाज़िरी, एडवांस, खर्चा और महीने का हिसाब।
+Crew money | क्रू का पैसा
+Edit crew money | क्रू का पैसा बदलें
+Advance, food at the event, travel or bonus | एडवांस, इवेंट पर खाना, किराया-भाड़ा या इनाम
+Crew member | क्रू मेंबर
+Advance (cut from pay) | एडवांस (तनख्वाह से कटेगा)
+Food / khuraki at the event | इवेंट पर खाना / खुराकी
+Travel / other spend | किराया-भाड़ा / दूसरा खर्च
+Bonus / inaam (added to pay) | इनाम (तनख्वाह में जुड़ेगा)
+e.g. Dinner for 6 crew at site | जैसे: साइट पर 6 लोगों का खाना
+Wage for one duty (₹) | एक ड्यूटी की मज़दूरी (₹)
+Duty hours (one shift) | ड्यूटी के घंटे (एक शिफ़्ट)
+Work beyond this is overtime; a full extra duty is one more shift | इससे ज़्यादा काम ओवरटाइम है; पूरी एक और ड्यूटी हो तो एक शिफ़्ट और
+Overtime ₹ per extra hour | ओवरटाइम: हर ज़्यादा घंटे के ₹
+Leave blank to use wage ÷ duty hours | खाली छोड़ें तो मज़दूरी ÷ ड्यूटी के घंटे से बनेगा
+Auto | अपने आप
+Add your crew first | पहले अपना क्रू जोड़ें
+Delete this entry? | यह एंट्री डिलीट करें?
+Write the hours only when someone works more than their duty. Extra hours become overtime; a full extra duty becomes one more shift. | घंटे तभी लिखें जब कोई अपनी ड्यूटी से ज़्यादा काम करे। ज़्यादा घंटे ओवरटाइम बनते हैं; पूरी एक और ड्यूटी हो तो एक शिफ़्ट और गिनी जाती है।
+duty {} hrs | ड्यूटी {1} घंटे
+hrs | घंटे
+Hours worked | काम के घंटे
+Give kharcha / advance | खर्चा / एडवांस दें
+1 shift | 1 शिफ़्ट
+{} shifts | {1} शिफ़्ट
+1 shift + {} hrs overtime | 1 शिफ़्ट + {1} घंटे ओवरटाइम
+{} shifts + {} hrs overtime | {1} शिफ़्ट + {2} घंटे ओवरटाइम
+{} shifts this month | इस महीने {1} शिफ़्ट
+{}/duty | {1}/ड्यूटी
+OT {}/hr | ओवरटाइम {1}/घंटा
+Kharcha (company) {} | खर्चा (कंपनी का) {1}
+Cut from pay | तनख्वाह से कटेगा
+Food / khuraki | खाना / खुराकी
+Company kharcha | कंपनी का खर्चा
+Travel / other | किराया-भाड़ा / दूसरा
+Bonus | इनाम
+Added to pay | तनख्वाह में जुड़ेगा
+No crew money this month | इस महीने क्रू को कोई पैसा नहीं दिया
+Advances, food at the event, travel and bonus show here. | एडवांस, इवेंट पर खाना, किराया-भाड़ा और इनाम यहां दिखेंगे।
+Net pay = wages + overtime + bonus − advance. Food and travel kharcha is the company’s cost, not cut from pay. | देनी रकम = मज़दूरी + ओवरटाइम + इनाम − एडवांस। खाना और किराया-भाड़ा कंपनी का खर्च है, तनख्वाह से नहीं कटता।
+Shifts | शिफ़्ट
+OT hrs | ओवरटाइम घंटे
+Wages | मज़दूरी
+Overtime | ओवरटाइम
+Advance: {} to {} | एडवांस: {2} को {1}
+Food / khuraki at the event: {} to {} | इवेंट पर खाना: {2} को {1}
+Travel / other spend: {} to {} | किराया-भाड़ा: {2} को {1}
+Bonus / inaam (added to pay): {} to {} | इनाम: {2} को {1}
+
+# ---------- expenses: every cost in one place ----------
+Every cost in one place: your expenses, crew wages, overtime and kharcha, and vendor POs. | हर खर्च एक जगह: आपके खर्च, क्रू की मज़दूरी, ओवरटाइम और खर्चा, और वेंडर के पीओ।
+Crew lines come from Staff (attendance, overtime, food, travel, bonus). Vendor lines come from purchase orders. Advances are not a cost; they are cut from pay. | क्रू वाली लाइनें स्टाफ़ से आती हैं (हाज़िरी, ओवरटाइम, खाना, किराया-भाड़ा, इनाम)। वेंडर वाली लाइनें परचेज़ ऑर्डर से। एडवांस खर्च नहीं है; वह तनख्वाह से कटता है।
+Crew wages | क्रू की मज़दूरी
+Crew kharcha | क्रू का खर्चा
+Vendor POs | वेंडर पीओ
+Wages: {} | मज़दूरी: {1}
+Food / khuraki: {} | खाना / खुराकी: {1}
+Bonus: {} | इनाम: {1}
+Crew travel / other: {} | क्रू किराया-भाड़ा: {1}
+from Staff | स्टाफ़ से
+paid ₹{} | दिया ₹{1}
+POs ₹{} | पीओ ₹{1}
+Exp ₹{} | खर्च ₹{1}
+Crew ₹{} | क्रू ₹{1}
+Vendors ₹{} | वेंडर ₹{1}
+Crew wages & overtime | क्रू की मज़दूरी और ओवरटाइम
+Crew kharcha & bonus | क्रू का खर्चा और इनाम
+
+# ---------- marketing ----------
+Marketing | मार्केटिंग
+Free tools to get more bookings: follow-ups, Google reviews, posters, rate card, client list and QR code. | ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, पोस्टर, रेट कार्ड, ग्राहकों की लिस्ट और क्यूआर कोड।
+Follow-ups | फ़ॉलो-अप
+Google reviews | गूगल रिव्यू
+Posters | पोस्टर
+Rate card | रेट कार्ड
+Clients | ग्राहक
+QR poster | क्यूआर पोस्टर
+Refer & share | रेफ़र और शेयर
+Follow up | फ़ॉलो-अप
+Follow up with {} | {1} से फ़ॉलो-अप करें
+Followed up with {} | {1} से फ़ॉलो-अप किया
+Most bookings are lost because nobody called back. Every enquiry and quotation shows here; after you follow up, tap Done and it comes back after 2 days if the client has still not confirmed. | ज़्यादातर बुकिंग इसलिए हाथ से जाती हैं क्योंकि किसी ने वापस फ़ोन नहीं किया। हर इन्क्वायरी और कोटेशन यहां दिखता है; फ़ॉलो-अप करके डन दबाएं, क्लाइंट ने पक्का नहीं किया तो 2 दिन बाद फिर दिखेगा।
+Done | डन
+Due today | आज करना है
+Never followed up | अभी तक फ़ॉलो-अप नहीं
+Last follow-up {} | आखिरी फ़ॉलो-अप {1}
+No open enquiries | कोई खुली इन्क्वायरी नहीं
+New enquiries and quotations will show here for follow-up. | नई इन्क्वायरी और कोटेशन फ़ॉलो-अप के लिए यहां दिखेंगे।
+Done. It will come back in 2 days if not confirmed. | हो गया। पक्का नहीं हुआ तो 2 दिन में फिर दिखेगा।
+Your Google review link | आपका गूगल रिव्यू लिंक
+Get it from Google: open your business on Google Maps → Ask for reviews → Share review form → copy the link. | गूगल से लें: गूगल मैप्स पर अपना बिज़नेस खोलें → रिव्यू मांगें → रिव्यू फ़ॉर्म शेयर करें → लिंक कॉपी करें।
+Google review link | गूगल रिव्यू लिंक
+Instagram page (optional) | इंस्टाग्राम पेज (ज़रूरी नहीं)
+Save links | लिंक सेव करें
+Links saved | लिंक सेव हो गए
+Links must start with https:// | लिंक https:// से शुरू होने चाहिए
+Ask the owner to add the Google review link in Marketing. | ओनर से कहें कि मार्केटिंग में गूगल रिव्यू लिंक डालें।
+Add your Google review link above. Until then the message asks for a review without a link. | ऊपर अपना गूगल रिव्यू लिंक डालें। तब तक मैसेज बिना लिंक के रिव्यू मांगेगा।
+Ask past clients | पुराने क्लाइंट से मांगें
+Events finished in the last 4 months | पिछले 4 महीने में पूरे हुए इवेंट
+Asked | मांग लिया
+Asked {} | {1} को मांगा
+Ask for review | रिव्यू मांगें
+No finished events yet | अभी कोई इवेंट पूरा नहीं हुआ
+After an event is marked Completed, ask the client for a Google review from here. | इवेंट पूरा मार्क होने के बाद यहां से क्लाइंट से गूगल रिव्यू मांगें।
+Pick a design | डिज़ाइन चुनें
+Diwali | दीवाली
+Wedding season | शादी का सीज़न
+Muhurat dates | मुहूर्त की तारीखें
+Special offer | स्पेशल ऑफ़र
+Navratri | नवरात्रि
+Holi | होली
+New Year | नया साल
+Thank you | धन्यवाद
+Big line | बड़ी लाइन
+Small line | छोटी लाइन
+Extra line (optional) | एक और लाइन (ज़रूरी नहीं)
+Dates (filled from your peak dates in Settings) | तारीखें (सेटिंग्स की पीक तारीखों से भरी गई)
+e.g. Valid till 30 November | जैसे: 30 नवंबर तक
+Size | साइज़
+Post (square) | पोस्ट (चौकोर)
+Status / story | स्टेटस / स्टोरी
+Your logo, business name and phone are added from Settings. Change the words to Hindi or English as you like. | आपका लोगो, बिज़नेस का नाम और फ़ोन सेटिंग्स से अपने आप आते हैं। शब्द हिंदी या अंग्रेज़ी में जैसे चाहें बदलें।
+Download | डाउनलोड
+Share | शेयर करें
+Poster preview | पोस्टर का प्रीव्यू
+Poster saved | पोस्टर सेव हो गया
+Could not save the poster on this device. Take a screenshot instead. | इस फ़ोन पर पोस्टर सेव नहीं हो पाया। स्क्रीनशॉट ले लें।
+Show godown items with rent per day ({}) | गोदाम का सामान रोज़ के किराये के साथ दिखाएं ({1})
+Show menu dishes ({}) | मेन्यू की डिश दिखाएं ({1})
+Packages / offer note (optional) | पैकेज / ऑफ़र का नोट (ज़रूरी नहीं)
+e.g. Wedding package for 500 guests from ₹2,50,000. Free DJ on bookings this month. | जैसे: 500 मेहमानों का शादी पैकेज ₹2,50,000 से। इस महीने बुकिंग पर डीजे फ़्री।
+Update card | कार्ड अपडेट करें
+Only items with a rent filled in are shown. Rates come from Inventory; dishes from Catering. | सिर्फ़ वही सामान दिखता है जिसका किराया भरा है। रेट इन्वेंटरी से और डिश कैटरिंग से आती हैं।
+Print / save PDF | प्रिंट / पीडीएफ़ सेव करें
+Send as text | टेक्स्ट में भेजें
+RATE CARD | रेट कार्ड
+day | दिन
+Rates are per day, before GST. Final price depends on date, quantity and venue. | रेट रोज़ के हैं, जीएसटी अलग। पक्का दाम तारीख, मात्रा और जगह पर निर्भर है।
+Anniversaries in the next 30 days | अगले 30 दिन में सालगिरह
+Weddings you did in earlier years. A wish brings the next booking. | पिछले सालों में की गई शादियां। एक बधाई से अगली बुकिंग आती है।
+None in the next 30 days | अगले 30 दिन में कोई नहीं
+Wedding anniversaries of your past clients show here. | पुराने क्लाइंट की शादी की सालगिरह यहां दिखेगी।
+Send wish | बधाई भेजें
+{} years | {1} साल
+Muhurat campaign | मुहूर्त कैंपेन
+From the peak dates in Settings. | सेटिंग्स की पीक तारीखों से।
+Peak dates | पीक तारीखें
+Peak date | पीक तारीख
+{} days left | {1} दिन बाकी
+{} past clients | {1} पुराने ग्राहक
+Copy message | मैसेज कॉपी करें
+Poster | पोस्टर
+No peak date in the next 60 days | अगले 60 दिन में कोई पीक तारीख नहीं
+Add muhurat dates in Settings to get a reminder here. | सेटिंग्स में मुहूर्त की तारीखें डालें, यहां याद दिलाया जाएगा।
+All clients ({}) | सभी ग्राहक ({1})
+Made from your bookings. Download the list for a WhatsApp broadcast or Facebook / Instagram ads. | आपकी बुकिंग से बनी लिस्ट। व्हाट्सऐप ब्रॉडकास्ट या फ़ेसबुक / इंस्टाग्राम ऐड के लिए डाउनलोड करें।
+Download list | लिस्ट डाउनलोड करें
+Search name or phone | नाम या फ़ोन खोजें
+{} bookings | {1} बुकिंग
+{} booking | {1} बुकिंग
+No clients yet | अभी कोई ग्राहक नहीं
+Clients are added automatically from your bookings. | ग्राहक आपकी बुकिंग से अपने आप जुड़ते हैं।
+Downloaded client list | ग्राहकों की लिस्ट डाउनलोड की
+QR code opens | क्यूआर कोड क्या खोलेगा
+WhatsApp enquiry | व्हाट्सऐप इन्क्वायरी
+Google review | गूगल रिव्यू
+Add your Google review link in the Google reviews tab first. | पहले गूगल रिव्यू टैब में अपना रिव्यू लिंक डालें।
+Print it and put it at your shop, godown, on vehicles and at every event entrance. Anyone who scans it lands in a WhatsApp chat with you, with a message already typed. | इसे प्रिंट करके दुकान, गोदाम, गाड़ियों और हर इवेंट के गेट पर लगाएं। जो भी स्कैन करेगा, उसकी आपसे व्हाट्सऐप चैट खुलेगी, मैसेज पहले से लिखा होगा।
+Keep it at the buffet counter or exit. Happy guests scan it and write a Google review on the spot. | इसे बुफ़े काउंटर या बाहर जाने के रास्ते पर रखें। खुश मेहमान स्कैन करके वहीं गूगल रिव्यू लिख देंगे।
+QR poster preview | क्यूआर पोस्टर का प्रीव्यू
+Add your mobile number first | पहले अपना मोबाइल नंबर डालें
+The QR code opens a WhatsApp chat with this number. Add it in Settings → Business profile. | क्यूआर कोड इसी नंबर से व्हाट्सऐप चैट खोलता है। इसे सेटिंग्स → बिज़नेस की जानकारी में डालें।
+Open Settings | सेटिंग्स खोलें
+Could not load the QR maker. Check the internet and try again. | क्यूआर बनाने वाला लोड नहीं हुआ। इंटरनेट देखकर फिर कोशिश करें।
+Share your business | अपना बिज़नेस शेयर करें
+A ready message with your services, phone, Google reviews and Instagram. Send it to new enquiries or post it in WhatsApp groups. | आपकी सेवाएं, फ़ोन, गूगल रिव्यू और इंस्टाग्राम वाला तैयार मैसेज। नई इन्क्वायरी को भेजें या व्हाट्सऐप ग्रुप में डालें।
+Send on WhatsApp | व्हाट्सऐप पर भेजें
+Refer another business | दूसरा बिज़नेस रेफ़र करें
+Know another tent house, caterer or event manager? Send them your link. When they join, we know you referred them. | कोई और टेंट हाउस, कैटरर या इवेंट मैनेजर जानते हैं? उन्हें अपना लिंक भेजें। वे जुड़ेंगे तो हमें पता रहेगा कि आपने भेजा।
+Know another tent house, caterer or event manager? Send them your link. When they join, we know you referred them. {} | कोई और टेंट हाउस, कैटरर या इवेंट मैनेजर जानते हैं? उन्हें अपना लिंक भेजें। वे जुड़ेंगे तो हमें पता रहेगा कि आपने भेजा। {1}
+You get 1 month free when they take a paid plan. | जब वे पेड प्लान लेंगे, आपको 1 महीना फ़्री मिलेगा।
+Copy link | लिंक कॉपी करें
+Referral reward (shown to businesses) | रेफ़रल इनाम (बिज़नेस को दिखेगा)
+Shown on Marketing → Refer & share. Leave blank to show no reward. | मार्केटिंग → रेफ़र और शेयर में दिखता है। खाली छोड़ें तो कोई इनाम नहीं दिखेगा।
+Referred by | किसने भेजा:
+Happy with {}? | {1} का काम पसंद आया?
+Recommend them to family and friends planning a function. | फ़ंक्शन की तैयारी कर रहे रिश्तेदारों और दोस्तों को इनके बारे में बताएं।
+Recommend on WhatsApp | व्हाट्सऐप पर बताएं
+Review on Google | गूगल पर रिव्यू दें
+Instagram | इंस्टाग्राम
+`);

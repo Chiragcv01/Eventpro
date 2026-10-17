@@ -57,6 +57,7 @@ A.doSignup = e => {
     if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
     const st = defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: v.bizTypes });
     st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = '2026-10';
+    try { const ref = localStorage.getItem('ep_ref'); if (ref) st.referredBy = ref; } catch (x) { }
     await S.adapter.signUpBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: ROLE_DEFAULTS, settings: st });
     S.user = await S.adapter.signIn(email, v.password); await afterLogin(); toast('Business created. You are the Owner.');
   });
@@ -130,7 +131,8 @@ V.guest = () => {
   </div></div>
   <div class="card pad">${reviewed ? `<h3>Thank you for your review!</h3><p class="muted">It helps ${esc(st.bizName)} serve more families.</p>` : `<h3 style="margin-bottom:8px">How was your experience?</h3>
     <form class="stack" onsubmit="A.guestReview(event)"><div class="grid2" style="padding:0">${fieldHTML({ name: 'stars', label: 'Rating', type: 'select', options: [[5, '★★★★★ Excellent'], [4, '★★★★ Very good'], [3, '★★★ Okay'], [2, '★★ Poor'], [1, '★ Bad']] })}${fieldHTML({ name: 'client', label: 'Your name', value: e.client })}</div>${fieldHTML({ name: 'comment', label: 'Your words', type: 'textarea', placeholder: 'Food, decor, staff behaviour, timing…' })}<button class="btn primary" type="submit">Submit review</button></form>`}</div>
-  <p class="tiny muted" style="text-align:center;margin-top:16px">Powered by SabManage</p></div>`;
+  <div class="card pad stack-sm" style="margin-top:14px">${ibox('share', '#0B9B68')}<h3>Happy with ${esc(st.bizName || 'us')}?</h3><p class="small muted">Recommend them to family and friends planning a function.</p><div class="row-flex">${waBtn(I18N.lang === 'hi' ? `हमारा ${e.type || 'इवेंट'} ${st.bizName || ''} ने किया, काम बहुत अच्छा लगा। आप भी संपर्क करें: ${st.phone || ''}` : `Our ${e.type || 'event'} was done by ${st.bizName || ''} and we were very happy with their work. Contact them: ${st.phone || ''}`, '', 'Recommend on WhatsApp', 'btn wa')}${st.googleReview ? `<a class="btn" href="${esc(st.googleReview)}" target="_blank" rel="noopener">${ic('star')} Review on Google</a>` : ''}${st.instagram ? `<a class="btn ghost" href="${esc(st.instagram)}" target="_blank" rel="noopener">Instagram</a>` : ''}</div></div>
+  <p class="tiny muted" style="text-align:center;margin-top:16px"><a href="https://sabmanage.com/?utm_source=client-page" target="_blank" rel="noopener" style="color:inherit">Powered by SabManage</a></p></div>`;
 };
 A.guestReview = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.guestReview(S.guest.token, { stars: +v.stars, client: v.client, comment: v.comment }); S.guest = { token: S.guest.token, ...(await S.adapter.guestView(S.guest.token)) }; render(); toast('Thank you! Review submitted.'); }); };
 

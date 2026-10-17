@@ -499,3 +499,27 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .help-tip b{display:block;font-size:13px;letter-spacing:.02em}
 .tabs .tab-help .info-btn{border:0;padding:0;background:#E6EDFF;color:var(--primary);width:36px;height:36px;border-radius:99px}
 .tabs .tab-help .info-btn .ico{width:19px;height:19px}
+
+/* crew hours */
+.hrs-in{display:inline-flex;align-items:center;gap:4px}
+.hrs-in input{width:64px;text-align:center}
+.hrs-in span{font-size:12.5px;color:var(--muted);font-weight:600}
+
+/* marketing */
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.tpl{border:2px solid transparent;border-radius:14px;min-height:62px;padding:8px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;font:700 13.5px var(--f-body,inherit);text-align:left;display:flex;align-items:flex-end;cursor:pointer;box-shadow:0 2px 6px rgba(15,23,42,.12)}
+.tpl.on{border-color:var(--ink);box-shadow:0 0 0 3px #fff inset,0 4px 14px rgba(15,23,42,.25)}
+.poster-cv{width:100%;max-width:420px;height:auto;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.18);background:#eee;display:block}
+.poster-cv.story{max-width:300px}
+.poster-cv.a4{max-width:380px}
+.share-pre{white-space:pre-wrap;font:500 14px/1.5 var(--f-body,inherit);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0}
+.ratecard .rc-h{margin:16px 0 6px;font-size:14px;color:var(--pb,#1F5EFF);text-transform:uppercase;letter-spacing:.04em}
+.ratecard .rc-t{width:100%;border-collapse:collapse}
+.ratecard .rc-t td{padding:6px 8px;border-bottom:1px solid #EEF0F6}
+.ratecard .rc-t .muted,.ratecard .rc-foot .muted{color:#6A7290;font-size:12px}
+.ratecard .rc-menu{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #EEF0F6;flex-wrap:wrap}
+.ratecard .rc-menu b{min-width:110px}
+.ratecard .rc-note{margin-top:16px;padding:12px 14px;border-radius:12px;background:#FFF8E6;border:1px solid #F5D98B;white-space:pre-wrap}
+.ratecard .rc-foot{margin-top:18px;text-align:center;font-weight:600}
+.tbl.payroll{min-width:900px}
+.tbl.payroll td:first-child{min-width:190px}

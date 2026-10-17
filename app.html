@@ -525,6 +525,30 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .tabs .tab-help .info-btn{border:0;padding:0;background:#E6EDFF;color:var(--primary);width:36px;height:36px;border-radius:99px}
 .tabs .tab-help .info-btn .ico{width:19px;height:19px}
 
+/* crew hours */
+.hrs-in{display:inline-flex;align-items:center;gap:4px}
+.hrs-in input{width:64px;text-align:center}
+.hrs-in span{font-size:12.5px;color:var(--muted);font-weight:600}
+
+/* marketing */
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.tpl{border:2px solid transparent;border-radius:14px;min-height:62px;padding:8px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;font:700 13.5px var(--f-body,inherit);text-align:left;display:flex;align-items:flex-end;cursor:pointer;box-shadow:0 2px 6px rgba(15,23,42,.12)}
+.tpl.on{border-color:var(--ink);box-shadow:0 0 0 3px #fff inset,0 4px 14px rgba(15,23,42,.25)}
+.poster-cv{width:100%;max-width:420px;height:auto;border-radius:16px;box-shadow:0 10px 30px rgba(15,23,42,.18);background:#eee;display:block}
+.poster-cv.story{max-width:300px}
+.poster-cv.a4{max-width:380px}
+.share-pre{white-space:pre-wrap;font:500 14px/1.5 var(--f-body,inherit);background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px;margin:0}
+.ratecard .rc-h{margin:16px 0 6px;font-size:14px;color:var(--pb,#1F5EFF);text-transform:uppercase;letter-spacing:.04em}
+.ratecard .rc-t{width:100%;border-collapse:collapse}
+.ratecard .rc-t td{padding:6px 8px;border-bottom:1px solid #EEF0F6}
+.ratecard .rc-t .muted,.ratecard .rc-foot .muted{color:#6A7290;font-size:12px}
+.ratecard .rc-menu{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #EEF0F6;flex-wrap:wrap}
+.ratecard .rc-menu b{min-width:110px}
+.ratecard .rc-note{margin-top:16px;padding:12px 14px;border-radius:12px;background:#FFF8E6;border:1px solid #F5D98B;white-space:pre-wrap}
+.ratecard .rc-foot{margin-top:18px;text-align:center;font-weight:600}
+.tbl.payroll{min-width:900px}
+.tbl.payroll td:first-child{min-width:190px}
+
 </style>
 </head>
 <body>
@@ -2300,6 +2324,201 @@ e.g. Basic | जैसे: बेसिक
 e.g. Shree Events Pvt Ltd | जैसे: श्री इवेंट्स प्राइवेट लिमिटेड
 `);
 
+I18N.load(`
+# ---------- crew duty hours, overtime, crew money ----------
+Crew roster, duty hours, overtime, attendance by event, advances, kharcha and monthly payout. | क्रू की लिस्ट, ड्यूटी के घंटे, ओवरटाइम, इवेंट के हिसाब से हाज़िरी, एडवांस, खर्चा और महीने का हिसाब।
+Crew money | क्रू का पैसा
+Edit crew money | क्रू का पैसा बदलें
+Advance, food at the event, travel or bonus | एडवांस, इवेंट पर खाना, किराया-भाड़ा या इनाम
+Crew member | क्रू मेंबर
+Advance (cut from pay) | एडवांस (तनख्वाह से कटेगा)
+Food / khuraki at the event | इवेंट पर खाना / खुराकी
+Travel / other spend | किराया-भाड़ा / दूसरा खर्च
+Bonus / inaam (added to pay) | इनाम (तनख्वाह में जुड़ेगा)
+e.g. Dinner for 6 crew at site | जैसे: साइट पर 6 लोगों का खाना
+Wage for one duty (₹) | एक ड्यूटी की मज़दूरी (₹)
+Duty hours (one shift) | ड्यूटी के घंटे (एक शिफ़्ट)
+Work beyond this is overtime; a full extra duty is one more shift | इससे ज़्यादा काम ओवरटाइम है; पूरी एक और ड्यूटी हो तो एक शिफ़्ट और
+Overtime ₹ per extra hour | ओवरटाइम: हर ज़्यादा घंटे के ₹
+Leave blank to use wage ÷ duty hours | खाली छोड़ें तो मज़दूरी ÷ ड्यूटी के घंटे से बनेगा
+Auto | अपने आप
+Add your crew first | पहले अपना क्रू जोड़ें
+Delete this entry? | यह एंट्री डिलीट करें?
+Write the hours only when someone works more than their duty. Extra hours become overtime; a full extra duty becomes one more shift. | घंटे तभी लिखें जब कोई अपनी ड्यूटी से ज़्यादा काम करे। ज़्यादा घंटे ओवरटाइम बनते हैं; पूरी एक और ड्यूटी हो तो एक शिफ़्ट और गिनी जाती है।
+duty {} hrs | ड्यूटी {1} घंटे
+hrs | घंटे
+Hours worked | काम के घंटे
+Give kharcha / advance | खर्चा / एडवांस दें
+1 shift | 1 शिफ़्ट
+{} shifts | {1} शिफ़्ट
+1 shift + {} hrs overtime | 1 शिफ़्ट + {1} घंटे ओवरटाइम
+{} shifts + {} hrs overtime | {1} शिफ़्ट + {2} घंटे ओवरटाइम
+{} shifts this month | इस महीने {1} शिफ़्ट
+{}/duty | {1}/ड्यूटी
+OT {}/hr | ओवरटाइम {1}/घंटा
+Kharcha (company) {} | खर्चा (कंपनी का) {1}
+Cut from pay | तनख्वाह से कटेगा
+Food / khuraki | खाना / खुराकी
+Company kharcha | कंपनी का खर्चा
+Travel / other | किराया-भाड़ा / दूसरा
+Bonus | इनाम
+Added to pay | तनख्वाह में जुड़ेगा
+No crew money this month | इस महीने क्रू को कोई पैसा नहीं दिया
+Advances, food at the event, travel and bonus show here. | एडवांस, इवेंट पर खाना, किराया-भाड़ा और इनाम यहां दिखेंगे।
+Net pay = wages + overtime + bonus − advance. Food and travel kharcha is the company’s cost, not cut from pay. | देनी रकम = मज़दूरी + ओवरटाइम + इनाम − एडवांस। खाना और किराया-भाड़ा कंपनी का खर्च है, तनख्वाह से नहीं कटता।
+Shifts | शिफ़्ट
+OT hrs | ओवरटाइम घंटे
+Wages | मज़दूरी
+Overtime | ओवरटाइम
+Advance: {} to {} | एडवांस: {2} को {1}
+Food / khuraki at the event: {} to {} | इवेंट पर खाना: {2} को {1}
+Travel / other spend: {} to {} | किराया-भाड़ा: {2} को {1}
+Bonus / inaam (added to pay): {} to {} | इनाम: {2} को {1}
+
+# ---------- expenses: every cost in one place ----------
+Every cost in one place: your expenses, crew wages, overtime and kharcha, and vendor POs. | हर खर्च एक जगह: आपके खर्च, क्रू की मज़दूरी, ओवरटाइम और खर्चा, और वेंडर के पीओ।
+Crew lines come from Staff (attendance, overtime, food, travel, bonus). Vendor lines come from purchase orders. Advances are not a cost; they are cut from pay. | क्रू वाली लाइनें स्टाफ़ से आती हैं (हाज़िरी, ओवरटाइम, खाना, किराया-भाड़ा, इनाम)। वेंडर वाली लाइनें परचेज़ ऑर्डर से। एडवांस खर्च नहीं है; वह तनख्वाह से कटता है।
+Crew wages | क्रू की मज़दूरी
+Crew kharcha | क्रू का खर्चा
+Vendor POs | वेंडर पीओ
+Wages: {} | मज़दूरी: {1}
+Food / khuraki: {} | खाना / खुराकी: {1}
+Bonus: {} | इनाम: {1}
+Crew travel / other: {} | क्रू किराया-भाड़ा: {1}
+from Staff | स्टाफ़ से
+paid ₹{} | दिया ₹{1}
+POs ₹{} | पीओ ₹{1}
+Exp ₹{} | खर्च ₹{1}
+Crew ₹{} | क्रू ₹{1}
+Vendors ₹{} | वेंडर ₹{1}
+Crew wages & overtime | क्रू की मज़दूरी और ओवरटाइम
+Crew kharcha & bonus | क्रू का खर्चा और इनाम
+
+# ---------- marketing ----------
+Marketing | मार्केटिंग
+Free tools to get more bookings: follow-ups, Google reviews, posters, rate card, client list and QR code. | ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, पोस्टर, रेट कार्ड, ग्राहकों की लिस्ट और क्यूआर कोड।
+Follow-ups | फ़ॉलो-अप
+Google reviews | गूगल रिव्यू
+Posters | पोस्टर
+Rate card | रेट कार्ड
+Clients | ग्राहक
+QR poster | क्यूआर पोस्टर
+Refer & share | रेफ़र और शेयर
+Follow up | फ़ॉलो-अप
+Follow up with {} | {1} से फ़ॉलो-अप करें
+Followed up with {} | {1} से फ़ॉलो-अप किया
+Most bookings are lost because nobody called back. Every enquiry and quotation shows here; after you follow up, tap Done and it comes back after 2 days if the client has still not confirmed. | ज़्यादातर बुकिंग इसलिए हाथ से जाती हैं क्योंकि किसी ने वापस फ़ोन नहीं किया। हर इन्क्वायरी और कोटेशन यहां दिखता है; फ़ॉलो-अप करके डन दबाएं, क्लाइंट ने पक्का नहीं किया तो 2 दिन बाद फिर दिखेगा।
+Done | डन
+Due today | आज करना है
+Never followed up | अभी तक फ़ॉलो-अप नहीं
+Last follow-up {} | आखिरी फ़ॉलो-अप {1}
+No open enquiries | कोई खुली इन्क्वायरी नहीं
+New enquiries and quotations will show here for follow-up. | नई इन्क्वायरी और कोटेशन फ़ॉलो-अप के लिए यहां दिखेंगे।
+Done. It will come back in 2 days if not confirmed. | हो गया। पक्का नहीं हुआ तो 2 दिन में फिर दिखेगा।
+Your Google review link | आपका गूगल रिव्यू लिंक
+Get it from Google: open your business on Google Maps → Ask for reviews → Share review form → copy the link. | गूगल से लें: गूगल मैप्स पर अपना बिज़नेस खोलें → रिव्यू मांगें → रिव्यू फ़ॉर्म शेयर करें → लिंक कॉपी करें।
+Google review link | गूगल रिव्यू लिंक
+Instagram page (optional) | इंस्टाग्राम पेज (ज़रूरी नहीं)
+Save links | लिंक सेव करें
+Links saved | लिंक सेव हो गए
+Links must start with https:// | लिंक https:// से शुरू होने चाहिए
+Ask the owner to add the Google review link in Marketing. | ओनर से कहें कि मार्केटिंग में गूगल रिव्यू लिंक डालें।
+Add your Google review link above. Until then the message asks for a review without a link. | ऊपर अपना गूगल रिव्यू लिंक डालें। तब तक मैसेज बिना लिंक के रिव्यू मांगेगा।
+Ask past clients | पुराने क्लाइंट से मांगें
+Events finished in the last 4 months | पिछले 4 महीने में पूरे हुए इवेंट
+Asked | मांग लिया
+Asked {} | {1} को मांगा
+Ask for review | रिव्यू मांगें
+No finished events yet | अभी कोई इवेंट पूरा नहीं हुआ
+After an event is marked Completed, ask the client for a Google review from here. | इवेंट पूरा मार्क होने के बाद यहां से क्लाइंट से गूगल रिव्यू मांगें।
+Pick a design | डिज़ाइन चुनें
+Diwali | दीवाली
+Wedding season | शादी का सीज़न
+Muhurat dates | मुहूर्त की तारीखें
+Special offer | स्पेशल ऑफ़र
+Navratri | नवरात्रि
+Holi | होली
+New Year | नया साल
+Thank you | धन्यवाद
+Big line | बड़ी लाइन
+Small line | छोटी लाइन
+Extra line (optional) | एक और लाइन (ज़रूरी नहीं)
+Dates (filled from your peak dates in Settings) | तारीखें (सेटिंग्स की पीक तारीखों से भरी गई)
+e.g. Valid till 30 November | जैसे: 30 नवंबर तक
+Size | साइज़
+Post (square) | पोस्ट (चौकोर)
+Status / story | स्टेटस / स्टोरी
+Your logo, business name and phone are added from Settings. Change the words to Hindi or English as you like. | आपका लोगो, बिज़नेस का नाम और फ़ोन सेटिंग्स से अपने आप आते हैं। शब्द हिंदी या अंग्रेज़ी में जैसे चाहें बदलें।
+Download | डाउनलोड
+Share | शेयर करें
+Poster preview | पोस्टर का प्रीव्यू
+Poster saved | पोस्टर सेव हो गया
+Could not save the poster on this device. Take a screenshot instead. | इस फ़ोन पर पोस्टर सेव नहीं हो पाया। स्क्रीनशॉट ले लें।
+Show godown items with rent per day ({}) | गोदाम का सामान रोज़ के किराये के साथ दिखाएं ({1})
+Show menu dishes ({}) | मेन्यू की डिश दिखाएं ({1})
+Packages / offer note (optional) | पैकेज / ऑफ़र का नोट (ज़रूरी नहीं)
+e.g. Wedding package for 500 guests from ₹2,50,000. Free DJ on bookings this month. | जैसे: 500 मेहमानों का शादी पैकेज ₹2,50,000 से। इस महीने बुकिंग पर डीजे फ़्री।
+Update card | कार्ड अपडेट करें
+Only items with a rent filled in are shown. Rates come from Inventory; dishes from Catering. | सिर्फ़ वही सामान दिखता है जिसका किराया भरा है। रेट इन्वेंटरी से और डिश कैटरिंग से आती हैं।
+Print / save PDF | प्रिंट / पीडीएफ़ सेव करें
+Send as text | टेक्स्ट में भेजें
+RATE CARD | रेट कार्ड
+day | दिन
+Rates are per day, before GST. Final price depends on date, quantity and venue. | रेट रोज़ के हैं, जीएसटी अलग। पक्का दाम तारीख, मात्रा और जगह पर निर्भर है।
+Anniversaries in the next 30 days | अगले 30 दिन में सालगिरह
+Weddings you did in earlier years. A wish brings the next booking. | पिछले सालों में की गई शादियां। एक बधाई से अगली बुकिंग आती है।
+None in the next 30 days | अगले 30 दिन में कोई नहीं
+Wedding anniversaries of your past clients show here. | पुराने क्लाइंट की शादी की सालगिरह यहां दिखेगी।
+Send wish | बधाई भेजें
+{} years | {1} साल
+Muhurat campaign | मुहूर्त कैंपेन
+From the peak dates in Settings. | सेटिंग्स की पीक तारीखों से।
+Peak dates | पीक तारीखें
+Peak date | पीक तारीख
+{} days left | {1} दिन बाकी
+{} past clients | {1} पुराने ग्राहक
+Copy message | मैसेज कॉपी करें
+Poster | पोस्टर
+No peak date in the next 60 days | अगले 60 दिन में कोई पीक तारीख नहीं
+Add muhurat dates in Settings to get a reminder here. | सेटिंग्स में मुहूर्त की तारीखें डालें, यहां याद दिलाया जाएगा।
+All clients ({}) | सभी ग्राहक ({1})
+Made from your bookings. Download the list for a WhatsApp broadcast or Facebook / Instagram ads. | आपकी बुकिंग से बनी लिस्ट। व्हाट्सऐप ब्रॉडकास्ट या फ़ेसबुक / इंस्टाग्राम ऐड के लिए डाउनलोड करें।
+Download list | लिस्ट डाउनलोड करें
+Search name or phone | नाम या फ़ोन खोजें
+{} bookings | {1} बुकिंग
+{} booking | {1} बुकिंग
+No clients yet | अभी कोई ग्राहक नहीं
+Clients are added automatically from your bookings. | ग्राहक आपकी बुकिंग से अपने आप जुड़ते हैं।
+Downloaded client list | ग्राहकों की लिस्ट डाउनलोड की
+QR code opens | क्यूआर कोड क्या खोलेगा
+WhatsApp enquiry | व्हाट्सऐप इन्क्वायरी
+Google review | गूगल रिव्यू
+Add your Google review link in the Google reviews tab first. | पहले गूगल रिव्यू टैब में अपना रिव्यू लिंक डालें।
+Print it and put it at your shop, godown, on vehicles and at every event entrance. Anyone who scans it lands in a WhatsApp chat with you, with a message already typed. | इसे प्रिंट करके दुकान, गोदाम, गाड़ियों और हर इवेंट के गेट पर लगाएं। जो भी स्कैन करेगा, उसकी आपसे व्हाट्सऐप चैट खुलेगी, मैसेज पहले से लिखा होगा।
+Keep it at the buffet counter or exit. Happy guests scan it and write a Google review on the spot. | इसे बुफ़े काउंटर या बाहर जाने के रास्ते पर रखें। खुश मेहमान स्कैन करके वहीं गूगल रिव्यू लिख देंगे।
+QR poster preview | क्यूआर पोस्टर का प्रीव्यू
+Add your mobile number first | पहले अपना मोबाइल नंबर डालें
+The QR code opens a WhatsApp chat with this number. Add it in Settings → Business profile. | क्यूआर कोड इसी नंबर से व्हाट्सऐप चैट खोलता है। इसे सेटिंग्स → बिज़नेस की जानकारी में डालें।
+Open Settings | सेटिंग्स खोलें
+Could not load the QR maker. Check the internet and try again. | क्यूआर बनाने वाला लोड नहीं हुआ। इंटरनेट देखकर फिर कोशिश करें।
+Share your business | अपना बिज़नेस शेयर करें
+A ready message with your services, phone, Google reviews and Instagram. Send it to new enquiries or post it in WhatsApp groups. | आपकी सेवाएं, फ़ोन, गूगल रिव्यू और इंस्टाग्राम वाला तैयार मैसेज। नई इन्क्वायरी को भेजें या व्हाट्सऐप ग्रुप में डालें।
+Send on WhatsApp | व्हाट्सऐप पर भेजें
+Refer another business | दूसरा बिज़नेस रेफ़र करें
+Know another tent house, caterer or event manager? Send them your link. When they join, we know you referred them. | कोई और टेंट हाउस, कैटरर या इवेंट मैनेजर जानते हैं? उन्हें अपना लिंक भेजें। वे जुड़ेंगे तो हमें पता रहेगा कि आपने भेजा।
+Know another tent house, caterer or event manager? Send them your link. When they join, we know you referred them. {} | कोई और टेंट हाउस, कैटरर या इवेंट मैनेजर जानते हैं? उन्हें अपना लिंक भेजें। वे जुड़ेंगे तो हमें पता रहेगा कि आपने भेजा। {1}
+You get 1 month free when they take a paid plan. | जब वे पेड प्लान लेंगे, आपको 1 महीना फ़्री मिलेगा।
+Copy link | लिंक कॉपी करें
+Referral reward (shown to businesses) | रेफ़रल इनाम (बिज़नेस को दिखेगा)
+Shown on Marketing → Refer & share. Leave blank to show no reward. | मार्केटिंग → रेफ़र और शेयर में दिखता है। खाली छोड़ें तो कोई इनाम नहीं दिखेगा।
+Referred by | किसने भेजा:
+Happy with {}? | {1} का काम पसंद आया?
+Recommend them to family and friends planning a function. | फ़ंक्शन की तैयारी कर रहे रिश्तेदारों और दोस्तों को इनके बारे में बताएं।
+Recommend on WhatsApp | व्हाट्सऐप पर बताएं
+Review on Google | गूगल पर रिव्यू दें
+Instagram | इंस्टाग्राम
+`);
+
 'use strict';
 /* ================= SabManage v3 — core ================= */
 const APP_VERSION = '3.0.0';
@@ -2346,6 +2565,11 @@ const LS = (() => { const mem = {}; return {
 const ICONS = {
   home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
   info: 'M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0zM12 11v5M12 7.6v.4',
+  megaphone: 'M3 10v4a1 1 0 0 0 1 1h3l6 4V5L7 9H4a1 1 0 0 0-1 1zM17 8a5 5 0 0 1 0 8M7 15l1.5 5h2.5l-1.3-4.3',
+  qr: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2zM16 16h2v2h-2z',
+  image: 'M4 5h16v14H4zM4 15l4-4 4 4 3-3 5 5M15 9.5h.01',
+  share: 'M18 8a3 3 0 1 0-3-3M6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4',
+  gift: 'M4 11h16v10H4zM3 7h18v4H3zM12 7v14M12 7c-1-3-5-4-5-1.5S10 7 12 7zM12 7c1-3 5-4 5-1.5S14 7 12 7z',
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
   box: 'M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10',
   pot: 'M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM2 10h20M9 6c0-1 1-2 1-3M14 6c0-1 1-2 1-3',
@@ -2404,10 +2628,11 @@ const MODULES = [
   { key: 'expenses', label: 'Expenses', icon: 'wallet', group: 'Money' },
   { key: 'reports', label: 'Reports & P&L', icon: 'chart', group: 'Money' },
   { key: 'reviews', label: 'Reviews', icon: 'star', group: 'Business' },
+  { key: 'marketing', label: 'Marketing', icon: 'megaphone', group: 'Business' },
   { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business' },
   { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business' }
 ];
-const MOD_COLOR = { dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', team: '#475569', settings: '#64748B' };
+const MOD_COLOR = { dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
 MODULES.forEach(m => { m.c = MOD_COLOR[m.key]; });
 const MOD = Object.fromEntries(MODULES.map(m => [m.key, m]));
 const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C026D3'], 'Sangeet & Mehendi': ['music', '#F59E0B'], 'Ring Ceremony': ['rings', '#8B5CF6'], 'Corporate Event': ['briefcase', '#2563EB'], 'Birthday / Anniversary': ['cake', '#F97316'], 'Religious / Jagran': ['diya', '#EA580C'], 'Exhibition': ['store', '#0891B2'], 'Other': ['calendar', '#64748B'] };
@@ -2419,10 +2644,10 @@ const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
   owner: { label: 'Owner', perms: allPerms(3), locked: true },
-  manager: { label: 'Manager', perms: { dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, team: 1, settings: 1 } },
-  accountant: { label: 'Accountant', perms: { dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, team: 0, settings: 1 } },
-  supervisor: { label: 'Site Supervisor', perms: { dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, team: 0, settings: 0 } },
-  staff: { label: 'Crew / Staff', perms: { dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, team: 0, settings: 0 } }
+  manager: { label: 'Manager', perms: { dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
+  accountant: { label: 'Accountant', perms: { dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
+  supervisor: { label: 'Site Supervisor', perms: { dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
+  staff: { label: 'Crew / Staff', perms: { dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const STAGES = ['Enquiry', 'Quoted', 'Confirmed', 'Setup', 'Live', 'Completed', 'Closed', 'Cancelled'];
 const RESERVING = ['Confirmed', 'Setup', 'Live'];
@@ -2450,7 +2675,7 @@ function defaultSettings(o = {}) {
 const MOBILE_DOMAIN = 'mobile.eventpro.app';
 function loginId(v) { v = String(v || '').trim(); if (v.includes('@')) return v.toLowerCase(); const d = v.replace(/\D/g, ''); return d.length >= 10 ? d.slice(-10) + '@' + MOBILE_DOMAIN : v.toLowerCase(); }
 function displayId(e) { e = String(e || ''); return e.endsWith('@' + MOBILE_DOMAIN) ? '+91 ' + e.split('@')[0] : e; }
-const DEFAULT_PLATFORM = { appName: 'SabManage', supportName: 'SabManage Support', supportPhone: '', supportEmail: '', trialDays: 14, plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
+const DEFAULT_PLATFORM = { appName: 'SabManage', supportName: 'SabManage Support', supportPhone: '', supportEmail: '', trialDays: 14, referralReward: 'You get 1 month free when they take a paid plan.', plans: [{ name: 'Basic', price: 499 }, { name: 'Pro', price: 999 }, { name: 'Enterprise', price: 2499 }] };
 const superEmails = () => (CFG.superAdminEmails || []).map(loginId);
 function graceDays() { return Math.max(0, Math.min(60, +(S.platform?.graceDays || 0))); }
 function orgState(o) { if (!o) return 'active'; if (o.status === 'suspended') return 'suspended'; if (o.expires && o.expires < todayLocal()) return addDays(o.expires, graceDays()) < todayLocal() ? 'expired' : 'grace'; return o.status || 'active'; }
@@ -2489,7 +2714,7 @@ const LocalDB = (() => {
       const db = load();
       return Object.entries(db.orgs).map(([id, o]) => { const R = db.records[id] || {}; const st = R.settings?.main || {}; const own = db.members.find(m => m.orgId === id && m.role === 'owner');
         const upd = Math.max(o.created || 0, ...Object.values(R).flatMap(c => Object.values(c).map(r => r.updatedAt || 0)));
-        return { orgId: id, name: o.name, created: o.created, ...this.orgMeta(id), ownerName: own?.name, ownerEmail: own?.email, ownerPhone: st.phone, city: st.city, logo: st.logo, members: db.members.filter(m => m.orgId === id).length, bookings: Object.keys(R.events || {}).length, invoices: Object.keys(R.invoices || {}).length, lastActivity: upd }; })
+        return { orgId: id, name: o.name, created: o.created, ...this.orgMeta(id), ownerName: own?.name, ownerEmail: own?.email, ownerPhone: st.phone, city: st.city, logo: st.logo, referredBy: st.referredBy, members: db.members.filter(m => m.orgId === id).length, bookings: Object.keys(R.events || {}).length, invoices: Object.keys(R.invoices || {}).length, lastActivity: upd }; })
         .sort((a, b) => (b.created || 0) - (a.created || 0));
     },
     async adminUpdateOrg(id, patch) { const o = load().orgs[id]; if (!o) throw new Error('Business not found'); Object.assign(o, patch); persist(); },
@@ -2843,6 +3068,7 @@ async function boot() {
   try { await S.adapter.init(); }
   catch (e) { if (S.adapter === CloudDB) { $('#app').innerHTML = `<div class="auth"><section class="auth-side"><div class="auth-card"><div class="card pad stack">${ibox('alert', '#E0344B', 'lg')}<h2>Cannot connect</h2><p class="muted">Check your internet connection and try again.</p><button class="btn primary" onclick="location.reload()">Try again</button></div></div></section></div>`; return; } }
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
+  try { const ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   const h = location.hash.replace('#', '');
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup' || h === 'login') { S.authTab = h === 'signup' && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
@@ -2994,7 +3220,7 @@ A.accountMenu = () => {
     <button class="linkbtn" style="align-self:center;color:var(--muted);font-weight:600" onclick="A.deleteAccountSheet()">${ic('trash')} Delete my account</button>
     <p class="tiny muted" style="text-align:center">SabManage v${APP_VERSION} · ${S.adapter.mode === 'local' ? 'Offline mode: data is saved on this device only.' : 'Cloud sync is on.'}</p></div>`);
 };
-const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'] };
+const ALERT_STYLE = { Overdue: ['rupee', '#E0344B'], Shortage: ['box', '#E0344B'], Confirm: ['calendar', '#D97706'], Dispatch: ['truck', '#1F5EFF'], Return: ['truck', '#D97706'], 'Follow up': ['megaphone', '#E11D74'] };
 function alertCard(a) { const [i, c] = ALERT_STYLE[a.tag] || ['alert', '#E0344B']; return `<div class="alert" style="--c:${c}" onclick="${a.go}">${ibox(i, c, 'sm')}<div class="grow" style="min-width:0"><b>${esc(a.title)}</b><div class="sub">${esc(a.sub || '')}</div></div>${ic('chev', 'go')}</div>`; }
 A.alertsSheet = () => {
   const al = computeAlerts();
@@ -3039,7 +3265,23 @@ function invStatus(inv, c) {
   return ['Unpaid', 'warn'];
 }
 function eventInvoices(evId) { return col('invoices').filter(i => i.eventId === evId); }
-function wageCost(filter) { const staff = Object.fromEntries(col('staff').map(s => [s.id, s])); return sum(col('attendance').filter(filter), a => (a.status === 'P' ? 1 : a.status === 'H' ? .5 : 0) * (+staff[a.staffId]?.rate || 0)); }
+/* Crew pay for one attendance mark. Full day = the person's duty hours (default 8).
+   Hours worked beyond the duty start a new shift; leftover hours are paid as overtime. */
+const dutyHrs = s => +s?.dutyHours > 0 ? +s.dutyHours : 8;
+const otRateOf = s => +s?.otRate > 0 ? +s.otRate : Math.round((+s?.rate || 0) / dutyHrs(s));
+function attPay(a, s) {
+  const r = { shifts: 0, otHours: 0, wage: 0, ot: 0 }; if (!a || !s) return r;
+  if (a.status === 'A') return r;
+  if (a.status === 'H') { r.shifts = .5; r.wage = .5 * (+s.rate || 0); return r; }
+  const h = +a.hours || 0, d = dutyHrs(s);
+  if (h > d) { r.shifts = Math.floor(h / d); r.otHours = Math.round((h - r.shifts * d) * 10) / 10; } else r.shifts = 1;
+  r.wage = r.shifts * (+s.rate || 0); r.ot = Math.round(r.otHours * otRateOf(s)); return r;
+}
+function wageCost(filter) { const staff = Object.fromEntries(col('staff').map(s => [s.id, s])); return sum(col('attendance').filter(filter), a => { const p = attPay(a, staff[a.staffId]); return p.wage + p.ot; }); }
+/* money given to crew (collection 'advances'): advance = cut from pay; food/travel = company cost; bonus = added to pay */
+const STAFF_MONEY = [['advance', 'Advance (cut from pay)'], ['food', 'Food / khuraki at the event'], ['travel', 'Travel / other spend'], ['bonus', 'Bonus / inaam (added to pay)']];
+const smKind = x => x.kind || 'advance';
+function crewSpend(filter) { return sum(col('advances').filter(x => smKind(x) !== 'advance' && filter(x)), x => x.amount); }
 function eventMoney(e) {
   const invs = eventInvoices(e.id).filter(i => i.type === 'invoice');
   const billed = sum(invs, i => invCalc(i).total);
@@ -3048,10 +3290,18 @@ function eventMoney(e) {
   const po = sum(col('pos').filter(p => p.eventId === e.id), p => p.amount);
   const exp = sum(col('expenses').filter(x => x.eventId === e.id), x => x.amount);
   const wages = wageCost(a => a.eventId === e.id);
-  const cost = po + exp + wages;
-  return { billed, received, revenue, po, exp, wages, cost, profit: revenue - cost, margin: revenue ? (revenue - cost) / revenue * 100 : 0, due: (billed || +e.budget || 0) - received };
+  const crew = crewSpend(x => x.eventId === e.id);
+  const cost = po + exp + wages + crew;
+  return { billed, received, revenue, po, exp, wages, crew, cost, profit: revenue - cost, margin: revenue ? (revenue - cost) / revenue * 100 : 0, due: (billed || +e.budget || 0) - received };
 }
 function eventProgress(e) { const t = col('tasks').filter(x => x.eventId === e.id); return t.length ? sum(t, x => x.progress) / t.length : null; }
+/* enquiry / quotation that nobody has followed up for 2+ days */
+function followDue(e) {
+  if (!['Enquiry', 'Quoted'].includes(e.stage)) return false;
+  const t = todayLocal(); if (e.date && eventEnd(e) < t) return false;
+  const last = e.followUpAt || (e.created ? todayLocal(new Date(e.created)) : null); if (!last) return true;
+  return daysBetween(last, t) >= 2;
+}
 function computeAlerts() {
   if (!S.org) return [];
   const out = []; const t = todayLocal();
@@ -3061,6 +3311,7 @@ function computeAlerts() {
     const d = daysBetween(t, e.date);
     if (['Enquiry', 'Quoted'].includes(e.stage) && d >= 0 && d <= 5) out.push({ tag: 'Confirm', tone: 'warn', title: `${e.title} not confirmed yet`, sub: `${fmtDate(e.date)} · ${d} day(s) left. Call ${e.client}.`, go: `A.go('event',{id:'${e.id}'})` });
     if (RESERVING.includes(e.stage) && (e.items || []).length && !e.dispatch?.out && d >= 0 && d <= 1) out.push({ tag: 'Dispatch', tone: 'accent', title: `Load truck for ${e.title}`, sub: `${(e.items || []).length} item types · ${fmtDate(e.date)}`, go: `A.go('event',{id:'${e.id}',tab:'items'})` });
+    if (followDue(e) && !(d >= 0 && d <= 5)) out.push({ tag: 'Follow up', tone: 'info', title: `Follow up with ${e.client}`, sub: `${e.stage} · ${e.title}${e.date ? ' · ' + fmtDate(e.date) : ''}`, go: can('marketing') ? `A.go('marketing',{tab:'followup'})` : `A.go('event',{id:'${e.id}'})` });
     if (e.dispatch?.out && !e.dispatch?.returned && eventEnd(e) < t) out.push({ tag: 'Return', tone: 'warn', title: `Material not back from ${e.title}`, sub: `Event ended ${fmtDate(eventEnd(e))}. Mark the return and log damage.`, go: `A.go('event',{id:'${e.id}',tab:'items'})` });
   });
   return out;
@@ -3126,11 +3377,13 @@ const HELP = {
      ['Record what you paid; the balance updates by itself.', 'जो पैसा दिया वह दर्ज करें; बाकी रकम अपने आप अपडेट होती है।']],
     ['POs linked to a booking also count in that booking’s profit.', 'बुकिंग से जुड़े पीओ उस बुकिंग के मुनाफ़े में भी गिने जाते हैं।']],
   staff: [['Staff & wages', 'स्टाफ़ और मज़दूरी'],
-    ['Your crew list, daily attendance at each event, advances given and the monthly payout, all calculated for you.', 'आपके क्रू की लिस्ट, हर इवेंट पर रोज़ की हाज़िरी, दिया गया एडवांस और महीने का हिसाब, सब अपने आप।'],
-    [['Roster: add riggers, halwai, waiters and helpers with their daily wage.', 'रोस्टर: रिगर, हलवाई, वेटर और हेल्पर को उनकी रोज़ की मज़दूरी के साथ जोड़ें।'],
-     ['Attendance: mark who worked at which event each day.', 'हाज़िरी: हर दिन कौन किस इवेंट पर था, यह मार्क करें।'],
-     ['Payroll: see days worked, advances and the amount to pay.', 'तनख्वाह: काम के दिन, एडवांस और देने वाली रकम देखें।']],
-    null],
+    ['Your crew list, duty hours, attendance at each event, overtime, money given (advance, food, travel, bonus) and the monthly payout, all calculated for you.', 'आपके क्रू की लिस्ट, ड्यूटी के घंटे, हर इवेंट पर हाज़िरी, ओवरटाइम, दिया गया पैसा (एडवांस, खाना, किराया-भाड़ा, इनाम) और महीने का हिसाब, सब अपने आप।'],
+    [['Roster: add each person with the wage for one duty and their duty hours (for example 8 or 12).', 'रोस्टर: हर व्यक्ति को एक ड्यूटी की मज़दूरी और ड्यूटी के घंटे (जैसे 8 या 12) के साथ जोड़ें।'],
+     ['Attendance: mark P / Half / Absent and the event. If someone works longer, write the hours worked.', 'हाज़िरी: P / आधा / गैरहाज़िर और इवेंट मार्क करें। कोई ज़्यादा देर काम करे तो काम के घंटे लिखें।'],
+     ['Extra hours are paid as overtime. When the extra hours reach a full duty, it counts as one more shift.', 'ज़्यादा घंटों का ओवरटाइम बनता है। ज़्यादा घंटे पूरी एक ड्यूटी के बराबर हो जाएं तो एक और शिफ़्ट गिनी जाती है।'],
+     ['Crew money: write every advance, food (khuraki) at the event, travel and bonus.', 'क्रू का पैसा: हर एडवांस, इवेंट पर खाना (खुराकी), किराया-भाड़ा और इनाम लिखें।'],
+     ['Payroll: wages + overtime + bonus − advance = amount to pay.', 'तनख्वाह: मज़दूरी + ओवरटाइम + इनाम − एडवांस = देने वाली रकम।']],
+    ['Advance is cut from pay. Food and travel are the company’s cost and show in Expenses and in the event’s profit.', 'एडवांस तनख्वाह से कटता है। खाना और किराया-भाड़ा कंपनी का खर्च है, यह खर्च में और इवेंट के मुनाफ़े में दिखता है।']],
   tools: [['Planner tools', 'प्लानर टूल्स'],
     ['Quick calculators for site planning: seating for a lawn, and how to load a truck.', 'साइट प्लानिंग के लिए जल्दी वाले कैलकुलेटर: लॉन में बैठने का इंतज़ाम, और ट्रक कैसे लोड करें।'],
     [['Seating & lawn: enter guests and lawn area to get tables, chairs and sofas, and whether it will feel crowded.', 'बैठक और लॉन: मेहमान और लॉन का एरिया डालें, टेबल, कुर्सी और सोफ़े की गिनती पाएं, और देखें भीड़ तो नहीं होगी।'],
@@ -3156,9 +3409,10 @@ const HELP = {
      ['Send a receipt or a reminder with one tap.', 'एक टैप में रसीद या रिमाइंडर भेजें।']],
     null],
   expenses: [['Expenses', 'खर्च'],
-    ['Write down running costs like diesel, transport, extra labour and repairs. Tag them to a booking to see the real profit of that event.', 'डीज़ल, ट्रांसपोर्ट, एक्स्ट्रा मज़दूर और रिपेयर जैसे खर्च लिखें। बुकिंग से जोड़ें तो उस इवेंट का असली मुनाफ़ा दिखेगा।'],
-    [['Tap "Add expense", enter amount, category and date.', '"खर्च जोड़ें" दबाएं, रकम, कैटेगरी और तारीख डालें।'],
-     ['Link it to a booking if it was spent for that event.', 'अगर खर्च किसी इवेंट के लिए था तो उस बुकिंग से जोड़ें।']],
+    ['Every cost of the month in one place: expenses you type here (diesel, transport, repairs), crew wages and overtime, crew food / travel / bonus, and vendor POs.', 'महीने का हर खर्च एक जगह: यहां लिखे खर्च (डीज़ल, ट्रांसपोर्ट, रिपेयर), क्रू की मज़दूरी और ओवरटाइम, क्रू का खाना / किराया / इनाम, और वेंडर के पीओ।'],
+    [['Tap "Add expense" for running costs; link it to a booking if it was for that event.', 'चालू खर्च के लिए "खर्च जोड़ें" दबाएं; किसी इवेंट के लिए था तो उस बुकिंग से जोड़ें।'],
+     ['Crew lines come from Staff and vendor lines from purchase orders, so you never write them twice.', 'क्रू वाली लाइनें स्टाफ़ से और वेंडर वाली परचेज़ ऑर्डर से अपने आप आती हैं, दोबारा लिखना नहीं पड़ता।'],
+     ['Use All / Expenses / Crew / Vendors to see one kind at a time.', 'सब / खर्च / क्रू / वेंडर से एक तरह का खर्च अलग देखें।']],
     ['Add expenses the same day; small amounts are easy to forget.', 'खर्च उसी दिन डालें; छोटी रकम भूलना आसान है।']],
   reports: [['Reports & P&L', 'रिपोर्ट और पी एंड एल'],
     ['Your profit and loss: billing, money collected, costs and the profit of every event for the period you pick.', 'आपका नफ़ा-नुकसान: बिलिंग, आया पैसा, खर्च और हर इवेंट का मुनाफ़ा, आपके चुने समय के लिए।'],
@@ -3189,6 +3443,41 @@ const HELP = {
      ['Turn on Authenticator for this login; it controls everything.', 'इस लॉगिन पर ऑथेंटिकेटर चालू रखें; इससे सब कुछ कंट्रोल होता है।']],
     null],
 
+  marketing: [['Marketing', 'मार्केटिंग'],
+    ['Free tools to get more bookings from the clients you already have: follow-ups, Google reviews, posters, rate card, client list, QR code and referrals. No extra cost.', 'आपके पुराने और नए ग्राहकों से ज़्यादा बुकिंग पाने के फ़्री टूल: फ़ॉलो-अप, गूगल रिव्यू, पोस्टर, रेट कार्ड, ग्राहकों की लिस्ट, क्यूआर कोड और रेफ़रल। कोई अलग खर्च नहीं।'],
+    [['Start with Follow-ups every morning: call back every enquiry.', 'हर सुबह फ़ॉलो-अप से शुरू करें: हर इन्क्वायरी को वापस कॉल करें।'], ['After each event, ask for a Google review.', 'हर इवेंट के बाद गूगल रिव्यू मांगें।'], ['Before festivals and big muhurat dates, post a poster on WhatsApp status.', 'त्योहार और बड़े मुहूर्त से पहले व्हाट्सऐप स्टेटस पर पोस्टर लगाएं।']],
+    ['Most new bookings come from old clients and their friends. Keep in touch with them.', 'ज़्यादातर नई बुकिंग पुराने ग्राहकों और उनके जानने वालों से आती हैं। उनसे जुड़े रहें।']],
+  'mk-followup': [['Follow-ups', 'फ़ॉलो-अप'],
+    ['Every enquiry and quotation that is not confirmed yet. Ones not followed up for 2 days are marked Due.', 'हर इन्क्वायरी और कोटेशन जो अभी पक्का नहीं हुआ। जिन्हें 2 दिन से फ़ॉलो-अप नहीं किया, वे "आज करना है" दिखते हैं।'],
+    [['Tap Message: a polite WhatsApp is already written for you.', 'मैसेज दबाएं: विनम्र व्हाट्सऐप मैसेज पहले से लिखा मिलेगा।'], ['After talking, tap Done. It comes back after 2 days if still not confirmed.', 'बात होने के बाद डन दबाएं। 2 दिन में पक्का न हो तो फिर दिखेगा।'], ['When the client agrees, open the booking and mark it Confirmed.', 'क्लाइंट मान जाए तो बुकिंग खोलकर पक्का मार्क करें।']], null],
+  'mk-reviews': [['Google reviews', 'गूगल रिव्यू'],
+    ['More Google reviews means you show up higher when people search "tent house near me". Ask every happy client.', 'गूगल पर ज़्यादा रिव्यू होंगे तो "पास का टेंट हाउस" ढूंढने पर आप ऊपर दिखेंगे। हर खुश ग्राहक से रिव्यू मांगें।'],
+    [['Save your Google review link once.', 'अपना गूगल रिव्यू लिंक एक बार सेव करें।'], ['Tap "Ask for review" next to each finished event; the WhatsApp message has the link.', 'हर पूरे हुए इवेंट के आगे "रिव्यू मांगें" दबाएं; व्हाट्सऐप मैसेज में लिंक होगा।']], null],
+  'mk-glink': [['Google review link', 'गूगल रिव्यू लिंक'],
+    ['The link that opens the "write a review" box for your business on Google.', 'वह लिंक जो गूगल पर आपके बिज़नेस का "रिव्यू लिखें" बॉक्स खोलता है।'],
+    [['Open Google Maps and search your business name.', 'गूगल मैप्स खोलें और अपने बिज़नेस का नाम ढूंढें।'], ['If you own the listing, tap "Ask for reviews" or "Share review form".', 'अगर लिस्टिंग आपकी है तो "Ask for reviews" या "Share review form" दबाएं।'], ['Copy the link and paste it here.', 'लिंक कॉपी करके यहां डालें।']], ['No Google listing yet? Create a free Google Business Profile first.', 'गूगल पर लिस्टिंग नहीं है? पहले फ़्री गूगल बिज़नेस प्रोफ़ाइल बनाएं।']],
+  'mk-posters': [['Posters', 'पोस्टर'],
+    ['Ready posters with your logo, name and phone for festivals, wedding season and offers. Post them on WhatsApp status, Instagram and Facebook.', 'आपके लोगो, नाम और फ़ोन के साथ त्योहार, शादी के सीज़न और ऑफ़र के तैयार पोस्टर। व्हाट्सऐप स्टेटस, इंस्टाग्राम और फ़ेसबुक पर लगाएं।'],
+    [['Pick a design.', 'डिज़ाइन चुनें।'], ['Change the words if you like.', 'चाहें तो शब्द बदलें।'], ['Choose Post or Status size and tap Download or Share.', 'पोस्ट या स्टेटस का साइज़ चुनें और डाउनलोड या शेयर दबाएं।']], null],
+  'mk-ratecard': [['Rate card', 'रेट कार्ड'],
+    ['A neat price list of your items and menu with your logo, to send to clients as a PDF or as WhatsApp text.', 'आपके सामान और मेन्यू की साफ़ रेट लिस्ट आपके लोगो के साथ, क्लाइंट को पीडीएफ़ या व्हाट्सऐप टेक्स्ट में भेजने के लिए।'],
+    [['Fill "Rent per day" for items in Inventory.', 'इन्वेंटरी में सामान का "रोज़ का किराया" भरें।'], ['Add a package or offer note if you like.', 'चाहें तो पैकेज या ऑफ़र का नोट जोड़ें।'], ['Tap Print / save PDF, or Send as text.', 'प्रिंट / पीडीएफ़ सेव या टेक्स्ट भेजें दबाएं।']], null],
+  'mk-clients': [['Clients', 'ग्राहक'],
+    ['All your clients from your bookings in one list, with anniversary wishes and muhurat campaign reminders.', 'आपकी बुकिंग से बनी सभी ग्राहकों की लिस्ट, सालगिरह की बधाई और मुहूर्त कैंपेन की याद के साथ।'],
+    [['Download the list and add the numbers to a WhatsApp broadcast list.', 'लिस्ट डाउनलोड करें और नंबर व्हाट्सऐप ब्रॉडकास्ट लिस्ट में डालें।'], ['Or upload it in Facebook / Instagram ads as a custom audience to reach them and people like them.', 'या फ़ेसबुक / इंस्टाग्राम ऐड में कस्टम ऑडियंस बनाकर उन तक और उनके जैसे लोगों तक पहुंचें।']], null],
+  'mk-anni': [['Anniversary wishes', 'सालगिरह की बधाई'],
+    ['Weddings you did in earlier years whose anniversary is in the next 30 days. A warm wish keeps you in their mind for the next family function.', 'पिछले सालों में की गई शादियां जिनकी सालगिरह अगले 30 दिन में है। एक बधाई से अगले फ़ंक्शन पर वे आपको याद रखेंगे।'], [], null],
+  'mk-campaign': [['Muhurat campaign', 'मुहूर्त कैंपेन'],
+    ['When a big muhurat date from your Settings is less than 60 days away, send an offer to all past clients before others do.', 'जब सेटिंग्स में डाला बड़ा मुहूर्त 60 दिन से कम दूर हो, तो दूसरों से पहले सभी पुराने ग्राहकों को ऑफ़र भेजें।'], [], null],
+  'mk-qr': [['QR poster', 'क्यूआर पोस्टर'],
+    ['A printable poster with a QR code. Scanning it opens a WhatsApp chat with you (or your Google review page).', 'क्यूआर कोड वाला प्रिंट होने वाला पोस्टर। स्कैन करते ही आपसे व्हाट्सऐप चैट (या आपका गूगल रिव्यू पेज) खुलता है।'],
+    [['Print it and stick it at the shop, godown and on vehicles.', 'प्रिंट करके दुकान, गोदाम और गाड़ियों पर लगाएं।'], ['Keep one at every event entrance and buffet counter.', 'हर इवेंट के गेट और बुफ़े काउंटर पर एक रखें।']], null],
+  'mk-share': [['Refer & share', 'रेफ़र और शेयर'],
+    ['Ready messages to share your business, and your personal link to invite other businesses to SabManage.', 'अपने बिज़नेस को शेयर करने के तैयार मैसेज, और दूसरे बिज़नेस को सबमैनेज पर बुलाने का आपका लिंक।'], [], null],
+  'mk-sharebiz': [['Share your business', 'अपना बिज़नेस शेयर करें'],
+    ['A short message with your services, phone, Google reviews and Instagram. Send it to new enquiries or post it in groups.', 'आपकी सेवाएं, फ़ोन, गूगल रिव्यू और इंस्टाग्राम वाला छोटा मैसेज। नई इन्क्वायरी को भेजें या ग्रुप में डालें।'], [], null],
+  'mk-refer': [['Refer another business', 'दूसरा बिज़नेस रेफ़र करें'],
+    ['Your own link. When a tent house, caterer or event manager signs up from it, SabManage knows you referred them.', 'आपका अपना लिंक। इससे कोई टेंट हाउस, कैटरर या इवेंट मैनेजर जुड़े तो सबमैनेज को पता रहता है कि आपने भेजा।'], [], null],
   /* ---------- home screen sections ---------- */
   'dash-upcoming': [['Upcoming events', 'आने वाले इवेंट'],
     ['The next events in date order, with stage, venue and guests. Tap one to open it.', 'तारीख के हिसाब से अगले इवेंट, स्टेज, जगह और मेहमानों के साथ। खोलने के लिए टैप करें।'], [], null],
@@ -3230,9 +3519,13 @@ const HELP = {
   'staff-roster': [['Roster', 'रोस्टर'],
     ['Your crew list with work type, mobile and daily wage.', 'आपके क्रू की लिस्ट, काम, मोबाइल और रोज़ की मज़दूरी के साथ।'], [], null],
   'staff-attendance': [['Attendance', 'हाज़िरी'],
-    ['Mark who worked on which day and at which event. Wages are calculated from this.', 'कौन किस दिन किस इवेंट पर था, यह मार्क करें। मज़दूरी इसी से बनती है।'], [], null],
+    ['Mark who worked on which day and at which event. If someone worked more than their duty hours, write the hours: extra hours become overtime and a full extra duty becomes one more shift.', 'कौन किस दिन किस इवेंट पर था, यह मार्क करें। ड्यूटी से ज़्यादा काम किया हो तो घंटे लिखें: ज़्यादा घंटे ओवरटाइम बनते हैं और पूरी एक और ड्यूटी हो तो एक शिफ़्ट और गिनी जाती है।'],
+    [['Example: duty 8 hours, worked 11 hours = 1 shift + 3 hours overtime.', 'उदाहरण: ड्यूटी 8 घंटे, काम 11 घंटे = 1 शिफ़्ट + 3 घंटे ओवरटाइम।'], ['Worked 18 hours = 2 shifts + 2 hours overtime.', 'काम 18 घंटे = 2 शिफ़्ट + 2 घंटे ओवरटाइम।'], ['Tap + ₹ on a row to give food money or an advance at the site.', 'साइट पर खाने का पैसा या एडवांस देने के लिए लाइन पर + ₹ दबाएं।']], null],
+  'staff-money': [['Crew money', 'क्रू का पैसा'],
+    ['Every rupee given to the crew: advance before work, food (khuraki) during the event, travel and other spend, and bonus.', 'क्रू को दिया हर रुपया: काम से पहले एडवांस, इवेंट में खाना (खुराकी), किराया-भाड़ा व दूसरा खर्च, और इनाम।'],
+    [['Advance is cut from the monthly pay.', 'एडवांस महीने की तनख्वाह से कटता है।'], ['Food and travel are company costs; they go into Expenses and the event’s profit.', 'खाना और किराया-भाड़ा कंपनी का खर्च है; यह खर्च और इवेंट के मुनाफ़े में जुड़ता है।'], ['Bonus is added to the pay.', 'इनाम तनख्वाह में जुड़ता है।']], null],
   'staff-payroll': [['Payroll', 'तनख्वाह'],
-    ['Month-wise days worked, wage earned, advances taken and the amount left to pay.', 'महीने के हिसाब से काम के दिन, बनी मज़दूरी, लिया एडवांस और देने वाली बाकी रकम।'], [], null],
+    ['Month-wise shifts, overtime hours, wages, overtime money, bonus, advance cut and the net amount to pay.', 'महीने के हिसाब से शिफ़्ट, ओवरटाइम के घंटे, मज़दूरी, ओवरटाइम का पैसा, इनाम, कटा एडवांस और देने वाली बाकी रकम।'], [], null],
   'tools-seating': [['Seating & lawn', 'बैठक और लॉन'],
     ['Enter guests, lawn area and seating style to see round tables, chairs and VIP sofas needed, and whether the space is comfortable or crowded.', 'मेहमान, लॉन का एरिया और बैठने का तरीका डालें; गोल टेबल, कुर्सी और वीआईपी सोफ़े की गिनती देखें, और जगह आराम की है या भीड़ वाली।'], [], null],
   'tools-truck': [['Truck loading', 'ट्रक लोडिंग'],
@@ -3363,6 +3656,7 @@ A.doSignup = e => {
     if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
     const st = defaultSettings({ bizName: v.bizName, owner: v.name, phone: v.phone, email: email.endsWith('@' + MOBILE_DOMAIN) ? '' : email, bizTypes: v.bizTypes });
     st.termsAcceptedAt = new Date().toISOString(); st.termsVersion = '2026-10';
+    try { const ref = localStorage.getItem('ep_ref'); if (ref) st.referredBy = ref; } catch (x) { }
     await S.adapter.signUpBusiness({ email, password: v.password, name: v.name, phone: v.phone, bizName: v.bizName, roles: ROLE_DEFAULTS, settings: st });
     S.user = await S.adapter.signIn(email, v.password); await afterLogin(); toast('Business created. You are the Owner.');
   });
@@ -3436,7 +3730,8 @@ V.guest = () => {
   </div></div>
   <div class="card pad">${reviewed ? `<h3>Thank you for your review!</h3><p class="muted">It helps ${esc(st.bizName)} serve more families.</p>` : `<h3 style="margin-bottom:8px">How was your experience?</h3>
     <form class="stack" onsubmit="A.guestReview(event)"><div class="grid2" style="padding:0">${fieldHTML({ name: 'stars', label: 'Rating', type: 'select', options: [[5, '★★★★★ Excellent'], [4, '★★★★ Very good'], [3, '★★★ Okay'], [2, '★★ Poor'], [1, '★ Bad']] })}${fieldHTML({ name: 'client', label: 'Your name', value: e.client })}</div>${fieldHTML({ name: 'comment', label: 'Your words', type: 'textarea', placeholder: 'Food, decor, staff behaviour, timing…' })}<button class="btn primary" type="submit">Submit review</button></form>`}</div>
-  <p class="tiny muted" style="text-align:center;margin-top:16px">Powered by SabManage</p></div>`;
+  <div class="card pad stack-sm" style="margin-top:14px">${ibox('share', '#0B9B68')}<h3>Happy with ${esc(st.bizName || 'us')}?</h3><p class="small muted">Recommend them to family and friends planning a function.</p><div class="row-flex">${waBtn(I18N.lang === 'hi' ? `हमारा ${e.type || 'इवेंट'} ${st.bizName || ''} ने किया, काम बहुत अच्छा लगा। आप भी संपर्क करें: ${st.phone || ''}` : `Our ${e.type || 'event'} was done by ${st.bizName || ''} and we were very happy with their work. Contact them: ${st.phone || ''}`, '', 'Recommend on WhatsApp', 'btn wa')}${st.googleReview ? `<a class="btn" href="${esc(st.googleReview)}" target="_blank" rel="noopener">${ic('star')} Review on Google</a>` : ''}${st.instagram ? `<a class="btn ghost" href="${esc(st.instagram)}" target="_blank" rel="noopener">Instagram</a>` : ''}</div></div>
+  <p class="tiny muted" style="text-align:center;margin-top:16px"><a href="https://sabmanage.com/?utm_source=client-page" target="_blank" rel="noopener" style="color:inherit">Powered by SabManage</a></p></div>`;
 };
 A.guestReview = e => { const v = formVals(e); if (!v) return; withBtn(e, async () => { await S.adapter.guestReview(S.guest.token, { stars: +v.stars, client: v.client, comment: v.comment }); S.guest = { token: S.guest.token, ...(await S.adapter.guestView(S.guest.token)) }; render(); toast('Thank you! Review submitted.'); }); };
 
@@ -3732,7 +4027,7 @@ EV_TABS.tasks = e => {
 EV_TABS.money = e => {
   const m = eventMoney(e); const invs = eventInvoices(e.id); const pays = col('payments').filter(p => p.eventId === e.id);
   const pos = col('pos').filter(p => p.eventId === e.id); const exps = col('expenses').filter(x => x.eventId === e.id);
-  return `<div class="kpis">${kpi('Billed', inr(m.billed), m.billed ? '' : 'Using package ' + inr(e.budget))}${kpi('Received', inr(m.received), '', 'good')}${kpi('Costs', inr(m.cost), `POs ${inr(m.po)} · Exp ${inr(m.exp)} · Wages ${inr(m.wages)}`)}${kpi('Profit est.', inr(m.profit), m.revenue ? m.margin.toFixed(1) + '% margin' : '', m.profit >= 0 ? 'good' : 'bad')}</div>
+  return `<div class="kpis">${kpi('Billed', inr(m.billed), m.billed ? '' : 'Using package ' + inr(e.budget))}${kpi('Received', inr(m.received), '', 'good')}${kpi('Costs', inr(m.cost), `POs ${inr(m.po)} · Exp ${inr(m.exp)} · Crew ${inr(m.wages + m.crew)}`)}${kpi('Profit est.', inr(m.profit), m.revenue ? m.margin.toFixed(1) + '% margin' : '', m.profit >= 0 ? 'good' : 'bad')}</div>
   <div class="grid g2">
     ${can('invoices') ? `<div class="card"><div class="card-h"><h3>Invoices & quotes</h3>${can('invoices', 2) ? `<button class="btn sm primary" onclick="A.newInvoice('${e.id}')">${ic('plus')} New</button>` : ''}</div><div class="rows">${invs.map(invRow).join('') || empty('None yet', 'Create a quotation for this event.')}</div></div>` : ''}
     ${can('payments') ? `<div class="card"><div class="card-h"><h3>Payments received</h3>${can('payments', 2) ? `<button class="btn sm" onclick="A.paymentForm(null,'${e.id}')">${ic('plus')} Record</button>` : ''}</div><div class="rows">${pays.map(payRow).join('') || empty('No payments', 'Advance and balance payments show here.')}</div></div>` : ''}
@@ -4046,30 +4341,70 @@ A.delPO = id => { const p = getById('pos', id); confirmBox('Delete ' + p.no + '?
 
 /* ================= Staff, attendance, payroll ================= */
 V.staff = () => {
-  const tab = S.params.tab || 'roster'; const edit = can('staff', 2);
-  const head = pageHead('Staff & wages', 'Crew roster, daily attendance by event, advances and monthly payout.', edit ? `${importBtn('staff')}<button class="btn primary" onclick="A.staffForm()">${ic('plus')} Add crew</button>` : '');
-  const tabs = `<div class="tabs">${[['roster', 'Roster'], ['attendance', 'Attendance'], ['payroll', 'Payroll']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}${tabHelp('staff-' + tab)}</div>`;
+  const tab = S.params.tab || 'roster'; const edit = can('staff', 2); const seeRates = can('reports') || edit;
+  const head = pageHead('Staff & wages', 'Crew roster, duty hours, overtime, attendance by event, advances, kharcha and monthly payout.', edit ? `${importBtn('staff')}<button class="btn" onclick="A.crewMoneyForm()">${ic('rupee')} Crew money</button><button class="btn primary" onclick="A.staffForm()">${ic('plus')} Add crew</button>` : '');
+  const tabs = `<div class="tabs">${[['roster', 'Roster'], ['attendance', 'Attendance'], ['money', 'Crew money'], ['payroll', 'Payroll']].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}</button>`).join('')}${tabHelp('staff-' + tab)}</div>`;
   if (tab === 'attendance') {
     const date = S.filters.attDate || todayLocal(); const evs = col('events').filter(e => e.date <= addDays(date, 1) && eventEnd(e) >= addDays(date, -1) && e.stage !== 'Cancelled');
-    const rows = col('staff').map(s => { const a = getById('attendance', date + '_' + s.id) || {}; return `<div class="row"><div class="main-col"><b>${esc(s.name)}</b><div class="sub">${esc(s.role || '')}</div></div><div class="row-flex" style="gap:6px;justify-content:flex-end">${edit ? `<select class="inline-in" style="width:auto;max-width:160px" onchange="A.mark('${s.id}','${date}',null,this.value)"><option value="">No event</option>${evs.map(e => `<option value="${e.id}" ${a.eventId === e.id ? 'selected' : ''}>${esc(e.title)}</option>`).join('')}</select>` : ''}<div class="seg">${[['P', 'Present'], ['H', 'Half'], ['A', 'Absent']].map(([k, l]) => `<button class="${a.status === k ? 'on' : ''}" ${edit ? `onclick="A.mark('${s.id}','${date}','${k}')"` : 'disabled'} title="${l}">${k}</button>`).join('')}</div></div></div>`; }).join('');
+    const rows = col('staff').map(s => { const a = getById('attendance', date + '_' + s.id) || {}; const p = attPay(a.status ? a : null, s);
+      const extra = a.status === 'P' && (p.shifts > 1 || p.otHours) ? pill(`${p.shifts > 1 ? p.shifts + ' shifts' : '1 shift'}${p.otHours ? ' + ' + p.otHours + ' hrs overtime' : ''}`, 'accent') : '';
+      return `<div class="row" style="flex-wrap:wrap"><div class="main-col" style="min-width:140px"><b>${esc(s.name)}</b><div class="sub">${esc(s.role || '')} · duty ${dutyHrs(s)} hrs</div>${extra ? `<div style="margin-top:4px">${extra}</div>` : ''}</div><div class="row-flex" style="gap:6px;justify-content:flex-end;flex-wrap:wrap">${edit ? `<select class="inline-in" style="width:auto;max-width:150px" onchange="A.mark('${s.id}','${date}',null,this.value)" aria-label="Event"><option value="">No event</option>${evs.map(e => `<option value="${e.id}" ${a.eventId === e.id ? 'selected' : ''}>${esc(e.title)}</option>`).join('')}</select>` : ''}<div class="seg">${[['P', 'Present'], ['H', 'Half'], ['A', 'Absent']].map(([k, l]) => `<button class="${a.status === k ? 'on' : ''}" ${edit ? `onclick="A.mark('${s.id}','${date}','${k}')"` : 'disabled'} title="${l}">${k}</button>`).join('')}</div>${edit ? `<label class="hrs-in"><input class="inline-in" type="number" min="0" max="48" step="0.5" inputmode="decimal" value="${a.hours || ''}" placeholder="${dutyHrs(s)}" onchange="A.markHours('${s.id}','${date}',this.value)" aria-label="Hours worked"><span>hrs</span></label><button class="btn sm ghost" onclick="A.crewMoneyForm(null,'${s.id}','${a.eventId || ''}','${date}')" title="Give kharcha / advance">+ ₹</button>` : ''}</div></div>`; }).join('');
     const present = col('attendance').filter(a => a.date === date); const cnt = k => present.filter(a => a.status === k).length;
-    return head + tabs + `<div class="toolbar"><input type="date" style="width:auto" value="${date}" onchange="A.setF('attDate',this.value)">${pill(cnt('P') + ' present', 'good')}${pill(cnt('H') + ' half day', 'warn')}${pill(cnt('A') + ' absent', 'bad')}${edit ? `<button class="btn sm" onclick="A.markAll('${date}')">Mark all present</button>` : ''}</div><div class="card"><div class="rows">${rows || empty('No crew added', 'Add your labour and staff first.')}</div></div>`;
+    return head + tabs + `<div class="toolbar"><input type="date" style="width:auto" value="${date}" onchange="A.setF('attDate',this.value)">${pill(cnt('P') + ' present', 'good')}${pill(cnt('H') + ' half day', 'warn')}${pill(cnt('A') + ' absent', 'bad')}${edit ? `<button class="btn sm" onclick="A.markAll('${date}')">Mark all present</button>` : ''}</div>
+    <div class="banner" style="margin-bottom:12px">${ic('clock')}<span>Write the hours only when someone works more than their duty. Extra hours become overtime; a full extra duty becomes one more shift.</span></div>
+    <div class="card"><div class="rows">${rows || empty('No crew added', 'Add your labour and staff first.')}</div></div>`;
+  }
+  if (tab === 'money') {
+    const month = S.filters.cmMonth || todayLocal().slice(0, 7);
+    const list = col('advances').filter(x => (x.date || '').startsWith(month)).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    const byKind = k => sum(list.filter(x => smKind(x) === k), x => x.amount);
+    return head + tabs + `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('cmMonth',this.value)"></div>
+    <div class="kpis">${kpi('Advance', inr(byKind('advance')), 'Cut from pay', '', 'rupee', '#EA580C')}${kpi('Food / khuraki', inr(byKind('food')), 'Company kharcha', '', 'pot', '#16A34A')}${kpi('Travel / other', inr(byKind('travel')), 'Company kharcha', '', 'truck', '#2563EB')}${kpi('Bonus', inr(byKind('bonus')), 'Added to pay', '', 'gift', '#DB2777')}</div>
+    <div class="card"><div class="rows">${list.map(crewMoneyRow).join('') || empty('No crew money this month', 'Advances, food at the event, travel and bonus show here.')}</div></div>`;
   }
   if (tab === 'payroll') {
     const month = S.filters.payMonth || todayLocal().slice(0, 7);
-    const rows = col('staff').map(s => { const att = col('attendance').filter(a => a.staffId === s.id && a.date.startsWith(month)); const days = sum(att, a => a.status === 'P' ? 1 : a.status === 'H' ? .5 : 0); const gross = days * (+s.rate || 0); const adv = sum(col('advances').filter(a => a.staffId === s.id && a.date.startsWith(month)), a => a.amount); const paid = getById('payouts', month + '_' + s.id);
-      return `<tr><td><b>${esc(s.name)}</b><div class="tiny muted">${inr(s.rate)}/day</div></td><td class="r">${days}</td><td class="r">${inr(gross)}</td><td class="r" style="color:var(--bad)">${adv ? '− ' + inr(adv) : '—'}</td><td class="r"><b>${inr(gross - adv)}</b></td><td class="r">${paid ? pill('Paid ' + fmtShort(paid.date), 'good') : edit ? `<button class="btn sm" onclick="A.payout('${s.id}','${month}',${gross - adv})">Mark paid</button>` : pill('Pending', 'warn')}</td><td>${edit ? `<button class="btn sm ghost" onclick="A.advanceForm('${s.id}')">+ Advance</button>` : ''}</td></tr>`; }).join('');
-    return head + tabs + `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('payMonth',this.value)"><span class="small muted">Half day counts as 0.5. Advances given this month are deducted.</span></div><div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Crew</th><th class="r">Days</th><th class="r">Earned</th><th class="r">Advance</th><th class="r">Net pay</th><th class="r">Status</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="7">${empty('No crew', '')}</td></tr>`}</tbody></table></div></div>`;
+    const rows = col('staff').map(s => { const pay = payrollOf(s, month); const paid = getById('payouts', month + '_' + s.id);
+      return `<tr><td><b>${esc(s.name)}</b><div class="tiny muted">${inr(s.rate)}/duty · duty ${dutyHrs(s)} hrs · OT ${inr(otRateOf(s))}/hr</div>${pay.company ? `<div class="tiny muted">Kharcha (company) ${inr(pay.company)}</div>` : ''}</td><td class="r">${pay.shifts}</td><td class="r">${pay.otHours || '—'}</td><td class="r">${inr(pay.wage)}</td><td class="r">${pay.ot ? inr(pay.ot) : '—'}</td><td class="r">${pay.bonus ? '+ ' + inr(pay.bonus) : '—'}</td><td class="r" style="color:var(--bad)">${pay.adv ? '− ' + inr(pay.adv) : '—'}</td><td class="r"><b>${inr(pay.net)}</b></td><td class="r">${paid ? pill('Paid ' + fmtShort(paid.date), 'good') : edit ? `<button class="btn sm" onclick="A.payout('${s.id}','${month}',${pay.net})">Mark paid</button>` : pill('Pending', 'warn')}</td><td>${edit ? `<button class="btn sm ghost" onclick="A.crewMoneyForm(null,'${s.id}')">+ ₹</button>` : ''}</td></tr>`; }).join('');
+    return head + tabs + `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('payMonth',this.value)"><span class="small muted">Net pay = wages + overtime + bonus − advance. Food and travel kharcha is the company’s cost, not cut from pay.</span></div><div class="card"><div class="tbl-wrap"><table class="tbl payroll"><thead><tr><th>Crew</th><th class="r">Shifts</th><th class="r">OT hrs</th><th class="r">Wages</th><th class="r">Overtime</th><th class="r">Bonus</th><th class="r">Advance</th><th class="r">Net pay</th><th class="r">Status</th><th></th></tr></thead><tbody>${rows || `<tr><td colspan="10">${empty('No crew', '')}</td></tr>`}</tbody></table></div></div>`;
   }
-  return head + tabs + `<div class="grid g-auto">${col('staff').map(s => { const linked = S.members.find(m => m.staffId === s.id); const month = todayLocal().slice(0, 7); const days = sum(col('attendance').filter(a => a.staffId === s.id && a.date.startsWith(month)), a => a.status === 'P' ? 1 : a.status === 'H' ? .5 : 0);
-    return `<div class="card pad stack-sm"><div class="row-flex" style="flex-wrap:nowrap"><div class="avatar">${esc(initials(s.name))}</div><div style="min-width:0;flex:1"><b>${esc(s.name)}</b><div class="tiny muted">${esc(s.role || '')} · ${esc(s.phone || '')}</div></div></div><div class="row-flex small" style="justify-content:space-between"><span class="muted">${can('reports') || edit ? inr(s.rate) + '/day · ' : ''}${days} days this month</span>${linked ? pill('App login', 'primary') : ''}</div><div class="row-flex">${s.phone ? waBtn('Namaste ' + s.name.split(' ')[0] + ' ji, ', s.phone, 'Message') : ''}${edit ? `<button class="btn sm" onclick="A.staffForm('${s.id}')">${ic('edit')} Edit</button>` : ''}</div></div>`; }).join('') || `<div class="card">${empty('No crew yet', 'Add riggers, halwai, waiters, DG techs and helpers.')}</div>`}</div>`;
+  return head + tabs + `<div class="grid g-auto">${col('staff').map(s => { const linked = S.members.find(m => m.staffId === s.id); const month = todayLocal().slice(0, 7); const pay = payrollOf(s, month);
+    return `<div class="card pad stack-sm"><div class="row-flex" style="flex-wrap:nowrap"><div class="avatar">${esc(initials(s.name))}</div><div style="min-width:0;flex:1"><b>${esc(s.name)}</b><div class="tiny muted">${esc(s.role || '')} · ${esc(s.phone || '')}</div></div></div><div class="row-flex small" style="justify-content:space-between"><span class="muted">${seeRates ? inr(s.rate) + '/duty · ' : ''}duty ${dutyHrs(s)} hrs · ${pay.shifts} shifts this month</span>${linked ? pill('App login', 'primary') : ''}</div><div class="row-flex">${s.phone ? waBtn('Namaste ' + s.name.split(' ')[0] + ' ji, ', s.phone, 'Message') : ''}${edit ? `<button class="btn sm" onclick="A.staffForm('${s.id}')">${ic('edit')} Edit</button><button class="btn sm ghost" onclick="A.crewMoneyForm(null,'${s.id}')">+ ₹</button>` : ''}</div></div>`; }).join('') || `<div class="card">${empty('No crew yet', 'Add riggers, halwai, waiters, DG techs and helpers.')}</div>`}</div>`;
 };
-A.staffForm = id => { const s = id ? getById('staff', id) : { rate: 800 }; formModal({ title: id ? 'Edit crew member' : 'Add crew member', fields: [{ name: 'name', label: 'Name', value: s.name, required: true }, { name: 'phone', label: 'Mobile', type: 'tel', value: s.phone }, { name: 'role', label: 'Work', value: s.role, placeholder: 'Rigger, halwai, waiter…' }, { name: 'rate', label: 'Daily wage ₹', type: 'number', min: 0, value: s.rate }],
-  left: id && can('staff', 3) ? `<button type="button" class="btn danger" onclick="A.delStaff('${id}')">${ic('trash')}</button>` : '', onSubmit: async v => { await save('staff', Object.assign(id ? s : { id: uid('st_') }, v, { rate: +v.rate || 0 }), `${id ? 'Updated' : 'Added'} crew ${v.name}`); render(); } }); };
+function payrollOf(s, month) {
+  const att = col('attendance').filter(a => a.staffId === s.id && (a.date || '').startsWith(month));
+  const r = { shifts: 0, otHours: 0, wage: 0, ot: 0 }; att.forEach(a => { const p = attPay(a, s); r.shifts += p.shifts; r.otHours += p.otHours; r.wage += p.wage; r.ot += p.ot; });
+  const money = col('advances').filter(a => a.staffId === s.id && (a.date || '').startsWith(month));
+  const k = kind => sum(money.filter(x => smKind(x) === kind), x => x.amount);
+  r.adv = k('advance'); r.bonus = k('bonus'); r.company = k('food') + k('travel');
+  r.otHours = Math.round(r.otHours * 10) / 10; r.net = r.wage + r.ot + r.bonus - r.adv; return r;
+}
+function crewMoneyRow(x) {
+  const s = getById('staff', x.staffId); const k = smKind(x); const [label, tone, icon, c] = { advance: ['Advance', 'warn', 'rupee', '#EA580C'], food: ['Food / khuraki', 'good', 'pot', '#16A34A'], travel: ['Travel / other', 'info', 'truck', '#2563EB'], bonus: ['Bonus', 'primary', 'gift', '#DB2777'] }[k];
+  const ev = x.eventId ? evById(x.eventId) : null; const edit = can('staff', 2);
+  return `<div class="row ${edit ? 'click' : ''}" ${edit ? `onclick="A.crewMoneyForm('${x.id}')"` : ''}>${ibox(icon, c)}<div class="main-col"><b>${esc(s?.name || 'Crew')}</b><div class="sub">${fmtShort(x.date)}${ev ? ' · ' + esc(ev.title) : ''}${x.note ? ' · ' + esc(x.note) : ''}</div></div>${pill(label, tone)}<b class="num">${inr(x.amount)}</b></div>`;
+}
+A.staffForm = id => { const s = id ? getById('staff', id) : { rate: 800, dutyHours: 8 }; formModal({ title: id ? 'Edit crew member' : 'Add crew member', fields: [{ name: 'name', label: 'Name', value: s.name, required: true }, { name: 'phone', label: 'Mobile', type: 'tel', value: s.phone }, { name: 'role', label: 'Work', value: s.role, placeholder: 'Rigger, halwai, waiter…' }, { name: 'rate', label: 'Wage for one duty (₹)', type: 'number', min: 0, value: s.rate }, { name: 'dutyHours', label: 'Duty hours (one shift)', type: 'number', min: 1, max: 24, step: '0.5', value: s.dutyHours || 8, hint: 'Work beyond this is overtime; a full extra duty is one more shift' }, { name: 'otRate', label: 'Overtime ₹ per extra hour', type: 'number', min: 0, value: s.otRate || '', placeholder: 'Auto', hint: 'Leave blank to use wage ÷ duty hours' }],
+  left: id && can('staff', 3) ? `<button type="button" class="btn danger" onclick="A.delStaff('${id}')">${ic('trash')}</button>` : '', onSubmit: async v => { await save('staff', Object.assign(id ? s : { id: uid('st_') }, v, { rate: +v.rate || 0, dutyHours: +v.dutyHours || 8, otRate: +v.otRate || 0 }), `${id ? 'Updated' : 'Added'} crew ${v.name}`); render(); } }); };
 A.delStaff = id => { const s = getById('staff', id); confirmBox('Remove crew member?', s.name + ' will be removed. Past attendance stays in reports.', 'Remove', async () => { await removeRec('staff', id, 'Removed crew ' + s.name); render(); }); };
 A.mark = async (sid, date, status, eventId) => { try { const id = date + '_' + sid; const a = getById('attendance', id) || { id, staffId: sid, date, status: 'P', eventId: '' }; if (status) a.status = status; if (eventId != null) a.eventId = eventId; await save('attendance', a); render(); } catch (err) { toast(err.message, 'bad'); } };
+A.markHours = async (sid, date, hrs) => { try { const id = date + '_' + sid; const a = getById('attendance', id) || { id, staffId: sid, date, status: 'P', eventId: '' }; const h = Math.max(0, Math.min(48, +hrs || 0)); a.hours = h || ''; if (h && a.status === 'A') a.status = 'P'; await save('attendance', a); render(); } catch (err) { toast(err.message, 'bad'); } };
 A.markAll = async date => { try { for (const s of col('staff')) { const id = date + '_' + s.id; const a = getById('attendance', id) || { id, staffId: s.id, date, eventId: '' }; a.status = 'P'; await save('attendance', a); } logAct(`Marked attendance for ${col('staff').length} crew on ${fmtDate(date)}`); render(); } catch (err) { toast(err.message, 'bad'); } };
-A.advanceForm = sid => { const s = getById('staff', sid); formModal({ title: 'Cash advance', sub: s.name, fields: [{ name: 'amount', label: 'Amount ₹', type: 'number', min: 1, required: true }, { name: 'date', label: 'Date', type: 'date', value: todayLocal() }, { name: 'note', label: 'Reason', full: true }], onSubmit: async v => { await save('advances', { id: uid('ad_'), staffId: sid, amount: +v.amount, date: v.date, note: v.note }, `Advance ${inr(v.amount)} to ${s.name}`); render(); } }); };
+A.advanceForm = sid => A.crewMoneyForm(null, sid);
+A.crewMoneyForm = (id, sid, evId, date) => {
+  if (!col('staff').length) { toast('Add your crew first', 'warn'); A.staffForm(); return; }
+  const x = id ? getById('advances', id) : { kind: 'advance', staffId: sid || '', eventId: evId || '', date: date || todayLocal() };
+  formModal({ title: id ? 'Edit crew money' : 'Crew money', sub: 'Advance, food at the event, travel or bonus', fields: [
+    { name: 'staffId', label: 'Crew member', type: 'select', options: col('staff').map(s => [s.id, s.name]), value: x.staffId, required: true, full: true },
+    { name: 'kind', label: 'Type', type: 'select', options: STAFF_MONEY, value: smKind(x), full: true },
+    { name: 'amount', label: 'Amount ₹', type: 'number', min: 1, required: true, value: x.amount }, { name: 'date', label: 'Date', type: 'date', value: x.date },
+    { name: 'eventId', label: 'For booking', type: 'select', options: [['', '— None —'], ...col('events').filter(e => e.stage !== 'Cancelled').sort(by('date')).map(e => [e.id, `${e.title} (${fmtShort(e.date)})`])], value: x.eventId, full: true },
+    { name: 'note', label: 'Note', value: x.note, full: true, placeholder: 'e.g. Dinner for 6 crew at site' }],
+    left: id && can('staff', 3) ? `<button type="button" class="btn danger" onclick="A.delCrewMoney('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { const s = getById('staff', v.staffId); const rec = Object.assign(id ? x : { id: uid('ad_') }, v, { amount: +v.amount }); const lab = (STAFF_MONEY.find(k => k[0] === v.kind) || STAFF_MONEY[0])[1];
+      await save('advances', rec, `${lab}: ${inr(v.amount)} to ${s?.name}`); render(); } });
+};
+A.delCrewMoney = id => confirmBox('Delete this entry?', '', 'Delete', async () => { await removeRec('advances', id); render(); });
 A.payout = async (sid, month, amount) => { try { await save('payouts', { id: month + '_' + sid, staffId: sid, month, amount, date: todayLocal() }, `Paid ${inr(amount)} wages to ${getById('staff', sid)?.name} for ${month}`); render(); } catch (err) { toast(err.message, 'bad'); } };
 
 /* ================= Live tracker ================= */
@@ -4099,14 +4434,37 @@ A.delTask = id => { const t = getById('tasks', id); confirmBox('Delete task?', t
 
 /* ================= Expenses ================= */
 function expRow(x) { const [xi, xc] = EXP_STYLE[x.category] || EXP_STYLE.Misc; return `<div class="row ${can('expenses', 2) ? 'click' : ''}" ${can('expenses', 2) ? `onclick="A.expenseForm('${x.id}')"` : ''}>${ibox(xi, xc)}<div class="main-col"><b>${esc(x.category)}</b><div class="sub">${fmtShort(x.date)}${x.note ? ' · ' + esc(x.note) : ''}${x.eventId ? ' · ' + esc(evById(x.eventId)?.title || '') : ''}</div></div><b class="num">${inr(x.amount)}</b></div>`; }
+/* Every cost of the month in one list: expenses typed here + crew wages/overtime + crew kharcha + vendor POs.
+   The crew and vendor lines are read from Staff and Vendors (never typed twice), so Reports and event profit match. */
+function monthCosts(month) {
+  const out = col('expenses').filter(x => (x.date || '').startsWith(month)).map(x => ({ src: 'exp', date: x.date, amount: +x.amount || 0, cat: x.category, x }));
+  if (can('staff')) {
+    col('staff').forEach(s => { const p = payrollOf(s, month); if (p.wage + p.ot > 0) out.push({ src: 'wage', date: month + '-' + String(new Date(+month.slice(0, 4), +month.slice(5, 7), 0).getDate()).padStart(2, '0'), amount: p.wage + p.ot, cat: 'Crew wages', s, p }); });
+    col('advances').filter(x => smKind(x) !== 'advance' && (x.date || '').startsWith(month)).forEach(x => out.push({ src: 'crew', date: x.date, amount: +x.amount || 0, cat: 'Crew kharcha', x }));
+  }
+  if (can('vendors')) col('pos').filter(x => (x.date || '').startsWith(month)).forEach(x => out.push({ src: 'po', date: x.date, amount: +x.amount || 0, cat: 'Vendor POs', x }));
+  return out.sort((a, b) => b.date.localeCompare(a.date));
+}
+const COST_STYLE = { 'Crew wages': ['users', '#0D9488'], 'Crew kharcha': ['pot', '#16A34A'], 'Vendor POs': ['handshake', '#D97706'] };
+function costRow(c) {
+  if (c.src === 'exp') return expRow(c.x);
+  const [i, col_] = COST_STYLE[c.cat];
+  if (c.src === 'wage') return `<div class="row click" onclick="A.go('staff',{tab:'payroll'})">${ibox(i, col_)}<div class="main-col"><b>Wages: ${esc(c.s.name)}</b><div class="sub">${c.p.shifts} shifts${c.p.otHours ? ' + ' + c.p.otHours + ' hrs overtime' : ''} · from Staff</div></div><b class="num">${inr(c.amount)}</b></div>`;
+  if (c.src === 'crew') { const s = getById('staff', c.x.staffId); const ev = c.x.eventId ? evById(c.x.eventId) : null; return `<div class="row click" onclick="A.go('staff',{tab:'money'})">${ibox(i, col_)}<div class="main-col"><b>${smKind(c.x) === 'bonus' ? 'Bonus' : smKind(c.x) === 'food' ? 'Food / khuraki' : 'Crew travel / other'}: ${esc(s?.name || 'Crew')}</b><div class="sub">${fmtShort(c.date)}${ev ? ' · ' + esc(ev.title) : ''}${c.x.note ? ' · ' + esc(c.x.note) : ''} · from Staff</div></div><b class="num">${inr(c.amount)}</b></div>`; }
+  const v = getById('vendors', c.x.vendorId); const ev = c.x.eventId ? evById(c.x.eventId) : null;
+  return `<div class="row click" onclick="A.poForm('${c.x.id}')">${ibox(i, col_)}<div class="main-col"><b>${esc(c.x.no)}: ${esc(v?.name || 'Vendor')}</b><div class="sub">${fmtShort(c.date)} · ${esc(c.x.desc || '')}${ev ? ' · ' + esc(ev.title) : ''} · paid ${inr(c.x.paid)}</div></div><b class="num">${inr(c.amount)}</b></div>`;
+}
 V.expenses = () => {
-  const month = S.filters.expMonth || todayLocal().slice(0, 7);
-  const list = col('expenses').filter(x => x.date.startsWith(month)).sort((a, b) => b.date.localeCompare(a.date));
-  const byCat = EXP_CATS.map(c => [c, sum(list.filter(x => x.category === c), x => x.amount)]).filter(x => x[1]); const tot = sum(list, x => x.amount);
-  return pageHead('Expenses', 'Diesel, transport, extra labour, repairs. Tag to a booking to see true event profit.', can('expenses', 2) ? `<button class="btn primary" onclick="A.expenseForm()">${ic('plus')} Add expense</button>` : '') +
-  `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('expMonth',this.value)"><b class="num">${inr(tot)} this month</b></div>
-  <div class="split"><div class="card"><div class="rows">${list.map(expRow).join('') || empty('No expenses this month', 'Add fuel, transport and other running costs.')}</div></div>
-  <div class="card pad stack-sm"><h3>By category</h3>${byCat.map(([c, v]) => `<div><div class="row-flex small" style="justify-content:space-between"><span class="row-flex" style="gap:8px">${ibox((EXP_STYLE[c] || EXP_STYLE.Misc)[0], (EXP_STYLE[c] || EXP_STYLE.Misc)[1], 'sm')}${esc(c)}</span><b class="num">${inr(v)}</b></div>${prog(tot ? v / tot * 100 : 0)}</div>`).join('') || '<span class="muted small">Nothing yet</span>'}</div></div>`;
+  const month = S.filters.expMonth || todayLocal().slice(0, 7); const show = S.filters.expShow || 'all';
+  const all = monthCosts(month); const list = all.filter(c => show === 'all' || (show === 'exp' ? c.src === 'exp' : show === 'crew' ? ['wage', 'crew'].includes(c.src) : c.src === 'po'));
+  const cats = [...new Set(all.map(c => c.cat))]; const tot = sum(all, c => c.amount);
+  const byCat = cats.map(c => [c, sum(all.filter(x => x.cat === c), x => x.amount)]).sort((a, b) => b[1] - a[1]);
+  const style = c => COST_STYLE[c] || EXP_STYLE[c] || EXP_STYLE.Misc;
+  return pageHead('Expenses', 'Every cost in one place: your expenses, crew wages, overtime and kharcha, and vendor POs.', can('expenses', 2) ? `<button class="btn primary" onclick="A.expenseForm()">${ic('plus')} Add expense</button>` : '') +
+  `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('expMonth',this.value)">${seg('expShow', [['all', 'All'], ['exp', 'Expenses'], ['crew', 'Crew'], ['po', 'Vendors']], show, 'A.setF')}<b class="num">${inr(tot)} this month</b></div>
+  <div class="split"><div class="card"><div class="rows">${list.map(costRow).join('') || empty('No expenses this month', 'Add fuel, transport and other running costs.')}</div></div>
+  <div class="card pad stack-sm"><h3>By category</h3>${byCat.map(([c, v]) => `<div><div class="row-flex small" style="justify-content:space-between"><span class="row-flex" style="gap:8px">${ibox(style(c)[0], style(c)[1], 'sm')}${esc(c)}</span><b class="num">${inr(v)}</b></div>${prog(tot ? v / tot * 100 : 0)}</div>`).join('') || '<span class="muted small">Nothing yet</span>'}
+  <p class="tiny muted" style="margin-top:6px">Crew lines come from Staff (attendance, overtime, food, travel, bonus). Vendor lines come from purchase orders. Advances are not a cost; they are cut from pay.</p></div></div>`;
 };
 A.expenseForm = (id, evId) => { const x = id ? getById('expenses', id) : { date: todayLocal(), eventId: evId || '', category: EXP_CATS[0] }; formModal({ title: id ? 'Edit expense' : 'Add expense', fields: [{ name: 'category', label: 'Type', type: 'select', options: EXP_CATS, value: x.category }, { name: 'amount', label: 'Amount ₹', type: 'number', min: 1, required: true, value: x.amount }, { name: 'date', label: 'Date', type: 'date', value: x.date }, { name: 'eventId', label: 'Booking', type: 'select', options: [['', '— General / overhead —'], ...col('events').sort(by('date')).map(e => [e.id, e.title])], value: x.eventId }, { name: 'note', label: 'Note', value: x.note, full: true }],
   left: id && can('expenses', 3) ? `<button type="button" class="btn danger" onclick="A.delExp('${id}')">${ic('trash')}</button>` : '', onSubmit: async v => { await save('expenses', Object.assign(id ? x : { id: uid('x_') }, v, { amount: +v.amount }), `${id ? 'Updated' : 'Added'} expense ${inr(v.amount)} (${v.category})`); render(); } }); };
@@ -4124,16 +4482,16 @@ V.reports = () => {
   const p = S.filters.period || 'fy'; const [a, b] = periodRange(p); const inR = d => d && d >= a && d <= b;
   const invs = col('invoices').filter(i => i.type === 'invoice' && inR(i.date)); const billed = sum(invs, i => invCalc(i).total); const gst = sum(invs, i => invCalc(i).gst);
   const collected = sum(col('payments').filter(x => inR(x.date)), x => x.amount);
-  const po = sum(col('pos').filter(x => inR(x.date)), x => x.amount); const exp = sum(col('expenses').filter(x => inR(x.date)), x => x.amount); const wages = wageCost(x => inR(x.date));
-  const cost = po + exp + wages; const net = billed - gst - cost;
+  const po = sum(col('pos').filter(x => inR(x.date)), x => x.amount); const exp = sum(col('expenses').filter(x => inR(x.date)), x => x.amount); const wages = wageCost(x => inR(x.date)); const crew = crewSpend(x => inR(x.date));
+  const cost = po + exp + wages + crew; const net = billed - gst - cost;
   const months = []; const base = new Date(todayLocal() + 'T00:00'); for (let k = 5; k >= 0; k--) { const m = todayLocal(new Date(base.getFullYear(), base.getMonth() - k, 1)).slice(0, 7); months.push(m); }
   const mrev = months.map(m => sum(col('invoices').filter(i => i.type === 'invoice' && (i.date || '').startsWith(m)), i => invCalc(i).total));
-  const mcost = months.map(m => sum(col('pos').filter(x => (x.date || '').startsWith(m)), x => x.amount) + sum(col('expenses').filter(x => x.date.startsWith(m)), x => x.amount) + wageCost(x => x.date.startsWith(m)));
+  const mcost = months.map(m => sum(col('pos').filter(x => (x.date || '').startsWith(m)), x => x.amount) + sum(col('expenses').filter(x => x.date.startsWith(m)), x => x.amount) + wageCost(x => x.date.startsWith(m)) + crewSpend(x => (x.date || '').startsWith(m)));
   const evs = col('events').filter(e => inR(e.date) && e.stage !== 'Cancelled').map(e => ({ e, m: eventMoney(e) })).sort((x, y) => y.m.revenue - x.m.revenue);
   return pageHead('Reports & P&L', `${fmtDate(a === '0000-01-01' ? null : a)} to ${fmtDate(b === '9999-12-31' ? todayLocal() : b)}`, `${seg('period', [['month', 'This month'], ['last', 'Last month'], ['fy', 'This FY'], ['all', 'All time']], p, 'A.setF')}${!FRAMED ? `<button class="btn sm" onclick="A.dl('pnl.csv')">${ic('download')} CSV</button>` : ''}`) +
-  `<div class="kpis">${kpi('Billed', inr(billed), `GST ${inr(gst)}`)}${kpi('Collected', inr(collected), '', 'good', 'rupee', '#0B9B68')}${kpi('Costs', inr(cost), `Vendors ${inr(po)} · Exp ${inr(exp)} · Wages ${inr(wages)}`)}${kpi('Net profit (ex-GST)', inr(net), billed ? (net / (billed - gst) * 100).toFixed(1) + '% margin' : '', net >= 0 ? 'good' : 'bad')}</div>
+  `<div class="kpis">${kpi('Billed', inr(billed), `GST ${inr(gst)}`)}${kpi('Collected', inr(collected), '', 'good', 'rupee', '#0B9B68')}${kpi('Costs', inr(cost), `Vendors ${inr(po)} · Exp ${inr(exp)} · Crew ${inr(wages + crew)}`)}${kpi('Net profit (ex-GST)', inr(net), billed ? (net / (billed - gst) * 100).toFixed(1) + '% margin' : '', net >= 0 ? 'good' : 'bad')}</div>
   <div class="split"><div class="card pad"><div class="row-flex" style="justify-content:space-between;margin-bottom:8px"><h3>Last 6 months</h3><div class="legend"><span><i style="background:var(--primary)"></i>Billed</span><span><i style="background:var(--accent)"></i>Costs</span></div></div><div class="chart">${barChart(months, mrev, mcost)}</div></div>
-  <div class="card pad stack-sm"><h3>Where the money goes</h3>${[['Vendor POs', po], ['Expenses', exp], ['Crew wages', wages]].map(([l, v]) => `<div><div class="row-flex small" style="justify-content:space-between"><span>${l}</span><b class="num">${inr(v)}</b></div>${prog(cost ? v / cost * 100 : 0)}</div>`).join('')}</div></div>
+  <div class="card pad stack-sm"><h3>Where the money goes</h3>${[['Vendor POs', po], ['Expenses', exp], ['Crew wages & overtime', wages], ['Crew kharcha & bonus', crew]].map(([l, v]) => `<div><div class="row-flex small" style="justify-content:space-between"><span>${l}</span><b class="num">${inr(v)}</b></div>${prog(cost ? v / cost * 100 : 0)}</div>`).join('')}</div></div>
   <div class="card" style="margin-top:14px"><div class="card-h"><h3>Profit by event</h3><span class="tiny muted">Revenue uses invoices, or package value until invoiced</span></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Event</th><th class="r">Revenue</th><th class="r">Costs</th><th class="r">Profit</th><th class="r">Margin</th></tr></thead><tbody>${evs.map(({ e, m }) => `<tr onclick="A.go('event',{id:'${e.id}',tab:'money'})" style="cursor:pointer"><td><b>${esc(e.title)}</b><div class="tiny muted">${fmtShort(e.date)} · ${num(e.pax)} pax</div></td><td class="r">${inr(m.revenue)}</td><td class="r">${inr(m.cost)}</td><td class="r" style="color:${m.profit >= 0 ? 'var(--good)' : 'var(--bad)'}"><b>${inr(m.profit)}</b></td><td class="r">${m.revenue ? m.margin.toFixed(1) + '%' : '—'}</td></tr>`).join('') || `<tr><td colspan="5">${empty('No events in this period', '')}</td></tr>`}</tbody></table></div></div>`;
 };
 A.dl = name => { const p = S.filters.period || 'fy'; const [a, b] = periodRange(p); const evs = col('events').filter(e => e.date >= a && e.date <= b && e.stage !== 'Cancelled'); downloadFile(name, 'Event,Date,Client,Revenue,Costs,Profit,Margin %\n' + evs.map(e => { const m = eventMoney(e); return `"${e.title}",${e.date},"${e.client}",${Math.round(m.revenue)},${Math.round(m.cost)},${Math.round(m.profit)},${m.margin.toFixed(1)}`; }).join('\n'), 'text/csv'); };
@@ -4370,6 +4728,7 @@ function adminOrgCard(o) {
     <div class="small" style="color:var(--ink2)">${ic('user')} ${esc(o.ownerName || '—')} <span class="muted">· ${esc(phone ? '+91 ' + phone.replace(/\D/g, '').slice(-10) : displayId(o.ownerEmail || ''))}</span></div>
     <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b><span>${o.plan === 'Trial' ? 'free' : inr(orgPrice(o)) + '/mo' + (o.price != null ? ' · special' : '')}</span></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>Team · Bookings</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
     ${o.notes ? `<div class="tiny muted">${ic('edit')} ${esc(o.notes)}</div>` : ''}
+    ${o.referredBy ? `<div class="tiny">${ic('gift')} Referred by <b>${esc((S.admin.orgs.find(x => refCode(x.orgId) === o.referredBy) || {}).name || o.referredBy)}</b></div>` : ''}
     <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
     <div class="tiny muted">Last activity ${o.lastActivity ? new Date(o.lastActivity).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—'} · ${o.invoices} bills</div></div>`;
 }
@@ -4411,6 +4770,7 @@ function adminPlatform() {
   return `<form class="card" onsubmit="A.savePlatform(event)"><div class="card-h"><div><h3>Plans & support</h3><p>Prices change for everyone at once and show on the website, renewal reminders and the Settings page. A special price set on one business stays as it is.</p></div></div>
   <div class="grid2" style="padding:6px 18px 14px">
     ${fieldHTML({ name: 'appName', label: 'Platform name', value: P.appName, required: true })}${fieldHTML({ name: 'trialDays', label: 'Free trial for new sign-ups (days)', type: 'number', min: 0, value: P.trialDays })}
+    ${fieldHTML({ name: 'referralReward', label: 'Referral reward (shown to businesses)', value: P.referralReward ?? DEFAULT_PLATFORM.referralReward, hint: 'Shown on Marketing → Refer & share. Leave blank to show no reward.' })}
     ${fieldHTML({ name: 'graceDays', label: 'Grace days after a plan ends', type: 'number', min: 0, max: 60, value: P.graceDays ?? 0, hint: 'The app keeps working for these many days after expiry, with a warning. 0 = stops the next day.' })}
     ${fieldHTML({ name: 'supportName', label: 'Support name', value: P.supportName })}${fieldHTML({ name: 'supportPhone', label: 'Support WhatsApp number', type: 'tel', value: P.supportPhone, hint: 'Businesses tap “Renew” and it opens WhatsApp to this number' })}
     ${fieldHTML({ name: 'supportEmail', label: 'Support email', type: 'email', value: P.supportEmail })}
@@ -4426,7 +4786,7 @@ function adminPlatform() {
 A.savePlatform = async e => {
   e.preventDefault(); const v = readForm(e.target);
   const plans = [0, 1, 2, 3, 4, 5].map(i => ({ name: (v['pn' + i] || '').trim(), price: +v['pp' + i] || 0, desc: (v['pd' + i] || '').trim() })).filter(p => p.name);
-  const p = { ...(S.platform || {}), appName: v.appName || 'SabManage', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), graceDays: Math.max(0, Math.min(60, +v.graceDays || 0)), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
+  const p = { ...(S.platform || {}), appName: v.appName || 'SabManage', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), graceDays: Math.max(0, Math.min(60, +v.graceDays || 0)), referralReward: (v.referralReward || '').trim(), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
   try { await S.adapter.savePlatform(p); S.platform = p; toast('Platform settings saved'); render(); } catch (err) { toast(err.message, 'bad'); }
 };
 A.bulkExtend = () => {
@@ -5019,6 +5379,275 @@ function startCard() {
   return `<div class="card pad stack-sm start-card"><div class="row-flex" style="justify-content:space-between"><div><h3>Get started${info('start')}</h3><p class="small muted">${done} of ${steps.length} done</p></div><button class="linkbtn" onclick="LS.set('ep_start_done_${S.org.orgId}',true);render()">Hide</button></div>${prog(done / steps.length * 100)}
     <div class="stack-sm" style="margin-top:4px">${steps.map(([t, sub, ok, fn, i, c]) => `<button class="start-step ${ok ? 'ok' : ''}" onclick="${fn}">${ok ? `<span class="ibox sm" style="--c:#0B9B68">${ic('check')}</span>` : ibox(i, c, 'sm')}<span class="grow" style="text-align:left"><b>${esc(t)}</b><span class="tiny muted" style="display:block">${esc(sub)}</span></span>${ok ? '' : ic('chev')}</button>`).join('')}</div></div>`;
 }
+
+/* ================= Marketing: free tools to get more bookings =================
+   Everything here runs inside the app with the business's own data: no paid service,
+   no extra hosting. Tabs: follow-ups, Google reviews, posters, rate card, clients
+   (export, anniversaries, muhurat campaigns), QR poster, refer & share. */
+const QR_SRC = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
+const MK_TABS = [['followup', 'Follow-ups'], ['reviews', 'Google reviews'], ['posters', 'Posters'], ['ratecard', 'Rate card'], ['clients', 'Clients'], ['qr', 'QR poster'], ['share', 'Refer & share']];
+const HI = () => I18N.lang === 'hi';
+const refCode = orgId => String(orgId || '').replace(/[^a-z0-9]/gi, '').slice(0, 8).toLowerCase();
+const phoneDigits = p => { const d = String(p || '').replace(/\D/g, ''); return d.length > 10 ? d.slice(-10) : d; };
+
+function clientsList() {
+  const map = new Map();
+  col('events').filter(e => e.client).forEach(e => {
+    const k = phoneDigits(e.phone) || e.client.trim().toLowerCase(); const c = map.get(k) || { name: e.client, phone: phoneDigits(e.phone), email: e.email || '', events: [], billed: 0 };
+    c.events.push(e); if (!c.email && e.email) c.email = e.email; map.set(k, c);
+  });
+  const billedBy = {}; col('invoices').filter(i => i.type === 'invoice' && i.eventId).forEach(i => { billedBy[i.eventId] = (billedBy[i.eventId] || 0) + invCalc(i).total; });
+  return [...map.values()].map(c => { c.events.sort((a, b) => (b.date || '').localeCompare(a.date || '')); c.last = c.events[0]; c.billed = sum(c.events, e => billedBy[e.id] || 0); return c; }).sort((a, b) => (b.last?.date || '').localeCompare(a.last?.date || ''));
+}
+function bizLine() { const st = settings(); return `${st.bizName || ''}${st.phone ? ' · ' + st.phone : ''}`; }
+
+V.marketing = () => {
+  const tab = MK_TABS.find(t => t[0] === S.params.tab) ? S.params.tab : 'followup';
+  const due = col('events').filter(followDue).length;
+  const head = pageHead('Marketing', 'Free tools to get more bookings: follow-ups, Google reviews, posters, rate card, client list and QR code.');
+  const tabs = `<div class="tabs">${MK_TABS.map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${k === 'followup' && due ? ` <span class="tabn">${due}</span>` : ''}</button>`).join('')}${tabHelp('mk-' + tab)}</div>`;
+  return head + tabs + MK[tab]();
+};
+const MK = {};
+
+/* ---------- 1. Follow-ups ---------- */
+function followMsg(e) {
+  const st = settings(); const d = e.date ? fmtDate(e.date) : '';
+  if (HI()) return e.stage === 'Quoted'
+    ? `नमस्ते ${e.client} जी 🙏\n${st.bizName} से बात कर रहे हैं। ${d ? d + ' के ' : ''}${e.type || 'इवेंट'} के लिए भेजा गया कोटेशन आपने देखा? कोई सवाल हो या कुछ बदलना हो तो बताइए। तारीख अभी खाली है, जल्दी पक्का करने पर हम आपके लिए रोक लेंगे।\n${bizLine()}`
+    : `नमस्ते ${e.client} जी 🙏\n${st.bizName} से बात कर रहे हैं। आपने ${d ? d + ' के ' : ''}${e.type || 'इवेंट'} के लिए पूछा था। क्या हम आपको पैकेज और दाम भेज दें? मिलने या साइट देखने का समय भी बता सकते हैं।\n${bizLine()}`;
+  return e.stage === 'Quoted'
+    ? `Namaste ${e.client} ji 🙏\nThis is ${st.bizName}. Did you get a chance to look at our quotation for your ${e.type || 'event'}${d ? ' on ' + d : ''}? Happy to change anything you need. The date is still free; confirm soon and we will hold it for you.\n${bizLine()}`
+    : `Namaste ${e.client} ji 🙏\nThis is ${st.bizName}. You had asked about your ${e.type || 'event'}${d ? ' on ' + d : ''}. Shall we send you our packages and prices? We can also visit the venue at a time that suits you.\n${bizLine()}`;
+}
+MK.followup = () => {
+  const t = todayLocal();
+  const list = col('events').filter(e => ['Enquiry', 'Quoted'].includes(e.stage) && !(e.date && eventEnd(e) < t)).sort((a, b) => (followDue(b) - followDue(a)) || (a.date || '9').localeCompare(b.date || '9'));
+  const edit = can('bookings', 2);
+  const rows = list.map(e => {
+    const last = e.followUpAt; const dueNow = followDue(e);
+    return `<div class="row" style="flex-wrap:wrap">${ibox(dueNow ? 'bell' : 'check', dueNow ? '#E11D74' : '#0B9B68')}<div class="main-col" style="min-width:170px"><b>${esc(e.client)}</b><div class="sub">${esc(e.title)}${e.date ? ' · ' + fmtShort(e.date) : ''} · ${last ? `Last follow-up ${fmtShort(last)}` : 'Never followed up'}${e.followCount ? ` · ${e.followCount}×` : ''}</div></div>
+    <div class="row-flex" style="gap:6px;flex-wrap:wrap;justify-content:flex-end">${stagePill(e.stage)}${dueNow ? pill('Due today', 'bad') : ''}${waBtn(followMsg(e), e.phone, 'Message')}${e.phone ? `<a class="btn sm" href="tel:${esc(phoneDigits(e.phone))}">${ic('phone')} Call</a>` : ''}${edit ? `<button class="btn sm" onclick="A.followDone('${e.id}')">${ic('check')} Done</button><button class="btn sm ghost" onclick="A.go('event',{id:'${e.id}'})">Open</button>` : ''}</div></div>`;
+  }).join('');
+  return `<div class="banner" style="margin-bottom:12px">${ic('megaphone')}<span>Most bookings are lost because nobody called back. Every enquiry and quotation shows here; after you follow up, tap Done and it comes back after 2 days if the client has still not confirmed.</span></div>
+  <div class="card"><div class="rows">${rows || empty('No open enquiries', 'New enquiries and quotations will show here for follow-up.', can('bookings', 2) ? `<button class="btn primary sm" onclick="A.eventForm()">${ic('plus')} New booking</button>` : '', 'megaphone', '#E11D74')}</div></div>`;
+};
+A.followDone = async id => { try { need('bookings', 2); const e = evById(id); e.followUpAt = todayLocal(); e.followCount = (+e.followCount || 0) + 1; await save('events', e, `Followed up with ${e.client}`); toast('Done. It will come back in 2 days if not confirmed.'); render(); } catch (err) { toast(err.message, 'bad'); } };
+
+/* ---------- 2. Google reviews ---------- */
+function reviewMsg(e) {
+  const st = settings(); const link = st.googleReview || '';
+  if (HI()) return `नमस्ते ${e.client} जी 🙏\n${st.bizName} की तरफ़ से आपके ${e.type || 'इवेंट'} में साथ देने के लिए धन्यवाद। अगर आपको हमारा काम पसंद आया हो तो गूगल पर 2 लाइन का रिव्यू ज़रूर लिखें, इससे हमें बहुत मदद मिलती है:\n${link}\nधन्यवाद!`;
+  return `Namaste ${e.client} ji 🙏\nThank you for choosing ${st.bizName} for your ${e.type || 'event'}. If you liked our work, please write 2 lines on Google. It helps us a lot:\n${link}\nThank you!`;
+}
+MK.reviews = () => {
+  const st = settings(); const t = todayLocal(); const editSt = can('settings', 2);
+  const done = col('events').filter(e => e.client && ['Completed', 'Closed', 'Live'].includes(e.stage) && e.date && daysBetween(eventEnd(e), t) >= 0 && daysBetween(eventEnd(e), t) <= 120).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  return `<div class="card" style="margin-bottom:14px"><div class="card-h"><div><h3>Your Google review link${info('mk-glink')}</h3><p>Get it from Google: open your business on Google Maps → Ask for reviews → Share review form → copy the link.</p></div></div>
+  ${editSt ? `<form class="grid2" style="padding:14px 16px" onsubmit="A.saveMkLinks(event)">${fieldHTML({ name: 'googleReview', label: 'Google review link', value: st.googleReview, placeholder: 'https://g.page/r/…/review', full: true })}${fieldHTML({ name: 'instagram', label: 'Instagram page (optional)', value: st.instagram, placeholder: 'https://instagram.com/yourpage' })}<div class="field" style="align-self:end"><button class="btn primary" type="submit">Save links</button></div></form>`
+    : `<div class="sheet-b small">${st.googleReview ? `<a href="${esc(st.googleReview)}" target="_blank" rel="noopener">${esc(st.googleReview)}</a>` : '<span class="muted">Ask the owner to add the Google review link in Marketing.</span>'}</div>`}</div>
+  ${!st.googleReview ? `<div class="banner warn" style="margin-bottom:12px">${ic('alert')}<span>Add your Google review link above. Until then the message asks for a review without a link.</span></div>` : ''}
+  <div class="card"><div class="card-h"><h3>Ask past clients</h3><span class="tiny muted">Events finished in the last 4 months</span></div><div class="rows">${done.map(e => `<div class="row" style="flex-wrap:wrap">${datebox(e.date, evStyle(e)[1])}<div class="main-col" style="min-width:160px"><b>${esc(e.client)}</b><div class="sub">${esc(e.title)}${e.reviewAskedAt ? ' · Asked ' + fmtShort(e.reviewAskedAt) : ''}</div></div><div class="row-flex" style="gap:6px">${e.reviewAskedAt ? pill('Asked', 'good') : ''}<a class="btn wa sm" href="${esc(waLink(reviewMsg(e), e.phone))}" target="_blank" rel="noopener" onclick="A.reviewAsked('${e.id}')">${ic('star')} Ask for review</a></div></div>`).join('') || empty('No finished events yet', 'After an event is marked Completed, ask the client for a Google review from here.', '', 'star', '#EAB308')}</div></div>`;
+};
+A.saveMkLinks = async ev => { ev.preventDefault(); try { need('settings', 2); const v = readForm(ev.target); const ok = u => !u || /^https?:\/\/\S+$/i.test(u); if (!ok(v.googleReview) || !ok(v.instagram)) throw new Error('Links must start with https://'); await saveSettingsRec({ googleReview: (v.googleReview || '').trim(), instagram: (v.instagram || '').trim() }); toast('Links saved'); render(); } catch (err) { toast(err.message, 'bad'); } };
+A.reviewAsked = id => { setTimeout(async () => { try { if (!can('bookings', 2)) return; const e = evById(id); e.reviewAskedAt = todayLocal(); await save('events', e); render(); } catch (err) { } }, 300); };
+
+/* ---------- 3. Posters (drawn on a canvas, saved as PNG) ---------- */
+const POSTERS = [
+  { k: 'diwali', name: 'Diwali', c: ['#4A0D1F', '#C2410C'], a: '#FCD34D', m: 'diya', head: ['Happy Diwali', 'शुभ दीपावली'], sub: ['Light up your celebrations with us', 'आपकी हर खुशी को रोशन करें हम'] },
+  { k: 'season', name: 'Wedding season', c: ['#7F1D1D', '#DC2626'], a: '#FDE68A', m: 'marigold', head: ['Shaadi season bookings open', 'शादी के सीज़न की बुकिंग शुरू'], sub: ['Tent, lights, decor and catering. Book your date today.', 'टेंट, लाइट, डेकोर और खाना। आज ही अपनी तारीख बुक करें।'] },
+  { k: 'dates', name: 'Muhurat dates', c: ['#581C87', '#C026D3'], a: '#FDE68A', m: 'marigold', head: ['Big muhurat dates', 'बड़े मुहूर्त की तारीखें'], sub: ['Book early, dates fill fast', 'जल्दी बुक करें, तारीखें तेज़ी से भर रही हैं'] },
+  { k: 'offer', name: 'Special offer', c: ['#1E3A8A', '#0891B2'], a: '#FDE047', m: 'tag', head: ['Special offer', 'स्पेशल ऑफ़र'], sub: ['10% off on bookings made this month', 'इस महीने बुकिंग पर 10% छूट'] },
+  { k: 'navratri', name: 'Navratri', c: ['#9D174D', '#EA580C'], a: '#FDE68A', m: 'rangoli', head: ['Happy Navratri', 'नवरात्रि की शुभकामनाएं'], sub: ['Garba, dandiya and jagran setups', 'गरबा, डांडिया और जागरण के सेटअप'] },
+  { k: 'holi', name: 'Holi', c: ['#7C3AED', '#DB2777'], a: '#FDE047', m: 'colors', head: ['Happy Holi', 'होली की शुभकामनाएं'], sub: ['Colours, music and food for your party', 'आपकी पार्टी के लिए रंग, म्यूज़िक और खाना'] },
+  { k: 'newyear', name: 'New Year', c: ['#0F172A', '#1E3A8A'], a: '#FCD34D', m: 'stars', head: ['Happy New Year', 'नया साल मुबारक'], sub: ['Thank you for a wonderful year', 'शानदार साल के लिए आपका धन्यवाद'] },
+  { k: 'thanks', name: 'Thank you', c: ['#065F46', '#0D9488'], a: '#FDE68A', m: 'rangoli', head: ['Thank you for trusting us', 'आपके भरोसे के लिए धन्यवाद'], sub: ['500+ happy families and counting', 'सैकड़ों खुश परिवार'] }
+];
+function posterState() {
+  if (!S.poster) { const p = POSTERS[0]; S.poster = { k: p.k, size: 'square', head: p.head[HI() ? 1 : 0], sub: p.sub[HI() ? 1 : 0], extra: '' }; }
+  return S.poster;
+}
+function nextSaaya(limit = 6) { const t = todayLocal(); return (settings().saaya || []).filter(s => s.date >= t).sort(by('date')).slice(0, limit); }
+MK.posters = () => {
+  const ps = posterState(); const tpl = POSTERS.find(p => p.k === ps.k) || POSTERS[0];
+  setTimeout(drawPosterNow, 30);
+  return `<div class="split poster-split"><div class="card pad stack">
+    <div><div class="eyebrow" style="margin-bottom:8px">Pick a design</div><div class="tpl-grid">${POSTERS.map(p => `<button class="tpl ${p.k === tpl.k ? 'on' : ''}" style="--c1:${p.c[0]};--c2:${p.c[1]}" onclick="A.posterTpl('${p.k}')"><span>${p.name}</span></button>`).join('')}</div></div>
+    ${fieldHTML({ name: 'ph', label: 'Big line', value: ps.head })}
+    ${fieldHTML({ name: 'ps', label: 'Small line', value: ps.sub })}
+    ${fieldHTML({ name: 'px', label: tpl.k === 'dates' ? 'Dates (filled from your peak dates in Settings)' : 'Extra line (optional)', value: ps.extra, placeholder: tpl.k === 'offer' ? 'e.g. Valid till 30 November' : '' })}
+    <div class="field"><span>Size</span>${seg('size', [['square', 'Post (square)'], ['story', 'Status / story']], ps.size, 'A.posterSet')}</div>
+    <p class="tiny muted">Your logo, business name and phone are added from Settings. Change the words to Hindi or English as you like.</p>
+  </div>
+  <div class="card pad stack" style="align-items:center"><canvas id="posterCv" class="poster-cv ${ps.size}" width="1080" height="${ps.size === 'story' ? 1920 : 1080}" role="img" aria-label="Poster preview"></canvas>
+    <div class="row-flex" style="justify-content:center"><button class="btn primary" onclick="A.posterSave()">${ic('download')} Download</button>${navigator.share ? `<button class="btn wa" onclick="A.posterShare()">${ic('share')} Share</button>` : ''}</div></div></div>`;
+};
+A.posterTpl = k => { const p = POSTERS.find(x => x.k === k); const ps = posterState(); ps.k = k; ps.head = p.head[HI() ? 1 : 0]; ps.sub = p.sub[HI() ? 1 : 0]; ps.extra = k === 'dates' ? nextSaaya(4).map(s => T(fmtShort(s.date))).join(' · ') : ''; render(); };
+A.posterSet = (k, v) => { posterState()[k] = v; render(); };
+document.addEventListener('input', ev => { const n = ev.target?.name; if (!S.poster || !['ph', 'ps', 'px'].includes(n) || !ev.target.closest('.poster-split')) return; S.poster[{ ph: 'head', ps: 'sub', px: 'extra' }[n]] = ev.target.value; drawPosterNow(); });
+const imgCache = {};
+function loadImg(src) { if (!src) return Promise.resolve(null); if (imgCache[src]) return imgCache[src]; return (imgCache[src] = new Promise(res => { const i = new Image(); if (/^https?:/.test(src)) i.crossOrigin = 'anonymous'; i.onload = () => res(i); i.onerror = () => res(null); i.src = src; })); }
+async function fontsReady(text) { try { await Promise.all(['800 80px "Baloo 2"', '600 40px Mukta', '700 40px Mukta'].map(f => document.fonts.load(f, text))); } catch (e) { } }
+function wrapLines(ctx, text, maxW) { const words = String(text || '').split(/\s+/).filter(Boolean); const lines = []; let line = ''; for (const w of words) { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; } if (line) lines.push(line); return lines; }
+function seeded(n) { let x = n; return () => (x = (x * 9301 + 49297) % 233280) / 233280; }
+function drawMotif(ctx, m, W, H, a) {
+  const rnd = seeded(7); ctx.save();
+  if (m === 'diya') { for (let i = 0; i < 5; i++) { const x = W * (0.12 + i * 0.19), y = H - 250; ctx.fillStyle = '#F59E0B'; ctx.beginPath(); ctx.ellipse(x, y, 62, 26, 0, 0, Math.PI); ctx.fill(); ctx.fillStyle = '#B45309'; ctx.fillRect(x - 62, y - 4, 124, 8); const g = ctx.createRadialGradient(x, y - 50, 4, x, y - 50, 70); g.addColorStop(0, 'rgba(253,224,71,.9)'); g.addColorStop(1, 'rgba(253,224,71,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y - 50, 70, 0, 7); ctx.fill(); ctx.fillStyle = '#FDE047'; ctx.beginPath(); ctx.moveTo(x, y - 82); ctx.quadraticCurveTo(x + 18, y - 40, x, y - 16); ctx.quadraticCurveTo(x - 18, y - 40, x, y - 82); ctx.fill(); } }
+  if (m === 'marigold') { for (let r = 0; r < 2; r++) for (let i = 0; i <= 22; i++) { const x = W * i / 22, y = 40 + r * 48 + Math.sin(i / 22 * Math.PI) * 90; ctx.fillStyle = (i + r) % 2 ? '#F59E0B' : '#FB923C'; ctx.beginPath(); ctx.arc(x, y, 26, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.beginPath(); ctx.arc(x, y, 9, 0, 7); ctx.fill(); } }
+  if (m === 'rangoli') { [[0, 0], [W, H]].forEach(([cx, cy]) => { for (let ring = 0; ring < 4; ring++) { const n = 12 + ring * 6, rr = 90 + ring * 70; for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2; ctx.fillStyle = ['rgba(253,224,71,.55)', 'rgba(255,255,255,.35)', 'rgba(251,146,60,.5)', 'rgba(244,114,182,.45)'][ring]; ctx.beginPath(); ctx.ellipse(cx + Math.cos(t) * rr, cy + Math.sin(t) * rr, 22, 10, t, 0, 7); ctx.fill(); } } }); }
+  if (m === 'colors') { const cs = ['#F472B6', '#FDE047', '#34D399', '#60A5FA', '#FB923C', '#A78BFA']; for (let i = 0; i < 26; i++) { ctx.fillStyle = cs[i % cs.length] + 'AA'; ctx.beginPath(); ctx.arc(rnd() * W, rnd() * H, 20 + rnd() * 90, 0, 7); ctx.fill(); } }
+  if (m === 'stars') { for (let i = 0; i < 60; i++) { const x = rnd() * W, y = rnd() * H, r = 2 + rnd() * 5; ctx.fillStyle = i % 5 ? 'rgba(255,255,255,.7)' : a; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); } }
+  if (m === 'tag') { ctx.translate(W - 190, 210); ctx.rotate(-0.25); ctx.fillStyle = a; ctx.beginPath(); ctx.arc(0, 0, 140, 0, 7); ctx.fill(); ctx.fillStyle = '#1E3A8A'; ctx.font = '800 92px "Baloo 2", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('%', 0, 8); }
+  ctx.restore();
+}
+let posterBusy = 0;
+async function drawPosterNow() {
+  const cv = document.getElementById('posterCv'); if (!cv) return; const my = ++posterBusy;
+  const ps = posterState(); const tpl = POSTERS.find(p => p.k === ps.k) || POSTERS[0]; const st = settings();
+  await fontsReady(ps.head + ps.sub + ps.extra + (st.bizName || '')); const logo = await loadImg(st.logo); if (my !== posterBusy) return;
+  const W = 1080, H = ps.size === 'story' ? 1920 : 1080; cv.width = W; cv.height = H; const ctx = cv.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, tpl.c[0]); g.addColorStop(1, tpl.c[1]); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.beginPath(); ctx.arc(W * 0.85, H * 0.18, 300, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(W * 0.1, H * 0.75, 240, 0, 7); ctx.fill();
+  drawMotif(ctx, tpl.m, W, H, tpl.a);
+  const footH = 190; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  // logo + name on top
+  let y = tpl.m === 'marigold' ? 230 : 120;
+  if (logo) { const s = 150; ctx.save(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2 + 8, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2, 0, 7); ctx.clip(); const r = Math.max(s / logo.width, s / logo.height); ctx.drawImage(logo, W / 2 - logo.width * r / 2, y + s / 2 - logo.height * r / 2, logo.width * r, logo.height * r); ctx.restore(); y += s + 60; }
+  ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = '700 40px Mukta, sans-serif'; ctx.fillText((st.bizName || '').toUpperCase(), W / 2, y); y += 40;
+  // headline block centred in the free space
+  const top = y, bottom = H - footH - (tpl.m === 'diya' ? 330 : 80);
+  let fs = 128; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; let hl = wrapLines(ctx, ps.head, W - 140);
+  while ((hl.length > 3 || hl.some(l => ctx.measureText(l).width > W - 140)) && fs > 60) { fs -= 6; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; hl = wrapLines(ctx, ps.head, W - 140); }
+  ctx.font = '600 50px Mukta, sans-serif'; const sl = wrapLines(ctx, ps.sub, W - 180);
+  ctx.font = '700 46px Mukta, sans-serif'; const xl = ps.extra ? wrapLines(ctx, ps.extra, W - 200) : [];
+  const blockH = hl.length * fs * 1.08 + 30 + sl.length * 64 + (xl.length ? 40 + xl.length * 62 + 30 : 0);
+  let by = top + Math.max(20, (bottom - top - blockH) / 2) + fs * 0.85;
+  ctx.fillStyle = tpl.a; ctx.font = `800 ${fs}px "Baloo 2", sans-serif`; ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 18;
+  hl.forEach(l => { ctx.fillText(l, W / 2, by); by += fs * 1.08; }); ctx.shadowBlur = 0; by += 10;
+  ctx.fillStyle = '#fff'; ctx.font = '600 50px Mukta, sans-serif'; sl.forEach(l => { ctx.fillText(l, W / 2, by); by += 64; });
+  if (xl.length) { by += 20; ctx.font = '700 46px Mukta, sans-serif'; const bw = Math.min(W - 120, Math.max(...xl.map(l => ctx.measureText(l).width)) + 80); const bh = xl.length * 62 + 30; ctx.fillStyle = 'rgba(255,255,255,.95)'; roundRect(ctx, W / 2 - bw / 2, by - 50, bw, bh, 28); ctx.fill(); ctx.fillStyle = tpl.c[0]; xl.forEach(l => { ctx.fillText(l, W / 2, by); by += 62; }); }
+  // footer band
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, H - footH, W, footH); ctx.fillStyle = tpl.c[0];
+  ctx.font = '800 54px "Baloo 2", sans-serif'; ctx.fillText(st.phone ? '📞 ' + st.phone : (st.bizName || ''), W / 2, H - footH + 88);
+  ctx.font = '600 34px Mukta, sans-serif'; ctx.fillStyle = '#475569'; ctx.fillText([st.city, st.instagram ? st.instagram.replace(/^https?:\/\/(www\.)?/, '') : ''].filter(Boolean).join('  ·  ') || (HI() ? 'कॉल या व्हाट्सऐप करें' : 'Call or WhatsApp'), W / 2, H - footH + 145);
+}
+function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+function posterBlob() { return new Promise(res => { const cv = document.getElementById('posterCv'); if (!cv) return res(null); cv.toBlob(b => res(b), 'image/png'); }); }
+const posterName = () => `${(settings().bizName || 'poster').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-${S.poster?.k || 'poster'}.png`;
+A.posterSave = async () => { try { await drawPosterNow(); const b = await posterBlob(); if (!b) return; const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = posterName(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); toast('Poster saved'); } catch (err) { toast('Could not save the poster on this device. Take a screenshot instead.', 'bad'); } };
+A.posterShare = async () => { try { await drawPosterNow(); const b = await posterBlob(); const f = new File([b], posterName(), { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] })) await navigator.share({ files: [f], text: settings().bizName }); else A.posterSave(); } catch (err) { if (err?.name !== 'AbortError') A.posterSave(); } };
+
+/* ---------- 4. Rate card / catalogue ---------- */
+MK.ratecard = () => {
+  const st = settings(); const rc = S.rc = S.rc || { inv: true, menu: true, note: '' };
+  const inv = col('inventory').filter(i => +i.rate > 0).sort(by('name')); const cats = [...new Set(inv.map(i => i.category || 'Other'))];
+  const dishes = col('dishes'); const courses = [...new Set(dishes.map(d => d.category || 'Other'))];
+  const card = `<div class="paper ratecard" style="--pb:${esc(brandColor(st))}">${paperHead(st, T('RATE CARD'), `<div class="pm">${fmtDate(todayLocal())}</div>`)}
+    ${rc.inv && moduleOn('inventory') && inv.length ? cats.map(c => `<h4 class="rc-h">${esc(T(c))}</h4><table class="rc-t"><tbody>${inv.filter(i => (i.category || 'Other') === c).map(i => `<tr><td>${esc(i.name)}</td><td class="r">${inr(i.rate)} <span class="muted">/ ${esc(T('day'))}</span></td></tr>`).join('')}</tbody></table>`).join('') : ''}
+    ${rc.menu && moduleOn('catering') && dishes.length ? `<h4 class="rc-h">${esc(T('Menu'))}</h4>${courses.map(c => `<div class="rc-menu"><b>${esc(T(c))}</b><span>${dishes.filter(d => (d.category || 'Other') === c).map(d => esc(d.name)).join(' · ')}</span></div>`).join('')}` : ''}
+    ${rc.note ? `<div class="rc-note">${esc(rc.note)}</div>` : ''}
+    <div class="rc-foot">${esc(st.bizName || '')}${st.phone ? ' · ' + esc(st.phone) : ''}${st.city ? ' · ' + esc(st.city) : ''}<br><span class="muted">${esc(T('Rates are per day, before GST. Final price depends on date, quantity and venue.'))}</span></div></div>`;
+  return `<div class="split"><div class="card pad stack">
+    <label class="check"><input type="checkbox" ${rc.inv ? 'checked' : ''} onchange="A.rcSet('inv',this.checked)"> <span>Show godown items with rent per day (${inv.length})</span></label>
+    <label class="check"><input type="checkbox" ${rc.menu ? 'checked' : ''} onchange="A.rcSet('menu',this.checked)"> <span>Show menu dishes (${dishes.length})</span></label>
+    ${fieldHTML({ name: 'rcnote', label: 'Packages / offer note (optional)', type: 'textarea', value: rc.note, placeholder: 'e.g. Wedding package for 500 guests from ₹2,50,000. Free DJ on bookings this month.' })}
+    <button class="btn" onclick="A.rcSet('note',document.querySelector('[name=rcnote]').value)">Update card</button>
+    <p class="tiny muted">Only items with a rent filled in are shown. Rates come from Inventory; dishes from Catering.</p>
+    <div class="row-flex">${!FRAMED ? `<button class="btn primary" onclick="window.print()">${ic('print')} Print / save PDF</button>` : ''}${waBtn(rateCardText(), '', 'Send as text')}</div></div>
+  <div><div id="printArea">${card}</div></div></div>`;
+};
+A.rcSet = (k, v) => { S.rc[k] = v; render(); };
+function rateCardText() {
+  const st = settings(); const inv = col('inventory').filter(i => +i.rate > 0); const dishes = col('dishes'); const rc = S.rc || {};
+  let t = `*${st.bizName || ''}*\n${HI() ? 'रेट कार्ड' : 'Rate card'}\n`;
+  if (rc.inv !== false && inv.length) t += '\n' + inv.map(i => `• ${i.name}: ${inr(i.rate)}/${HI() ? 'दिन' : 'day'}`).join('\n') + '\n';
+  if (rc.menu !== false && dishes.length) t += `\n${HI() ? 'मेन्यू' : 'Menu'}: ` + dishes.map(d => d.name).join(', ') + '\n';
+  if (rc.note) t += '\n' + rc.note + '\n';
+  return t + `\n📞 ${st.phone || ''}`;
+}
+
+/* ---------- 5. Clients: list, export, anniversaries, muhurat campaigns ---------- */
+function anniversaries(days = 30) {
+  const t = todayLocal(); const y = +t.slice(0, 4);
+  return col('events').filter(e => e.date && ['Wedding', 'Ring Ceremony'].includes(e.type) && e.stage !== 'Cancelled' && +e.date.slice(0, 4) < y).map(e => {
+    let next = y + e.date.slice(4); if (next < t) next = (y + 1) + e.date.slice(4); return { e, next, d: daysBetween(t, next), years: +next.slice(0, 4) - +e.date.slice(0, 4) };
+  }).filter(x => x.d >= 0 && x.d <= days).sort((a, b) => a.d - b.d);
+}
+function anniMsg(x) {
+  const st = settings(); const e = x.e;
+  if (HI()) return `नमस्ते ${e.client} जी 🙏\nशादी की ${x.years}वीं सालगिरह की ढेर सारी शुभकामनाएं! ${fmtDate(e.date)} को आपकी खुशियों में शामिल होना ${st.bizName} के लिए सौभाग्य था। परिवार के किसी भी फ़ंक्शन के लिए हमें याद करें।\n${bizLine()}`;
+  return `Namaste ${e.client} ji 🙏\nHappy ${x.years}${x.years === 1 ? 'st' : x.years === 2 ? 'nd' : x.years === 3 ? 'rd' : 'th'} wedding anniversary! It was an honour for ${st.bizName} to be part of your wedding on ${fmtDate(e.date)}. For any family function, we are just a call away.\n${bizLine()}`;
+}
+function campaignMsg(s) {
+  const st = settings();
+  if (HI()) return `नमस्ते 🙏\n${fmtDate(s.date)}${s.label ? ' (' + s.label + ')' : ''} का बड़ा मुहूर्त आ रहा है और तारीखें तेज़ी से भर रही हैं। टेंट, लाइट, डेकोर और खाने की बुकिंग के लिए आज ही संपर्क करें। पुराने ग्राहकों के लिए खास दाम।\n${bizLine()}`;
+  return `Namaste 🙏\nThe big muhurat on ${fmtDate(s.date)}${s.label ? ' (' + s.label + ')' : ''} is coming and dates are filling fast. Call us today for tent, lights, decor and catering. Special rates for our old clients.\n${bizLine()}`;
+}
+MK.clients = () => {
+  const q = (S.filters.mkq || '').toLowerCase(); const all = clientsList(); const list = all.filter(c => !q || (c.name + ' ' + c.phone).toLowerCase().includes(q));
+  const ann = anniversaries(30); const sa = nextSaaya(3).filter(s => daysBetween(todayLocal(), s.date) <= 60); const money = can('invoices');
+  return `<div class="split" style="margin-bottom:14px">
+    <div class="card"><div class="card-h"><div><h3>Anniversaries in the next 30 days${info('mk-anni')}</h3><p>Weddings you did in earlier years. A wish brings the next booking.</p></div></div><div class="rows">${ann.map(x => `<div class="row" style="flex-wrap:wrap">${datebox(x.next, '#E11D74')}<div class="main-col" style="min-width:150px"><b>${esc(x.e.client)}</b><div class="sub">${x.d === 0 ? 'Today' : x.d === 1 ? 'Tomorrow' : `In ${x.d} days`} · ${x.years} years · ${esc(x.e.title)}</div></div>${waBtn(anniMsg(x), x.e.phone, 'Send wish')}</div>`).join('') || empty('None in the next 30 days', 'Wedding anniversaries of your past clients show here.', '', 'gift', '#E11D74')}</div></div>
+    <div class="card"><div class="card-h"><div><h3>Muhurat campaign${info('mk-campaign')}</h3><p>From the peak dates in Settings.</p></div>${can('settings', 2) ? `<button class="btn sm" onclick="A.go('settings')">Peak dates</button>` : ''}</div><div class="rows">${sa.map(s => `<div class="row" style="flex-wrap:wrap">${datebox(s.date, '#7C3AED')}<div class="main-col" style="min-width:150px"><b>${esc(s.label || 'Peak date')}</b><div class="sub">${daysBetween(todayLocal(), s.date)} days left · ${all.length} past clients</div></div><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.copy(${esc(JSON.stringify(campaignMsg(s)))})">${ic('copy')} Copy message</button><button class="btn sm" onclick="A.posterTpl('dates');A.setP('tab','posters')">${ic('image')} Poster</button></div></div>`).join('') || empty('No peak date in the next 60 days', 'Add muhurat dates in Settings to get a reminder here.', '', 'calendar', '#7C3AED')}</div></div></div>
+  <div class="card"><div class="card-h"><div><h3>All clients (${all.length})${info('mk-clients')}</h3><p>Made from your bookings. Download the list for a WhatsApp broadcast or Facebook / Instagram ads.</p></div>${all.length && !FRAMED ? `<button class="btn" onclick="A.exportClients()">${ic('download')} Download list</button>` : ''}</div>
+    <div class="sheet-b" style="padding-top:12px"><div class="search"><input type="search" placeholder="Search name or phone" value="${esc(S.filters.mkq || '')}" oninput="A.setF('mkq',this.value)"></div></div>
+    <div class="rows">${list.slice(0, 200).map(c => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(c.name))}</div><div class="main-col" style="min-width:160px"><b>${esc(c.name)}</b><div class="sub">${esc(c.phone || '—')} · ${c.events.length} booking${c.events.length > 1 ? 's' : ''}${c.last?.type ? ' · ' + esc(c.last.type) : ''}${c.last?.date ? ' · ' + fmtShort(c.last.date) : ''}${money && c.billed ? ' · ' + inr(c.billed) : ''}</div></div>${c.phone ? waBtn(`Namaste ${c.name} ji 🙏\n`, c.phone, 'Message') : ''}</div>`).join('') || empty('No clients yet', 'Clients are added automatically from your bookings.', '', 'users', '#0D9488')}</div></div>`;
+};
+A.exportClients = () => {
+  const csvq = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = clientsList().map(c => [c.name, c.phone ? '+91' + c.phone : '', c.email, c.last?.type || '', c.last?.date || '', c.events.length, can('invoices') ? Math.round(c.billed) : ''].map(csvq).join(','));
+  downloadFile('clients.csv', '﻿' + ['Name,Phone,Email,Last event,Last event date,Bookings,Total billed', ...rows].join('\n'), 'text/csv'); logAct('Downloaded client list');
+};
+
+/* ---------- 6. QR poster ---------- */
+async function qrLib() { if (!window.qrcode) await loadScript(QR_SRC); return window.qrcode; }
+/* kept short and in Latin letters so the QR stays small and easy to scan */
+function enquiryLink() { return waLink('Namaste, booking enquiry', settings().phone); }
+MK.qr = () => {
+  const st = settings(); const kind = S.filters.qrKind || 'wa';
+  setTimeout(drawQrNow, 30);
+  if (!st.phone && kind === 'wa') return `<div class="card">${empty('Add your mobile number first', 'The QR code opens a WhatsApp chat with this number. Add it in Settings → Business profile.', can('settings', 2) ? `<button class="btn primary sm" onclick="A.go('settings')">Open Settings</button>` : '', 'qr', '#E11D74')}</div>`;
+  return `<div class="split poster-split"><div class="card pad stack">
+    <div class="field"><span>QR code opens</span>${seg('qrKind', [['wa', 'WhatsApp enquiry'], ['review', 'Google review']], kind, 'A.setF')}</div>
+    ${kind === 'review' && !st.googleReview ? `<div class="banner warn">${ic('alert')}<span>Add your Google review link in the Google reviews tab first.</span></div>` : ''}
+    <p class="small">${kind === 'wa' ? 'Print it and put it at your shop, godown, on vehicles and at every event entrance. Anyone who scans it lands in a WhatsApp chat with you, with a message already typed.' : 'Keep it at the buffet counter or exit. Happy guests scan it and write a Google review on the spot.'}</p>
+    <div class="row-flex"><button class="btn primary" onclick="A.qrSave()">${ic('download')} Download</button>${!FRAMED ? `<button class="btn" onclick="A.qrPrint()">${ic('print')} Print</button>` : ''}</div></div>
+  <div class="card pad" style="display:grid;place-items:center"><canvas id="qrCv" class="poster-cv a4" width="1240" height="1754" role="img" aria-label="QR poster preview"></canvas></div></div>`;
+};
+async function drawQrNow() {
+  const cv = document.getElementById('qrCv'); if (!cv) return; const st = settings(); const kind = S.filters.qrKind || 'wa';
+  const url = kind === 'review' ? (st.googleReview || '') : enquiryLink(); if (!url) { const c = cv.getContext('2d'); c.fillStyle = '#F3F5FA'; c.fillRect(0, 0, cv.width, cv.height); return; }
+  let qr; try { const lib = await qrLib(); qr = lib(0, 'M'); qr.addData(url); qr.make(); } catch (e) { toast('Could not load the QR maker. Check the internet and try again.', 'bad'); return; }
+  const head = kind === 'review' ? (HI() ? 'हमारा काम पसंद आया?' : 'Liked our work?') : (HI() ? 'बुकिंग के लिए स्कैन करें' : 'Scan to book with us');
+  const sub = kind === 'review' ? (HI() ? 'स्कैन करें और गूगल पर रिव्यू लिखें' : 'Scan and write us a Google review') : (HI() ? 'सीधे व्हाट्सऐप पर बात करें' : 'Chat with us directly on WhatsApp');
+  await fontsReady(head + sub + (st.bizName || '')); const logo = await loadImg(st.logo);
+  const W = 1240, H = 1754, ctx = cv.getContext('2d'); const c1 = brandColor(st) || '#1F5EFF';
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = c1; ctx.fillRect(0, 0, W, 360); ctx.textAlign = 'center';
+  let y = 90; if (logo) { const s = 140; ctx.save(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2 + 8, 0, 7); ctx.fillStyle = '#fff'; ctx.fill(); ctx.beginPath(); ctx.arc(W / 2, y + s / 2, s / 2, 0, 7); ctx.clip(); const r = Math.max(s / logo.width, s / logo.height); ctx.drawImage(logo, W / 2 - logo.width * r / 2, y + s / 2 - logo.height * r / 2, logo.width * r, logo.height * r); ctx.restore(); y += s + 70; } else y = 200;
+  ctx.fillStyle = '#fff'; ctx.font = '800 64px "Baloo 2", sans-serif'; ctx.fillText(st.bizName || '', W / 2, y);
+  ctx.fillStyle = '#121831'; ctx.font = '800 92px "Baloo 2", sans-serif'; ctx.fillText(head, W / 2, 500);
+  ctx.fillStyle = '#475569'; ctx.font = '600 48px Mukta, sans-serif'; ctx.fillText(sub, W / 2, 575);
+  const n = qr.getModuleCount(), box = 760, cell = Math.floor(box / (n + 8)), size = cell * (n + 8), x0 = (W - size) / 2, y0 = 640;
+  ctx.fillStyle = '#fff'; ctx.fillRect(x0, y0, size, size); ctx.strokeStyle = c1; ctx.lineWidth = 10; roundRect(ctx, x0 - 20, y0 - 20, size + 40, size + 40, 40); ctx.stroke();
+  ctx.fillStyle = '#000'; for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) ctx.fillRect(x0 + (c + 4) * cell, y0 + (r + 4) * cell, cell, cell);
+  ctx.fillStyle = c1; ctx.font = '800 72px "Baloo 2", sans-serif'; ctx.fillText(st.phone ? '📞 ' + st.phone : '', W / 2, y0 + size + 140);
+  ctx.fillStyle = '#64748B'; ctx.font = '600 40px Mukta, sans-serif'; ctx.fillText([st.address, st.city].filter(Boolean).join(', ').slice(0, 60), W / 2, y0 + size + 210);
+}
+A.qrSave = async () => { await drawQrNow(); const cv = document.getElementById('qrCv'); if (!cv) return; cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'qr-poster.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); }, 'image/png'); };
+A.qrPrint = async () => { await drawQrNow(); const cv = document.getElementById('qrCv'); if (!cv) return; modal(`${sheetHead('QR poster')}<div class="sheet-b"><div id="printArea"><img src="${cv.toDataURL('image/png')}" alt="QR poster" style="width:100%;display:block"></div></div><footer class="sheet-f no-print"><span class="grow"></span><button class="btn primary" onclick="window.print()">${ic('print')} Print</button></footer>`, { wide: true }); };
+
+/* ---------- 7. Refer & share ---------- */
+function shareBizText() {
+  const st = settings(); const types = (st.bizTypes || []).map(t => ({ tent: HI() ? 'टेंट और डेकोर' : 'Tent & decor', caterer: HI() ? 'कैटरिंग' : 'Catering', event: HI() ? 'इवेंट मैनेजमेंट' : 'Event management' }[t])).filter(Boolean).join(', ');
+  return `*${st.bizName || ''}*${st.tagline ? '\n' + st.tagline : ''}\n${types}${st.city ? ' · ' + st.city : ''}\n📞 ${st.phone || ''}${st.googleReview ? `\n⭐ ${HI() ? 'हमारे रिव्यू' : 'Our reviews'}: ${st.googleReview}` : ''}${st.instagram ? `\n📸 ${st.instagram}` : ''}`;
+}
+MK.share = () => {
+  const P = S.platform || DEFAULT_PLATFORM; const code = refCode(S.org.orgId); const link = `https://sabmanage.com/?ref=${code}`;
+  const msg = HI() ? `नमस्ते 🙏 मैं अपने बिज़नेस की बुकिंग, स्टॉक, बिल और स्टाफ़ का पूरा हिसाब ${P.appName || 'SabManage'} ऐप पर रखता हूं। टेंट, कैटरिंग और इवेंट वालों के लिए बहुत काम का है। आप भी आज़माएं: ${link}` : `Namaste 🙏 I run my bookings, stock, bills and staff on ${P.appName || 'SabManage'}. Very useful for tent, catering and event businesses. Try it: ${link}`;
+  return `<div class="grid g-auto">
+    <div class="card pad stack">${ibox('share', '#0B9B68', 'lg')}<h3>Share your business${info('mk-sharebiz')}</h3><p class="small muted">A ready message with your services, phone, Google reviews and Instagram. Send it to new enquiries or post it in WhatsApp groups.</p><pre class="share-pre">${esc(shareBizText())}</pre><div class="row-flex">${waBtn(shareBizText(), '', 'Send on WhatsApp', 'btn wa')}<button class="btn" onclick="A.copy(${esc(JSON.stringify(shareBizText()))})">${ic('copy')} Copy</button></div></div>
+    ${S.role === 'owner' ? `<div class="card pad stack">${ibox('gift', '#E11D74', 'lg')}<h3>Refer another business${info('mk-refer')}</h3><p class="small muted">Know another tent house, caterer or event manager? Send them your link. When they join, we know you referred them.${P.referralReward ? ' ' + esc(P.referralReward) : ''}</p><div class="banner"><span class="mono small" style="overflow-wrap:anywhere">${esc(link)}</span></div><div class="row-flex">${waBtn(msg, '', 'Send on WhatsApp', 'btn wa')}<button class="btn" onclick="A.copy('${link}')">${ic('copy')} Copy link</button></div></div>` : ''}</div>`;
+};
 
 boot();
 

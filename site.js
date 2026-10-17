@@ -6,6 +6,8 @@
   function put(v) { try { localStorage.setItem(KEY, v); } catch (e) { } }
   var param = new URLSearchParams(location.search).get('lang');
   if (param === 'hi' || param === 'en') put(param);
+  /* referral link from another business: sabmanage.com/?ref=code (kept for sign-up in the app) */
+  try { var ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   var lang = get() === 'hi' ? 'hi' : 'en';
 
   function apply(l) {

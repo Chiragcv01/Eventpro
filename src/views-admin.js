@@ -124,6 +124,7 @@ function adminOrgCard(o) {
     <div class="small" style="color:var(--ink2)">${ic('user')} ${esc(o.ownerName || '—')} <span class="muted">· ${esc(phone ? '+91 ' + phone.replace(/\D/g, '').slice(-10) : displayId(o.ownerEmail || ''))}</span></div>
     <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b><span>${o.plan === 'Trial' ? 'free' : inr(orgPrice(o)) + '/mo' + (o.price != null ? ' · special' : '')}</span></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>Team · Bookings</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
     ${o.notes ? `<div class="tiny muted">${ic('edit')} ${esc(o.notes)}</div>` : ''}
+    ${o.referredBy ? `<div class="tiny">${ic('gift')} Referred by <b>${esc((S.admin.orgs.find(x => refCode(x.orgId) === o.referredBy) || {}).name || o.referredBy)}</b></div>` : ''}
     <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
     <div class="tiny muted">Last activity ${o.lastActivity ? new Date(o.lastActivity).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—'} · ${o.invoices} bills</div></div>`;
 }
@@ -165,6 +166,7 @@ function adminPlatform() {
   return `<form class="card" onsubmit="A.savePlatform(event)"><div class="card-h"><div><h3>Plans & support</h3><p>Prices change for everyone at once and show on the website, renewal reminders and the Settings page. A special price set on one business stays as it is.</p></div></div>
   <div class="grid2" style="padding:6px 18px 14px">
     ${fieldHTML({ name: 'appName', label: 'Platform name', value: P.appName, required: true })}${fieldHTML({ name: 'trialDays', label: 'Free trial for new sign-ups (days)', type: 'number', min: 0, value: P.trialDays })}
+    ${fieldHTML({ name: 'referralReward', label: 'Referral reward (shown to businesses)', value: P.referralReward ?? DEFAULT_PLATFORM.referralReward, hint: 'Shown on Marketing → Refer & share. Leave blank to show no reward.' })}
     ${fieldHTML({ name: 'graceDays', label: 'Grace days after a plan ends', type: 'number', min: 0, max: 60, value: P.graceDays ?? 0, hint: 'The app keeps working for these many days after expiry, with a warning. 0 = stops the next day.' })}
     ${fieldHTML({ name: 'supportName', label: 'Support name', value: P.supportName })}${fieldHTML({ name: 'supportPhone', label: 'Support WhatsApp number', type: 'tel', value: P.supportPhone, hint: 'Businesses tap “Renew” and it opens WhatsApp to this number' })}
     ${fieldHTML({ name: 'supportEmail', label: 'Support email', type: 'email', value: P.supportEmail })}
@@ -180,7 +182,7 @@ function adminPlatform() {
 A.savePlatform = async e => {
   e.preventDefault(); const v = readForm(e.target);
   const plans = [0, 1, 2, 3, 4, 5].map(i => ({ name: (v['pn' + i] || '').trim(), price: +v['pp' + i] || 0, desc: (v['pd' + i] || '').trim() })).filter(p => p.name);
-  const p = { ...(S.platform || {}), appName: v.appName || 'SabManage', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), graceDays: Math.max(0, Math.min(60, +v.graceDays || 0)), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
+  const p = { ...(S.platform || {}), appName: v.appName || 'SabManage', allowSignup: !!v.allowSignup, supportName: v.supportName, supportPhone: v.supportPhone, supportEmail: v.supportEmail, trialDays: Math.max(0, +v.trialDays || 0), graceDays: Math.max(0, Math.min(60, +v.graceDays || 0)), referralReward: (v.referralReward || '').trim(), plans: plans.length ? plans : DEFAULT_PLATFORM.plans };
   try { await S.adapter.savePlatform(p); S.platform = p; toast('Platform settings saved'); render(); } catch (err) { toast(err.message, 'bad'); }
 };
 A.bulkExtend = () => {

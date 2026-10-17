@@ -250,7 +250,7 @@ EV_TABS.tasks = e => {
 EV_TABS.money = e => {
   const m = eventMoney(e); const invs = eventInvoices(e.id); const pays = col('payments').filter(p => p.eventId === e.id);
   const pos = col('pos').filter(p => p.eventId === e.id); const exps = col('expenses').filter(x => x.eventId === e.id);
-  return `<div class="kpis">${kpi('Billed', inr(m.billed), m.billed ? '' : 'Using package ' + inr(e.budget))}${kpi('Received', inr(m.received), '', 'good')}${kpi('Costs', inr(m.cost), `POs ${inr(m.po)} · Exp ${inr(m.exp)} · Wages ${inr(m.wages)}`)}${kpi('Profit est.', inr(m.profit), m.revenue ? m.margin.toFixed(1) + '% margin' : '', m.profit >= 0 ? 'good' : 'bad')}</div>
+  return `<div class="kpis">${kpi('Billed', inr(m.billed), m.billed ? '' : 'Using package ' + inr(e.budget))}${kpi('Received', inr(m.received), '', 'good')}${kpi('Costs', inr(m.cost), `POs ${inr(m.po)} · Exp ${inr(m.exp)} · Crew ${inr(m.wages + m.crew)}`)}${kpi('Profit est.', inr(m.profit), m.revenue ? m.margin.toFixed(1) + '% margin' : '', m.profit >= 0 ? 'good' : 'bad')}</div>
   <div class="grid g2">
     ${can('invoices') ? `<div class="card"><div class="card-h"><h3>Invoices & quotes</h3>${can('invoices', 2) ? `<button class="btn sm primary" onclick="A.newInvoice('${e.id}')">${ic('plus')} New</button>` : ''}</div><div class="rows">${invs.map(invRow).join('') || empty('None yet', 'Create a quotation for this event.')}</div></div>` : ''}
     ${can('payments') ? `<div class="card"><div class="card-h"><h3>Payments received</h3>${can('payments', 2) ? `<button class="btn sm" onclick="A.paymentForm(null,'${e.id}')">${ic('plus')} Record</button>` : ''}</div><div class="rows">${pays.map(payRow).join('') || empty('No payments', 'Advance and balance payments show here.')}</div></div>` : ''}
