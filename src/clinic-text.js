@@ -1,5 +1,15 @@
 /* ================= Clinic: ⓘ help + Hindi (Devanagari) ================= */
 Object.assign(HELP, {
+  limits: [['Alert limits', 'अलर्ट की लिमिट'],
+    ['For each reading you decide two levels. Alert: the number turns orange and you get a notification. Emergency: an alarm rings on the doctor’s phone again and again until someone taps Seen.', 'हर रीडिंग के लिए आप दो लेवल तय करते हैं। अलर्ट: नंबर नारंगी हो जाता है और आपको नोटिफ़िकेशन आता है। इमरजेंसी: डॉक्टर के फ़ोन पर तब तक बार-बार अलार्म बजता है जब तक कोई “देख लिया” न दबाए।'],
+    [['Fill “Alert below / above” for the normal range of your patients.', 'अपने मरीज़ों की सामान्य सीमा के लिए “इससे कम पर अलर्ट / इससे ज़्यादा पर अलर्ट” भरें।'], ['Fill “Emergency below / above” only for dangerous numbers.', '“इससे कम पर इमरजेंसी / इससे ज़्यादा पर इमरजेंसी” सिर्फ़ ख़तरनाक नंबरों के लिए भरें।'], ['A different limit for one patient? Open the patient → Health → Alert limits.', 'किसी एक मरीज़ के लिए अलग लिमिट? मरीज़ खोलें → सेहत → अलर्ट की लिमिट।']],
+    ['The alarm works on phones where notifications are on. In the SabManage Android app it rings even on silent.', 'अलार्म उन फ़ोन पर बजता है जिनमें नोटिफ़िकेशन चालू हैं। सबमैनेज के एंड्रॉयड ऐप में यह साइलेंट पर भी बजता है।']],
+  tests: [['Your own readings and tests', 'आपकी अपनी रीडिंग और जांच'],
+    ['Add any reading or lab test you need, like HbA1c, cholesterol, pain score or a urine test. It gets its own chart, its own limits and shows on the patient link.', 'कोई भी रीडिंग या लैब जांच जोड़ें, जैसे HbA1c, कोलेस्ट्रॉल, दर्द का स्कोर या पेशाब की जांच। इसका अपना चार्ट और अपनी लिमिट बनती है, और यह मरीज़ के लिंक पर दिखती है।'],
+    [['Tap Add, write the name and unit.', '“जोड़ें” दबाएं, नाम और यूनिट लिखें।'], ['Then open a patient → Edit and tick it in “Readings to track”.', 'फिर मरीज़ खोलें → बदलें, और “कौन-सी रीडिंग रखनी है” में इस पर टिक लगाएं।']]],
+  'c-flagged': [['Readings that crossed your limits', 'जो रीडिंग आपकी लिमिट से बाहर गईं'],
+    ['Patients whose reading from their link crossed the limits you set. Red is an emergency.', 'वे मरीज़ जिनकी लिंक से भेजी रीडिंग आपकी तय लिमिट से बाहर गई। लाल मतलब इमरजेंसी।'],
+    [['Tap the patient to see the reading.', 'रीडिंग देखने के लिए मरीज़ पर टैप करें।'], ['Call or alert the patient, then tap Checked.', 'मरीज़ को कॉल करें या अलर्ट भेजें, फिर “देख लिया” दबाएं।']]],
   'c-home': [['Clinic home', 'क्लिनिक होम'],
     ['Today at a glance: appointments, patients still to see, appointment requests, new messages from patients and fees to collect.', 'आज की पूरी झलक: अपॉइंटमेंट, जिन मरीज़ों को अभी देखना है, अपॉइंटमेंट की रिक्वेस्ट, मरीज़ों के नए मैसेज और लेनी बाकी फ़ीस।'],
     [['Tap Book appointment for clinic, video or WhatsApp visits.', 'क्लिनिक, वीडियो या व्हाट्सऐप के लिए “अपॉइंटमेंट बुक करें” दबाएं।'],
@@ -36,7 +46,7 @@ Object.assign(HELP, {
   'adm-verify': [['Doctor verification', 'डॉक्टर की जांच'], ['Every doctor uploads a registration certificate at sign-up. Their clinic stays locked until you approve it here.', 'हर डॉक्टर साइन अप पर रजिस्ट्रेशन सर्टिफ़िकेट अपलोड करता है। जब तक आप यहां मंज़ूरी न दें, उनका क्लिनिक बंद रहता है।'],
     [['Open the files and check the number on the council’s website.', 'फ़ाइलें खोलें और काउंसिल की वेबसाइट पर नंबर जांचें।'], ['Tap Approve, or Reject with a reason the doctor will see.', '“मंज़ूर करें” दबाएं, या कारण लिखकर “मना करें”; डॉक्टर को कारण दिखेगा।']]]
 });
-I18N.load(['c-home', 'c-queue', 'c-requests', 'patients', 'patient', 'pt-health', 'pt-readings', 'pt-records', 'pt-messages', 'pt-fees', 'appointments', 'ap-requests', 'ap-fees', 'c-settings', 'adm-verify']
+I18N.load(['limits', 'tests', 'c-flagged', 'c-home', 'c-queue', 'c-requests', 'patients', 'patient', 'pt-health', 'pt-readings', 'pt-records', 'pt-messages', 'pt-fees', 'appointments', 'ap-requests', 'ap-fees', 'c-settings', 'adm-verify']
   .flatMap(k => { const [t, w, steps, tip] = HELP[k]; return [t, w, ...(steps || []), ...(tip ? [tip] : [])]; }).map(([en, hi]) => en + ' | ' + hi).join('\n'));
 
 I18N.load(`
@@ -440,4 +450,148 @@ Apne business ka poora hisaab, ek app mein. | अपने बिज़नेस
 Tent · Catering · Events · Clinics | टेंट · कैटरिंग · इवेंट · क्लिनिक
 Tent houses, caterers, event managers and doctors: bookings, stock, bills, patients, appointments and payments in one simple app. | टेंट हाउस, कैटरर, इवेंट मैनेजर और डॉक्टर: बुकिंग, स्टॉक, बिल, मरीज़, अपॉइंटमेंट और पेमेंट एक आसान ऐप में।
 Live setup | लाइव सेटअप
+`);
+I18N.load(`
+Emergency | इमरजेंसी
+Check | जांचें
+Reading | रीडिंग
+reading to check | जांचने वाली रीडिंग
+Readings that crossed your limits | जो रीडिंग आपकी लिमिट से बाहर गईं
+Limits | लिमिट
+Add your own reading or test | अपनी रीडिंग या जांच जोड़ें
+Alert limits | अलर्ट की लिमिट
+Coloured numbers crossed the alert limits you set: orange = check, red = emergency. | रंगीन नंबर आपकी तय की गई लिमिट से बाहर हैं: नारंगी = जांचें, लाल = इमरजेंसी।
+This patient has own limits. | इस मरीज़ की अपनी अलग लिमिट हैं।
+Result | नतीजा
+Emergency limit crossed | इमरजेंसी लिमिट पार हुई
+Alert below | इससे कम पर अलर्ट
+Alert above | इससे ज़्यादा पर अलर्ट
+Emergency below | इससे कम पर इमरजेंसी
+Emergency above | इससे ज़्यादा पर इमरजेंसी
+write a number | नंबर लिखें
+“Alert below” must be smaller than “Alert above” | “इससे कम पर अलर्ट” वाला नंबर “इससे ज़्यादा पर अलर्ट” से छोटा होना चाहिए
+“Emergency below” must be smaller than “Alert below” | “इससे कम पर इमरजेंसी” वाला नंबर “इससे कम पर अलर्ट” से छोटा होना चाहिए
+“Emergency above” must be bigger than “Alert above” | “इससे ज़्यादा पर इमरजेंसी” वाला नंबर “इससे ज़्यादा पर अलर्ट” से बड़ा होना चाहिए
+Readings & alert limits | रीडिंग और अलर्ट की लिमिट
+Your own readings and tests, and when the app should warn you | आपकी अपनी रीडिंग और जांच, और ऐप आपको कब सावधान करे
+Alert | अलर्ट
+The reading turns orange and you get a notification once. | रीडिंग नारंगी हो जाती है और आपको एक बार नोटिफ़िकेशन आता है।
+An alarm rings on the doctor’s phone again and again until someone taps “Seen”. | डॉक्टर के फ़ोन पर तब तक बार-बार अलार्म बजता है जब तक कोई “देख लिया” न दबाए।
+When the patient sends such a reading, their screen tells them to contact you. | जब मरीज़ ऐसी रीडिंग भेजता है, तो उसकी स्क्रीन पर लिखा आता है कि आपसे संपर्क करें।
+Leave a box empty for no limit. Each patient can also get own limits. | कोई लिमिट नहीं चाहिए तो खाना खाली छोड़ें। हर मरीज़ की अपनी अलग लिमिट भी रख सकते हैं।
+Who hears the emergency alarm | इमरजेंसी अलार्म किसके फ़ोन पर बजे
+Doctors only (owner + associate doctors) | सिर्फ़ डॉक्टर (मालिक + दूसरे डॉक्टर)
+Doctors and front desk | डॉक्टर और रिसेप्शन
+Everyone in the team | टीम में सबके
+Tell the patient on their screen to contact the doctor when their reading crosses a limit | रीडिंग लिमिट से बाहर जाए तो मरीज़ की स्क्रीन पर लिखा आए कि डॉक्टर से संपर्क करें
+The suggested numbers are only a starting point. Set them as per your own judgement. | सुझाए गए नंबर सिर्फ़ शुरुआत के लिए हैं। इन्हें अपने हिसाब से तय करें।
+Use suggested numbers | सुझाए गए नंबर लगाएं
+Save limits | लिमिट सेव करें
+Your own readings and tests | आपकी अपनी रीडिंग और जांच
+Add any reading or lab test you want patients or your team to record, e.g. HbA1c, pain score or a urine test. | कोई भी रीडिंग या लैब जांच जोड़ें जो मरीज़ या आपकी टीम दर्ज करे, जैसे HbA1c, दर्द का स्कोर या पेशाब की जांच।
+Text result | लिखा हुआ नतीजा
+Number | नंबर
+limits set | लिमिट तय है
+No own readings yet. | अभी कोई अपनी रीडिंग नहीं जोड़ी।
+Quick add | झट से जोड़ें
+Limits saved | लिमिट सेव हो गई
+Use the suggested numbers? | सुझाए गए नंबर लगाएं?
+The limits for BP, sugar, pulse, oxygen and temperature go back to the suggested numbers. Limits of your own tests stay. | बीपी, शुगर, पल्स, ऑक्सीजन और बुखार की लिमिट वापस सुझाए गए नंबरों पर आ जाएंगी। आपकी अपनी जांच की लिमिट वैसी ही रहेंगी।
+Use suggested | सुझाए गए लगाएं
+Edit reading / test | रीडिंग / जांच बदलें
+New reading / test | नई रीडिंग / जांच
+Patients and your team can record it; it gets its own chart | मरीज़ और आपकी टीम इसे दर्ज कर सकते हैं; इसका अपना चार्ट बनेगा
+Unit (optional) | यूनिट (ज़रूरी नहीं)
+e.g. HbA1c | जैसे HbA1c
+e.g. % | जैसे %
+Type of result | नतीजा किस तरह का
+Number (gets a chart and limits) | नंबर (चार्ट और लिमिट मिलेगी)
+Text, e.g. Positive / Negative | लिखा हुआ, जैसे पॉज़िटिव / नेगेटिव
+Allowed numbers (optional, stops typing mistakes) | सही नंबरों की सीमा (ज़रूरी नहीं, ग़लत टाइप होने से रोकती है)
+Lowest possible | सबसे कम
+Highest possible | सबसे ज़्यादा
+This reading | यह रीडिंग
+Leave the limit boxes empty if you do not want alerts for this test. | इस जांच पर अलर्ट नहीं चाहिए तो लिमिट के खाने खाली छोड़ें।
+Write the name of the reading or test | रीडिंग या जांच का नाम लिखें
+A reading with this name already exists | इस नाम की रीडिंग पहले से है
+“Lowest possible” must be smaller than “Highest possible” | “सबसे कम” वाला नंबर “सबसे ज़्यादा” से छोटा होना चाहिए
+Up to 30 own readings | ज़्यादा से ज़्यादा 30 अपनी रीडिंग
+Saved. Tick it in a patient’s “Readings to track” to show it on their link. | सेव हो गया। मरीज़ के लिंक पर दिखाने के लिए उनकी “कौन-सी रीडिंग रखनी है” में इस पर टिक लगाएं।
+It is removed from forms and charts. Readings already saved stay in the data. | यह फ़ॉर्म और चार्ट से हट जाएगी। पहले से सेव रीडिंग डेटा में रहेंगी।
+Removed | हटा दिया
+Alert limits for this patient | इस मरीज़ के अलर्ट की लिमिट
+Empty boxes use your clinic limits (shown in grey). Fill only what is different for this patient. | खाली खानों में क्लिनिक की लिमिट लगेगी (हल्के रंग में दिखी है)। सिर्फ़ वही भरें जो इस मरीज़ के लिए अलग है।
+Use clinic limits | क्लिनिक की लिमिट लगाएं
+Clinic limits apply again | फिर से क्लिनिक की लिमिट लागू
+Limits saved for this patient | इस मरीज़ की लिमिट सेव हो गई
+Please call the clinic now | कृपया अभी क्लिनिक को कॉल करें
+Please come to the clinic today | कृपया आज क्लिनिक आइए
+Go to the nearest hospital now | अभी पास के अस्पताल जाइए
+Check your reading again in 30 minutes and send it | 30 मिनट बाद फिर से रीडिंग लेकर भेजिए
+Do not take your next dose before talking to the doctor | डॉक्टर से बात किए बिना अगली दवा मत लीजिए
+Emergency reading | इमरजेंसी रीडिंग
+Reading to check | जांचने वाली रीडिंग
+Checked | देख लिया
+Patient has seen your alert | मरीज़ ने आपका अलर्ट देख लिया
+Alert sent to patient, not seen yet | मरीज़ को अलर्ट भेजा, अभी देखा नहीं
+Stop alert | अलर्ट बंद करें
+Send the patient link first | पहले मरीज़ का लिंक भेजें
+The alert shows on the patient’s private link. Send the link once on WhatsApp, then you can alert the patient any time. | अलर्ट मरीज़ के निजी लिंक पर दिखता है। एक बार व्हाट्सऐप पर लिंक भेज दें, फिर आप कभी भी मरीज़ को अलर्ट भेज सकते हैं।
+Send patient link | मरीज़ का लिंक भेजें
+Alert the patient | मरीज़ को अलर्ट भेजें
+Alert patient | मरीज़ को अलर्ट
+The patient’s link shows this alert in red with a sound. If they turned on alerts, their phone rings again and again until they tap “I have seen it”. You see here when they have seen it. | मरीज़ के लिंक पर यह अलर्ट लाल रंग में आवाज़ के साथ दिखता है। अगर उन्होंने अलर्ट चालू किए हैं, तो उनका फ़ोन तब तक बार-बार बजेगा जब तक वे “मैंने देख लिया” न दबाएं। उन्होंने कब देखा, यह आपको यहीं दिखेगा।
+How serious | कितना ज़रूरी
+Important | ज़रूरी
+Message for the patient | मरीज़ के लिए मैसेज
+e.g. Your BP is very high. Please call the clinic now. | जैसे आपका बीपी बहुत ज़्यादा है। कृपया अभी क्लिनिक को कॉल करें।
+Also send it on WhatsApp | व्हाट्सऐप पर भी भेजें
+Send alert | अलर्ट भेजें
+Write the message for the patient | मरीज़ के लिए मैसेज लिखें
+Alert sent. It rings on the patient’s phone until they open it. | अलर्ट भेज दिया। जब तक मरीज़ इसे खोलेंगे नहीं, उनका फ़ोन बजता रहेगा।
+Alert sent. It shows when the patient opens their link (alerts are not turned on on their phone yet). | अलर्ट भेज दिया। मरीज़ जब अपना लिंक खोलेंगे तब दिखेगा (उनके फ़ोन पर अभी अलर्ट चालू नहीं हैं)।
+Open your link and tap “I have seen it” | अपना लिंक खोलें और “मैंने देख लिया” दबाएं
+Stop this alert? | यह अलर्ट बंद करें?
+The patient’s phone stops getting it. Use this if you already talked to the patient. | मरीज़ के फ़ोन पर यह आना बंद हो जाएगा। मरीज़ से बात हो चुकी हो तो इसे दबाएं।
+Alert stopped | अलर्ट बंद हो गया
+Marked as checked | देख लिया लगा दिया
+Add your own readings and tests. Set when you get an alert, and when an emergency alarm rings. | अपनी रीडिंग और जांच जोड़ें। तय करें कि अलर्ट कब आए और इमरजेंसी अलार्म कब बजे।
+Your last reading is in the danger range set by your doctor. | आपकी पिछली रीडिंग डॉक्टर की तय ख़तरे वाली सीमा में है।
+Your last reading is outside the range set by your doctor. | आपकी पिछली रीडिंग डॉक्टर की तय सीमा से बाहर है।
+Please contact your doctor. | कृपया अपने डॉक्टर से संपर्क करें।
+Urgent message from your doctor | आपके डॉक्टर का ज़रूरी मैसेज
+Important message from your doctor | आपके डॉक्टर का अहम मैसेज
+I have seen it | मैंने देख लिया
+Get alerts from your doctor on this phone | इस फ़ोन पर डॉक्टर के अलर्ट पाएं
+If your doctor needs to reach you urgently, this phone will ring. | डॉक्टर को आपसे तुरंत बात करनी हो, तो यह फ़ोन बजेगा।
+Notifications not allowed | नोटिफ़िकेशन की इजाज़त नहीं मिली
+Alerts are on. Your doctor can now reach you on this phone. | अलर्ट चालू हो गए। अब डॉक्टर इस फ़ोन पर आप तक पहुंच सकते हैं।
+Could not turn on alerts | अलर्ट चालू नहीं हो पाए
+Please contact your doctor now | कृपया अभी अपने डॉक्टर से संपर्क करें
+Please contact your doctor | कृपया अपने डॉक्टर से संपर्क करें
+This reading is in the danger range your doctor set. Your doctor has been alerted. Call your doctor now. | यह रीडिंग डॉक्टर की तय ख़तरे वाली सीमा में है। डॉक्टर को अलर्ट चला गया है। अभी डॉक्टर को कॉल करें।
+This reading is outside the range your doctor set. The clinic has been told. Please talk to your doctor. | यह रीडिंग डॉक्टर की तय सीमा से बाहर है। क्लिनिक को बता दिया गया है। कृपया डॉक्टर से बात करें।
+If you feel very unwell, call 108 or go to the nearest hospital. | तबीयत ज़्यादा ख़राब लगे तो 108 पर कॉल करें या पास के अस्पताल जाएं।
+Too many alerts in one hour. Please call the patient. | एक घंटे में बहुत ज़्यादा अलर्ट। कृपया मरीज़ को कॉल करें।
+Send the patient link first. The alert shows on the patient link. | पहले मरीज़ का लिंक भेजें। अलर्ट मरीज़ के लिंक पर दिखता है।
+Emergency reading from a patient | मरीज़ की इमरजेंसी रीडिंग
+Call patient | मरीज़ को कॉल करें
+Seen, stop alarm | देख लिया, अलार्म बंद करें
+The alarm keeps ringing on every doctor’s phone until someone taps Seen. | जब तक कोई “देख लिया” न दबाए, हर डॉक्टर के फ़ोन पर अलार्म बजता रहेगा।
+BP upper (systolic) | बीपी ऊपर वाला (सिस्टोलिक)
+BP lower (diastolic) | बीपी नीचे वाला (डायस्टोलिक)
+BP upper | बीपी ऊपर
+BP lower | बीपी नीचे
+Temp | बुखार
+SpO2 | ऑक्सीजन
+HbA1c | एचबीए1सी
+Cholesterol (total) | कोलेस्ट्रॉल (कुल)
+Haemoglobin | हीमोग्लोबिन
+Creatinine | क्रिएटिनिन
+TSH | टीएसएच
+Uric acid | यूरिक एसिड
+Pain score | दर्द का स्कोर
+Peak flow | पीक फ़्लो
+Waist | कमर
+Urine test | पेशाब की जांच
 `);

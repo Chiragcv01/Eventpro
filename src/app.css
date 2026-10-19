@@ -658,3 +658,37 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .portal-foot{margin-top:22px;padding:14px;border-radius:14px;background:var(--surface2);display:flex;flex-direction:column;gap:6px;text-align:center}
 .qr-pay{display:grid;place-items:center}.qr-pay svg{width:200px;height:200px;background:#fff;border-radius:12px;border:1px solid var(--line)}.qr-pay:empty{display:none}
 @media (max-width:420px){.kind-cards{grid-template-columns:1fr 1fr}.kind-card{padding:9px}.kind-card .ibox{width:34px;height:34px}}
+
+/* clinic: alert limits, emergencies, alerts to patients (19 Oct 2026) */
+.v-crit{color:#fff;background:#D92D20;border-radius:6px;padding:0 5px}
+.vflag.crit{background:#D92D20;color:#fff}
+.tbl tr.lv-emergency td{background:#FEF3F2}.tbl tr.lv-alert td{background:#FFFAEB}
+.tbl tr.lv-emergency td .pill,.tbl tr.lv-alert td .pill{margin-top:4px;font-size:11px}
+.row.row-crit{background:#FEF3F2}
+.pat-alert{align-items:center}.pat-alert .btn{margin-left:auto;flex:none}
+.banner .btn{flex:none}
+.btn.danger-solid{background:#D92D20;border-color:#D92D20;color:#fff;box-shadow:0 6px 16px rgba(217,45,32,.25)}
+.btn.flag-btn{color:#B42318;border-color:#FECDCA}
+.click-card{width:100%;border:1px solid var(--line);cursor:pointer;font:inherit;color:inherit;gap:12px;align-items:center}
+.click-card:hover{border-color:var(--primary)}
+.lim-how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.lim-how-i{display:flex;gap:10px;align-items:flex-start}.lim-how-i b{display:block}.lim-how-i span{font-size:13px;color:var(--muted);line-height:1.4}
+@media (max-width:720px){.lim-how{grid-template-columns:1fr}}
+.lim-list{display:flex;flex-direction:column}
+.lim-list.boxed{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lim-row{display:grid;grid-template-columns:minmax(150px,1.1fr) 3fr;gap:12px;align-items:center;padding:12px 16px;border-top:1px solid var(--line)}
+.lim-list .lim-row:first-child{border-top:0}
+.lim-name{display:flex;flex-direction:column;min-width:0}
+.lim-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.lim{display:flex;flex-direction:column;gap:3px;min-width:0}
+.lim span{font-size:11.5px;font-weight:700;letter-spacing:.01em}
+.lim.a span{color:#B54708}.lim.e span{color:#B42318}
+.lim input{width:100%;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid var(--line);font:600 15px var(--f-body);background:#fff}
+.lim.a input{border-color:#FEDF89;background:#FFFCF5}.lim.e input{border-color:#FECDCA;background:#FFFBFA}
+.lim input::placeholder{color:#98A2B3;font-weight:500}
+@media (max-width:640px){.lim-row{grid-template-columns:1fr;gap:8px;padding:12px}.lim-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.alert-scrim.emergency{background:rgba(150,10,10,.88)}
+.alert-scrim.emergency .alert-ring{background:#FEE4E2;color:#D92D20}
+.alert-scrim.amber{background:rgba(120,70,0,.72)}
+.alert-scrim.amber .alert-ring{background:#FEF0C7;color:#B54708}
+.read-result.emg .sheet-h h3{color:#B42318}.read-result.warn .sheet-h h3{color:#B54708}

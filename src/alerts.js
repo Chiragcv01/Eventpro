@@ -52,9 +52,13 @@ const AlertsDB = {
     const { data, error } = await S.adapter.sb.rpc('ack_alert', { p_id: id }); if (error) throw S.adapter.err(error); return data;
   }
 };
-const forMe = a => (a.kind === 'patient' || a.from_user !== S.user?.id) && (!a.to_user || a.to_user === S.user?.id);
-const isRing = a => (a.kind || 'alert') === 'alert';
-const seenByMe = a => !!(a.acks || {})[S.user?.id];
+/* clinic alerts come from the patient link (kinds patient / reading / emergency); to_role limits who gets them */
+const FROM_PATIENT = ['patient', 'reading', 'emergency'];
+const roleOK = a => !a.to_role || (a.to_role === 'doctors' ? ['owner', 'manager'] : ['owner', 'manager', 'supervisor']).includes(S.role || S.me?.role || 'owner');
+const forMe = a => (FROM_PATIENT.includes(a.kind) || a.from_user !== S.user?.id) && (!a.to_user || a.to_user === S.user?.id) && roleOK(a);
+const isRing = a => ['alert', 'emergency'].includes(a.kind || 'alert');
+/* an emergency stops ringing for everybody as soon as one person taps Seen */
+const seenByMe = a => a.kind === 'emergency' ? Object.keys(a.acks || {}).length > 0 : !!(a.acks || {})[S.user?.id];
 const canSendAlert = () => S.adapter?.mode === 'cloud' ? lvl('tasks') >= 2 : !!S.org && lvl('tasks') >= 2;
 
 /* ---------- live updates ---------- */
@@ -69,7 +73,8 @@ async function startAlerts() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: 'org_id=eq.' + S.org.orgId }, p => {
         const a = p.new; if (!a?.id) return; const i = (S.teamAlerts || []).findIndex(x => x.id === a.id);
         if (i >= 0) S.teamAlerts[i] = a; else S.teamAlerts.unshift(a);
-        if (p.eventType === 'INSERT' && forMe(a)) { if (isRing(a)) showAlertOverlay(); else toast((a.kind === 'patient' ? '💬 ' : '✅ ') + a.title + (a.body ? ' · ' + a.body : '')); }
+        if (p.eventType === 'INSERT' && forMe(a)) { if (isRing(a)) showAlertOverlay(); else if (a.kind === 'reading') { Tune.play(); toast('🔔 ' + a.title + (a.body ? ' · ' + a.body : ''), 'warn'); } else toast((a.kind === 'patient' ? '💬 ' : '✅ ') + a.title + (a.body ? ' · ' + a.body : '')); }
+        if (p.eventType === 'UPDATE' && document.getElementById('alertRoot')) showAlertOverlay();
         refreshAlertDot();
       }).subscribe();
   }
@@ -93,23 +98,29 @@ function showAlertOverlay() {
   const list = pendingForMe(); let root = document.getElementById('alertRoot');
   if (!list.length) { if (root) root.remove(); Tune.stop(); return; }
   if (!root) { root = document.createElement('div'); root.id = 'alertRoot'; document.body.appendChild(root); }
-  const a = list[0]; const urgent = !!a.urgent;
-  root.innerHTML = `<div class="alert-scrim ${urgent ? 'urgent' : ''}" role="alertdialog" aria-modal="true" aria-labelledby="alT"><div class="alert-card fade">
-    <div class="alert-ring">${ic(urgent ? 'alert' : 'bell')}</div>
-    <div class="eyebrow">${urgent ? 'Urgent alert' : 'Alert'}${list.length > 1 ? ` · 1 of ${list.length}` : ''}</div>
+  const a = list[0]; const urgent = !!a.urgent; const emg = a.kind === 'emergency';
+  const pid = String(a.event_id || '').startsWith('pt:') ? a.event_id.slice(3) : ''; const pt = pid && typeof patientById === 'function' ? patientById(pid) : null;
+  const ptPhone = pt?.phone ? String(pt.phone).replace(/\D/g, '').slice(-10) : '';
+  const secs = emg ? 900 : urgent ? 120 : 0;
+  const same = root.dataset.id === a.id; root.dataset.id = a.id;
+  root.innerHTML = `<div class="alert-scrim ${urgent ? 'urgent' : ''} ${emg ? 'emergency' : ''}" role="alertdialog" aria-modal="true" aria-labelledby="alT"><div class="alert-card fade">
+    <div class="alert-ring">${ic(emg ? 'siren' : urgent ? 'alert' : 'bell')}</div>
+    <div class="eyebrow">${emg ? 'Emergency reading from a patient' : urgent ? 'Urgent alert' : 'Alert'}${list.length > 1 ? ` · 1 of ${list.length}` : ''}</div>
     <h2 id="alT">${esc(a.title)}</h2>${a.body ? `<p class="alert-body">${esc(a.body)}</p>` : ''}
-    <div class="small muted">From <b>${esc(a.from_name || 'Team')}</b> · ${new Date(a.created_at).toLocaleTimeString(I18N.lang === 'hi' ? 'hi-IN' : 'en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
-    ${!Tune.unlocked ? `<button class="btn" onclick="Tune.play(${urgent ? 120 : 0})">${ic('bell')} Play sound</button>` : ''}
-    <button class="btn primary block alert-ok" onclick="A.ackAlert('${a.id}')">${ic('check')} Seen, OK</button>
-    ${a.event_id && evById(a.event_id) ? `<button class="linkbtn" onclick="A.ackAlert('${a.id}','${a.event_id}')">Open booking</button>` : ''}
+    <div class="small muted">${emg ? '' : `From <b>${esc(a.from_name || 'Team')}</b> · `}${new Date(a.created_at).toLocaleTimeString(I18N.lang === 'hi' ? 'hi-IN' : 'en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+    ${!Tune.unlocked ? `<button class="btn" onclick="Tune.play(${secs})">${ic('bell')} Play sound</button>` : ''}
+    ${emg && ptPhone ? `<a class="btn block" href="tel:${ptPhone}" onclick="A.ackAlert('${a.id}')">${ic('phone')} Call patient</a>` : ''}
+    <button class="btn primary block alert-ok" onclick="A.ackAlert('${a.id}'${pid ? `,'pt:${pid}'` : ''})">${ic('check')} ${emg ? 'Seen, stop alarm' : 'Seen, OK'}</button>
+    ${a.event_id && !pid && evById(a.event_id) ? `<button class="linkbtn" onclick="A.ackAlert('${a.id}','${a.event_id}')">Open booking</button>` : ''}
+    ${emg ? `<p class="tiny muted">The alarm keeps ringing on every doctor’s phone until someone taps Seen.</p>` : ''}
   </div></div>`;
-  Tune.play(urgent ? 120 : 0);
+  if (!same) Tune.play(secs);
 }
 A.ackAlert = async (id, evId) => {
   Tune.stop();
   try { const acks = await AlertsDB.ack(id); const a = (S.teamAlerts || []).find(x => x.id === id); if (a) a.acks = acks || { ...(a.acks || {}), [S.user.id]: { at: new Date().toISOString() } }; } catch (e) { toast(e.message, 'bad'); }
   const rest = pendingForMe(); if (rest.length) showAlertOverlay(); else { document.getElementById('alertRoot')?.remove(); }
-  if (evId) A.go('event', { id: evId }); else render();
+  if (evId && evId.startsWith('pt:')) A.go('patient', { id: evId.slice(3) }); else if (evId) A.go('event', { id: evId }); else render();
 };
 
 /* ---------- send ---------- */
@@ -191,7 +202,7 @@ function pushCard() {
   return `<div class="card pad row-flex push-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('bell', '#E11D74')}<div class="grow" style="min-width:0"><b>Turn on alert notifications</b><div class="small muted">So you hear alerts from your team with the SabManage tune, even when the app is closed.</div></div><div class="row-flex" style="gap:6px"><button class="btn primary sm" onclick="A.notifSheet()">Turn on</button><button class="icon-btn" style="width:34px;height:34px" aria-label="Hide" onclick="LS.set('ep_push_hide',true);render()">${ic('x')}</button></div></div>`;
 }
 /* service worker tells an open app that a push arrived */
-try { navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', ev => { if (ev.data?.type === 'sm-alert' && S.org) startAlerts(); }); } catch (e) { }
+try { navigator.serviceWorker && navigator.serviceWorker.addEventListener('message', ev => { if (ev.data?.type !== 'sm-alert') return; if (S.portal && typeof portalReload === 'function') portalReload(); else if (S.org) startAlerts(); }); } catch (e) { }
 
 /* ---------- team alerts inside the bell sheet ---------- */
 function teamAlertRow(a) {

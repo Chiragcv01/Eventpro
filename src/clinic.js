@@ -13,43 +13,83 @@ const VIT = Object.fromEntries(VITALS.map(v => [v[0], v]));
 const SUGAR_T = { fasting: 'Fasting', pp: 'After food', random: 'Random' };
 const SUGAR_C = { fasting: '#1E5BD8', pp: '#C2185B', random: '#D97706' };
 const LIMITS = { sys: [50, 260], dia: [30, 160], sugar: [20, 600], weight: [1, 300], pulse: [20, 220], spo2: [50, 100], temp: [90, 110] };
+Object.assign(ICONS, {
+  flask: 'M9 3h6M10 3v6l-5.2 9.1A2 2 0 0 0 6.5 21h11a2 2 0 0 0 1.7-2.9L14 9V3M7.6 15h8.8',
+  flag: 'M5 21V4M5 4h12l-2.5 4L17 12H5', siren: 'M6 18v-6a6 6 0 0 1 12 0v6M4 18h16v3H4zM12 3V1M4.2 5.2 3 4M19.8 5.2 21 4'
+});
+
+/* ---------- the doctor's own readings / lab tests (settings.tests) ----------
+   {key:'t_xxxx', name, unit, type:'number'|'text', min, max}. On the patient link they come with the page. */
+const numOr = v => (v === '' || v == null || !isFinite(+v)) ? null : +v;
+const curTests = () => (((S.portal ? S.portal.clinic?.tests : (S.org ? settings().tests : null)) || [])).filter(t => t && /^t_[a-z0-9]{2,16}$/.test(t.key || '') && t.name);
+const testOf = k => curTests().find(t => t.key === k);
+function MDEF(k) { if (VIT[k]) return VIT[k]; const t = testOf(k); return t ? [k, t.name, t.unit || '', t.type === 'text' ? 'file' : 'flask', '#4F46E5'] : null; }
+const isText = k => testOf(k)?.type === 'text';
+const allKeys = () => [...VITALS.map(v => v[0]), ...curTests().map(t => t.key)];
+
 function cleanReading(p) {
   const r = {};
   Object.entries(LIMITS).forEach(([k, [lo, hi]]) => { const v = p[k]; if (v === '' || v == null) return; const n = Number(v); if (!isFinite(n) || n < lo || n > hi) throw new Error(`${T('The number looks wrong')}: ${k} (${lo}–${hi})`); r[k] = Math.round(n * 10) / 10; });
   if ((r.sys == null) !== (r.dia == null)) throw new Error('Fill both BP numbers (upper and lower)');
   if (r.sugar != null) r.sugarType = SUGAR_T[p.sugarType] ? p.sugarType : 'random';
+  curTests().forEach(t => {
+    const v = p[t.key]; if (v === '' || v == null) return;
+    if (t.type === 'text') { const s = String(v).trim().slice(0, 120); if (s) r[t.key] = s; return; }
+    const n = Number(v); const lo = numOr(t.min), hi = numOr(t.max);
+    if (!isFinite(n) || Math.abs(n) > 1e6 || (lo != null && n < lo) || (hi != null && n > hi)) throw new Error(`${T('The number looks wrong')}: ${t.name}${lo != null || hi != null ? ` (${lo ?? '…'}–${hi ?? '…'})` : ''}`);
+    r[t.key] = Math.round(n * 100) / 100;
+  });
   if ((p.note || '').trim()) r.note = p.note.trim().slice(0, 300);
   return r;
 }
-const readingHas = r => ['sys', 'sugar', 'weight', 'pulse', 'spo2', 'temp'].some(k => r[k] != null);
-/* "please look" alerts (same numbers the server uses for patient readings) */
-function readingFlags(r) {
-  const f = [];
-  if (r.sys != null && (r.sys >= 160 || r.dia >= 100 || r.sys < 90)) f.push(`BP ${r.sys}/${r.dia}`);
-  if (r.sugar != null && (r.sugar >= 250 || r.sugar < 70)) f.push(`Sugar ${r.sugar}`);
-  if (r.spo2 != null && r.spo2 < 92) f.push(`SpO2 ${r.spo2}`);
-  if (r.temp != null && r.temp >= 101) f.push(`Temp ${r.temp}`);
-  return f;
+const readingHas = r => ['sys', 'sugar', 'weight', 'pulse', 'spo2', 'temp'].some(k => r[k] != null) || curTests().some(t => r[t.key] != null && r[t.key] !== '');
+
+/* ---------- alert limits (set by the doctor; the same rules run on the server) ----------
+   below low / above high = "check" (alert);  below critLow / above critHigh = EMERGENCY */
+const RULE_FIELDS = [['sys', 'BP upper (systolic)', 'mmHg'], ['dia', 'BP lower (diastolic)', 'mmHg'], ['sugar', 'Sugar', 'mg/dL'], ['weight', 'Weight', 'kg'], ['pulse', 'Pulse', '/min'], ['spo2', 'Oxygen (SpO₂)', '%'], ['temp', 'Temperature', '°F']];
+const SHORT_L = { sys: 'BP upper', dia: 'BP lower', sugar: 'Sugar', weight: 'Weight', pulse: 'Pulse', spo2: 'SpO2', temp: 'Temp' };
+const RULE_KEYS = ['low', 'high', 'critLow', 'critHigh'];
+const DEFAULT_RULES = { sys: { low: 90, high: 160, critLow: 80, critHigh: 180 }, dia: { high: 100, critHigh: 120 }, sugar: { low: 70, high: 250, critLow: 54, critHigh: 400 }, pulse: { low: 50, high: 120, critLow: 40, critHigh: 140 }, spo2: { low: 92, critLow: 88 }, temp: { high: 101, critHigh: 103 } };
+const clinicRules = st => (st && st.rules && typeof st.rules === 'object') ? st.rules : DEFAULT_RULES;
+function mergeRules(base, own) {
+  const out = {}; new Set([...Object.keys(base || {}), ...Object.keys(own || {})]).forEach(f => {
+    const r = {}; RULE_KEYS.forEach(k => { const v = numOr(own?.[f]?.[k]) ?? numOr(base?.[f]?.[k]); if (v != null) r[k] = v; }); if (Object.keys(r).length) out[f] = r;
+  }); return out;
 }
-/* the usual adult ranges, only to colour a value for a quick look. The doctor decides. */
-function vitalCheck(key, r) {
-  if (key === 'bp' && r.sys != null) return r.sys >= 140 || r.dia >= 90 ? 'high' : r.sys < 90 || r.dia < 60 ? 'low' : '';
-  if (key === 'sugar' && r.sugar != null) return r.sugar < 70 ? 'low' : (r.sugarType === 'fasting' ? r.sugar >= 126 : r.sugar >= 200) ? 'high' : '';
-  if (key === 'pulse' && r.pulse != null) return r.pulse > 100 ? 'high' : r.pulse < 50 ? 'low' : '';
-  if (key === 'spo2' && r.spo2 != null) return r.spo2 < 95 ? 'low' : '';
-  if (key === 'temp' && r.temp != null) return r.temp >= 100.4 ? 'high' : '';
-  return '';
+const rulesFor = p => S.portal ? (S.portal.rules || {}) : mergeRules(clinicRules(settings()), p?.rules);
+const ruleFieldLabel = f => RULE_FIELDS.find(x => x[0] === f)?.[1] || testOf(f)?.name || f;
+function fieldLevel(v, r) {
+  v = numOr(v); if (v == null || !r) return null;
+  if (r.critLow != null && v < r.critLow) return { lvl: 2, dir: 'low' }; if (r.critHigh != null && v > r.critHigh) return { lvl: 2, dir: 'high' };
+  if (r.low != null && v < r.low) return { lvl: 1, dir: 'low' }; if (r.high != null && v > r.high) return { lvl: 1, dir: 'high' };
+  return null;
+}
+/* {level:'emergency'|'alert'|'', flags:['BP upper 190', …]} */
+function readingLevel(r, rules) {
+  let lvl = 0; const flags = [];
+  Object.entries(rules || {}).forEach(([f, rr]) => { const x = fieldLevel(r[f], rr); if (x) { lvl = Math.max(lvl, x.lvl); flags.push(`${T(SHORT_L[f] || testOf(f)?.name || f)} ${r[f]}`); } });
+  return { level: lvl === 2 ? 'emergency' : lvl === 1 ? 'alert' : '', flags };
+}
+const readingFlags = (r, p) => readingLevel(r, rulesFor(p)).flags;
+let RN = {}; /* limits of the patient on screen (set by V.patient / V.portal) */
+function vitalCheck(key, r, rules = RN) {
+  let best = null; (key === 'bp' ? ['sys', 'dia'] : [key]).forEach(f => { const x = fieldLevel(r[f], rules[f]); if (x && (!best || x.lvl > best.lvl)) best = x; });
+  return best;
 }
 function vitalText(key, r) {
   if (key === 'bp') return r.sys != null ? `${r.sys}/${r.dia}` : '';
   if (key === 'sugar') return r.sugar != null ? `${r.sugar}` : '';
-  return r[key] != null ? String(r[key]) : '';
+  return r[key] != null && r[key] !== '' ? String(r[key]) : '';
 }
-const hasVital = (key, r) => key === 'bp' ? r.sys != null : r[key] != null;
-function vitalCell(key, r) { const t = vitalText(key, r); if (!t) return '<span class="muted">—</span>'; const c = vitalCheck(key, r); return `<b class="num ${c ? 'v-' + c : ''}">${esc(t)}</b>${key === 'sugar' ? `<span class="tiny muted"> ${esc(T(SUGAR_T[r.sugarType] || 'Random'))}</span>` : ''}${c ? ` <span class="vflag ${c}">${c === 'high' ? '↑' : '↓'}</span>` : ''}`; }
+const hasVital = (key, r) => key === 'bp' ? r.sys != null : r[key] != null && r[key] !== '';
+function vitalCell(key, r) {
+  const t = vitalText(key, r); if (!t) return '<span class="muted">—</span>'; const c = isText(key) ? null : vitalCheck(key, r);
+  return `<b class="num ${c ? (c.lvl === 2 ? 'v-crit' : 'v-' + c.dir) : ''}">${esc(t)}</b>${key === 'sugar' ? `<span class="tiny muted"> ${esc(T(SUGAR_T[r.sugarType] || 'Random'))}</span>` : ''}${c ? ` <span class="vflag ${c.lvl === 2 ? 'crit' : c.dir}">${c.lvl === 2 ? '!!' : c.dir === 'high' ? '↑' : '↓'}</span>` : ''}`;
+}
+const levelPill = lv => lv === 'emergency' ? `<span class="pill bad">${ic('siren')} ${T('Emergency')}</span>` : lv === 'alert' ? `<span class="pill warn">${T('Check')}</span>` : '';
 const atText = at => { if (!at) return ''; const [d, t] = String(at).split('T'); return `${fmtShort(d)}${t ? ' · ' + t.slice(0, 5) : ''}`; };
 const nowAt = () => { const d = new Date(); return todayLocal(d) + 'T' + d.toTimeString().slice(0, 5); };
-const trackOf = p => (p?.track && p.track.length ? p.track : ['bp', 'sugar', 'weight']);
+const trackOf = p => (p?.track && p.track.length ? p.track : ['bp', 'sugar', 'weight']).filter(k => MDEF(k));
 const ageSex = p => [p.age ? p.age + ' ' + T('yrs') : '', p.sex ? T(p.sex) : ''].filter(Boolean).join(' · ');
 const patientById = id => getById('patients', id);
 const MODE_L = { clinic: 'In clinic', video: 'Video call', whatsapp: 'WhatsApp call' };
@@ -185,7 +225,8 @@ function vitalChart(key, list) {
   if (!rs.length) return '';
   if (key === 'bp') return lineChart([{ name: 'Upper (systolic)', color: '#C2185B', points: rs.map(r => ({ x: msOf(r.at), y: r.sys, lab: atText(r.at) })) }, { name: 'Lower (diastolic)', color: '#1E5BD8', points: rs.map(r => ({ x: msOf(r.at), y: r.dia, lab: atText(r.at) })) }], { unit: 'mmHg' });
   if (key === 'sugar') { const types = Object.keys(SUGAR_T).filter(t => rs.some(r => (r.sugarType || 'random') === t)); return lineChart(types.map(t => ({ name: SUGAR_T[t], color: SUGAR_C[t], points: rs.filter(r => (r.sugarType || 'random') === t).map(r => ({ x: msOf(r.at), y: r.sugar, lab: atText(r.at) })) })), { unit: 'mg/dL' }); }
-  return lineChart([{ name: VIT[key][1], color: '#1E5BD8', points: rs.map(r => ({ x: msOf(r.at), y: r[key], lab: atText(r.at) })) }], { unit: VIT[key][2] });
+  const d = MDEF(key); if (!d || isText(key)) return '';
+  return lineChart([{ name: d[1], color: VIT[key] ? '#1E5BD8' : '#4F46E5', points: rs.filter(r => numOr(r[key]) != null).map(r => ({ x: msOf(r.at), y: +r[key], lab: atText(r.at) })) }], { unit: d[2] });
 }
 function chartLegend(key, list) {
   if (key === 'bp') return `<div class="vlegend"><span><i style="background:#C2185B"></i>Upper (systolic)</span><span><i style="background:#1E5BD8"></i>Lower (diastolic)</span></div>`;
@@ -194,11 +235,12 @@ function chartLegend(key, list) {
 }
 /* first vs latest, and the last 7 days against the 7 days before */
 function vitalTrend(key, list) {
-  const rs = list.filter(r => hasVital(key, r)); if (rs.length < 2) return '';
-  const val = r => key === 'bp' ? r.sys : r[key]; const last = rs[0], first = rs[rs.length - 1];
+  if (isText(key)) return '';
+  const rs = list.filter(r => hasVital(key, r) && numOr(key === 'bp' ? r.sys : r[key]) != null); if (rs.length < 2) return '';
+  const val = r => +(key === 'bp' ? r.sys : r[key]); const last = rs[0], first = rs[rs.length - 1];
   const d = Math.round((val(last) - val(first)) * 10) / 10; if (!d) return `<span class="trend same">No change since ${fmtShort(first.at.slice(0, 10))}</span>`;
   const better = key === 'weight' || key === 'bp' || key === 'sugar' ? d < 0 : null;
-  return `<span class="trend ${better === null ? '' : better ? 'good' : 'bad'}">${d > 0 ? '↑' : '↓'} ${Math.abs(d)} ${esc(VIT[key][2])} <span>since ${fmtShort(first.at.slice(0, 10))}</span></span>`;
+  return `<span class="trend ${better === null ? '' : better ? 'good' : 'bad'}">${d > 0 ? '↑' : '↓'} ${Math.abs(d)} ${esc(MDEF(key)?.[2] || '')} <span>since ${fmtShort(first.at.slice(0, 10))}</span></span>`;
 }
 
 /* ---------- clinic home ---------- */
@@ -223,6 +265,7 @@ function clinicHome() {
     ${can('appointments') ? `<div><b>${inr(sum(dues, a => a.fee))}</b><span>Fees to collect</span></div>` : ''}
   </div>
   <div class="big-grid">${btns.join('')}</div>
+  ${flaggedPatients().length && can('patients') ? `<div class="sec-h"><h2>Readings that crossed your limits${info('c-flagged')}</h2><button class="linkbtn" onclick="A.go('limits')">${ic('gear')} Limits</button></div><div class="card"><div class="rows">${flaggedPatients().map(flaggedRow).join('')}</div></div>` : ''}
   ${claims.length ? `<div class="sec-h"><h2>Patients say they paid</h2></div><div class="card"><div class="rows">${claims.map(apptRow).join('')}</div></div>` : ''}
   ${req.length ? `<div class="sec-h"><h2>Appointment requests${info('c-requests')}</h2></div><div class="card"><div class="rows">${req.map(apptRow).join('')}</div></div>` : ''}
   <div class="sec-h"><h2>Today’s queue${info('c-queue')}</h2><button class="linkbtn" onclick="A.go('appointments')">All appointments ${ic('chev')}</button></div>
@@ -237,10 +280,15 @@ function clinicAlerts() {
     col('appts').filter(a => a.payClaim && !a.paid).forEach(a => out.push({ tag: 'Fee', title: `${a.patientName || 'Patient'} says fee paid ${inr(a.fee)}`, sub: `${T('Check your UPI and confirm')}${a.payClaim.utr ? ' · UTR ' + a.payClaim.utr : ''}`, go: `A.apptSheet('${a.id}')` }));
     col('appts').filter(a => feeDue(a) && !a.payClaim && a.date < t).forEach(a => out.push({ tag: 'Overdue', title: `${a.patientName || 'Patient'}: fee ${inr(a.fee)} pending`, sub: `${fmtDate(a.date)} · ${T('Send a reminder')}`, go: `A.apptSheet('${a.id}')` }));
   }
+  if (can('patients')) flaggedPatients().forEach(p => out.push({ tag: p.alertLevel === 'emergency' ? 'Emergency' : 'Reading', title: `${p.name}: ${p.alertText || T('reading to check')}`, sub: atText(p.alertAt), go: `A.go('patient',{id:'${p.id}'})` }));
   if (can('patients')) col('patients').filter(p => +p.unread > 0).forEach(p => out.push({ tag: 'Message', title: `${p.name}: ${p.unread} new message${p.unread > 1 ? 's' : ''}`, sub: atText(p.lastMsgAt), go: `A.go('patient',{id:'${p.id}',tab:'messages'})` }));
   return out;
 }
-Object.assign(ALERT_STYLE, { Request: ['calendar', '#D97706'], Fee: ['rupee', '#0B9B68'], Message: ['send', '#E11D48'] });
+Object.assign(ALERT_STYLE, { Request: ['calendar', '#D97706'], Fee: ['rupee', '#0B9B68'], Message: ['send', '#E11D48'], Emergency: ['siren', '#D92D20'], Reading: ['pulse', '#D97706'] });
+/* patients whose reading from the link crossed a limit and the doctor has not marked it checked */
+const flaggedPatients = () => col('patients').filter(p => p.alertLevel).sort((a, b) => (b.alertLevel === 'emergency') - (a.alertLevel === 'emergency') || String(b.alertAt || '').localeCompare(String(a.alertAt || '')));
+const flaggedRow = p => `<button class="row click ${p.alertLevel === 'emergency' ? 'row-crit' : ''}" onclick="A.go('patient',{id:'${p.id}'})"><div class="avatar" style="background:${p.alertLevel === 'emergency' ? '#FEE4E2;color:#B42318' : '#FEF0C7;color:#93370D'}">${esc(initials(p.name))}</div><div class="main-col"><b>${esc(p.name)}</b><div class="sub">${esc(p.alertText || '')}</div><div class="tiny muted">${atText(p.alertAt)}</div></div>${levelPill(p.alertLevel)}${ic('chev', 'go')}</button>`;
+A.clearPatientAlert = async pid => { const p = patientById(pid); if (!p) return; try { await save('patients', { ...p, alertLevel: '', alertText: '', checkedAt: nowAt(), checkedBy: S.me?.name || '' }, `Checked reading of ${p.name}`); toast('Marked as checked'); render(); } catch (e) { toast(e.message, 'bad'); } };
 
 /* ---------- patients ---------- */
 function patientRow(p) {
@@ -265,7 +313,7 @@ A.patientForm = (id, then) => {
     <div class="field"><span>Gender</span><div class="chips">${['Male', 'Female', 'Other'].map(x => `<label class="chip-radio"><input type="radio" name="sex" value="${x}" ${p.sex === x ? 'checked' : ''}><span>${x}</span></label>`).join('')}</div></div></div>
     ${fieldHTML({ name: 'conditions', label: 'Illness / reason for care', value: p.conditions, placeholder: 'e.g. Diabetes, high BP' })}
     ${fieldHTML({ name: 'allergies', label: 'Allergies', value: p.allergies, placeholder: 'e.g. Penicillin' })}
-    <div class="field"><span>Readings to track</span><div class="chips">${VITALS.map(([k, l]) => `<label class="chip-check"><input type="checkbox" name="track" value="${k}" data-multi="1" ${trackOf(p).includes(k) ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div><small>These show on the patient’s link and as charts here</small></div>
+    <div class="field"><span>Readings to track</span><div class="chips">${[...VITALS.map(([k, l]) => [k, l]), ...curTests().map(t => [t.key, t.name])].map(([k, l]) => `<label class="chip-check"><input type="checkbox" name="track" value="${k}" data-multi="1" ${trackOf(p).includes(k) ? 'checked' : ''}><span>${esc(l)}</span></label>`).join('')}</div><small>These show on the patient’s link and as charts here.${can('settings', 2) ? ` <button type="button" class="linkbtn" onclick="A.closeModal();setTimeout(()=>A.go('limits'),40)">${ic('plus')} Add your own reading or test</button>` : ''}</small></div>
     ${fieldHTML({ name: 'notes', label: 'Private note', type: 'textarea', rows: 2, value: p.notes })}
   </div><footer class="sheet-f">${id && lvl('patients') >= 3 ? `<button type="button" class="btn ghost danger" onclick="A.delPatient('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save</button></footer></form>`);
 };
@@ -289,7 +337,7 @@ A.pickPatient = next => {
 
 V.patient = () => {
   const p = patientById(S.params.id); if (!p) return pageHead('Patient', '', '', "A.go('patients')") + empty('Patient not found', '');
-  loadPatientData(p.id); const loading = S.adapter.mode === 'cloud' && S.patLoaded?.[p.id] !== true;
+  loadPatientData(p.id); const loading = S.adapter.mode === 'cloud' && S.patLoaded?.[p.id] !== true; RN = rulesFor(p);
   const tab = S.params.tab || 'health'; const rd = pReadings(p.id); const msgs = pMsgs(p.id); const unread = +p.unread || 0;
   const tabs = [['health', 'Health'], ['readings', 'Readings'], ...(can('medical') ? [['records', 'Records']] : []), ['messages', 'Messages', unread], ...(can('appointments') ? [['fees', 'Visits & fees']] : [])];
   const phone = p.phone ? String(p.phone).replace(/\D/g, '').slice(-10) : '';
@@ -298,7 +346,8 @@ V.patient = () => {
     <div style="min-width:0;flex:1"><h1 style="font:800 22px/1.2 var(--f-display)">${esc(p.name)}${info('patient')}</h1><div class="small muted">${[ageSex(p), p.phone ? esc(p.phone) : ''].filter(Boolean).join(' · ')}</div>
     <div class="row-flex" style="gap:6px;margin-top:6px">${p.conditions ? `<span class="pill accent">${esc(p.conditions)}</span>` : ''}${p.allergies ? `<span class="pill bad">${T('Allergy')}: ${esc(p.allergies)}</span>` : ''}${p.consentAt ? `<span class="pill good">${T('On the patient link')}</span>` : ''}</div></div>
     ${can('patients', 2) ? `<button class="icon-btn" aria-label="Edit patient" onclick="A.patientForm('${p.id}')">${ic('edit')}</button>` : ''}</div>
-    <div class="row-flex" style="gap:6px;margin-top:12px">${phone ? `<a class="btn sm" href="tel:${phone}">${ic('phone')} Call</a>${waBtn('', phone, 'WhatsApp')}` : ''}${can('patients', 2) ? `<button class="btn sm primary" onclick="A.patientLinkSheet('${p.id}')">${ic('link')} Patient link</button>` : ''}${can('appointments', 2) ? `<button class="btn sm" onclick="A.apptForm({patientId:'${p.id}'})">${ic('calendar')} Appointment</button>` : ''}</div></div>
+    <div class="row-flex" style="gap:6px;margin-top:12px">${phone ? `<a class="btn sm" href="tel:${phone}">${ic('phone')} Call</a>${waBtn('', phone, 'WhatsApp')}` : ''}${can('patients', 2) ? `<button class="btn sm primary" onclick="A.patientLinkSheet('${p.id}')">${ic('link')} Patient link</button>` : ''}${can('appointments', 2) ? `<button class="btn sm" onclick="A.apptForm({patientId:'${p.id}'})">${ic('calendar')} Appointment</button>` : ''}${can('patients', 2) ? `<button class="btn sm flag-btn" onclick="A.flagPatient('${p.id}')">${ic('flag')} Alert patient</button>` : ''}</div></div>
+  ${patientBanners(p)}
   <div class="tabs">${tabs.map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('pt-' + tab)}</div>`;
   if (loading) return head + `<div class="card">${empty('Loading…', '', '', 'pulse', '#94A3B8')}</div>`;
   if (tab === 'readings') return head + readingsTab(p, rd);
@@ -307,25 +356,30 @@ V.patient = () => {
   if (tab === 'fees' && can('appointments')) return head + feesTab(p);
   return head + healthTab(p, rd);
 };
+/* one card per reading: last value, change, chart (or the last results of a text test) */
+function vitalCard(k, rd, list) {
+  const d = MDEF(k); if (!d) return ''; const [, label, unit, icon, c] = d; const lastR = rd.find(r => hasVital(k, r));
+  const head = `<div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><div class="row-flex" style="gap:10px;flex-wrap:nowrap">${ibox(icon, c, 'sm')}<div><b>${esc(T(label))}</b><div class="tiny muted">${esc(unit)}</div></div></div>${lastR ? `<div style="text-align:right"><div class="vbig">${vitalCell(k, lastR)}</div><div class="tiny muted">${atText(lastR.at)}</div></div>` : `<span class="tiny muted">${T('No reading yet')}</span>`}</div>`;
+  if (isText(k)) { const xs = list.filter(r => hasVital(k, r)).slice(1, 6); return `<div class="card pad vcard">${head}${xs.map(r => `<div class="row-flex small" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:6px"><span class="muted">${atText(r.at)}</span><b>${esc(r[k])}</b></div>`).join('')}</div>`; }
+  return `<div class="card pad vcard">${head}${vitalTrend(k, list)}${chartLegend(k, list)}${vitalChart(k, list) || `<div class="small muted" style="padding:14px 0">${lastR ? T('No reading in this period') : T('Add a reading or ask the patient to send it from their link')}</div>`}</div>`;
+}
 function healthTab(p, rd) {
   const range = S.filters.vRange || '30'; const since = range === 'all' ? '' : addDays(todayLocal(), -+range);
   const list = since ? rd.filter(r => String(r.at).slice(0, 10) >= since) : rd;
-  const keys = trackOf(p).concat(VITALS.map(v => v[0]).filter(k => !trackOf(p).includes(k) && rd.some(r => hasVital(k, r))));
-  return `<div class="row-flex" style="justify-content:space-between;margin-bottom:12px">${seg('vRange', [['7', '7 days'], ['30', '30 days'], ['90', '3 months'], ['all', 'All']], range, 'A.setF')}${can('patients', 2) ? `<button class="btn primary sm" onclick="A.readingForm('${p.id}')">${ic('plus')} Add reading</button>` : ''}</div>
-  ${rd.length ? `<div class="grid g2">${keys.map(k => { const lastR = rd.find(r => hasVital(k, r)); const [, label, unit, icon, c] = VIT[k];
-    return `<div class="card pad vcard"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><div class="row-flex" style="gap:10px;flex-wrap:nowrap">${ibox(icon, c, 'sm')}<div><b>${label}</b><div class="tiny muted">${unit}</div></div></div>${lastR ? `<div style="text-align:right"><div class="vbig">${vitalCell(k, lastR)}</div><div class="tiny muted">${atText(lastR.at)}</div></div>` : `<span class="tiny muted">${T('No reading yet')}</span>`}</div>
-      ${vitalTrend(k, list)}${chartLegend(k, list)}${vitalChart(k, list) || `<div class="small muted" style="padding:14px 0">${lastR ? T('No reading in this period') : T('Add a reading or ask the patient to send it from their link')}</div>`}</div>`; }).join('')}</div>
-    <p class="tiny muted" style="margin-top:10px">${T('Coloured numbers are outside the usual adult range. They are only a quick hint; the doctor decides.')}</p>`
+  const keys = trackOf(p).concat(allKeys().filter(k => !trackOf(p).includes(k) && rd.some(r => hasVital(k, r))));
+  return `<div class="row-flex" style="justify-content:space-between;margin-bottom:12px">${seg('vRange', [['7', '7 days'], ['30', '30 days'], ['90', '3 months'], ['all', 'All']], range, 'A.setF')}<div class="row-flex" style="gap:6px">${can('patients', 2) ? `<button class="btn sm" onclick="A.patientLimits('${p.id}')">${ic('bell')} Alert limits</button><button class="btn primary sm" onclick="A.readingForm('${p.id}')">${ic('plus')} Add reading</button>` : ''}</div></div>
+  ${rd.length ? `<div class="grid g2">${keys.map(k => vitalCard(k, rd, list)).join('')}</div>
+    <p class="tiny muted" style="margin-top:10px">${T('Coloured numbers crossed the alert limits you set: orange = check, red = emergency.')} ${p.rules && Object.keys(p.rules).length ? T('This patient has own limits.') : ''}</p>`
   : `<div class="card">${empty('No readings yet', 'Add a reading here, or send the patient link so the patient adds BP, sugar and weight daily from home.', `${can('patients', 2) ? `<button class="btn primary" onclick="A.readingForm('${p.id}')">${ic('plus')} Add reading</button><button class="btn" onclick="A.patientLinkSheet('${p.id}')">${ic('link')} Patient link</button>` : ''}`, 'pulse', '#0EA5E9')}</div>`}`;
 }
 function readingsTab(p, rd) {
-  const keys = VITALS.map(v => v[0]).filter(k => trackOf(p).includes(k) || rd.some(r => hasVital(k, r)));
+  const keys = allKeys().filter(k => trackOf(p).includes(k) || rd.some(r => hasVital(k, r)));
   return `<div class="row-flex" style="justify-content:space-between;margin-bottom:12px"><span class="small muted">${rd.length} ${T('readings')}</span><div class="row-flex" style="gap:6px">${rd.length ? `<button class="btn sm" onclick="A.readingsCSV('${p.id}')">${ic('download')} Excel / CSV</button>` : ''}${can('patients', 2) ? `<button class="btn primary sm" onclick="A.readingForm('${p.id}')">${ic('plus')} Add reading</button>` : ''}</div></div>
-  <div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date & time</th>${keys.map(k => `<th>${VIT[k][1]}</th>`).join('')}<th>By</th><th></th></tr></thead><tbody>${rd.map(r => `<tr><td class="nowrap">${atText(r.at)}</td>${keys.map(k => `<td class="nowrap">${vitalCell(k, r)}</td>`).join('')}<td><span class="tiny ${r.by === 'patient' ? 'pill info' : 'muted'}">${r.by === 'patient' ? T('Patient') : esc(r.updatedBy || T('Clinic'))}</span>${r.note ? `<div class="tiny muted">${esc(r.note)}</div>` : ''}</td><td>${lvl('patients') >= 3 ? `<button class="icon-btn" style="width:32px;height:32px" aria-label="Delete reading" onclick="A.delReading('${r.id}')">${ic('trash')}</button>` : ''}</td></tr>`).join('') || `<tr><td colspan="${keys.length + 3}" class="muted">${T('No readings yet')}</td></tr>`}</tbody></table></div></div>`;
+  <div class="card"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Date & time</th>${keys.map(k => `<th>${esc(T(MDEF(k)[1]))}</th>`).join('')}<th>By</th><th></th></tr></thead><tbody>${rd.map(r => { const lv = readingLevel(r, RN).level; return `<tr class="${lv ? 'lv-' + lv : ''}"><td class="nowrap">${atText(r.at)}${lv ? `<div>${levelPill(lv)}</div>` : ''}</td>${keys.map(k => `<td class="nowrap">${vitalCell(k, r)}</td>`).join('')}<td><span class="tiny ${r.by === 'patient' ? 'pill info' : 'muted'}">${r.by === 'patient' ? T('Patient') : esc(r.updatedBy || T('Clinic'))}</span>${r.note ? `<div class="tiny muted">${esc(r.note)}</div>` : ''}</td><td>${lvl('patients') >= 3 ? `<button class="icon-btn" style="width:32px;height:32px" aria-label="Delete reading" onclick="A.delReading('${r.id}')">${ic('trash')}</button>` : ''}</td></tr>`; }).join('') || `<tr><td colspan="${keys.length + 3}" class="muted">${T('No readings yet')}</td></tr>`}</tbody></table></div></div>`;
 }
 A.readingsCSV = pid => {
-  const p = patientById(pid); const rd = pReadings(pid);
-  const rows = [['Date', 'Time', 'BP upper', 'BP lower', 'Sugar', 'Sugar type', 'Weight kg', 'Pulse', 'SpO2 %', 'Temp F', 'By', 'Note'], ...rd.map(r => { const [d, t] = String(r.at).split('T'); return [d, t || '', r.sys ?? '', r.dia ?? '', r.sugar ?? '', r.sugar != null ? SUGAR_T[r.sugarType] || '' : '', r.weight ?? '', r.pulse ?? '', r.spo2 ?? '', r.temp ?? '', r.by === 'patient' ? 'Patient' : (r.updatedBy || 'Clinic'), r.note || '']; })];
+  const p = patientById(pid); const rd = pReadings(pid); const tests = curTests().filter(t => rd.some(r => hasVital(t.key, r)));
+  const rows = [['Date', 'Time', 'BP upper', 'BP lower', 'Sugar', 'Sugar type', 'Weight kg', 'Pulse', 'SpO2 %', 'Temp F', ...tests.map(t => t.name + (t.unit ? ' ' + t.unit : '')), 'Alert', 'By', 'Note'], ...rd.map(r => { const [d, t] = String(r.at).split('T'); return [d, t || '', r.sys ?? '', r.dia ?? '', r.sugar ?? '', r.sugar != null ? SUGAR_T[r.sugarType] || '' : '', r.weight ?? '', r.pulse ?? '', r.spo2 ?? '', r.temp ?? '', ...tests.map(x => r[x.key] ?? ''), { emergency: 'Emergency', alert: 'Check' }[readingLevel(r, rulesFor(p)).level] || '', r.by === 'patient' ? 'Patient' : (r.updatedBy || 'Clinic'), r.note || '']; })];
   const csv = '﻿' + rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = `${p.name.replace(/[^\w]+/g, '_')}_readings.csv`; a.click();
 };
@@ -335,10 +389,18 @@ function readingFields(track, r = {}) {
   return `${has('bp') ? `<div class="field"><span>BP (upper / lower)</span><div class="bp-in"><input name="sys" type="number" inputmode="numeric" placeholder="120" min="50" max="260" value="${r.sys ?? ''}"><b>/</b><input name="dia" type="number" inputmode="numeric" placeholder="80" min="30" max="160" value="${r.dia ?? ''}"><span class="tiny muted">mmHg</span></div></div>` : ''}
   ${has('sugar') ? `<div class="field"><span>Sugar (mg/dL)</span><input name="sugar" type="number" inputmode="numeric" placeholder="e.g. 110" value="${r.sugar ?? ''}"><div class="chips" style="margin-top:6px">${Object.entries(SUGAR_T).map(([k, l], i) => `<label class="chip-radio"><input type="radio" name="sugarType" value="${k}" ${(r.sugarType || 'fasting') === k ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div></div>` : ''}
   <div class="grid2" style="padding:0">${['weight', 'pulse', 'spo2', 'temp'].filter(has).map(k => `<label class="field"><span>${VIT[k][1]} (${VIT[k][2]})</span><input name="${k}" type="number" step="any" inputmode="decimal" value="${r[k] ?? ''}" placeholder="${{ weight: '72', pulse: '76', spo2: '98', temp: '98.6' }[k]}"></label>`).join('')}</div>
-  <details class="more-vitals"><summary>${T('Other readings')}</summary><div class="grid2" style="padding:8px 0 0">${['bp', 'sugar', 'weight', 'pulse', 'spo2', 'temp'].filter(k => !has(k)).map(k => k === 'bp' ? `<div class="field full"><span>BP (upper / lower)</span><div class="bp-in"><input name="sys" type="number" inputmode="numeric" placeholder="120"><b>/</b><input name="dia" type="number" inputmode="numeric" placeholder="80"></div></div>` : k === 'sugar' ? `<label class="field"><span>Sugar (mg/dL)</span><input name="sugar" type="number" inputmode="numeric"></label>` : `<label class="field"><span>${VIT[k][1]} (${VIT[k][2]})</span><input name="${k}" type="number" step="any" inputmode="decimal"></label>`).join('')}</div></details>
+  ${curTests().some(t => has(t.key)) ? `<div class="grid2" style="padding:0">${curTests().filter(t => has(t.key)).map(t => testField(t, r)).join('')}</div>` : ''}
+  <details class="more-vitals"><summary>${T('Other readings')}</summary><div class="grid2" style="padding:8px 0 0">${['bp', 'sugar', 'weight', 'pulse', 'spo2', 'temp'].filter(k => !has(k)).map(k => k === 'bp' ? `<div class="field full"><span>BP (upper / lower)</span><div class="bp-in"><input name="sys" type="number" inputmode="numeric" placeholder="120"><b>/</b><input name="dia" type="number" inputmode="numeric" placeholder="80"></div></div>` : k === 'sugar' ? `<label class="field"><span>Sugar (mg/dL)</span><input name="sugar" type="number" inputmode="numeric"></label>` : `<label class="field"><span>${VIT[k][1]} (${VIT[k][2]})</span><input name="${k}" type="number" step="any" inputmode="decimal"></label>`).join('')}${curTests().filter(t => !has(t.key)).map(t => testField(t)).join('')}</div></details>
   ${fieldHTML({ name: 'note', label: 'Note (optional)', placeholder: 'e.g. after walk, felt dizzy' })}`;
 }
-function readValues(form) { const v = readForm(form); const out = {}; ['sys', 'dia', 'sugar', 'weight', 'pulse', 'spo2', 'temp'].forEach(k => { const els = [...form.querySelectorAll(`[name=${k}]`)]; const x = els.map(e => e.value).find(Boolean); out[k] = x === undefined ? '' : x; }); out.sugarType = v.sugarType; out.note = v.note; return out; }
+const testField = (t, r = {}) => t.type === 'text'
+  ? `<label class="field"><span translate="no">${esc(t.name)}</span><input name="${t.key}" maxlength="120" value="${esc(r[t.key] ?? '')}" placeholder="${esc(T('Result'))}"></label>`
+  : `<label class="field"><span translate="no">${esc(t.name)}${t.unit ? ` (${esc(t.unit)})` : ''}</span><input name="${t.key}" type="number" step="any" inputmode="decimal" value="${r[t.key] ?? ''}"${numOr(t.min) != null ? ` min="${t.min}"` : ''}${numOr(t.max) != null ? ` max="${t.max}"` : ''}></label>`;
+function readValues(form) {
+  const v = readForm(form); const out = {};
+  ['sys', 'dia', 'sugar', 'weight', 'pulse', 'spo2', 'temp', ...curTests().map(t => t.key)].forEach(k => { const els = [...form.querySelectorAll(`[name="${k}"]`)]; const x = els.map(e => e.value).find(Boolean); out[k] = x === undefined ? '' : x; });
+  out.sugarType = v.sugarType; out.note = v.note; return out;
+}
 A.readingForm = pid => {
   const p = patientById(pid); if (!p) return;
   modal(`<form class="form" onsubmit="A.saveReading(event,'${pid}')" novalidate>${sheetHead('Add reading', p.name)}<div class="sheet-b stack">
@@ -350,10 +412,11 @@ A.saveReading = (e, pid) => {
   withBtn(e, async () => {
     const r = cleanReading(readValues(f)); if (!readingHas(r)) throw new Error('Fill at least one reading');
     const at = (f.querySelector('[name=at]')?.value || nowAt()).slice(0, 16);
-    const rec = { id: uid('rd_'), patientId: pid, by: 'clinic', at, date: at.slice(0, 10), ...r };
-    await save('readings', rec, `Added reading for ${patientById(pid)?.name}`);
+    const p0 = patientById(pid); const ev = readingLevel(r, rulesFor(p0));
+    const rec = { id: uid('rd_'), patientId: pid, by: 'clinic', at, date: at.slice(0, 10), ...r, ...(ev.level ? { level: ev.level, flags: ev.flags } : {}) };
+    await save('readings', rec, `Added reading for ${p0?.name}`);
     const p = patientById(pid); if (p && (!p.lastReadingAt || at > p.lastReadingAt)) { p.lastReadingAt = at; await save('patients', p); }
-    A.closeModal(); const fl = readingFlags(rec); toast(fl.length ? `${T('Saved')} · ${T('Please check')}: ${fl.join(', ')}` : 'Reading saved', fl.length ? 'warn' : '');
+    A.closeModal(); toast(ev.level ? `${T('Saved')} · ${T(ev.level === 'emergency' ? 'Emergency limit crossed' : 'Please check')}: ${ev.flags.join(', ')}` : 'Reading saved', ev.level ? (ev.level === 'emergency' ? 'bad' : 'warn') : '');
     if (S.view !== 'patient' || S.params.id !== pid) A.go('patient', { id: pid }); else render();
   });
 };
@@ -567,6 +630,7 @@ function clinicSettings() {
   const st = settings(); const edit = can('settings', 2); const ro = edit ? '' : 'disabled';
   const f = (name, label, extra = {}) => fieldHTML({ name, label, value: st[name], ...extra }).replace('<input', `<input ${ro}`).replace('<textarea', `<textarea ${ro}`).replace('<select', `<select ${ro}`);
   return pageHead('Settings', 'Clinic profile, fees, UPI and timings') + `<div class="stack">${planCard()}
+  <button class="card pad row-flex click-card" style="flex-wrap:nowrap;text-align:left" onclick="A.go('limits')">${ibox('siren', '#D92D20')}<div class="grow" style="min-width:0"><b>${T('Readings & alert limits')}</b><div class="small muted">${T('Add your own readings and tests. Set when you get an alert, and when an emergency alarm rings.')}</div></div>${ic('chev', 'go')}</button>
   <form class="card" onsubmit="A.saveClinicSettings(event)"><div class="card-h"><div><h3>Clinic profile</h3><p>Shown on the patient link and on printed prescriptions</p></div></div><div class="grid2" style="padding:14px 16px">
     ${f('bizName', 'Clinic / hospital name', { required: true })}${f('doctorName', 'Doctor name')}${f('qualification', 'Qualification')}${f('specialisation', 'Speciality', { type: 'select', options: SPECIALITIES })}
     ${f('regNo', 'Registration number')}${f('council', 'Medical council', { type: 'select', options: ['', ...COUNCILS] })}
@@ -578,6 +642,137 @@ function clinicSettings() {
   <div class="card pad"><div class="row-flex" style="gap:14px;flex-wrap:nowrap"><div class="imgbox logo">${st.logo ? `<img src="${esc(st.logo)}" alt="">` : ic('steth')}</div><div><b>Clinic logo</b><div class="tiny muted">Shows on the patient link and prescriptions</div>${edit ? `<div class="row-flex" style="margin-top:8px;gap:6px"><label class="btn sm soft">${ic('upload')} ${st.logo ? 'Change' : 'Upload'}<input type="file" accept="image/*" hidden onchange="A.uploadImg('logo', this.files[0])"></label><label class="btn sm soft">${ic('edit')} Signature / stamp<input type="file" accept="image/*" hidden onchange="A.uploadImg('stamp', this.files[0])"></label></div>` : ''}</div></div></div></div>`;
 }
 A.saveClinicSettings = async e => { e.preventDefault(); try { const v = readForm(e.target); ['feeClinic', 'feeVideo'].forEach(k => v[k] = v[k] === '' ? '' : +v[k] || 0); await saveSettingsRec(v); logAct('Updated clinic settings'); S.org.name = v.bizName || S.org.name; toast('Settings saved'); render(); } catch (err) { toast(err.message, 'bad'); } };
+
+/* ---------- readings & alert limits (doctor's settings) ---------- */
+const TEST_PRESETS = [
+  { name: 'HbA1c', unit: '%', rules: { high: 6.5 } }, { name: 'Cholesterol (total)', unit: 'mg/dL', rules: { high: 200 } },
+  { name: 'Haemoglobin', unit: 'g/dL', rules: { low: 11 } }, { name: 'Creatinine', unit: 'mg/dL', rules: { high: 1.2 } },
+  { name: 'TSH', unit: 'mIU/L', rules: { low: 0.4, high: 4.5 } }, { name: 'Uric acid', unit: 'mg/dL', rules: { high: 7 } },
+  { name: 'Pain score', unit: '0–10', min: 0, max: 10, rules: { high: 6 } }, { name: 'Peak flow', unit: 'L/min', rules: {} },
+  { name: 'Waist', unit: 'cm', rules: {} }, { name: 'Urine test', type: 'text' }];
+const ALARM_TO = [['doctors', 'Doctors only (owner + associate doctors)'], ['managers', 'Doctors and front desk'], ['all', 'Everyone in the team']];
+function limitRow(f, label, unit, r = {}, ph = {}, dis = '') {
+  const inp = (k, cls, lab) => `<label class="lim ${cls}"><span>${lab}</span><input name="${f}.${k}" type="number" step="any" inputmode="decimal" value="${r[k] ?? ''}" placeholder="${ph[k] ?? '—'}" ${dis}></label>`;
+  return `<div class="lim-row"><div class="lim-name"><b translate="${VIT[f] || RULE_FIELDS.some(x => x[0] === f) ? 'yes' : 'no'}">${esc(T(label))}</b><span class="tiny muted">${esc(unit)}</span></div>
+    <div class="lim-grid">${inp('low', 'a', T('Alert below'))}${inp('high', 'a', T('Alert above'))}${inp('critLow', 'e', T('Emergency below'))}${inp('critHigh', 'e', T('Emergency above'))}</div></div>`;
+}
+/* read the limit boxes of a form → {rules} or throws with a clear message */
+function readLimits(form, fields) {
+  const out = {};
+  fields.forEach(([f, label]) => {
+    const r = {}; RULE_KEYS.forEach(k => { const el = form.querySelector(`[name="${f}.${k}"]`); const v = el ? numOr(el.value) : null; if (el && el.value.trim() !== '' && v == null) throw new Error(`${T(label)}: ${T('write a number')}`); if (v != null) r[k] = v; });
+    if (r.low != null && r.high != null && r.low >= r.high) throw new Error(`${T(label)}: ${T('“Alert below” must be smaller than “Alert above”')}`);
+    if (r.critLow != null && r.low != null && r.critLow > r.low) throw new Error(`${T(label)}: ${T('“Emergency below” must be smaller than “Alert below”')}`);
+    if (r.critHigh != null && r.high != null && r.critHigh < r.high) throw new Error(`${T(label)}: ${T('“Emergency above” must be bigger than “Alert above”')}`);
+    if (Object.keys(r).length) out[f] = r;
+  });
+  return out;
+}
+const limitFields = () => [...RULE_FIELDS.map(([k, l, u]) => [k, l, u]), ...curTests().filter(t => t.type !== 'text').map(t => [t.key, t.name, t.unit || ''])];
+V.limits = () => {
+  const st = settings(); const edit = can('settings', 2); const dis = edit ? '' : 'disabled'; const rules = clinicRules(st); const tests = curTests();
+  return pageHead('Readings & alert limits', 'Your own readings and tests, and when the app should warn you', '', "A.go('settings')") + `<div class="stack">
+  <div class="card pad lim-how"><div class="lim-how-i">${ibox('bell', '#D97706')}<div><b>${T('Alert')}</b><span>${T('The reading turns orange and you get a notification once.')}</span></div></div>
+    <div class="lim-how-i">${ibox('siren', '#D92D20')}<div><b>${T('Emergency')}</b><span>${T('An alarm rings on the doctor’s phone again and again until someone taps “Seen”.')}</span></div></div>
+    <div class="lim-how-i">${ibox('user', '#0EA5E9')}<div><b>${T('Patient')}</b><span>${T('When the patient sends such a reading, their screen tells them to contact you.')}</span></div></div></div>
+  <form class="card" onsubmit="A.saveLimits(event)" novalidate><div class="card-h"><div><h3>${T('Alert limits')}${info('limits')}</h3><p>${T('Leave a box empty for no limit. Each patient can also get own limits.')}</p></div></div>
+    <div class="lim-list">${limitFields().map(([f, l, u]) => limitRow(f, l, u, rules[f] || {}, {}, dis)).join('')}</div>
+    <div class="stack-sm" style="padding:4px 16px 14px">${fieldHTML({ name: 'alarmTo', label: 'Who hears the emergency alarm', type: 'select', value: st.alarmTo || 'doctors', options: ALARM_TO }).replace('<select', `<select ${dis}`)}
+      <label class="check"><input type="checkbox" name="tellPatient" ${st.tellPatient === false ? '' : 'checked'} ${dis}> <span>${T('Tell the patient on their screen to contact the doctor when their reading crosses a limit')}</span></label>
+      <p class="tiny muted">${T('The suggested numbers are only a starting point. Set them as per your own judgement.')}</p></div>
+    ${edit ? `<footer class="sheet-f" style="position:static"><button type="button" class="btn ghost" onclick="A.resetLimits()">${T('Use suggested numbers')}</button><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save limits</button></footer>` : ''}</form>
+  <div class="card"><div class="card-h"><div><h3>${T('Your own readings and tests')}${info('tests')}</h3><p>${T('Add any reading or lab test you want patients or your team to record, e.g. HbA1c, pain score or a urine test.')}</p></div>${edit ? `<button class="btn primary sm" onclick="A.testForm()">${ic('plus')} Add</button>` : ''}</div>
+    ${tests.length ? `<div class="rows">${tests.map(t => `<button class="row ${edit ? 'click' : ''}" ${edit ? `onclick="A.testForm('${t.key}')"` : ''}>${ibox(t.type === 'text' ? 'file' : 'flask', '#4F46E5', 'sm')}<div class="main-col"><b translate="no">${esc(t.name)}</b><div class="sub">${t.type === 'text' ? T('Text result') : `${T('Number')}${t.unit ? ' · ' + esc(t.unit) : ''}`}${rules[t.key] ? ' · ' + T('limits set') : ''}</div></div>${edit ? ic('chev', 'go') : ''}</button>`).join('')}</div>` : `<div class="pad small muted" style="padding:0 16px 14px">${T('No own readings yet.')}</div>`}
+    ${edit ? `<div style="padding:0 16px 16px"><div class="tiny muted" style="margin-bottom:6px">${T('Quick add')}</div><div class="chips">${TEST_PRESETS.filter(x => !tests.some(t => t.name.toLowerCase() === x.name.toLowerCase())).map((x, i) => `<button type="button" class="chip" onclick="A.testForm('',${TEST_PRESETS.indexOf(x)})">${ic('plus')} ${esc(x.name)}</button>`).join('')}</div></div>` : ''}</div></div>`;
+};
+A.saveLimits = e => {
+  e.preventDefault(); const f = e.target;
+  withBtn(e, async () => { const rules = readLimits(f, limitFields()); await saveSettingsRec({ rules, alarmTo: f.alarmTo.value || 'doctors', tellPatient: !!f.tellPatient.checked }); logAct('Updated alert limits'); toast('Limits saved'); render(); });
+};
+A.resetLimits = () => confirmBox('Use the suggested numbers?', 'The limits for BP, sugar, pulse, oxygen and temperature go back to the suggested numbers. Limits of your own tests stay.', 'Use suggested', async () => {
+  const keep = Object.fromEntries(Object.entries(clinicRules(settings())).filter(([k]) => k.startsWith('t_'))); await saveSettingsRec({ rules: { ...DEFAULT_RULES, ...keep } }); toast('Done'); render(); }, 'primary');
+A.testForm = (key, preset) => {
+  const t = key ? testOf(key) : (preset != null ? { ...TEST_PRESETS[preset] } : { type: 'number' }); if (!t) return;
+  const r = key ? (clinicRules(settings())[key] || {}) : (t.rules || {});
+  modal(`<form class="form" onsubmit="A.saveTest(event,'${key || ''}')" novalidate>${sheetHead(key ? 'Edit reading / test' : 'New reading / test', 'Patients and your team can record it; it gets its own chart')}<div class="sheet-b stack">
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'name', label: 'Name', required: true, value: t.name || '', placeholder: 'e.g. HbA1c', maxlength: 40 })}${fieldHTML({ name: 'unit', label: 'Unit (optional)', value: t.unit || '', placeholder: 'e.g. %', maxlength: 16 })}</div>
+    <div class="field"><span>Type of result</span><div class="chips">${[['number', 'Number (gets a chart and limits)'], ['text', 'Text, e.g. Positive / Negative']].map(([v, l]) => `<label class="chip-radio"><input type="radio" name="type" value="${v}" ${(t.type || 'number') === v ? 'checked' : ''} onchange="document.getElementById('tNum').hidden=this.value!=='number'"><span>${l}</span></label>`).join('')}</div></div>
+    <div id="tNum" class="stack-sm" ${t.type === 'text' ? 'hidden' : ''}>
+      <details ${numOr(t.min) != null || numOr(t.max) != null ? 'open' : ''}><summary class="small">${T('Allowed numbers (optional, stops typing mistakes)')}</summary><div class="grid2" style="padding:8px 0 0">${fieldHTML({ name: 'min', label: 'Lowest possible', type: 'number', value: t.min ?? '' })}${fieldHTML({ name: 'max', label: 'Highest possible', type: 'number', value: t.max ?? '' })}</div></details>
+      <div class="lim-list boxed">${limitRow('x', t.name || T('This reading'), t.unit || '', r)}</div>
+      <p class="tiny muted">${T('Leave the limit boxes empty if you do not want alerts for this test.')}</p></div>
+  </div><footer class="sheet-f">${key ? `<button type="button" class="btn ghost danger" onclick="A.delTest('${key}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save</button></footer></form>`);
+};
+A.saveTest = (e, key) => {
+  e.preventDefault(); const f = e.target; const v = readForm(f);
+  withBtn(e, async () => {
+    const name = (v.name || '').trim().slice(0, 40); if (!name) throw new Error('Write the name of the reading or test');
+    const st = settings(); const tests = (st.tests || []).slice(); const k = key || 't_' + Math.random().toString(36).replace(/[^a-z0-9]/g, '').slice(0, 6).padEnd(6, 'x');
+    if (tests.some(t => t.key !== k && t.name.trim().toLowerCase() === name.toLowerCase())) throw new Error('A reading with this name already exists');
+    const type = v.type === 'text' ? 'text' : 'number'; const min = numOr(v.min), max = numOr(v.max);
+    if (min != null && max != null && min >= max) throw new Error('“Lowest possible” must be smaller than “Highest possible”');
+    const rec = { key: k, name, unit: (v.unit || '').trim().slice(0, 16), type, ...(type === 'number' && min != null ? { min } : {}), ...(type === 'number' && max != null ? { max } : {}) };
+    const lim = type === 'number' ? (readLimits(f, [['x', name]]).x || null) : null;
+    const rules = { ...clinicRules(st) }; if (lim) rules[k] = lim; else delete rules[k];
+    const i = tests.findIndex(t => t.key === k); if (i >= 0) tests[i] = rec; else tests.push(rec);
+    if (tests.length > 30) throw new Error('Up to 30 own readings');
+    await saveSettingsRec({ tests, rules }); logAct(`${key ? 'Updated' : 'Added'} reading ${name}`); A.closeModal(); toast('Saved. Tick it in a patient’s “Readings to track” to show it on their link.'); render();
+  });
+};
+A.delTest = key => { const t = testOf(key); confirmBox(`Remove ${t?.name || 'this reading'}?`, 'It is removed from forms and charts. Readings already saved stay in the data.', 'Remove', async () => { const st = settings(); const rules = { ...clinicRules(st) }; delete rules[key]; await saveSettingsRec({ tests: (st.tests || []).filter(x => x.key !== key), rules }); A.closeModal(); toast('Removed'); render(); }); };
+
+/* own limits for one patient (empty box = clinic limit) */
+A.patientLimits = pid => {
+  const p = patientById(pid); if (!p) return; const base = clinicRules(settings()); const own = p.rules || {};
+  const tr = trackOf(p); const want = f => (f === 'sys' || f === 'dia') ? tr.includes('bp') : tr.includes(f);
+  const fields = limitFields(); const main = fields.filter(([f]) => want(f)), rest = fields.filter(([f]) => !want(f));
+  modal(`<form class="form" onsubmit="A.savePatientLimits(event,'${pid}')" novalidate>${sheetHead('Alert limits for this patient', p.name)}<div class="sheet-b stack">
+    <div class="banner">${ic('info')}<span>${T('Empty boxes use your clinic limits (shown in grey). Fill only what is different for this patient.')}</span></div>
+    <div class="lim-list boxed">${main.map(([f, l, u]) => limitRow(f, l, u, own[f] || {}, base[f] || {})).join('')}</div>
+    ${rest.length ? `<details ${rest.some(([f]) => own[f]) ? 'open' : ''}><summary class="small">${T('Other readings')}</summary><div class="lim-list boxed" style="margin-top:8px">${rest.map(([f, l, u]) => limitRow(f, l, u, own[f] || {}, base[f] || {})).join('')}</div></details>` : ''}
+  </div><footer class="sheet-f">${Object.keys(own).length ? `<button type="button" class="btn ghost" onclick="A.savePatientLimits(null,'${pid}',true)">${T('Use clinic limits')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save</button></footer></form>`, { wide: true });
+};
+A.savePatientLimits = (e, pid, clear) => {
+  if (e) e.preventDefault(); const p = patientById(pid);
+  const run = async () => { const rules = clear ? {} : readLimits(e.target, limitFields()); await save('patients', { ...p, rules }, `Updated alert limits of ${p.name}`); A.closeModal(); toast(clear ? 'Clinic limits apply again' : 'Limits saved for this patient'); render(); };
+  if (e) withBtn(e, run); else run().catch(err => toast(err.message, 'bad'));
+};
+
+/* ---------- alert the patient (shows on the patient link, re-sent until the patient taps “I have seen it”) ---------- */
+const FLAG_QUICK = ['Please call the clinic now', 'Please come to the clinic today', 'Go to the nearest hospital now', 'Check your reading again in 30 minutes and send it', 'Do not take your next dose before talking to the doctor'];
+function patientBanners(p) {
+  const out = [];
+  if (p.alertLevel) out.push(`<div class="banner ${p.alertLevel === 'emergency' ? 'bad' : 'warn'} pat-alert">${ic(p.alertLevel === 'emergency' ? 'siren' : 'bell')}<span><b>${T(p.alertLevel === 'emergency' ? 'Emergency reading' : 'Reading to check')}</b> · ${esc(p.alertText || '')} · ${atText(p.alertAt)}</span>${can('patients', 2) ? `<button class="btn sm" onclick="A.clearPatientAlert('${p.id}')">${ic('check')} Checked</button>` : ''}</div>`);
+  const f = p.flag; if (f && !f.cancelledAt && (!f.seenAt || Date.now() - msOf(f.seenAt) < 36e5 * 24)) out.push(f.seenAt
+    ? `<div class="banner good">${ic('check')}<span><b>${T('Patient has seen your alert')}</b> · ${atText(f.seenAt)} · “${esc(f.text)}”</span></div>`
+    : `<div class="banner ${f.level === 'red' ? 'bad' : 'warn'}">${ic('flag')}<span><b>${T('Alert sent to patient, not seen yet')}</b> · ${atText(f.at)} · “${esc(f.text)}”</span>${can('patients', 2) ? `<button class="btn sm ghost" onclick="A.cancelFlag('${p.id}')">${T('Stop alert')}</button>` : ''}</div>`);
+  return out.length ? `<div class="stack-sm" style="margin-bottom:12px">${out.join('')}</div>` : '';
+}
+A.flagPatient = pid => {
+  const p = patientById(pid); if (!p) return; const phone = String(p.phone || '').replace(/\D/g, '').slice(-10);
+  if (!p.linkToken) { confirmBox('Send the patient link first', 'The alert shows on the patient’s private link. Send the link once on WhatsApp, then you can alert the patient any time.', 'Send patient link', () => A.patientLinkSheet(pid), 'primary'); return; }
+  modal(`<form class="form" onsubmit="A.sendFlag(event,'${pid}')" novalidate>${sheetHead('Alert the patient', p.name)}<div class="sheet-b stack">
+    <div class="banner">${ic('info')}<span>${T('The patient’s link shows this alert in red with a sound. If they turned on alerts, their phone rings again and again until they tap “I have seen it”. You see here when they have seen it.')}</span></div>
+    <div class="field"><span>How serious</span><div class="chips"><label class="chip-radio"><input type="radio" name="level" value="red" checked><span>${ic('siren')} Urgent</span></label><label class="chip-radio"><input type="radio" name="level" value="amber"><span>${ic('bell')} Important</span></label></div></div>
+    <div class="field"><span>Quick message</span><div class="chips">${FLAG_QUICK.map(q => `<button type="button" class="chip" onclick="this.form.text.value=this.textContent">${esc(T(q))}</button>`).join('')}</div></div>
+    ${fieldHTML({ name: 'text', label: 'Message for the patient', type: 'textarea', rows: 3, required: true, maxlength: 500, placeholder: 'e.g. Your BP is very high. Please call the clinic now.' })}
+    ${phone ? `<label class="check"><input type="checkbox" name="wa" checked> <span>${T('Also send it on WhatsApp')}</span></label>` : ''}
+  </div><footer class="sheet-f"><span class="grow"></span><button class="btn danger-solid" type="submit">${ic('flag')} Send alert</button></footer></form>`);
+};
+A.sendFlag = (e, pid) => {
+  e.preventDefault(); const f = e.target; const v = readForm(f); const text = (v.text || '').trim(); if (!text) { toast('Write the message for the patient', 'bad'); return; }
+  const wa = !!f.wa?.checked; const waWin = wa ? window.open('', '_blank') : null;
+  withBtn(e, async () => {
+    try {
+      const p = patientById(pid); const r = await S.adapter.clinicAlertPatient(S.org.orgId, pid, v.level, text);
+      p.flag = { id: r.id, level: r.level, text: r.text, at: r.at, by: r.by }; if (S.adapter.mode !== 'cloud') await save('patients', p);
+      A.closeModal(); toast(r.devices ? T('Alert sent. It rings on the patient’s phone until they open it.') : T('Alert sent. It shows when the patient opens their link (alerts are not turned on on their phone yet).'), r.devices ? '' : 'warn'); render();
+      const phone = String(p.phone || '').replace(/\D/g, '').slice(-10); const st = settings(); const doc = st.doctorName ? 'Dr. ' + st.doctorName : st.bizName;
+      if (waWin) waWin.location = waLink(`${v.level === 'red' ? '🚨 ' : '⚠️ '}${doc}: ${text}\n\n${T('Open your link and tap “I have seen it”')}: ${portalUrl(p.linkToken)}`, phone);
+    } catch (err) { if (waWin) waWin.close(); throw err; }
+  });
+};
+A.cancelFlag = pid => { const p = patientById(pid); if (!p?.flag) return; confirmBox('Stop this alert?', 'The patient’s phone stops getting it. Use this if you already talked to the patient.', 'Stop alert', async () => { await S.adapter.clinicCancelAlert(S.org.orgId, p.flag.id); p.flag = { ...p.flag, cancelledAt: nowAt() }; if (S.adapter.mode !== 'cloud') await save('patients', p); toast('Alert stopped'); render(); }, 'primary'); };
 
 /* ---------- hooks into the rest of the app ---------- */
 const eventDashboard = V.dashboard; V.dashboard = () => (isClinic() ? `<div class="sec-h" style="margin-top:0"><h2>Today${info('c-home')}</h2></div>` + clinicHome() : eventDashboard());
@@ -595,6 +790,12 @@ A.openPortal = async token => {
   const t = String(token || '').trim().toLowerCase(); const data = await S.adapter.portalView(t);
   if (!data) throw new Error('This link is not active. Please ask your clinic for a new link.');
   S.portal = { token: t, tab: S.portal?.tab || 'home', ...data }; try { history.replaceState(null, '', '#p-' + t); } catch (e) { } render();
+  /* new alerts from the doctor: check when the patient comes back to the page, and every 2 minutes while it is open */
+  if (!S.portalTimer) {
+    const quiet = () => { const mr = document.getElementById('modalRoot'); return S.portal && document.visibilityState === 'visible' && !(mr && !mr.hidden); };
+    S.portalTimer = setInterval(() => { if (quiet()) portalReload(); }, 120e3);
+    document.addEventListener('visibilitychange', () => { if (quiet()) portalReload(); });
+  }
 };
 const portalReload = async () => { try { const d = await S.adapter.portalView(S.portal.token); S.portal = { ...S.portal, ...d }; render(); } catch (e) { toast(e.message, 'bad'); } };
 function portalErrorScreen(msg) { return `<div class="stripe"></div><div class="content" style="max-width:560px;padding:40px 18px"><div class="card pad stack">${ibox('alert', '#E0344B', 'lg')}<h2>${esc(T('Link not working'))}</h2><p class="muted">${esc(T(msg))}</p></div></div>`; }
@@ -609,26 +810,85 @@ V.portal = () => {
     <button class="btn primary block" style="min-height:52px;font-size:17px" type="submit">${ic('check')} ${T('Agree and continue')}</button></form>${foot}</div>`;
   const now = todayLocal(); const appts = (P.appts || []).slice().sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
   const next = appts.find(a => a.date >= now && ['booked', 'requested'].includes(a.status)); const dues = appts.filter(a => +a.fee > 0 && !a.paid && ['booked', 'done'].includes(a.status));
-  const rd = (P.readings || []).slice().sort((a, b) => String(b.at).localeCompare(String(a.at))); const track = trackOf(pt);
+  const rd = (P.readings || []).slice().sort((a, b) => String(b.at).localeCompare(String(a.at))); const track = trackOf(pt); RN = P.rules || {};
+  const lastLv = rd[0] && Date.now() - msOf(rd[0].at) < 48 * 36e5 ? readingLevel(rd[0], RN) : null;
+  const tel = c.phone ? String(c.phone).replace(/[^\d+]/g, '') : '';
   return `<div class="stripe"></div><div class="content portal" style="max-width:720px;padding-bottom:30px">${top}
   <h2 style="margin-bottom:12px">${T('Namaste')} ${esc(pt.name || '')} 🙏</h2>
+  ${lastLv?.level && c.tellPatient !== false ? `<div class="banner ${lastLv.level === 'emergency' ? 'bad' : 'warn'}" style="margin-bottom:14px">${ic(lastLv.level === 'emergency' ? 'siren' : 'bell')}<span><b>${T(lastLv.level === 'emergency' ? 'Your last reading is in the danger range set by your doctor.' : 'Your last reading is outside the range set by your doctor.')}</b> ${T('Please contact your doctor.')} <span class="tiny">${esc(lastLv.flags.join(', '))} · ${atText(rd[0].at)}</span></span>${tel ? `<a class="btn sm" href="tel:${esc(tel)}">${ic('phone')} ${T('Call')}</a>` : ''}</div>` : ''}
+  ${portalPushCard()}
   ${next ? `<div class="card pad next-appt" style="margin-bottom:14px"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><div><div class="eyebrow">${T(next.status === 'requested' ? 'Appointment request sent' : 'Your next appointment')}</div><b style="font-size:18px">${fmtDay(next.date)}${next.time ? ' · ' + esc(next.time) : ''}</b><div class="small muted">${ic(MODE_I[next.mode]?.[0] || 'building')} ${T(MODE_L[next.mode] || 'In clinic')}${next.status === 'requested' ? ' · ' + T('waiting for the clinic to confirm') : ''}</div></div>${apptPill(next)}</div>
     ${next.mode === 'video' && next.room && next.status === 'booked' ? `<a class="btn primary block" style="margin-top:10px;min-height:50px" href="${esc(jitsiUrl(next))}" target="_blank" rel="noopener">${ic('video')} ${T('Join video call')}</a>` : next.mode === 'whatsapp' && next.status === 'booked' ? `<p class="small" style="margin-top:8px">${T('The doctor will call you on WhatsApp at this time.')}</p>` : next.mode === 'clinic' && c.address ? `<a class="btn sm" style="margin-top:8px" target="_blank" rel="noopener" href="https://maps.google.com/?q=${encodeURIComponent([c.address, c.city].filter(Boolean).join(', '))}">${ic('pin')} ${T('Map')}</a>` : ''}</div>` : ''}
   <div class="big-grid">${bigBtn('Send my reading', 'pulse', '#0EA5E9', 'A.portalReading()', 'BP, sugar, weight…')}${bigBtn('Tell my problem', 'mic', '#E11D48', 'A.portalMessage()', 'Write, photo or voice')}${bigBtn('Book appointment', 'calendar', '#7C3AED', 'A.portalBook()')}${dues.length && c.upi ? bigBtn('Pay fee', 'rupee', '#0B9B68', 'A.portalPay()', inr(sum(dues, a => a.fee))) : c.phone ? `<a class="big-btn" style="--c:#0B9B68" href="tel:${esc(String(c.phone).replace(/\s/g, ''))}">${ibox('phone', '#0B9B68', 'lg')}<b>${T('Call the clinic')}</b></a>` : ''}</div>
   <div class="sec-h"><h2>${T('My health')}</h2></div>
-  ${rd.length ? `<div class="grid g2">${track.filter(k => rd.some(r => hasVital(k, r))).map(k => { const lastR = rd.find(r => hasVital(k, r)); const [, label, unit, icon, col_] = VIT[k]; return `<div class="card pad vcard"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap"><div class="row-flex" style="gap:10px;flex-wrap:nowrap">${ibox(icon, col_, 'sm')}<div><b>${T(label)}</b><div class="tiny muted">${unit}</div></div></div><div style="text-align:right"><div class="vbig">${vitalCell(k, lastR)}</div><div class="tiny muted">${atText(lastR.at)}</div></div></div>${chartLegend(k, rd.slice(0, 60))}${vitalChart(k, rd.slice(0, 60))}</div>`; }).join('')}</div>`
+  ${rd.length ? `<div class="grid g2">${allKeys().filter(k => (track.includes(k) || testOf(k)) && rd.some(r => hasVital(k, r))).map(k => vitalCard(k, rd, rd.slice(0, 60))).join('')}</div>`
     : `<div class="card">${empty('No readings yet', 'Tap “Send my reading” after you check your BP or sugar at home.', '', 'pulse', '#0EA5E9')}</div>`}
   <div class="sec-h"><h2>${T('Messages')}</h2></div>
   <div class="card pad chat"><div class="chat-list">${(P.msgs || []).map(m => msgBubble(m, m.from === 'patient')).join('') || `<div class="small muted" style="text-align:center;padding:14px">${T('Your messages to the clinic and their replies show here.')}</div>`}</div><button class="btn block" onclick="A.portalMessage()">${ic('send')} ${T('Write to the clinic')}</button></div>
   ${c.timings || c.address ? `<div class="card pad small" style="margin-top:14px">${c.timings ? `<div>${ic('clock')} ${esc(c.timings)}</div>` : ''}${c.address ? `<div style="margin-top:4px">${ic('pin')} ${esc([c.address, c.city].filter(Boolean).join(', '))}</div>` : ''}</div>` : ''}
-  ${foot}</div>`;
+  ${foot}</div>${portalAlertOverlay()}`;
 };
+/* an alert from the doctor: full screen, with sound, until the patient taps “I have seen it” */
+function portalAlertOverlay() {
+  const P = S.portal; const a = (P.alerts || [])[0]; if (!a) return ''; const c = P.clinic || {}; const red = a.level === 'red';
+  const tel = c.phone ? String(c.phone).replace(/[^\d+]/g, '') : '';
+  return `<div class="alert-scrim ${red ? 'urgent' : 'amber'}" role="alertdialog" aria-modal="true" aria-labelledby="paT"><div class="alert-card fade">
+    <div class="alert-ring">${ic(red ? 'siren' : 'bell')}</div>
+    <div class="eyebrow">${T(red ? 'Urgent message from your doctor' : 'Important message from your doctor')}${P.alerts.length > 1 ? ` · 1 / ${P.alerts.length}` : ''}</div>
+    <h2 id="paT" style="white-space:pre-wrap">${esc(a.text)}</h2>
+    <div class="small muted">${[c.doctor ? 'Dr. ' + esc(c.doctor) : '', a.by && a.by !== c.doctor ? esc(a.by) : '', atText(a.at)].filter(Boolean).join(' · ')}</div>
+    ${tel ? `<a class="btn block" style="min-height:50px" href="tel:${esc(tel)}">${ic('phone')} ${T('Call the clinic')}</a>` : ''}
+    <button class="btn primary block alert-ok" onclick="A.portalAck('${a.id}')">${ic('check')} ${T('I have seen it')}</button>
+    <p class="tiny muted">${T('In an emergency call 108 or go to the nearest hospital.')}</p></div></div>`;
+}
+AFTER_RENDER.push(() => { if (S.portal?.alerts?.length) { if (!S.portalRinging) { S.portalRinging = true; Tune.play(300); } } else if (S.portalRinging) { S.portalRinging = false; Tune.stop(); } });
+A.portalAck = async id => {
+  Tune.stop(); S.portalRinging = false;
+  try { await S.adapter.portalAck(S.portal.token, id); } catch (e) { toast(e.message, 'bad'); }
+  S.portal.alerts = (S.portal.alerts || []).filter(a => a.id !== id); render(); portalReload();
+};
+/* the patient's own phone notifications (only on this link, no login) */
+const portalPushKey = () => 'ep_ppush_' + (S.portal?.token || '');
+function portalPushCard() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window) || location.protocol !== 'https:' || S.adapter.mode !== 'cloud') return '';
+  if (Notification.permission === 'denied' || (Notification.permission === 'granted' && LS.get(portalPushKey(), false)) || LS.get(portalPushKey() + '_hide', false)) return '';
+  return `<div class="card pad row-flex push-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('bell', '#E11D48')}<div class="grow" style="min-width:0"><b>${T('Get alerts from your doctor on this phone')}</b><div class="small muted">${T('If your doctor needs to reach you urgently, this phone will ring.')}</div></div><div class="row-flex" style="gap:6px"><button class="btn primary sm" onclick="A.portalPush()">${T('Turn on')}</button><button class="icon-btn" style="width:34px;height:34px" aria-label="Hide" onclick="LS.set(portalPushKey()+'_hide',true);render()">${ic('x')}</button></div></div>`;
+}
+A.portalPush = async () => {
+  try {
+    const r = await Notification.requestPermission(); if (r !== 'granted') { toast(T('Notifications not allowed'), 'warn'); return; }
+    const reg = await navigator.serviceWorker.ready; let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC) });
+    const j = sub.toJSON(); await S.adapter.portalSavePush(S.portal.token, { endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth });
+    LS.set(portalPushKey(), true); toast(T('Alerts are on. Your doctor can now reach you on this phone.')); render();
+  } catch (e) { toast(T('Could not turn on alerts') + ': ' + e.message, 'bad'); }
+};
+/* after the patient sends a reading that crosses the doctor's limits */
+function portalReadingResult(lv) {
+  const c = S.portal.clinic || {}; const tel = c.phone ? String(c.phone).replace(/[^\d+]/g, '') : ''; const emg = lv.level === 'emergency';
+  const wa = c.phone ? String(c.phone).replace(/\D/g, '').slice(-10) : '';
+  modal(`<div class="read-result ${emg ? 'emg' : 'warn'}">${sheetHead(emg ? 'Please contact your doctor now' : 'Please contact your doctor', lv.flags.join(', '))}<div class="sheet-b stack">
+    <div class="banner ${emg ? 'bad' : 'warn'}">${ic(emg ? 'siren' : 'bell')}<span>${T(emg ? 'This reading is in the danger range your doctor set. Your doctor has been alerted. Call your doctor now.' : 'This reading is outside the range your doctor set. The clinic has been told. Please talk to your doctor.')}</span></div>
+    ${tel ? `<a class="btn primary block" style="min-height:54px;font-size:17px" href="tel:${esc(tel)}">${ic('phone')} ${T('Call the clinic')}</a>` : ''}
+    ${wa ? `<a class="btn wa block" target="_blank" rel="noopener" href="${esc(waLink(`${T('Namaste')}, ${S.portal.patient?.name || ''}: ${lv.flags.join(', ')}`, wa))}">${ic('wa')} WhatsApp</a>` : ''}
+    <p class="small"><b>${T('If you feel very unwell, call 108 or go to the nearest hospital.')}</b></p>
+    <button class="btn ghost block" onclick="A.closeModal()">${T('OK')}</button></div></div>`);
+}
 A.portalConsent = e => { e.preventDefault(); if (!e.target.ok.checked) { toast('Please tick the box to agree', 'bad'); return; } withBtn(e, async () => { await S.adapter.portalConsent(S.portal.token, S.portal.patient?.name || ''); await portalReload(); }); };
 A.portalReading = () => {
   const track = trackOf(S.portal.patient);
   modal(`<form class="form" onsubmit="A.portalSaveReading(event)" novalidate>${sheetHead('Send my reading', fmtDay(todayLocal()))}<div class="sheet-b stack">${readingFields(track)}</div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit" style="min-height:48px">${ic('send')} Send</button></footer></form>`);
 };
-A.portalSaveReading = e => { e.preventDefault(); const f = e.target; withBtn(e, async () => { const r = cleanReading(readValues(f)); if (!readingHas(r)) throw new Error('Fill at least one reading'); await S.adapter.portalReading(S.portal.token, r); A.closeModal(); const fl = readingFlags(r); toast(fl.length ? T('Sent. This reading is outside the usual range; the clinic has been told. If you feel unwell, call the clinic.') : T('Sent to the clinic. Thank you!'), fl.length ? 'warn' : ''); await portalReload(); }); };
+A.portalSaveReading = e => {
+  e.preventDefault(); const f = e.target;
+  withBtn(e, async () => {
+    const r = cleanReading(readValues(f)); if (!readingHas(r)) throw new Error('Fill at least one reading');
+    const saved = await S.adapter.portalReading(S.portal.token, r); A.closeModal();
+    const lv = saved?.level ? { level: saved.level, flags: saved.flags || [] } : readingLevel(r, S.portal.rules || {});
+    await portalReload();
+    if (lv.level && S.portal.clinic?.tellPatient !== false) portalReadingResult(lv); else toast(T('Sent to the clinic. Thank you!'));
+  });
+};
 A.portalMessage = () => {
   PEND.pmsg = [];
   modal(`<form class="form" onsubmit="A.portalSendMsg(event)" novalidate>${sheetHead('Tell my problem', 'Write, add a photo, or record your voice')}<div class="sheet-b stack">

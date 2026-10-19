@@ -1,6 +1,6 @@
 /* SabManage service worker: fast repeat visits and a clear offline screen.
    App data always comes live from the server; nothing private is cached. */
-const VERSION = 'ep-2026-10-17';
+const VERSION = 'ep-2026-10-19';
 const SHELL = ['/offline.html', '/icon.svg', '/img/icons/icon-192.png', '/img/icons/icon-512.png', '/sounds/alert.mp3'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
@@ -38,7 +38,8 @@ self.addEventListener('push', e => {
 self.addEventListener('notificationclick', e => {
   e.notification.close(); const url = (e.notification.data && e.notification.data.url) || '/app';
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-    for (const c of list) { if (new URL(c.url).pathname.startsWith('/app')) { c.postMessage({ type: 'sm-alert' }); return c.focus(); } }
+    const patient = url.indexOf('#p-') >= 0; /* an alert from the doctor opens that patient's own link */
+    for (const c of list) { const u = new URL(c.url); if (patient ? c.url.indexOf(url.slice(url.indexOf('#p-'))) >= 0 : u.pathname.startsWith('/app') && u.hash.indexOf('#p-') !== 0) { c.postMessage({ type: 'sm-alert' }); return c.focus(); } }
     return self.clients.openWindow(url);
   }));
 });
