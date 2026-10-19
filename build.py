@@ -3,7 +3,7 @@ root = pathlib.Path(__file__).parent
 src = root / 'src'
 head = (src / 'head.html').read_text()
 css = (src / 'app.css').read_text()
-js = '\n'.join((src / f).read_text() for f in ['i18n.js', 'core.js', 'alerts.js', 'help.js', 'auth.js', 'views-ops.js', 'views-money.js', 'views-admin.js', 'views-site.js', 'views-import.js', 'views-marketing.js', 'simple.js', 'leads.js', 'venue.js', 'clinic.js', 'clinic-text.js', 'venue-text.js'])
+js = '\n'.join((src / f).read_text() for f in ['i18n.js', 'core.js', 'alerts.js', 'help.js', 'auth.js', 'views-ops.js', 'views-money.js', 'views-admin.js', 'views-site.js', 'views-import.js', 'views-marketing.js', 'simple.js', 'leads.js', 'venue.js', 'clinic.js', 'demo.js', 'clinic-text.js', 'venue-text.js'])
 js += "\nboot();\n"
 body = f'<div id="app"></div>\n<div id="modalRoot" hidden></div>\n<script>\n{js}\n</script>\n'
 fragment = f'{head}<style>\n{css}\n</style>\n{body}'

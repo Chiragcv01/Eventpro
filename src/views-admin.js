@@ -126,7 +126,7 @@ function adminOrgCard(o) {
     <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b><span>${o.plan === 'Trial' ? 'free' : inr(orgPrice(o)) + '/mo' + (o.price != null ? ' · special' : '')}</span></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>${o.kind === 'clinic' ? 'Team · Patients' : 'Team · Bookings'}</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
     ${o.notes ? `<div class="tiny muted">${ic('edit')} ${esc(o.notes)}</div>` : ''}
     ${o.referredBy ? `<div class="tiny">${ic('gift')} Referred by <b>${esc((S.admin.orgs.find(x => refCode(x.orgId) === o.referredBy) || {}).name || o.referredBy)}</b></div>` : ''}
-    <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
+    <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${typeof demoOrgOn === 'function' && demoOrgOn(o.orgId) ? `<button class="btn sm" onclick="A.adminDemo('${o.orgId}')">${ic('sparkle')} Demo data</button>` : ''}${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
     <div class="tiny muted">Last activity ${o.lastActivity ? new Date(o.lastActivity).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—'} · ${o.invoices} ${o.kind === 'clinic' ? 'appointments' : 'bills'}</div></div>`;
 }
 A.adminManage = id => {
@@ -139,6 +139,7 @@ A.adminManage = id => {
     { name: 'extend', label: 'Or change validity by', type: 'select', options: steps.map(([v, l]) => [String(v), l]), value: '0' },
     { name: 'price', label: 'Special price for this business (₹/month)', type: 'number', min: 0, value: o.price ?? '', hint: 'Leave empty to charge the normal plan price' },
     { name: 'notes', label: 'Private note (only Super Admins see this)', type: 'textarea', value: o.notes, full: true, placeholder: 'e.g. Paid ₹9,999 by UPI on 12 Oct, yearly plan' },
+    { name: 'demo', label: (S.platform?.demo?.all ? 'Demo data is allowed for every business (Platform tab)' : 'Allow demo data for this business (to show the app; load and remove from the app)'), type: 'checkbox', value: typeof demoOrgOn === 'function' && demoOrgOn(id), full: true },
     { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('shield')}<span>When the validity date passes${graceDays() ? ` (plus ${graceDays()} grace days)` : ''}, the business cannot use the app until you extend it. Their data stays safe. Suspended blocks the app at once.</span></div>` }],
     submit: 'Save', onSubmit: async v => {
       let exp = v.expires; const ext = +v.extend || 0;
@@ -146,6 +147,7 @@ A.adminManage = id => {
       if (ext < 0) { exp = addDays(exp || todayLocal(), ext); }
       const status = ext > 0 && v.status === 'trial' && v.plan !== 'Trial' ? 'active' : v.status;
       const price = v.price === '' || v.price == null ? null : Math.max(0, +v.price);
+      if (!S.platform?.demo?.all && !!v.demo !== demoOrgOn(id)) await A.demoAllowOrg(id, !!v.demo);
       const patch = { plan: v.plan, status, expires: exp || '', notes: v.notes, price };
       await S.adapter.adminUpdateOrg(id, patch); Object.assign(o, patch);
       if (S.org?.orgId === id) Object.assign(S.org, patch);
@@ -178,7 +180,7 @@ function adminPlatform() {
   <div class="card pad stack-sm" style="margin-top:16px"><h3>Change validity for many businesses</h3><p class="small muted">Useful for a festival offer or to make up for downtime. Applies to every business in the chosen group.</p>
   <div class="row-flex" style="gap:8px"><select id="bulkWho" style="width:auto"><option value="live">All active and trial businesses</option><option value="paid">Only paid (active)</option><option value="trial">Only free trial</option><option value="all">Every business, including expired</option></select>
   <select id="bulkDays" style="width:auto">${[[1, '+1 day'], [3, '+3 days'], [7, '+7 days'], [15, '+15 days'], [30, '+1 month'], [-1, '−1 day'], [-7, '−7 days']].map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select>
-  <button class="btn" type="button" onclick="A.bulkExtend()">${ic('clock')} Apply</button></div></div>`;
+  <button class="btn" type="button" onclick="A.bulkExtend()">${ic('clock')} Apply</button></div></div>` + (typeof adminDemoCard === 'function' ? adminDemoCard() : '');
 }
 A.savePlatform = async e => {
   e.preventDefault(); const v = readForm(e.target);

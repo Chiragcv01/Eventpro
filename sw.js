@@ -1,6 +1,6 @@
 /* SabManage service worker: fast repeat visits and a clear offline screen.
    App data always comes live from the server; nothing private is cached. */
-const VERSION = 'ep-2026-10-19';
+const VERSION = 'ep-2026-10-19b';
 const SHELL = ['/offline.html', '/icon.svg', '/img/icons/icon-192.png', '/img/icons/icon-512.png', '/sounds/alert.mp3'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {

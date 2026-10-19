@@ -37,6 +37,7 @@ src/views-import.js  Excel/CSV import (SheetJS from jsDelivr, lazy) + "Get start
 src/clinic.js        Clinic kind: clinic home, Patients (readings + SVG charts, records/visits + prescription print, messages with photo/voice, patient link), Appointments (clinic / Jitsi video / WhatsApp, fees, UPI, reminders), clinic settings, and the patient portal (#p-<token>)
 src/clinic-text.js   ⓘ help + Hindi dictionary for the clinic screens
 src/leads.js         Leads & sales (all event businesses): lead list, lead page (log of calls/replies, suggested follow-up messages `leadMsgs`), follow up today, dates calendar, report, 'Get leads automatically' (lead link, Make/Zapier/Pabbly steps, Google Form Apps Script, CSV/Excel upload); `normLead` = same field reading as api/lead.js
+src/demo.js          Demo data: load / remove sample records for event (tent / caterer / planner / venue + leads) or clinic businesses; Super Admin decides who may use it
 src/venue.js         Venue / banquet / resort (bizTypes 'venue'): Venue & rooms page (today, halls 14-day grid, room board, guests check-in/out), booking tab 'Venue plan' (halls, function sheet + print, rooming list + auto allot, hospitality checklist → tasks with `area`)
 src/venue-text.js    ⓘ help + Hindi for leads and venue (built last)
 src/simple.js        Easy home (default; `A.setFull` toggles full), crew home (I reached / my work % buttons), quick booking + packages, simple access sheet, live sync (Realtime on `records`)
@@ -84,6 +85,7 @@ download/SabManage.apk  the signed Android app served at sabmanage.com/download/
 - Live sync: every save sets `updatedById`; Realtime on `records` updates other open phones within a second (toasts for crew progress, self attendance, new bookings, payments); the app also reloads data when it comes back to the screen after 90 s.
 - Morning summary: pg_cron 02:15 UTC → edge function `daily-summary` (token in Vault `cron_token`) → push 'Today: N events…' to owners/managers in their app language (`push_subs.lang`). Android v1.2: only titles starting 🔔/🚨 use the alarm channel; ☀️/✅ use the normal channel.
 - Blog HTML is sanitized on save (`cleanHTML` in views-site.js) and on render (`sanitize` in api/site.js).
+- Demo data (19 Oct 2026): permission lives in platform settings `demo = { all, orgs: [orgId] }` (Super Admin: business card → Plan & access checkbox, or Platform tab card 'Allow demo data for every business'). Allowed owner (or Super Admin) sees an account-menu tile 'Demo data', a home card when the business is empty, and a 'Demo data is on · Remove' banner. Every sample record has `demo: true` (ids `dm_…`); remove = `adapter.delDemo` (cloud: delete records where data->>demo = 'true'), own records never touched. Dates are relative to today. No triggers on `records`, so loading never sends real pushes. Super Admin card button 'Demo data' opens the business with the sheet.
 - Offline mode: if `supabaseUrl` is empty the app uses LocalDB (localStorage) — used for local testing (`superAdminEmails` in config makes a Super Admin offline).
 
 ## Brand and website (17 Oct 2026 redesign)

@@ -279,6 +279,7 @@ const LocalDB = (() => {
     async put(orgId, coll, rec) { const db = load(); db.records[orgId] = db.records[orgId] || {}; (db.records[orgId][coll] = db.records[orgId][coll] || {})[rec.id] = JSON.parse(JSON.stringify(rec)); if (coll === 'settings' && rec.bizName) db.orgs[orgId].name = rec.bizName; persist(); },
     async putMany(orgId, coll, recs) { for (const r of recs) await this.put(orgId, coll, r); },
     async del(orgId, coll, id) { const db = load(); if (db.records[orgId]?.[coll]) delete db.records[orgId][coll][id]; persist(); },
+    async delDemo(orgId, colls) { const db = load(); colls.forEach(c => { const m = db.records[orgId]?.[c]; if (m) Object.keys(m).forEach(id => { if (m[id]?.demo) delete m[id]; }); }); persist(); },
     async saveRoles(orgId, roles) { load().roles[orgId] = JSON.parse(JSON.stringify(roles)); persist(); },
     async createInvite(orgId, role, name) { const db = load(); const code = inviteCode(); db.invites.push({ code, orgId, role, name, created: Date.now(), expires: Date.now() + 7 * 864e5 }); persist(); return code; },
     async acceptInvite(userId, code, displayName) {
@@ -406,6 +407,7 @@ const CloudDB = {
   async put(orgId, coll, rec) { const { error } = await this.sb.from('records').upsert({ org_id: orgId, collection: coll, id: rec.id, data: rec, updated_at: new Date().toISOString() }); if (error) throw this.err(error); if (coll === 'settings' && rec.bizName) this.sb.from('orgs').update({ name: rec.bizName }).eq('id', orgId).then(() => { }); },
   async putMany(orgId, coll, recs) { const now = new Date().toISOString(); for (let i = 0; i < recs.length; i += 200) { const { error } = await this.sb.from('records').upsert(recs.slice(i, i + 200).map(rec => ({ org_id: orgId, collection: coll, id: rec.id, data: rec, updated_at: now }))); if (error) throw this.err(error); } },
   async del(orgId, coll, id) { const { error } = await this.sb.from('records').delete().match({ org_id: orgId, collection: coll, id }); if (error) throw this.err(error); },
+  async delDemo(orgId, colls) { const { error } = await this.sb.from('records').delete().eq('org_id', orgId).in('collection', colls).eq('data->>demo', 'true'); if (error) throw this.err(error); },
   async saveRoles(orgId, roles) { const rows = Object.entries(roles).filter(([k]) => k !== 'owner').map(([role, r]) => ({ org_id: orgId, role, label: r.label, perms: r.perms })); const { error } = await this.sb.from('org_roles').upsert(rows); if (error) throw this.err(error); },
   async createInvite(orgId, role, name) { const code = inviteCode(); const { error } = await this.sb.from('invites').insert({ code, org_id: orgId, role, display_name: name, expires_at: new Date(Date.now() + 7 * 864e5).toISOString() }); if (error) throw this.err(error); return code; },
   async acceptInvite(userId, code, displayName) { const { data, error } = await this.sb.rpc('accept_invite', { p_code: String(code).toUpperCase().trim(), p_display_name: displayName || null }); if (error) throw this.err(error); return data; },
@@ -832,6 +834,7 @@ A.accountMenu = () => {
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
       ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
+      ${S.org && typeof demoCanUse === 'function' && demoCanUse() ? `<button class="tile" onclick="A.demoSheet()">${ibox('sparkle', '#9333EA')}<span>Demo data${demoCount() ? ' · on' : ''}</span></button>` : ''}
       ${can('settings') ? `<button class="tile" onclick="A.go('settings')">${ibox('gear', '#64748B')}<span>Settings</span></button>` : ''}
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>
