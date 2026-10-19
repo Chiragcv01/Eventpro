@@ -729,3 +729,7 @@ span.hall-chip{cursor:default}
 .hosp-area>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:6px}.hosp-area>summary::-webkit-details-marker{display:none}
 .hosp-area[open]>summary .go{transform:rotate(90deg)}
 .hosp-pick{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.demo-card { border: 1.5px solid #E9D5FF; background: linear-gradient(135deg, #FAF5FF, #fff); }
+.banner.demo-on { background: #F5F3FF; border-color: #DDD6FE; color: #5B21B6; align-items: center; }
+.banner.demo-on > span { flex: 1; }
+.btn.demo-btn { color: #7E22CE; border-color: #E9D5FF; background: #FAF5FF; }

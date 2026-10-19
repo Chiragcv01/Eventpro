@@ -131,7 +131,7 @@ function demoBanner() {
   const n = demoCount();
   if (n) return `<div class="banner demo-on" style="margin-bottom:12px">${ic('sparkle')}<span><b>${T('Demo data is on')}</b> · ${T('sample records are shown for a demo.')}</span><button class="btn sm" onclick="A.demoSheet()">${T('Remove')}</button></div>`;
   const empty_ = isClinic() ? !col('patients').length : !col('events').length && !col('leads').length;
-  return empty_ ? `<div class="card pad row-flex demo-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('sparkle', '#9333EA')}<div class="grow" style="min-width:0"><b>${T('Show the app with demo data')}</b><div class="small muted">${T('Load sample records to give a demo. Remove them in one tap later.')}</div></div><button class="btn primary sm" onclick="A.demoLoad()">${T('Load')}</button></div>` : '';
+  return empty_ || demoOrgOn(S.org.orgId) ? `<div class="card pad row-flex demo-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('sparkle', '#9333EA')}<div class="grow" style="min-width:0"><b>${T('Show the app with demo data')}</b><div class="small muted">${T('Load sample records to give a demo. Remove them in one tap later.')}</div></div><button class="btn primary sm" onclick="A.demoLoad()">${T('Load')}</button></div>` : '';
 }
 const _dashDemo = V.dashboard; V.dashboard = () => demoBanner() + _dashDemo();
 
@@ -155,6 +155,7 @@ function adminDemoCard() {
 
 I18N.load(`
 Demo data | डेमो डेटा
+Allow demo | डेमो चालू करें
 Demo data · on | डेमो डेटा · चालू
 Demo data is not allowed for this business. Ask SabManage support. | इस बिज़नेस के लिए डेमो डेटा की अनुमति नहीं है। SabManage सपोर्ट से पूछें।
 Demo data is already loaded | डेमो डेटा पहले से लोड है

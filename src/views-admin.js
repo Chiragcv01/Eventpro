@@ -126,7 +126,7 @@ function adminOrgCard(o) {
     <div class="tri"><div><span>Plan</span><b style="font-size:15px">${esc(o.plan || '—')}</b><span>${o.plan === 'Trial' ? 'free' : inr(orgPrice(o)) + '/mo' + (o.price != null ? ' · special' : '')}</span></div><div class="${o.left != null && o.left < 0 ? 'sh' : o.left != null && o.left <= 7 ? 'bk' : 'fr'}"><span>Valid till</span><b style="font-size:15px">${esc(exp)}</b><span>${expSub}</span></div><div><span>${o.kind === 'clinic' ? 'Team · Patients' : 'Team · Bookings'}</span><b style="font-size:15px">${o.members} · ${o.bookings}</b></div></div>
     ${o.notes ? `<div class="tiny muted">${ic('edit')} ${esc(o.notes)}</div>` : ''}
     ${o.referredBy ? `<div class="tiny">${ic('gift')} Referred by <b>${esc((S.admin.orgs.find(x => refCode(x.orgId) === o.referredBy) || {}).name || o.referredBy)}</b></div>` : ''}
-    <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${typeof demoOrgOn === 'function' && demoOrgOn(o.orgId) ? `<button class="btn sm" onclick="A.adminDemo('${o.orgId}')">${ic('sparkle')} Demo data</button>` : ''}${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
+    <div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.adminOpen('${o.orgId}')">${ic('eye')} Open</button><button class="btn sm" onclick="A.adminManage('${o.orgId}')">${ic('gear')} Plan & access</button>${typeof demoOrgOn !== 'function' ? '' : demoOrgOn(o.orgId) ? `<button class="btn sm demo-btn" onclick="A.adminDemo('${o.orgId}')">${ic('sparkle')} Demo data</button>` : `<button class="btn sm ghost" onclick="A.demoAllowOrg('${o.orgId}',true)">${ic('sparkle')} Allow demo</button>`}${phone ? waBtn(msg, phone, 'Owner') : ''}</div>
     <div class="tiny muted">Last activity ${o.lastActivity ? new Date(o.lastActivity).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' }) : '—'} · ${o.invoices} ${o.kind === 'clinic' ? 'appointments' : 'bills'}</div></div>`;
 }
 A.adminManage = id => {
@@ -135,11 +135,11 @@ A.adminManage = id => {
   formModal({ title: o.name, sub: 'Plan, validity, price and access for this business', fields: [
     { name: 'plan', label: 'Plan', type: 'select', options: ['Trial', ...P.plans.map(p => p.name)].map(n => [n, n === 'Trial' ? 'Free trial' : `${n} · ${inr(planPrice(n))}/month`]), value: o.plan },
     { name: 'status', label: 'Access', type: 'select', options: [['trial', 'Trial'], ['active', 'Active (paid)'], ['suspended', 'Suspended (block login)']], value: o.status },
+    { name: 'demo', label: (S.platform?.demo?.all ? 'Demo data is allowed for every business (Platform tab)' : 'Allow demo data for this business (to show the app; load and remove from the app)'), type: 'checkbox', value: typeof demoOrgOn === 'function' && demoOrgOn(id), full: true },
     { name: 'expires', label: 'Valid till', type: 'date', value: o.expires },
     { name: 'extend', label: 'Or change validity by', type: 'select', options: steps.map(([v, l]) => [String(v), l]), value: '0' },
     { name: 'price', label: 'Special price for this business (₹/month)', type: 'number', min: 0, value: o.price ?? '', hint: 'Leave empty to charge the normal plan price' },
     { name: 'notes', label: 'Private note (only Super Admins see this)', type: 'textarea', value: o.notes, full: true, placeholder: 'e.g. Paid ₹9,999 by UPI on 12 Oct, yearly plan' },
-    { name: 'demo', label: (S.platform?.demo?.all ? 'Demo data is allowed for every business (Platform tab)' : 'Allow demo data for this business (to show the app; load and remove from the app)'), type: 'checkbox', value: typeof demoOrgOn === 'function' && demoOrgOn(id), full: true },
     { type: 'html', full: true, html: `<div class="banner" style="font-size:13px">${ic('shield')}<span>When the validity date passes${graceDays() ? ` (plus ${graceDays()} grace days)` : ''}, the business cannot use the app until you extend it. Their data stays safe. Suspended blocks the app at once.</span></div>` }],
     submit: 'Save', onSubmit: async v => {
       let exp = v.expires; const ext = +v.extend || 0;
