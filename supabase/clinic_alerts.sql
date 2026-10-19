@@ -8,7 +8,7 @@
 --   an EMERGENCY → alerts row kind 'emergency', urgent, event_id 'pt:<patient id>', to_role doctors/managers/null (push 🚨, rings until
 --   someone taps Seen; re-sent every minute for 30 minutes by sm_private.clinic_alarm_tick)
 -- * patient_alerts: the doctor alerts a patient; it shows on the patient link and is re-sent until the patient taps "I have seen it"
--- * internal helpers live in schema sm_private, which the API cannot reach (applied with the owner's OK, 19 Oct 2026)
+-- * internal helpers live in schema sm_private, which the API cannot reach (applied by the owner in the Supabase SQL Editor, 19 Oct 2026)
 
 create schema if not exists sm_private;
 alter table public.alerts drop constraint if exists alerts_kind_chk;
