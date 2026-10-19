@@ -118,7 +118,7 @@ A.demoRemove = () => confirmBox('Remove demo data?', 'Only the sample records ar
 A.demoSheet = () => {
   const n = demoCount(); const clinic = isClinic();
   modal(`${sheetHead('Demo data', S.org?.name || '')}<div class="sheet-b stack">
-    ${demoAllowed() ? '' : `<div class="banner warn">${ic('alert')}<span>${T('Demo data is not allowed for this business. Ask SabManage support.')}</span></div>`}
+    ${demoAllowed() ? '' : `<div class="banner warn">${ic('shield')}<span>${T('Demo data is not allowed for this business. Ask SabManage support.')}</span></div>${S.platform?.supportPhone ? waBtn(`Namaste, please allow demo data for ${S.org?.name || 'my business'} on SabManage.`, S.platform.supportPhone, T('Ask support on WhatsApp')) : ''}`}
     ${n ? `<div class="banner good">${ic('check')}<span><b>${T('Demo data is on')}</b> · ${n} ${T('sample records')}. ${T('They are marked as demo and can be removed in one tap.')}</span></div>
       <button class="btn danger block" onclick="A.demoRemove()">${ic('trash')} ${T('Remove demo data')}</button>`
     : `<p class="small">${T(clinic ? 'Adds sample patients with readings and charts, an emergency reading, visits, today’s appointments, a request and messages.' : 'Adds sample bookings, stock, crew with attendance, live setup tasks, bills and payments, expenses, vendors, a review and leads at every stage. Venues also get halls, rooms and guests.')}</p>
@@ -155,6 +155,9 @@ function adminDemoCard() {
 
 I18N.load(`
 Demo data | डेमो डेटा
+Demo data is allowed for every business. Tap “Demo data” on a business to load or remove sample records. | हर बिज़नेस के लिए डेमो डेटा चालू है। सैंपल रिकॉर्ड लोड करने या हटाने के लिए किसी बिज़नेस पर “डेमो डेटा” दबाएं।
+Ask support on WhatsApp | व्हाट्सऐप पर सपोर्ट से पूछें
+Demo data: tap “Allow demo” on a business, then “Demo data” to load or remove sample records. | डेमो डेटा: किसी बिज़नेस पर “डेमो चालू करें” दबाएं, फिर “डेमो डेटा” दबाकर सैंपल रिकॉर्ड लोड करें या हटाएं।
 Allow demo | डेमो चालू करें
 Demo data · on | डेमो डेटा · चालू
 Demo data is not allowed for this business. Ask SabManage support. | इस बिज़नेस के लिए डेमो डेटा की अनुमति नहीं है। SabManage सपोर्ट से पूछें।

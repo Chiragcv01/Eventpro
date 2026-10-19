@@ -108,6 +108,7 @@ V.admin = () => {
   if (f === 'Suspended') list = list.filter(r => r.state === 'suspended');
   if (q) list = list.filter(r => [r.name, r.ownerName, r.ownerEmail, r.ownerPhone, r.city].join(' ').toLowerCase().includes(q));
   return head + mfaWarn + kp + tabs + `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="Search business, owner, phone or city" value="${esc(S.filters.admQ || '')}" onchange="A.setF('admQ',this.value)"></div></div>
+  <div class="banner demo-on" style="margin-bottom:12px">${ic('sparkle')}<span>${S.platform?.demo?.all ? 'Demo data is allowed for every business. Tap “Demo data” on a business to load or remove sample records.' : 'Demo data: tap “Allow demo” on a business, then “Demo data” to load or remove sample records.'}</span></div>
   <div class="chips" style="margin-bottom:14px">${['All', 'Trial', 'Paid', 'Expiring soon', 'Expired', 'Suspended'].map(c => `<button class="chip ${f === c ? 'on' : ''}" onclick="A.setF('adm','${c}')">${c}</button>`).join('')}</div>
   <div class="grid g-auto">${list.map(adminOrgCard).join('') || `<div class="card">${empty('No businesses here', 'Try another filter. New sign-ups appear here automatically.', '', 'store', '#94A3B8')}</div>`}</div>`;
 };

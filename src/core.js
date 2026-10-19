@@ -834,7 +834,7 @@ A.accountMenu = () => {
       <button class="tile" onclick="A.toggleLang()">${ibox('globe', '#DB2777')}<span translate="no">${I18N.lang === 'hi' ? 'English' : 'हिंदी'}</span></button>
       <button class="tile" onclick="A.newPasswordModal()">${ibox('key', '#0D9488')}<span>Change password</span></button>
       ${S.adapter.mode === 'cloud' ? `<button class="tile" onclick="A.mfaSheet()">${ibox('shield', S.mfaOn ? '#0B9B68' : '#E0344B')}<span>Authenticator ${S.mfaOn ? 'on' : 'off'}</span></button>` : ''}
-      ${S.org && typeof demoCanUse === 'function' && demoCanUse() ? `<button class="tile" onclick="A.demoSheet()">${ibox('sparkle', '#9333EA')}<span>Demo data${demoCount() ? ' · on' : ''}</span></button>` : ''}
+      ${S.org && typeof demoCanUse === 'function' && (S.super || S.role === 'owner') ? `<button class="tile" onclick="A.demoSheet()">${ibox('sparkle', '#9333EA')}<span>Demo data${demoCount() ? ' · on' : ''}</span></button>` : ''}
       ${can('settings') ? `<button class="tile" onclick="A.go('settings')">${ibox('gear', '#64748B')}<span>Settings</span></button>` : ''}
     </div>
     <button class="btn danger block" onclick="A.logout()">${ic('logout')} Log out</button>
