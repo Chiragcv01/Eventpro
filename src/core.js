@@ -101,7 +101,7 @@ const MARK_SVG = '<svg class="ico mark" viewBox="0 0 24 24" aria-hidden="true"><
 const ic = (n, cls = '') => `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n] || ''}"/></svg>`;
 
 /* ================= Domain constants ================= */
-const BIZ_TYPES = [['tent', 'Tent House'], ['caterer', 'Caterer / Halwai'], ['event', 'Event Manager / Planner']];
+const BIZ_TYPES = [['tent', 'Tent House'], ['caterer', 'Caterer / Halwai'], ['event', 'Event Manager / Planner'], ['venue', 'Venue / Banquet / Resort']];
 /* 'event' businesses (tent / caterer / event manager) and 'clinic' (doctor) get different sections.
    A module without `kinds` is for event businesses only. */
 const MODULES = [
@@ -110,9 +110,11 @@ const MODULES = [
   { key: 'patients', label: 'Patients', icon: 'heart', group: 'Daily', kinds: ['clinic'] },
   { key: 'medical', label: 'Medical records', icon: 'file', group: 'Daily', kinds: ['clinic'], hidden: true },
   { key: 'bookings', label: 'Bookings', icon: 'calendar', group: 'Daily' },
+  { key: 'leads', label: 'Leads & Sales', short: 'Leads', icon: 'megaphone', group: 'Daily' },
+  { key: 'venue', label: 'Venue & Rooms', short: 'Venue', icon: 'building', group: 'Daily', biz: ['venue'] },
   { key: 'tasks', label: 'Live Tracker', short: 'Live', icon: 'pulse', group: 'Daily' },
-  { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event'] },
-  { key: 'catering', label: 'Catering', icon: 'pot', group: 'Operations', biz: ['caterer', 'event'] },
+  { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event', 'venue'] },
+  { key: 'catering', label: 'Catering', icon: 'pot', group: 'Operations', biz: ['caterer', 'event', 'venue'] },
   { key: 'vendors', label: 'Vendors & POs', icon: 'handshake', group: 'Operations' },
   { key: 'staff', label: 'Staff & Wages', icon: 'users', group: 'Operations' },
   { key: 'tools', label: 'Planner Tools', icon: 'ruler', group: 'Operations', biz: ['tent', 'event'] },
@@ -125,22 +127,23 @@ const MODULES = [
   { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business', kinds: ['event', 'clinic'] },
   { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business', kinds: ['event', 'clinic'] }
 ];
-const MOD_COLOR = { appointments: '#7C3AED', patients: '#E11D48', medical: '#0891B2', dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
+const MOD_COLOR = { leads: '#9333EA', venue: '#0F766E', appointments: '#7C3AED', patients: '#E11D48', medical: '#0891B2', dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
 MODULES.forEach(m => { m.c = MOD_COLOR[m.key]; });
 const MOD = Object.fromEntries(MODULES.map(m => [m.key, m]));
 const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C026D3'], 'Sangeet & Mehendi': ['music', '#F59E0B'], 'Ring Ceremony': ['rings', '#8B5CF6'], 'Corporate Event': ['briefcase', '#2563EB'], 'Birthday / Anniversary': ['cake', '#F97316'], 'Religious / Jagran': ['diya', '#EA580C'], 'Exhibition': ['store', '#0891B2'], 'Other': ['calendar', '#64748B'] };
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
+const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
   owner: { label: 'Owner', perms: allPerms(3), locked: true },
-  manager: { label: 'Manager', perms: { dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
-  accountant: { label: 'Accountant', perms: { dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
-  supervisor: { label: 'Site Supervisor', perms: { dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
-  staff: { label: 'Crew / Staff', perms: { dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
+  manager: { label: 'Manager', perms: { leads: 3, venue: 3, dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
+  accountant: { label: 'Accountant', perms: { leads: 1, venue: 1, dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
+  supervisor: { label: 'Site Supervisor', perms: { leads: 0, venue: 2, dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
+  sales: { label: 'Sales Executive', perms: { leads: 2, venue: 1, dashboard: 1, bookings: 2, tasks: 1, inventory: 0, catering: 1, vendors: 0, staff: 0, tools: 0, invoices: 1, payments: 0, expenses: 0, reports: 0, reviews: 1, marketing: 2, team: 0, settings: 0 } },
+  staff: { label: 'Crew / Staff', perms: { leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const CLINIC_ROLES = {
   owner: { label: 'Doctor (Owner)', perms: allPerms(3), locked: true },
@@ -254,6 +257,8 @@ const LocalDB = (() => {
     async clinicCancelAlert(orgId, id) { const db = load(); const a = (db.palerts || []).find(x => x.id === id && x.orgId === orgId); if (a && !a.cancelledAt) { a.cancelledAt = new Date().toISOString(); const pt = db.records[orgId]?.patients?.[a.pid]; if (pt?.flag?.id === id) pt.flag.cancelledAt = a.cancelledAt.slice(0, 16); persist(); } },
     async portalAck(token, id) { const { l, R } = this._pl(token); const db = load(); const a = (db.palerts || []).find(x => x.id === id && x.orgId === l.orgId && x.pid === l.pid && !x.seenAt && !x.cancelledAt); if (!a) return; const now = new Date(); a.seenAt = todayLocal(now) + 'T' + now.toTimeString().slice(0, 5); const pt = R.patients[l.pid]; if (pt?.flag?.id === id) pt.flag.seenAt = a.seenAt; this._notify(l.orgId, (pt?.name || 'Patient') + ' has seen your alert', a.text.slice(0, 120)); persist(); },
     async portalSavePush() { },
+    async leadKey(orgId, reset) { const db = load(); db.leadKeys = db.leadKeys || {}; if (reset || !db.leadKeys[orgId]) db.leadKeys[orgId] = guestToken() + guestToken(); persist(); return db.leadKeys[orgId]; },
+    async leadIntake(key, p) { const db = load(); const orgId = Object.keys(db.leadKeys || {}).find(o => db.leadKeys[o] === key); if (!orgId) throw new Error('This lead link is not active'); const now = new Date(); const at = todayLocal(now) + 'T' + now.toTimeString().slice(0, 5); const R = db.records[orgId] = db.records[orgId] || {}; const rec = { id: uid('ld_'), created: Date.now(), createdAt: at, status: 'New', via: 'link', ...p, log: [{ at, type: 'lead', by: 'Lead link', text: p.message || '' }] }; (R.leads = R.leads || {})[rec.id] = rec; this._notify(orgId, 'New lead: ' + (p.name || p.phone), p.source || '', 'lead', { to_role: 'sales', event_id: 'ld:' + rec.id }); persist(); if (S.org?.orgId === orgId) S.data.leads = [...col('leads'), rec]; return { ok: true, id: rec.id }; },
     async portalMessage(token, p) { const { l, R } = this._pl(token); if (!l.consent) throw new Error('Please give your consent first'); const now = new Date(); if (!(p.text || '').trim() && !(p.files || []).length) throw new Error('Write something, or add a photo or voice note'); const pt = R.patients[l.pid]; const rec = { id: uid('pm_'), patientId: l.pid, from: 'patient', at: todayLocal(now) + 'T' + now.toTimeString().slice(0, 5), text: (p.text || '').trim(), files: p.files || [], by: pt.name }; this._put(R, 'pmsgs', rec); pt.unread = (+pt.unread || 0) + 1; pt.lastMsgAt = rec.at; this._notify(l.orgId, 'Message from ' + pt.name, rec.text || 'Photo / voice'); persist(); return rec; },
     async portalBook(token, p) { const { l, R } = this._pl(token); if (!l.consent) throw new Error('Please give your consent first'); if (!p.date || p.date < todayLocal()) throw new Error('Pick a date within the next 90 days'); const pt = R.patients[l.pid]; const st = R.settings?.main || {}; const mode = ['clinic', 'video', 'whatsapp'].includes(p.mode) ? p.mode : 'clinic'; const rec = { id: uid('ap_'), patientId: l.pid, patientName: pt.name, phone: pt.phone, date: p.date, time: p.time || '', mode, status: 'requested', source: 'patient', reason: p.reason || '', fee: +(mode === 'clinic' ? st.feeClinic : st.feeVideo) || 0, paid: false, created: Date.now() }; this._put(R, 'appts', rec); this._notify(l.orgId, 'Appointment request: ' + pt.name, rec.date + ' ' + rec.time); persist(); return rec; },
     async portalPaid(token, apptId, utr) { const { l, R } = this._pl(token); const a = R.appts?.[apptId]; if (!a || a.patientId !== l.pid) throw new Error('Appointment not found'); a.payClaim = { at: new Date().toISOString().slice(0, 16).replace('T', ' '), utr: utr || '' }; this._notify(l.orgId, 'Fee paid by ' + a.patientName + ' (check UPI)', inr(a.fee)); persist(); },
@@ -426,6 +431,8 @@ const CloudDB = {
   async clinicAlertPatient(orgId, pid, level, text) { return this.rpc('clinic_alert_patient', { p_org: orgId, p_patient: pid, p_level: level, p_text: text }); },
   async clinicCancelAlert(orgId, id) { return this.rpc('clinic_cancel_patient_alert', { p_org: orgId, p_id: id }); },
   async portalAck(token, id) { return this.rpc('patient_ack_alert', { p_token: token, p_id: id }); },
+  async leadKey(orgId, reset) { return this.rpc('lead_key', { p_org: orgId, p_reset: !!reset }); },
+  async leadIntake(key, p) { return this.rpc('lead_intake', { p_key: key, p }); },
   async portalSavePush(token, sub) { return this.rpc('patient_save_push', { p_token: token, p_endpoint: sub.endpoint, p_p256dh: sub.p256dh, p_auth: sub.auth }); },
   async portalBook(token, p) { return this.rpc('patient_book', { p_token: token, p }); },
   async portalPaid(token, apptId, utr) { return this.rpc('patient_paid', { p_token: token, p_appt: apptId, p_utr: utr || '' }); },
@@ -633,7 +640,7 @@ async function boot() {
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   try { const ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   const h = location.hash.replace('#', '');
-  if (h.startsWith('alert-')) { try { history.replaceState(null, '', location.pathname); } catch (e) { } }
+  if (h.startsWith('alert-') || h.startsWith('lead-')) { if (h.startsWith('lead-')) S.pendingLead = h.slice(5); try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   if (h.startsWith('p-')) { try { await A.openPortal(h.slice(2)); return; } catch (e) { S.portal = null; S.portalError = e.message; $('#app').innerHTML = portalErrorScreen(e.message); return; } }
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup-clinic') { S.preKind = 'clinic'; }
@@ -672,6 +679,7 @@ async function openOrg(orgId, override) {
   S.invites = []; S.invitesLoaded = false; S.draft = null; S.dirty = false;
   if (!o.viewAs) LS.set('ep3_lastOrg', orgId);
   S.view = MODULES.find(m => can(m.key))?.key || 'dashboard'; S.params = {};
+  if (S.pendingLead) { S.view = 'lead'; S.params = { id: S.pendingLead }; S.pendingLead = null; }
   initCatering();
   render();
   if (typeof startAlerts === 'function') startAlerts();
@@ -918,6 +926,7 @@ function followDue(e) {
   const last = e.followUpAt || (e.created ? todayLocal(new Date(e.created)) : null); if (!last) return true;
   return daysBetween(last, t) >= 2;
 }
+const EXTRA_ALERTS = []; /* other files add their own reminders (leads, venue) */
 function computeAlerts() {
   if (!S.org) return [];
   if (isClinic()) return typeof clinicAlerts === 'function' ? clinicAlerts() : [];
@@ -931,6 +940,7 @@ function computeAlerts() {
     if (followDue(e) && !(d >= 0 && d <= 5)) out.push({ tag: 'Follow up', tone: 'info', title: `Follow up with ${e.client}`, sub: `${e.stage} · ${e.title}${e.date ? ' · ' + fmtDate(e.date) : ''}`, go: can('marketing') ? `A.go('marketing',{tab:'followup'})` : `A.go('event',{id:'${e.id}'})` });
     if (e.dispatch?.out && !e.dispatch?.returned && eventEnd(e) < t) out.push({ tag: 'Return', tone: 'warn', title: `Material not back from ${e.title}`, sub: `Event ended ${fmtDate(eventEnd(e))}. Mark the return and log damage.`, go: `A.go('event',{id:'${e.id}',tab:'items'})` });
   });
+  EXTRA_ALERTS.forEach(f => { try { out.push(...f()); } catch (e) { } });
   return out;
 }
 

@@ -68,7 +68,9 @@ function simpleHome() {
     can('bookings', 2) && bigBtn('New booking', 'calendar', MOD.bookings.c, 'A.newBooking()', '4 things to fill'),
     can('payments', 2) && bigBtn('Payment received', 'rupee', '#0B9B68', 'A.paymentForm()'),
     can('staff', 2) && bigBtn('Attendance', 'users', MOD.staff.c, "A.go('staff',{tab:'attendance'})"),
-    can('inventory') && bigBtn('Stock', 'box', MOD.inventory.c, "A.go('inventory')"),
+    can('leads', 2) && bigBtn('New lead', 'megaphone', MOD.leads.c, 'A.leadForm()', 'Call, walk-in or ad'),
+    typeof isVenue === 'function' && isVenue() && can('venue') && bigBtn('Rooms & guests', 'bed', MOD.venue.c, "A.go('venue')"),
+    can('inventory') && !(typeof isVenue === 'function' && isVenue()) && bigBtn('Stock', 'box', MOD.inventory.c, "A.go('inventory')"),
     can('invoices', 2) && bigBtn('Bill / quotation', 'receipt', MOD.invoices.c, 'A.newInvoice()'),
     can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()')].filter(Boolean);
   return `${pushCard()}${whatsNewCard()}
@@ -103,7 +105,7 @@ function crewHome() {
     <div class="pct-btns">${[25, 50, 75].map(v => `<button class="${x.progress >= v ? 'on' : ''}" onclick="A.crewProg('${x.id}',${v})">${v}%</button>`).join('')}<button class="done ${x.progress >= 100 ? 'on' : ''}" onclick="A.crewProg('${x.id}',100)">${ic('check')} Done</button></div></div>`; }).join('')}</div>`
     : `<div class="card">${empty('No work given to you', 'When the owner gives you setup work, it shows here.', '', 'pulse', MOD.tasks.c)}</div>`}
   ${evs.length ? `<div class="sec-h"><h2>Today’s events</h2></div><div class="card"><div class="rows">${evs.map(e => `<div class="row">${datebox(e.date, evStyle(e)[1])}<div class="main-col"><b>${esc(e.title)}</b><div class="sub">${esc(e.venue || '')}${e.time ? ' · ' + esc(e.time) : ''}</div></div>${e.venue ? `<a class="btn sm" target="_blank" rel="noopener" href="https://maps.google.com/?q=${encodeURIComponent(e.venue)}">${ic('pin')} Map</a>` : ''}</div>`).join('')}</div></div>` : ''}
-  <div class="big-grid two" style="margin-top:14px">${canSendAlert() ? bigBtn('Alert the owner', 'bell', '#E11D74', `A.alertForm('${owner?.userId || ''}')`) : ''}${st.phone ? `<a class="big-btn" style="--c:#0B9B68" href="tel:${esc(String(st.phone).replace(/\s/g, ''))}">${ibox('phone', '#0B9B68', 'lg')}<b>Call the owner</b></a>` : ''}</div>`;
+  <div class="big-grid two" style="margin-top:14px">${canSendAlert() ? bigBtn('Alert my seniors', 'bell', '#E11D74', `A.alertForm('@seniors')`) : ''}${st.phone ? `<a class="big-btn" style="--c:#0B9B68" href="tel:${esc(String(st.phone).replace(/\s/g, ''))}">${ibox('phone', '#0B9B68', 'lg')}<b>Call the owner</b></a>` : ''}</div>`;
 }
 A.iReached = async () => {
   try {

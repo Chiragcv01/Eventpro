@@ -141,7 +141,7 @@ A.deleteEvent = id => { const e = evById(id); confirmBox('Delete booking?', `${e
 /* ================= Event hub ================= */
 V.event = () => {
   const e = evById(S.params.id); if (!e) return empty('Booking not found', 'It may have been deleted.', `<button class="btn" onclick="A.go('bookings')">Back to bookings</button>`);
-  const tabs = [['overview', 'Overview', true], ['items', 'Items & dispatch', can('inventory')], ['menu', 'Menu', can('catering')], ['schedule', 'Run-sheet', true], ['tasks', 'Tasks', can('tasks')], ['money', 'Money', can('invoices') || can('payments') || can('expenses')], ['guest', 'Client link', can('bookings', 2)]].filter(x => x[2]);
+  const tabs = [['overview', 'Overview', true], ['venue', 'Venue plan', typeof isVenue === 'function' && isVenue()], ['items', 'Items & dispatch', can('inventory')], ['menu', 'Menu', can('catering')], ['schedule', 'Run-sheet', true], ['tasks', 'Tasks', can('tasks')], ['money', 'Money', can('invoices') || can('payments') || can('expenses')], ['guest', 'Client link', can('bookings', 2)]].filter(x => x[2]);
   const tab = tabs.find(x => x[0] === S.params.tab) ? S.params.tab : 'overview';
   const si = STAGES.indexOf(e.stage); const edit = can('bookings', 2);
   const [ei, ec] = evStyle(e);

@@ -718,6 +718,43 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .alert-scrim.amber .alert-ring{background:#FEF0C7;color:#B54708}
 .read-result.emg .sheet-h h3{color:#B42318}.read-result.warn .sheet-h h3{color:#B54708}
 
+/* leads & venue (19 Oct 2026) */
+.src-pill{display:inline-flex;align-items:center;font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:99px;color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff)}
+.lead-today .msg-preview{margin:8px 0;padding:10px 12px;border-radius:12px;background:var(--surface2);font-size:14px;line-height:1.45;white-space:pre-wrap;max-height:120px;overflow:hidden}
+.lead-today.late{border-color:#FECDCA}
+.bad-t{color:var(--bad);font-weight:700}
+.msg-card{display:flex;flex-direction:column;gap:6px;padding-top:6px;border-top:1px solid var(--line)}.msg-card:first-child{border-top:0}
+.msg-edit{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:15px/1.5 var(--f-body);resize:vertical;background:var(--surface2)}
+.timeline-s{display:flex;flex-direction:column;gap:12px;padding:0 16px 16px}.tl-row{display:flex;gap:10px;align-items:flex-start}.tl-row .main-col{min-width:0}
+.lead-steps .step{font-size:12px}
+.link-box{overflow-wrap:anywhere;background:var(--surface2);padding:10px 12px;border-radius:12px}
+.code-box{background:#0E1A33;color:#E6ECF7;border-radius:12px;padding:12px;font:12px/1.45 ui-monospace,Menlo,Consolas,monospace;overflow:auto;max-height:220px;white-space:pre;margin:0 0 10px}
+.dlegend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin-bottom:8px}.dlegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.dlegend i.b,.dt.b,.slot.b{background:#0B9B68}.dlegend i.q,.dt.q,.slot.q{background:#F59E0B}.dlegend i.e,.dt.e{background:#7C3AED}.dlegend i.f{background:var(--surface2);border:1px solid var(--line)}
+.dcal{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)}
+.dcal .dh{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:var(--surface2);font-size:12px;font-weight:700;color:var(--muted);text-align:center;padding:6px 0}
+.dgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.dc{min-height:74px;border:0;border-top:1px solid var(--line);border-left:1px solid var(--line);background:none;padding:4px;display:flex;flex-direction:column;gap:2px;align-items:stretch;text-align:left;cursor:pointer;font:inherit;min-width:0}
+.dc:nth-child(7n+1){border-left:0}.dc.empty{cursor:default}.dc.past{opacity:.5}.dc.today .dn{background:var(--brand);color:#fff;border-radius:99px;padding:0 6px}
+.dc .dn{font-weight:800;font-size:13px;align-self:flex-start}
+.dts{display:flex;flex-wrap:wrap;gap:3px}.dt{color:#fff;font-size:11px;font-weight:800;border-radius:6px;min-width:18px;height:18px;padding:0 4px;display:inline-grid;place-items:center}
+.dc.is-booked{background:color-mix(in srgb,#0B9B68 7%,transparent)}
+.funnel{display:flex;flex-direction:column;gap:8px;padding:0 16px 16px}.fr{display:grid;grid-template-columns:110px 1fr 40px 40px;gap:8px;align-items:center;font-size:13.5px}
+.fb{height:12px;border-radius:99px;background:var(--surface2);overflow:hidden}.fb i{display:block;height:100%;border-radius:99px}
+.hall-chips{display:flex;flex-wrap:wrap;gap:8px}
+.hall-chip{border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:8px 12px;font:600 14px var(--f-body);color:var(--ink2);display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.hall-chip.on{background:#ECFDF5;border-color:#6EE7B7;color:#065F46}.hall-chip.busy{border-style:dashed;border-color:#FDBA74}.hall-chip.busy.on{background:#FFF7ED;color:#9A3412}
+span.hall-chip{cursor:default}
+.tbl.avail th.c,.tbl.avail td.c{text-align:center;padding:6px 4px;min-width:34px}
+.slot{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;border:0;color:#fff;font-weight:800;font-size:11px;cursor:pointer}.slot.f{background:var(--surface2);border:1px solid var(--line);cursor:default}
+.room-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.room-tile{border:2px solid var(--c);background:color-mix(in srgb,var(--c) 8%,#fff);border-radius:14px;padding:10px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;cursor:pointer;font:inherit;text-align:left;min-width:0}
+.room-tile b{font:800 20px var(--f-display);color:var(--ink)}.room-tile span{font-size:11.5px;color:var(--muted)}.room-tile .rs{color:var(--c);font-weight:800}.room-tile .rg{color:var(--ink2);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.hosp-area{border-top:1px solid var(--line);padding:10px 16px}
+.hosp-area>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:6px}.hosp-area>summary::-webkit-details-marker{display:none}
+.hosp-area[open]>summary .go{transform:rotate(90deg)}
+.hosp-pick{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+
 </style>
 </head>
 <body>
@@ -3010,7 +3047,7 @@ const MARK_SVG = '<svg class="ico mark" viewBox="0 0 24 24" aria-hidden="true"><
 const ic = (n, cls = '') => `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n] || ''}"/></svg>`;
 
 /* ================= Domain constants ================= */
-const BIZ_TYPES = [['tent', 'Tent House'], ['caterer', 'Caterer / Halwai'], ['event', 'Event Manager / Planner']];
+const BIZ_TYPES = [['tent', 'Tent House'], ['caterer', 'Caterer / Halwai'], ['event', 'Event Manager / Planner'], ['venue', 'Venue / Banquet / Resort']];
 /* 'event' businesses (tent / caterer / event manager) and 'clinic' (doctor) get different sections.
    A module without `kinds` is for event businesses only. */
 const MODULES = [
@@ -3019,9 +3056,11 @@ const MODULES = [
   { key: 'patients', label: 'Patients', icon: 'heart', group: 'Daily', kinds: ['clinic'] },
   { key: 'medical', label: 'Medical records', icon: 'file', group: 'Daily', kinds: ['clinic'], hidden: true },
   { key: 'bookings', label: 'Bookings', icon: 'calendar', group: 'Daily' },
+  { key: 'leads', label: 'Leads & Sales', short: 'Leads', icon: 'megaphone', group: 'Daily' },
+  { key: 'venue', label: 'Venue & Rooms', short: 'Venue', icon: 'building', group: 'Daily', biz: ['venue'] },
   { key: 'tasks', label: 'Live Tracker', short: 'Live', icon: 'pulse', group: 'Daily' },
-  { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event'] },
-  { key: 'catering', label: 'Catering', icon: 'pot', group: 'Operations', biz: ['caterer', 'event'] },
+  { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event', 'venue'] },
+  { key: 'catering', label: 'Catering', icon: 'pot', group: 'Operations', biz: ['caterer', 'event', 'venue'] },
   { key: 'vendors', label: 'Vendors & POs', icon: 'handshake', group: 'Operations' },
   { key: 'staff', label: 'Staff & Wages', icon: 'users', group: 'Operations' },
   { key: 'tools', label: 'Planner Tools', icon: 'ruler', group: 'Operations', biz: ['tent', 'event'] },
@@ -3034,22 +3073,23 @@ const MODULES = [
   { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business', kinds: ['event', 'clinic'] },
   { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business', kinds: ['event', 'clinic'] }
 ];
-const MOD_COLOR = { appointments: '#7C3AED', patients: '#E11D48', medical: '#0891B2', dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
+const MOD_COLOR = { leads: '#9333EA', venue: '#0F766E', appointments: '#7C3AED', patients: '#E11D48', medical: '#0891B2', dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
 MODULES.forEach(m => { m.c = MOD_COLOR[m.key]; });
 const MOD = Object.fromEntries(MODULES.map(m => [m.key, m]));
 const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C026D3'], 'Sangeet & Mehendi': ['music', '#F59E0B'], 'Ring Ceremony': ['rings', '#8B5CF6'], 'Corporate Event': ['briefcase', '#2563EB'], 'Birthday / Anniversary': ['cake', '#F97316'], 'Religious / Jagran': ['diya', '#EA580C'], 'Exhibition': ['store', '#0891B2'], 'Other': ['calendar', '#64748B'] };
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
+const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
   owner: { label: 'Owner', perms: allPerms(3), locked: true },
-  manager: { label: 'Manager', perms: { dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
-  accountant: { label: 'Accountant', perms: { dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
-  supervisor: { label: 'Site Supervisor', perms: { dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
-  staff: { label: 'Crew / Staff', perms: { dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
+  manager: { label: 'Manager', perms: { leads: 3, venue: 3, dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
+  accountant: { label: 'Accountant', perms: { leads: 1, venue: 1, dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
+  supervisor: { label: 'Site Supervisor', perms: { leads: 0, venue: 2, dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
+  sales: { label: 'Sales Executive', perms: { leads: 2, venue: 1, dashboard: 1, bookings: 2, tasks: 1, inventory: 0, catering: 1, vendors: 0, staff: 0, tools: 0, invoices: 1, payments: 0, expenses: 0, reports: 0, reviews: 1, marketing: 2, team: 0, settings: 0 } },
+  staff: { label: 'Crew / Staff', perms: { leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const CLINIC_ROLES = {
   owner: { label: 'Doctor (Owner)', perms: allPerms(3), locked: true },
@@ -3163,6 +3203,8 @@ const LocalDB = (() => {
     async clinicCancelAlert(orgId, id) { const db = load(); const a = (db.palerts || []).find(x => x.id === id && x.orgId === orgId); if (a && !a.cancelledAt) { a.cancelledAt = new Date().toISOString(); const pt = db.records[orgId]?.patients?.[a.pid]; if (pt?.flag?.id === id) pt.flag.cancelledAt = a.cancelledAt.slice(0, 16); persist(); } },
     async portalAck(token, id) { const { l, R } = this._pl(token); const db = load(); const a = (db.palerts || []).find(x => x.id === id && x.orgId === l.orgId && x.pid === l.pid && !x.seenAt && !x.cancelledAt); if (!a) return; const now = new Date(); a.seenAt = todayLocal(now) + 'T' + now.toTimeString().slice(0, 5); const pt = R.patients[l.pid]; if (pt?.flag?.id === id) pt.flag.seenAt = a.seenAt; this._notify(l.orgId, (pt?.name || 'Patient') + ' has seen your alert', a.text.slice(0, 120)); persist(); },
     async portalSavePush() { },
+    async leadKey(orgId, reset) { const db = load(); db.leadKeys = db.leadKeys || {}; if (reset || !db.leadKeys[orgId]) db.leadKeys[orgId] = guestToken() + guestToken(); persist(); return db.leadKeys[orgId]; },
+    async leadIntake(key, p) { const db = load(); const orgId = Object.keys(db.leadKeys || {}).find(o => db.leadKeys[o] === key); if (!orgId) throw new Error('This lead link is not active'); const now = new Date(); const at = todayLocal(now) + 'T' + now.toTimeString().slice(0, 5); const R = db.records[orgId] = db.records[orgId] || {}; const rec = { id: uid('ld_'), created: Date.now(), createdAt: at, status: 'New', via: 'link', ...p, log: [{ at, type: 'lead', by: 'Lead link', text: p.message || '' }] }; (R.leads = R.leads || {})[rec.id] = rec; this._notify(orgId, 'New lead: ' + (p.name || p.phone), p.source || '', 'lead', { to_role: 'sales', event_id: 'ld:' + rec.id }); persist(); if (S.org?.orgId === orgId) S.data.leads = [...col('leads'), rec]; return { ok: true, id: rec.id }; },
     async portalMessage(token, p) { const { l, R } = this._pl(token); if (!l.consent) throw new Error('Please give your consent first'); const now = new Date(); if (!(p.text || '').trim() && !(p.files || []).length) throw new Error('Write something, or add a photo or voice note'); const pt = R.patients[l.pid]; const rec = { id: uid('pm_'), patientId: l.pid, from: 'patient', at: todayLocal(now) + 'T' + now.toTimeString().slice(0, 5), text: (p.text || '').trim(), files: p.files || [], by: pt.name }; this._put(R, 'pmsgs', rec); pt.unread = (+pt.unread || 0) + 1; pt.lastMsgAt = rec.at; this._notify(l.orgId, 'Message from ' + pt.name, rec.text || 'Photo / voice'); persist(); return rec; },
     async portalBook(token, p) { const { l, R } = this._pl(token); if (!l.consent) throw new Error('Please give your consent first'); if (!p.date || p.date < todayLocal()) throw new Error('Pick a date within the next 90 days'); const pt = R.patients[l.pid]; const st = R.settings?.main || {}; const mode = ['clinic', 'video', 'whatsapp'].includes(p.mode) ? p.mode : 'clinic'; const rec = { id: uid('ap_'), patientId: l.pid, patientName: pt.name, phone: pt.phone, date: p.date, time: p.time || '', mode, status: 'requested', source: 'patient', reason: p.reason || '', fee: +(mode === 'clinic' ? st.feeClinic : st.feeVideo) || 0, paid: false, created: Date.now() }; this._put(R, 'appts', rec); this._notify(l.orgId, 'Appointment request: ' + pt.name, rec.date + ' ' + rec.time); persist(); return rec; },
     async portalPaid(token, apptId, utr) { const { l, R } = this._pl(token); const a = R.appts?.[apptId]; if (!a || a.patientId !== l.pid) throw new Error('Appointment not found'); a.payClaim = { at: new Date().toISOString().slice(0, 16).replace('T', ' '), utr: utr || '' }; this._notify(l.orgId, 'Fee paid by ' + a.patientName + ' (check UPI)', inr(a.fee)); persist(); },
@@ -3335,6 +3377,8 @@ const CloudDB = {
   async clinicAlertPatient(orgId, pid, level, text) { return this.rpc('clinic_alert_patient', { p_org: orgId, p_patient: pid, p_level: level, p_text: text }); },
   async clinicCancelAlert(orgId, id) { return this.rpc('clinic_cancel_patient_alert', { p_org: orgId, p_id: id }); },
   async portalAck(token, id) { return this.rpc('patient_ack_alert', { p_token: token, p_id: id }); },
+  async leadKey(orgId, reset) { return this.rpc('lead_key', { p_org: orgId, p_reset: !!reset }); },
+  async leadIntake(key, p) { return this.rpc('lead_intake', { p_key: key, p }); },
   async portalSavePush(token, sub) { return this.rpc('patient_save_push', { p_token: token, p_endpoint: sub.endpoint, p_p256dh: sub.p256dh, p_auth: sub.auth }); },
   async portalBook(token, p) { return this.rpc('patient_book', { p_token: token, p }); },
   async portalPaid(token, apptId, utr) { return this.rpc('patient_paid', { p_token: token, p_appt: apptId, p_utr: utr || '' }); },
@@ -3542,7 +3586,7 @@ async function boot() {
   try { S.platform = await S.adapter.getPlatform(); } catch (e) { S.platform = { ...DEFAULT_PLATFORM }; }
   try { const ref = new URLSearchParams(location.search).get('ref'); if (ref && /^[a-z0-9]{6,12}$/i.test(ref)) localStorage.setItem('ep_ref', ref.toLowerCase()); } catch (e) { }
   const h = location.hash.replace('#', '');
-  if (h.startsWith('alert-')) { try { history.replaceState(null, '', location.pathname); } catch (e) { } }
+  if (h.startsWith('alert-') || h.startsWith('lead-')) { if (h.startsWith('lead-')) S.pendingLead = h.slice(5); try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   if (h.startsWith('p-')) { try { await A.openPortal(h.slice(2)); return; } catch (e) { S.portal = null; S.portalError = e.message; $('#app').innerHTML = portalErrorScreen(e.message); return; } }
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup-clinic') { S.preKind = 'clinic'; }
@@ -3581,6 +3625,7 @@ async function openOrg(orgId, override) {
   S.invites = []; S.invitesLoaded = false; S.draft = null; S.dirty = false;
   if (!o.viewAs) LS.set('ep3_lastOrg', orgId);
   S.view = MODULES.find(m => can(m.key))?.key || 'dashboard'; S.params = {};
+  if (S.pendingLead) { S.view = 'lead'; S.params = { id: S.pendingLead }; S.pendingLead = null; }
   initCatering();
   render();
   if (typeof startAlerts === 'function') startAlerts();
@@ -3827,6 +3872,7 @@ function followDue(e) {
   const last = e.followUpAt || (e.created ? todayLocal(new Date(e.created)) : null); if (!last) return true;
   return daysBetween(last, t) >= 2;
 }
+const EXTRA_ALERTS = []; /* other files add their own reminders (leads, venue) */
 function computeAlerts() {
   if (!S.org) return [];
   if (isClinic()) return typeof clinicAlerts === 'function' ? clinicAlerts() : [];
@@ -3840,6 +3886,7 @@ function computeAlerts() {
     if (followDue(e) && !(d >= 0 && d <= 5)) out.push({ tag: 'Follow up', tone: 'info', title: `Follow up with ${e.client}`, sub: `${e.stage} · ${e.title}${e.date ? ' · ' + fmtDate(e.date) : ''}`, go: can('marketing') ? `A.go('marketing',{tab:'followup'})` : `A.go('event',{id:'${e.id}'})` });
     if (e.dispatch?.out && !e.dispatch?.returned && eventEnd(e) < t) out.push({ tag: 'Return', tone: 'warn', title: `Material not back from ${e.title}`, sub: `Event ended ${fmtDate(eventEnd(e))}. Mark the return and log damage.`, go: `A.go('event',{id:'${e.id}',tab:'items'})` });
   });
+  EXTRA_ALERTS.forEach(f => { try { out.push(...f()); } catch (e) { } });
   return out;
 }
 
@@ -3904,13 +3951,18 @@ const AlertsDB = {
   }
 };
 /* clinic alerts come from the patient link (kinds patient / reading / emergency); to_role limits who gets them */
-const FROM_PATIENT = ['patient', 'reading', 'emergency'];
-const roleOK = a => !a.to_role || (a.to_role === 'doctors' ? ['owner', 'manager'] : ['owner', 'manager', 'supervisor']).includes(S.role || S.me?.role || 'owner');
+const FROM_PATIENT = ['patient', 'reading', 'emergency', 'lead'];
+const ROLE_GROUPS = { doctors: ['owner', 'manager'], managers: ['owner', 'manager', 'supervisor'], sales: ['owner', 'manager', 'sales'] };
+const roleOK = a => !a.to_role || (ROLE_GROUPS[a.to_role] || ROLE_GROUPS.managers).includes(S.role || S.me?.role || 'owner');
 const forMe = a => (FROM_PATIENT.includes(a.kind) || a.from_user !== S.user?.id) && (!a.to_user || a.to_user === S.user?.id) && roleOK(a);
 const isRing = a => ['alert', 'emergency'].includes(a.kind || 'alert');
 /* an emergency stops ringing for everybody as soon as one person taps Seen */
 const seenByMe = a => a.kind === 'emergency' ? Object.keys(a.acks || {}).length > 0 : !!(a.acks || {})[S.user?.id];
-const canSendAlert = () => S.adapter?.mode === 'cloud' ? lvl('tasks') >= 2 : !!S.org && lvl('tasks') >= 2;
+/* everyone can alert their seniors; tasks Edit or more can alert anyone */
+const canSendAlert = () => !!S.org && !['expired', 'suspended'].includes(orgState(S.org));
+const canAlertAll = () => !!S.org && lvl('tasks') >= 2;
+const isSenior = m => ROLE_GROUPS.managers.includes(m.role);
+const quickAlerts = () => (typeof isVenue === 'function' && isVenue() ? VENUE_ALERTS : QUICK_ALERTS);
 
 /* ---------- live updates ---------- */
 let alertChan = null;
@@ -3977,15 +4029,16 @@ A.ackAlert = async (id, evId) => {
 /* ---------- send ---------- */
 A.alertForm = (toUser) => {
   if (!canSendAlert()) { toast('Your role cannot send alerts. Ask the owner.', 'bad'); return; }
-  const people = S.members.filter(m => m.userId && m.userId !== S.user.id);
+  const all = canAlertAll(); const people = S.members.filter(m => m.userId && m.userId !== S.user.id && (all || isSenior(m)));
+  if (!toUser && !all) toUser = '@seniors';
   const evs = col('events').filter(e => !['Cancelled', 'Closed', 'Completed'].includes(e.stage) && eventEnd(e) >= addDays(todayLocal(), -1)).sort(by('date'));
   modal(`<form class="form" onsubmit="A.sendAlert(event)" novalidate>${sheetHead('Send alert', 'Rings on their phone with the alert tune')}<div class="sheet-b stack">
     ${people.length ? '' : `<div class="banner warn">${ic('alert')}<span>Nobody else has an app login yet. Add your team in Team & access so they get alerts.</span></div>`}
-    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [['', `Everyone (${people.length})`], ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
-    <div class="field"><span>Quick message</span><div class="chips">${QUICK_ALERTS.map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
+    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [...(all ? [['', `Everyone (${people.length})`]] : []), ['@seniors', 'My seniors (owner, managers, supervisors)'], ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
+    <div class="field"><span>Quick message</span><div class="chips">${quickAlerts().map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
     ${fieldHTML({ name: 'title', label: 'Alert', required: true, maxlength: 140, placeholder: 'e.g. Come to the godown now' })}
     ${fieldHTML({ name: 'body', label: 'Details (optional)', type: 'textarea', maxlength: 600 })}
-    ${evs.length ? fieldHTML({ name: 'event', label: 'About booking (optional)', type: 'select', options: [['', '—'], ...evs.map(e => [e.id, `${e.title} (${fmtShort(e.date)})`])] }) : ''}
+    ${evs.length && can('bookings') ? fieldHTML({ name: 'event', label: 'About booking (optional)', type: 'select', options: [['', '—'], ...evs.map(e => [e.id, `${e.title} (${fmtShort(e.date)})`])] }) : ''}
     <label class="check urgent-check"><input type="checkbox" name="urgent" checked> <span><b>Urgent</b>: keeps ringing until they tap “Seen”</span></label>
     <p class="tiny muted">Crew without the app? Use the WhatsApp button on their card in Staff.</p>
   </div><footer class="sheet-f"><span class="grow"></span><button type="button" class="btn ghost" onclick="A.closeModal()">Cancel</button><button class="btn primary" type="submit">${ic('send')} Send alert</button></footer></form>`);
@@ -3993,8 +4046,9 @@ A.alertForm = (toUser) => {
 A.sendAlert = e => {
   e.preventDefault(); const v = readForm(e.target); if (!(v.title || '').trim()) { toast('Write the alert', 'bad'); return; }
   withBtn(e, async () => {
-    const to = S.members.find(m => m.userId === v.to);
-    const rec = { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, to_user: v.to || null, to_name: to ? to.name : null, from_name: S.me?.name || S.user.name, event_id: v.event || null };
+    const seniors = v.to === '@seniors'; const to = S.members.find(m => m.userId === v.to);
+    if (!seniors && !canAlertAll() && !(to && isSenior(to))) throw new Error('You can send alerts to your seniors');
+    const rec = { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, to_user: seniors ? null : v.to || null, to_name: seniors ? 'Seniors' : to ? to.name : null, from_name: S.me?.name || S.user.name, event_id: v.event || null, ...(seniors ? { to_role: 'managers' } : {}) };
     const a = await AlertsDB.send(rec); S.teamAlerts = [a, ...(S.teamAlerts || []).filter(x => x.id !== a.id)];
     const r = await AlertsDB.push(a.id); A.closeModal(); logAct(`Sent alert: ${rec.title}`);
     toast(r.sent ? `Alert sent. Ringing on ${r.sent} phone${r.sent > 1 ? 's' : ''}.` : 'Alert sent. They will see it when the app is open (phone notifications are not turned on for them yet).');
@@ -4358,7 +4412,7 @@ V.auth = () => {
       <button type="button" class="linkbtn" style="align-self:center" onclick="A.forgotModal()">Forgot password?</button></form>`,
     signup: `<form class="stack" onsubmit="A.doSignup(event)">
       <div class="grid2" style="padding:0">${fieldHTML({ name: 'name', label: 'Your name', required: true, autocomplete: 'name' })}${fieldHTML({ name: 'phone', label: 'Mobile', type: 'tel', required: true, placeholder: '98290 12345', autocomplete: 'tel' })}</div>
-      <div class="field"><span>What is your business? *</span><div class="kind-cards">${types}</div><small>Tent, catering and event: pick all that apply. Doctors: pick Doctor / Clinic.</small></div>
+      <div class="field"><span>What is your business? *</span><div class="kind-cards">${types}</div><small>Tent, catering, event and venue: pick all that apply. Doctors: pick Doctor / Clinic.</small></div>
       <label class="field"><span id="bizNameLabel">Business name *</span><input id="f_bizName" name="bizName" required placeholder="e.g. Sharma Enterprises"></label>
       <div id="docFields" class="doc-fields" hidden>${doctorFieldsHTML({})}</div>
       ${fieldHTML({ name: 'email', label: 'Your login ID: email or mobile number', required: true, autocomplete: 'username', hint: 'You will use this to log in every time' })}
@@ -4532,7 +4586,7 @@ A.resetMfa = (userId, orgId, name) => confirmBox('Reset authenticator?', `${name
 
 /* ---------- business type + doctor verification ---------- */
 const KIND_CARDS = [['tent', 'Tent House', 'Stock, bookings, crew', 'tent', '#2563EB'], ['caterer', 'Caterer / Halwai', 'Menu, ration, plates', 'pot', '#16A34A'],
-  ['event', 'Event Manager', 'Planning, vendors, setup', 'sparkle', '#DB2777'], ['clinic', 'Doctor / Clinic', 'Patients, reports, appointments', 'steth', '#E11D48']];
+  ['event', 'Event Manager', 'Planning, vendors, setup', 'sparkle', '#DB2777'], ['venue', 'Venue / Banquet / Resort', 'Halls, rooms, guests, hospitality', 'building', '#0F766E'], ['clinic', 'Doctor / Clinic', 'Patients, reports, appointments', 'steth', '#E11D48']];
 const COUNCILS = ['National Medical Commission (NMC)', 'Rajasthan Medical Council', 'Delhi Medical Council', 'Maharashtra Medical Council', 'Gujarat Medical Council', 'Uttar Pradesh Medical Council', 'Madhya Pradesh Medical Council', 'Haryana Medical Council', 'Punjab Medical Council', 'Bihar Medical Council', 'West Bengal Medical Council', 'Karnataka Medical Council', 'Tamil Nadu Medical Council', 'Telangana State Medical Council', 'Andhra Pradesh Medical Council', 'Kerala (TCMC)', 'Dental Council (State / DCI)', 'AYUSH / Ayurveda / Homoeopathy Board', 'Physiotherapy Council', 'Other state council'];
 const SPECIALITIES = ['General Physician', 'Diabetologist', 'Cardiologist', 'Physiotherapist', 'Paediatrician', 'Gynaecologist', 'Dermatologist', 'Orthopaedic', 'ENT', 'Eye specialist', 'Dentist', 'Psychiatrist', 'Dietitian', 'Ayurveda', 'Homoeopathy', 'Other'];
 function doctorFieldsHTML(v) {
@@ -4749,7 +4803,7 @@ A.deleteEvent = id => { const e = evById(id); confirmBox('Delete booking?', `${e
 /* ================= Event hub ================= */
 V.event = () => {
   const e = evById(S.params.id); if (!e) return empty('Booking not found', 'It may have been deleted.', `<button class="btn" onclick="A.go('bookings')">Back to bookings</button>`);
-  const tabs = [['overview', 'Overview', true], ['items', 'Items & dispatch', can('inventory')], ['menu', 'Menu', can('catering')], ['schedule', 'Run-sheet', true], ['tasks', 'Tasks', can('tasks')], ['money', 'Money', can('invoices') || can('payments') || can('expenses')], ['guest', 'Client link', can('bookings', 2)]].filter(x => x[2]);
+  const tabs = [['overview', 'Overview', true], ['venue', 'Venue plan', typeof isVenue === 'function' && isVenue()], ['items', 'Items & dispatch', can('inventory')], ['menu', 'Menu', can('catering')], ['schedule', 'Run-sheet', true], ['tasks', 'Tasks', can('tasks')], ['money', 'Money', can('invoices') || can('payments') || can('expenses')], ['guest', 'Client link', can('bookings', 2)]].filter(x => x[2]);
   const tab = tabs.find(x => x[0] === S.params.tab) ? S.params.tab : 'overview';
   const si = STAGES.indexOf(e.stage); const edit = can('bookings', 2);
   const [ei, ec] = evStyle(e);
@@ -6501,7 +6555,9 @@ function simpleHome() {
     can('bookings', 2) && bigBtn('New booking', 'calendar', MOD.bookings.c, 'A.newBooking()', '4 things to fill'),
     can('payments', 2) && bigBtn('Payment received', 'rupee', '#0B9B68', 'A.paymentForm()'),
     can('staff', 2) && bigBtn('Attendance', 'users', MOD.staff.c, "A.go('staff',{tab:'attendance'})"),
-    can('inventory') && bigBtn('Stock', 'box', MOD.inventory.c, "A.go('inventory')"),
+    can('leads', 2) && bigBtn('New lead', 'megaphone', MOD.leads.c, 'A.leadForm()', 'Call, walk-in or ad'),
+    typeof isVenue === 'function' && isVenue() && can('venue') && bigBtn('Rooms & guests', 'bed', MOD.venue.c, "A.go('venue')"),
+    can('inventory') && !(typeof isVenue === 'function' && isVenue()) && bigBtn('Stock', 'box', MOD.inventory.c, "A.go('inventory')"),
     can('invoices', 2) && bigBtn('Bill / quotation', 'receipt', MOD.invoices.c, 'A.newInvoice()'),
     can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()')].filter(Boolean);
   return `${pushCard()}${whatsNewCard()}
@@ -6536,7 +6592,7 @@ function crewHome() {
     <div class="pct-btns">${[25, 50, 75].map(v => `<button class="${x.progress >= v ? 'on' : ''}" onclick="A.crewProg('${x.id}',${v})">${v}%</button>`).join('')}<button class="done ${x.progress >= 100 ? 'on' : ''}" onclick="A.crewProg('${x.id}',100)">${ic('check')} Done</button></div></div>`; }).join('')}</div>`
     : `<div class="card">${empty('No work given to you', 'When the owner gives you setup work, it shows here.', '', 'pulse', MOD.tasks.c)}</div>`}
   ${evs.length ? `<div class="sec-h"><h2>Today’s events</h2></div><div class="card"><div class="rows">${evs.map(e => `<div class="row">${datebox(e.date, evStyle(e)[1])}<div class="main-col"><b>${esc(e.title)}</b><div class="sub">${esc(e.venue || '')}${e.time ? ' · ' + esc(e.time) : ''}</div></div>${e.venue ? `<a class="btn sm" target="_blank" rel="noopener" href="https://maps.google.com/?q=${encodeURIComponent(e.venue)}">${ic('pin')} Map</a>` : ''}</div>`).join('')}</div></div>` : ''}
-  <div class="big-grid two" style="margin-top:14px">${canSendAlert() ? bigBtn('Alert the owner', 'bell', '#E11D74', `A.alertForm('${owner?.userId || ''}')`) : ''}${st.phone ? `<a class="big-btn" style="--c:#0B9B68" href="tel:${esc(String(st.phone).replace(/\s/g, ''))}">${ibox('phone', '#0B9B68', 'lg')}<b>Call the owner</b></a>` : ''}</div>`;
+  <div class="big-grid two" style="margin-top:14px">${canSendAlert() ? bigBtn('Alert my seniors', 'bell', '#E11D74', `A.alertForm('@seniors')`) : ''}${st.phone ? `<a class="big-btn" style="--c:#0B9B68" href="tel:${esc(String(st.phone).replace(/\s/g, ''))}">${ibox('phone', '#0B9B68', 'lg')}<b>Call the owner</b></a>` : ''}</div>`;
 }
 A.iReached = async () => {
   try {
@@ -6657,6 +6713,758 @@ function whatsNewCard() {
     <ul>${WHATS_NEW.map(([i, t]) => `<li>${ic(i)}<span>${t}</span></li>`).join('')}</ul>
     <div class="row-flex">${!inAndroidApp() ? `<a class="btn sm primary" href="${APP_DL}" target="_blank" rel="noopener">${ic('download')} Get the Android app</a>` : ''}${can('team', 2) ? `<button class="btn sm wa" onclick="A.shareAppLink()">${ic('wa')} Send app to team</button>` : ''}</div></div>`;
 }
+
+/* ================= Leads & sales (all event businesses: venue, tent, caterer, planner) =================
+   Collection `leads` (module 'leads'). A lead comes from the business's own lead link (Meta lead ads through
+   Make / Zapier / Pabbly, Google Forms through a small Apps Script, the website, any form), from an Ads Manager
+   CSV, or is typed by a sales executive. Every call / WhatsApp / visit is logged with the client's reply in
+   short; the app suggests the next follow-up message for that client and shows which dates are booked,
+   which have quotations running and which leads convert. */
+
+const LEAD_ST = ['New', 'Contacted', 'Site visit', 'Quoted', 'Negotiation', 'Won', 'Lost'];
+const LEAD_OPEN = ['New', 'Contacted', 'Site visit', 'Quoted', 'Negotiation'];
+const LEAD_TONE = { New: 'info', Contacted: '', 'Site visit': 'accent', Quoted: 'primary', Negotiation: 'warn', Won: 'good', Lost: 'bad' };
+const LEAD_SRC = ['Meta / Facebook', 'Instagram', 'Google Form', 'Website', 'Google Ads', 'Phone call', 'WhatsApp', 'Walk-in', 'Referral', 'Wedding portal', 'Other'];
+const SRC_COLOR = { 'Meta / Facebook': '#1877F2', Instagram: '#D6249F', 'Google Form': '#7248B9', Website: '#0F766E', 'Google Ads': '#EA4335', 'Phone call': '#0B9B68', WhatsApp: '#16A34A', 'Walk-in': '#D97706', Referral: '#DB2777', 'Wedding portal': '#9333EA', Other: '#64748B' };
+const OUTCOMES = [['interested', 'Interested', 'Contacted', 2], ['no_answer', 'Did not pick up', '', 0.17], ['call_later', 'Asked to call later', 'Contacted', 1],
+  ['wants_quote', 'Wants a quotation', 'Quoted', 1], ['visit_planned', 'Site visit fixed', 'Site visit', 0], ['budget', 'Budget is a problem', 'Negotiation', 2],
+  ['comparing', 'Comparing other options', 'Negotiation', 2], ['date_issue', 'Date not free / date changed', 'Contacted', 1],
+  ['confirmed', 'Ready to book', 'Won', 0], ['booked_else', 'Booked somewhere else', 'Lost', 0], ['not_interested', 'Not interested', 'Lost', 0]];
+const OUT = Object.fromEntries(OUTCOMES.map(o => [o[0], o]));
+const LOST_REASONS = ['Budget', 'Booked elsewhere', 'Date not available', 'No response', 'Plan cancelled', 'Other'];
+const LOG_ICON = { call: ['phone', '#0B9B68'], whatsapp: ['wa', '#16A34A'], visit: ['pin', '#D97706'], quote: ['receipt', '#2563EB'], note: ['edit', '#64748B'], lead: ['sparkle', '#7C3AED'], status: ['check', '#0F766E'] };
+
+/* ---------- reading a lead from any form (same rules as api/lead.js on the server) ---------- */
+const LEAD_KEYS = {
+  name: ['fullname', 'name', 'yourname', 'clientname', 'customername', 'naam', 'firstname'], last: ['lastname', 'surname'],
+  phone: ['phonenumber', 'phone', 'mobile', 'mobilenumber', 'mobileno', 'contactnumber', 'contactno', 'whatsappnumber', 'whatsapp', 'phoneno', 'contact'],
+  email: ['email', 'emailaddress', 'emailid', 'mail'],
+  eventDate: ['eventdate', 'weddingdate', 'functiondate', 'dateofevent', 'dateoffunction', 'preferreddate', 'bookingdate', 'date'],
+  guests: ['guests', 'guestcount', 'noofguests', 'numberofguests', 'pax', 'expectedguests', 'headcount', 'guest'],
+  eventType: ['eventtype', 'typeofevent', 'occasion', 'functiontype', 'event', 'function'],
+  budget: ['budget', 'yourbudget', 'approxbudget', 'budgetrange'], city: ['city', 'location', 'yourcity', 'venuecity'],
+  message: ['message', 'comments', 'comment', 'requirement', 'requirements', 'details', 'anymessage', 'query', 'notes', 'yourmessage'],
+  source: ['source', 'platform', 'leadsource'], campaign: ['campaignname', 'campaign', 'adname', 'adsetname'], form: ['formname', 'form'],
+  extId: ['leadgenid', 'leadid', 'id'], createdTime: ['createdtime', 'timestamp', 'submittedat']
+};
+const LEAD_FUZZY = { phone: /phone|mobile|whatsapp|contact/, name: /name/, eventDate: /date|when|tarikh/, guests: /guest|pax/, email: /mail/, eventType: /event|occasion|function/ };
+const nkey = k => String(k).toLowerCase().replace(/[^a-z0-9]/g, '');
+function flattenLead(b) {
+  const o = {}; if (!b || typeof b !== 'object') return o;
+  if (Array.isArray(b.field_data)) b.field_data.forEach(f => { if (f && f.name) o[f.name] = (f.values || [])[0]; });
+  if (b.namedValues && typeof b.namedValues === 'object') Object.entries(b.namedValues).forEach(([k, v]) => { o[k] = Array.isArray(v) ? v.join(', ') : v; });
+  Object.entries(b).forEach(([k, v]) => {
+    if (k === 'field_data' || k === 'namedValues' || k === 'key') return;
+    if (v && typeof v === 'object' && !Array.isArray(v)) Object.entries(v).forEach(([k2, v2]) => { if (v2 == null || typeof v2 !== 'object') o[k2] = v2; });
+    else if (Array.isArray(v)) o[k] = v.filter(x => typeof x !== 'object').join(', '); else o[k] = v;
+  });
+  return o;
+}
+function parseDateAny(v) {
+  const s = String(v || '').trim(); if (!s) return '';
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})/); if (m) { const y = m[3].length === 2 ? '20' + m[3] : m[3]; return `${y}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`; }
+  const t = Date.parse(s); if (!isNaN(t)) { const d = new Date(t); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+  return '';
+}
+function srcName(s, def) {
+  const x = String(s || '').toLowerCase();
+  if (/^(ig|instagram)/.test(x)) return 'Instagram'; if (/^(fb|facebook|meta)/.test(x)) return 'Meta / Facebook'; if (/google\s*form/.test(x)) return 'Google Form';
+  const hit = LEAD_SRC.find(z => z.toLowerCase() === x); return hit || def || 'Other';
+}
+function normLead(raw, defSource) {
+  const o = flattenLead(raw); const out = {}; const used = new Set(); const byNk = {};
+  Object.keys(o).forEach(k => { if (o[k] != null && String(o[k]).trim() !== '' && byNk[nkey(k)] == null) byNk[nkey(k)] = k; });
+  Object.entries(LEAD_KEYS).forEach(([f, keys]) => { for (const kk of keys) { if (byNk[kk] != null && !used.has(byNk[kk])) { out[f] = String(o[byNk[kk]]).trim(); used.add(byNk[kk]); break; } } });
+  Object.entries(LEAD_FUZZY).forEach(([f, re]) => { if (out[f]) return; const k = Object.keys(o).find(x => !used.has(x) && re.test(nkey(x)) && String(o[x] ?? '').trim()); if (k) { out[f] = String(o[k]).trim(); used.add(k); } });
+  if (out.last) { out.name = [out.name, out.last].filter(Boolean).join(' '); delete out.last; }
+  if (!out.eventDate && /^\d{1,4}[\/.\-]\d{1,2}[\/.\-]\d{1,4}$/.test(String(out.eventType || '').trim())) { out.eventDate = out.eventType; out.eventType = ''; }
+  if (out.extId && !/^[\w:-]{4,80}$/.test(out.extId)) delete out.extId;
+  const extra = {}; Object.keys(o).forEach(k => { if (!used.has(k) && Object.keys(extra).length < 20 && String(o[k] ?? '').trim() !== '') extra[String(k).slice(0, 60)] = String(o[k]).slice(0, 200); });
+  const digits = String(out.phone || '').replace(/[^\d+]/g, '');
+  return {
+    name: String(out.name || '').slice(0, 120), phone: digits.slice(-15), email: String(out.email || '').slice(0, 160), eventDate: parseDateAny(out.eventDate),
+    guests: parseInt(String(out.guests || '').replace(/[^\d]/g, ''), 10) || '', eventType: String(out.eventType || '').slice(0, 60), budget: String(out.budget || '').slice(0, 60),
+    city: String(out.city || '').slice(0, 80), message: String(out.message || '').slice(0, 1000), source: srcName(out.source, defSource), campaign: String(out.campaign || '').slice(0, 120),
+    form: String(out.form || '').slice(0, 120), extId: out.extId || '', extra
+  };
+}
+
+/* ---------- helpers ---------- */
+const leadById = id => getById('leads', id);
+const phone10 = p => String(p || '').replace(/\D/g, '').slice(-10);
+const leadOpen = l => LEAD_OPEN.includes(l.status || 'New');
+const leadDue = (l, end = todayLocal() + 'T23:59') => leadOpen(l) && (!l.nextAt ? (l.status || 'New') === 'New' : String(l.nextAt) <= end);
+const leadLate = l => leadOpen(l) && l.nextAt && String(l.nextAt) < nowAt();
+const leadPill = l => pill(l.status || 'New', LEAD_TONE[l.status || 'New']);
+const srcPill = s => `<span class="src-pill" style="--c:${SRC_COLOR[s] || '#64748B'}">${esc(T(s || 'Other'))}</span>`;
+const salesPeople = () => S.members.filter(m => m.userId && (m.role === 'owner' || (S.roles[m.role]?.perms?.leads || m.perms?.leads || 0) >= 2 || m.role === 'manager' || m.role === 'sales'));
+const memberName = uid_ => S.members.find(m => m.userId === uid_)?.name || '';
+const isMineLead = l => !l.assignedTo || l.assignedTo === S.user?.id;
+const leadAge = l => { const t = +l.created || Date.parse(l.createdAt || '') || 0; if (!t) return ''; const m = Math.round((Date.now() - t) / 60000); return m < 60 ? `${m} min` : m < 1440 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} d`; };
+const LEAD_WHEN = [['2h', 'In 2 hours', () => isoIn(2)], ['eve', 'This evening', () => todayLocal() + 'T18:00'], ['tom', 'Tomorrow', () => addDays(todayLocal(), 1) + 'T11:00'], ['3d', 'In 3 days', () => addDays(todayLocal(), 3) + 'T11:00'], ['1w', 'Next week', () => addDays(todayLocal(), 7) + 'T11:00']];
+function isoIn(h) { const d = new Date(Date.now() + h * 36e5); return todayLocal(d) + 'T' + d.toTimeString().slice(0, 5); }
+function nextFor(outcome) { const h = OUT[outcome]?.[3]; if (h === 0 || h == null) return ''; return h < 1 ? isoIn(Math.round(h * 24)) : addDays(todayLocal(), Math.round(h)) + 'T11:00'; }
+
+/* ---------- list ---------- */
+V.leads = () => {
+  const tab = S.params.tab || 'list'; const all = col('leads');
+  const due = all.filter(l => leadDue(l)); const fresh = all.filter(l => (l.status || 'New') === 'New');
+  const quoting = all.filter(l => ['Quoted', 'Negotiation'].includes(l.status));
+  const m0 = todayLocal().slice(0, 7); const wonM = all.filter(l => l.status === 'Won' && String(l.wonAt || '').slice(0, 7) === m0);
+  const tabs = [['list', 'Leads', 0], ['today', 'Follow up today', due.length], ['dates', 'Dates'], ['report', 'Report'], ...(can('leads', 3) ? [['connect', 'Get leads automatically']] : [])];
+  const head = pageHead('Leads & sales', 'Every enquiry from ads, forms, calls and walk-ins in one place', can('leads', 2) ? `<button class="btn primary" onclick="A.leadForm()">${ic('plus')} New lead</button>` : '') +
+    `<div class="today-strip"><div><b>${fresh.length}</b><span>New</span></div><div><b>${due.length}</b><span>Follow up today</span></div><div><b>${quoting.length}</b><span>Quotes running</span></div><div><b>${wonM.length}</b><span>Won this month</span></div></div>
+    <div class="tabs">${tabs.map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('ld-' + tab)}</div>`;
+  if (tab === 'today') return head + leadsToday(due);
+  if (tab === 'dates') return head + leadDates();
+  if (tab === 'report') return head + leadReport();
+  if (tab === 'connect' && can('leads', 3)) return head + leadConnect();
+  return head + leadList(all);
+};
+function leadRow(l) {
+  const late = leadLate(l);
+  return `<button class="row click lead-row" onclick="A.go('lead',{id:'${l.id}'})"><div class="avatar" style="background:${SRC_COLOR[l.source] || '#64748B'}1f;color:${SRC_COLOR[l.source] || '#334155'}">${esc(initials(l.name || '?'))}</div>
+    <div class="main-col"><b>${esc(l.name || l.phone || 'No name')}</b><div class="sub">${[l.eventType ? esc(T(l.eventType)) : '', l.eventDate ? fmtShort(l.eventDate) : '', l.guests ? num(l.guests) + ' ' + T('guests') : ''].filter(Boolean).join(' · ') || esc(l.phone || '')}</div>
+    <div class="tiny row-flex" style="gap:6px;margin-top:3px">${srcPill(l.source)}${l.nextAt && leadOpen(l) ? `<span class="${late ? 'bad-t' : 'muted'}">${ic('clock')} ${atText(l.nextAt)}</span>` : (l.status || 'New') === 'New' ? `<span class="muted">${T(leadAge(l) + ' ago')}</span>` : ''}${l.assignedTo ? `<span class="muted">${ic('user')} ${esc(memberName(l.assignedTo))}</span>` : ''}</div></div>
+    ${leadPill(l)}${ic('chev', 'go')}</button>`;
+}
+function leadList(all) {
+  const f = S.filters.ldF || 'Open'; const src = S.filters.ldSrc || ''; const q = (S.filters.ldQ || '').toLowerCase(); const mine = S.filters.ldMine;
+  let list = all.slice();
+  if (f === 'Open') list = list.filter(leadOpen); else if (f !== 'All') list = list.filter(l => (l.status || 'New') === f);
+  if (src) list = list.filter(l => l.source === src);
+  if (mine) list = list.filter(l => l.assignedTo === S.user?.id);
+  if (q) list = list.filter(l => [l.name, l.phone, l.email, l.eventType, l.city, l.campaign].join(' ').toLowerCase().includes(q));
+  list.sort((a, b) => (leadLate(b) - leadLate(a)) || ((b.status === 'New') - (a.status === 'New')) || String(a.nextAt || '9').localeCompare(String(b.nextAt || '9')) || (+b.created || 0) - (+a.created || 0));
+  const srcs = [...new Set(all.map(l => l.source).filter(Boolean))];
+  return `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="${esc(T('Search name, mobile or event'))}" value="${esc(S.filters.ldQ || '')}" oninput="clearTimeout(window._lq);window._lq=setTimeout(()=>A.setF('ldQ',this.value),350)"></div>
+    ${srcs.length > 1 ? `<select class="inline-in" aria-label="Source" onchange="A.setF('ldSrc',this.value)"><option value="">${T('All sources')}</option>${srcs.map(s => `<option value="${esc(s)}" ${s === src ? 'selected' : ''}>${esc(T(s))}</option>`).join('')}</select>` : ''}</div>
+  <div class="chips" style="margin-bottom:14px">${['Open', ...LEAD_ST, 'All'].map(c => `<button class="chip ${f === c ? 'on' : ''}" onclick="A.setF('ldF','${c}')">${T(c)}${c !== 'All' && c !== 'Open' ? ` <span class="muted">${all.filter(l => (l.status || 'New') === c).length}</span>` : ''}</button>`).join('')}${S.user ? `<button class="chip ${mine ? 'on' : ''}" onclick="A.setF('ldMine',${!mine})">${ic('user')} ${T('Mine')}</button>` : ''}</div>
+  <div class="card">${list.length ? `<div class="rows">${list.slice(0, 300).map(leadRow).join('')}</div>` : empty(all.length ? 'Nothing here' : 'No leads yet', all.length ? 'Change the filter above.' : 'Add a lead by hand, upload your Facebook / Instagram leads file, or connect your ads and Google Form so leads come in by themselves.', all.length ? '' : `${can('leads', 2) ? `<button class="btn primary" onclick="A.leadForm()">${ic('plus')} New lead</button>` : ''}${can('leads', 3) ? `<button class="btn" onclick="A.setP('tab','connect')">${ic('bolt')} Get leads automatically</button>` : ''}`, 'megaphone', MOD.leads.c)}</div>`;
+}
+function leadsToday(due) {
+  const list = due.slice().sort((a, b) => String(a.nextAt || '').localeCompare(String(b.nextAt || '')));
+  return `<p class="small muted" style="margin:0 0 12px">${T('New leads and follow-ups due till tonight. Send the suggested message, then tap Update to note what the client said.')}</p>
+  <div class="stack-sm">${list.map(l => { const m = leadMsgs(l)[0]; const p = phone10(l.phone);
+    return `<div class="card pad lead-today ${leadLate(l) ? 'late' : ''}"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><button class="linkbtn" style="text-align:left;min-width:0" onclick="A.go('lead',{id:'${l.id}'})"><b style="font-size:16px">${esc(l.name || l.phone)}</b><div class="small muted">${[l.eventType ? esc(T(l.eventType)) : '', l.eventDate ? fmtShort(l.eventDate) : '', l.guests ? num(l.guests) + ' ' + T('guests') : ''].filter(Boolean).join(' · ')}</div></button>${leadPill(l)}</div>
+      ${l.lastOutcome ? `<div class="tiny muted" style="margin-top:4px">${T('Last')}: ${esc(T(OUT[l.lastOutcome]?.[1] || ''))}${l.lastNote ? ' · “' + esc(String(l.lastNote).slice(0, 90)) + '”' : ''}</div>` : ''}
+      <div class="msg-preview">${esc(m.text)}</div>
+      <div class="row-flex" style="gap:6px">${p ? `<a class="btn sm" href="tel:${p}" onclick="A.leadQuickLog('${l.id}','call')">${ic('phone')} Call</a><a class="btn sm wa" target="_blank" rel="noopener" href="${esc(waLink(m.text, p))}" onclick="A.leadQuickLog('${l.id}','whatsapp')">${ic('wa')} WhatsApp</a>` : ''}${can('leads', 2) ? `<button class="btn sm primary" onclick="A.leadLog('${l.id}')">${ic('edit')} Update</button>` : ''}</div></div>`; }).join('') || `<div class="card">${empty('All caught up', 'No follow-up is due today.', '', 'check', '#0B9B68')}</div>`}</div>`;
+}
+
+/* ---------- one lead ---------- */
+V.lead = () => {
+  const l = leadById(S.params.id); if (!l) return pageHead('Lead', '', '', "A.go('leads')") + empty('Lead not found', 'It may have been deleted.');
+  const p = phone10(l.phone); const edit = can('leads', 2); const si = LEAD_ST.indexOf(l.status || 'New');
+  const msgs = leadMsgs(l); const ev = l.eventId ? evById(l.eventId) : null;
+  const clash = l.eventDate ? col('events').filter(e => RESERVING.includes(e.stage) && e.date <= l.eventDate && eventEnd(e) >= l.eventDate) : [];
+  const log = (l.log || []).slice().reverse();
+  return `<button class="back" onclick="A.go('leads')">${ic('back')} Leads</button>
+  <div class="card pad lead-head"><div class="row-flex" style="flex-wrap:nowrap;align-items:flex-start"><div class="avatar" style="width:52px;height:52px;font-size:18px;background:${SRC_COLOR[l.source] || '#64748B'}1f;color:${SRC_COLOR[l.source] || '#334155'}">${esc(initials(l.name || '?'))}</div>
+    <div style="min-width:0;flex:1"><h1 style="font:800 22px/1.2 var(--f-display)">${esc(l.name || l.phone || 'No name')}${info('lead')}</h1><div class="small muted">${esc(l.phone || '')}${l.email ? ' · ' + esc(l.email) : ''}</div><div class="row-flex" style="gap:6px;margin-top:6px">${leadPill(l)}${srcPill(l.source)}${l.campaign ? `<span class="pill">${esc(l.campaign)}</span>` : ''}</div></div>
+    ${edit ? `<button class="icon-btn" aria-label="Edit lead" onclick="A.leadForm('${l.id}')">${ic('edit')}</button>` : ''}</div>
+    <div class="stepper lead-steps" style="margin-top:12px">${LEAD_ST.slice(0, 6).map((s, i) => `<button class="step ${l.status === 'Lost' ? '' : i < si ? 'done' : i === si ? 'cur' : ''}" ${edit ? `onclick="A.leadStatus('${l.id}','${s}')"` : 'disabled'}><i></i>${T(s)}</button>`).join('')}</div>
+    <div class="row-flex" style="gap:6px;margin-top:10px">${p ? `<a class="btn sm" href="tel:${p}" onclick="A.leadQuickLog('${l.id}','call')">${ic('phone')} Call</a>${waBtn('', p, 'WhatsApp')}` : ''}${edit ? `<button class="btn sm primary" onclick="A.leadLog('${l.id}')">${ic('edit')} Update after talking</button>` : ''}
+      ${edit && l.status !== 'Won' ? `<button class="btn sm" onclick="A.leadWon('${l.id}')">${ic('check')} Won: make booking</button>` : ''}${edit && leadOpen(l) ? `<button class="btn sm ghost danger" onclick="A.leadLost('${l.id}')">${T('Lost')}</button>` : ''}</div></div>
+  ${clash.length && leadOpen(l) ? `<div class="banner warn" style="margin-bottom:12px">${ic('calendar')}<span><b>${fmtDate(l.eventDate)}</b>: ${T('already booked for')} ${clash.map(e => esc(e.title)).join(', ')}${typeof venueClashText === 'function' ? venueClashText(l.eventDate) : ''}</span></div>` : ''}
+  ${l.nextAt && leadOpen(l) ? `<div class="banner ${leadLate(l) ? 'bad' : ''}" style="margin-bottom:12px">${ic('clock')}<span>${T('Next follow-up')}: <b>${atText(l.nextAt)}</b></span></div>` : ''}
+  <div class="split">
+    <div class="stack">
+      <div class="card"><div class="card-h"><div><h3>${T('Suggested message')}${info('lead-msg')}</h3><p>${T('Made for this client from their last reply. Edit before sending if you like.')}</p></div></div>
+        <div class="sheet-b stack-sm" style="padding-top:4px">${msgs.map((m, i) => `<div class="msg-card"><div class="eyebrow">${esc(T(m.label))}</div><textarea id="lm${i}" rows="4" class="msg-edit">${esc(m.text)}</textarea>
+          <div class="row-flex" style="gap:6px">${p ? `<button class="btn sm wa" onclick="A.leadSend('${l.id}',${i})">${ic('wa')} Send on WhatsApp</button>` : ''}<button class="btn sm" onclick="A.copy(document.getElementById('lm${i}').value)">${ic('copy')} Copy</button></div></div>`).join('')}</div></div>
+      <div class="card"><div class="card-h"><h3>${T('What happened so far')}</h3></div><div class="timeline-s">${log.map(x => { const [i, c] = LOG_ICON[x.type] || LOG_ICON.note; return `<div class="tl-row">${ibox(i, c, 'sm')}<div class="main-col"><div class="small"><b>${esc(T(x.type === 'lead' ? 'Lead came in' : OUT[x.outcome]?.[1] || ({ call: 'Called', whatsapp: 'WhatsApp sent', visit: 'Site visit', quote: 'Quotation', note: 'Note', status: 'Status changed' })[x.type] || 'Note'))}</b>${x.status ? ' → ' + esc(T(x.status)) : ''}${x.amount ? ' · ' + inr(x.amount) : ''}</div>${x.text ? `<div class="pre small">${esc(x.text)}</div>` : ''}<div class="tiny muted">${esc(x.by || '')} · ${atText(x.at)}</div></div></div>`; }).join('') || `<div class="small muted" style="padding:0 16px 14px">${T('Nothing yet.')}</div>`}</div></div>
+    </div>
+    <div class="stack">
+      <div class="card"><div class="card-h"><h3>${T('Details')}</h3></div><div class="sheet-b" style="padding-top:8px"><table class="tbl"><tbody>
+        <tr><td class="muted">${T('Event')}</td><td>${esc(T(l.eventType || '—'))}</td></tr>
+        <tr><td class="muted">${T('Date')}</td><td>${l.eventDate ? fmtDay(l.eventDate) : '—'}</td></tr>
+        <tr><td class="muted">${T('Guests')}</td><td class="num">${l.guests ? num(l.guests) : '—'}</td></tr>
+        <tr><td class="muted">${T('Budget')}</td><td>${esc(l.budget || '—')}</td></tr>
+        ${l.quote ? `<tr><td class="muted">${T('Quotation')}</td><td class="num"><b>${inr(l.quote)}</b></td></tr>` : ''}
+        <tr><td class="muted">${T('City')}</td><td>${esc(l.city || '—')}</td></tr>
+        <tr><td class="muted">${T('Handled by')}</td><td>${esc(memberName(l.assignedTo) || T('Not assigned'))}</td></tr>
+        <tr><td class="muted">${T('Came in')}</td><td>${l.createdAt ? atText(l.createdAt) : ''}${l.form ? ' · ' + esc(l.form) : ''}</td></tr>
+        ${l.message ? `<tr><td class="muted">${T('Message')}</td><td class="pre">${esc(l.message)}</td></tr>` : ''}
+        ${l.lostReason ? `<tr><td class="muted">${T('Lost because')}</td><td>${esc(T(l.lostReason))}</td></tr>` : ''}
+        ${Object.entries(l.extra || {}).map(([k, v]) => `<tr><td class="muted" translate="no">${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}
+      </tbody></table></div></div>
+      ${ev ? `<button class="card pad row-flex click-card" style="flex-wrap:nowrap;text-align:left" onclick="A.go('event',{id:'${ev.id}'})">${ibox('calendar', MOD.bookings.c)}<div class="grow"><b>${esc(ev.title)}</b><div class="small muted">${fmtDate(ev.date)} · ${esc(T(ev.stage))}</div></div>${ic('chev', 'go')}</button>` : ''}
+      ${lvl('leads') >= 3 ? `<button class="btn ghost danger" onclick="A.delLead('${l.id}')">${ic('trash')} ${T('Delete lead')}</button>` : ''}
+    </div></div>`;
+};
+
+A.leadForm = (id, preset = {}) => {
+  const l = id ? leadById(id) : { status: 'New', source: 'Phone call', eventType: 'Wedding', assignedTo: S.user?.id, ...preset };
+  const people = salesPeople();
+  formModal({
+    title: id ? 'Edit lead' : 'New lead', sub: id ? l.name : 'Only the name or mobile is needed',
+    fields: [
+      { name: 'name', label: 'Client name', value: l.name, autofocus: !id }, { name: 'phone', label: 'Mobile (WhatsApp)', type: 'tel', value: l.phone, placeholder: '98290 12345' },
+      { name: 'eventType', label: 'Event', type: 'select', options: EVENT_TYPES, value: l.eventType }, { name: 'eventDate', label: 'Event date', type: 'date', value: l.eventDate },
+      { name: 'guests', label: 'Guests', type: 'number', min: 0, value: l.guests }, { name: 'budget', label: 'Budget', value: l.budget, placeholder: 'e.g. 5–7 lakh' },
+      { name: 'source', label: 'Where did it come from', type: 'select', options: LEAD_SRC, value: l.source }, { name: 'campaign', label: 'Ad / campaign (optional)', value: l.campaign },
+      { name: 'assignedTo', label: 'Handled by', type: 'select', options: [['', 'Not assigned'], ...people.map(m => [m.userId, m.name])], value: l.assignedTo || '' }, { name: 'city', label: 'City', value: l.city },
+      { name: 'email', label: 'Email', type: 'email', value: l.email }, { name: 'nextAt', label: 'Next follow-up', type: 'datetime-local', value: l.nextAt || (id ? '' : isoIn(1)) },
+      { name: 'message', label: 'What they asked for', type: 'textarea', value: l.message, full: true }
+    ],
+    left: '',
+    onSubmit: async v => {
+      if (!(v.name || '').trim() && !phone10(v.phone)) throw new Error('Write the client name or mobile');
+      const p = phone10(v.phone);
+      if (!id && p) { const dup = col('leads').find(x => phone10(x.phone) === p && leadOpen(x)); if (dup) { toast(T('This mobile is already a lead. Opening it.'), 'warn'); A.go('lead', { id: dup.id }); return; } }
+      const base = id ? l : { id: uid('ld_'), created: Date.now(), createdAt: nowAt(), status: 'New', log: [{ at: nowAt(), type: 'lead', by: S.me?.name || '', text: v.message || '' }] };
+      const rec = { ...base, ...v, name: (v.name || '').trim(), guests: v.guests === '' ? '' : +v.guests || '', eventDate: v.eventDate || '' };
+      await save('leads', rec, `${id ? 'Updated' : 'Added'} lead ${rec.name || rec.phone}`); toast('Saved');
+      if (!id) A.go('lead', { id: rec.id }); else render();
+    }
+  });
+};
+A.delLead = id => { const l = leadById(id); confirmBox('Delete this lead?', `${l.name || l.phone} and its history will be removed.`, 'Delete lead', async () => { await removeRec('leads', id, `Deleted lead ${l.name || l.phone}`); A.go('leads'); }); };
+
+/* log what the client said; the status and next follow-up are suggested from the reply */
+A.leadLog = (id, preset = {}) => {
+  const l = leadById(id); if (!l) return;
+  modal(`<form class="form" onsubmit="A.saveLeadLog(event,'${id}')" novalidate>${sheetHead('What did the client say?', l.name || l.phone)}<div class="sheet-b stack">
+    <div class="field"><span>How did you talk</span><div class="chips">${[['call', 'Call'], ['whatsapp', 'WhatsApp'], ['visit', 'Site visit'], ['note', 'Note']].map(([k, t], i) => `<label class="chip-radio"><input type="radio" name="type" value="${k}" ${(preset.type || 'call') === k ? 'checked' : ''}><span>${ic(LOG_ICON[k][0])} ${t}</span></label>`).join('')}</div></div>
+    <div class="field"><span>Client’s reply</span><div class="chips">${OUTCOMES.map(([k, t]) => `<label class="chip-radio"><input type="radio" name="outcome" value="${k}" onchange="A.leadOutcome(this)"><span>${t}</span></label>`).join('')}</div></div>
+    ${fieldHTML({ name: 'text', label: 'In short, what did they say?', type: 'textarea', rows: 3, placeholder: 'e.g. Liked the lawn, wants 500 pax buffet, father will decide by Sunday' })}
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'status', label: 'Stage now', type: 'select', options: LEAD_ST, value: l.status || 'New' })}${fieldHTML({ name: 'quote', label: 'Quotation ₹ (if given)', type: 'number', min: 0, value: l.quote || '' })}</div>
+    <div class="field"><span>Next follow-up</span><div class="chips">${LEAD_WHEN.map(([k, t]) => `<button type="button" class="chip" onclick="A.leadWhen(this,'${k}')">${t}</button>`).join('')}</div><input type="datetime-local" name="nextAt" value="${esc(l.nextAt && String(l.nextAt) > nowAt() ? l.nextAt : '')}"><small>Leave empty if no follow-up is needed</small></div>
+  </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save</button></footer></form>`);
+};
+A.leadWhen = (el, k) => { el.form.nextAt.value = LEAD_WHEN.find(x => x[0] === k)[2](); };
+A.leadOutcome = el => { const o = OUT[el.value]; const f = el.form; if (o?.[2]) f.status.value = o[2]; const n = nextFor(el.value); f.nextAt.value = n; };
+A.saveLeadLog = (e, id) => {
+  e.preventDefault(); const v = readForm(e.target);
+  withBtn(e, async () => {
+    const l = leadById(id); const st = v.status || l.status || 'New';
+    if (!v.outcome && !(v.text || '').trim() && st === l.status) throw new Error('Pick the client’s reply or write what they said');
+    if (st === 'Won') { A.closeModal(); await addLeadLog(l, { type: v.type, outcome: v.outcome, text: v.text, amount: +v.quote || 0 }, {}); return A.leadWon(id); }
+    if (st === 'Lost') { A.closeModal(); await addLeadLog(l, { type: v.type, outcome: v.outcome, text: v.text }, {}); return A.leadLost(id); }
+    await addLeadLog(l, { type: v.type || 'call', outcome: v.outcome || '', text: (v.text || '').trim(), status: st !== l.status ? st : '', amount: +v.quote && +v.quote !== +l.quote ? +v.quote : 0 }, { status: st, nextAt: v.nextAt || '', ...(+v.quote ? { quote: +v.quote } : {}) });
+    A.closeModal(); toast('Saved'); render();
+  });
+};
+async function addLeadLog(l, entry, patch) {
+  const at = nowAt(); const log = [...(l.log || []), { at, by: S.me?.name || S.user?.name || '', ...entry }].slice(-200);
+  const rec = { ...l, ...patch, log, lastAt: at };
+  if (entry.outcome) { rec.lastOutcome = entry.outcome; rec.lastNote = entry.text || ''; }
+  if (!rec.firstContactAt && ['call', 'whatsapp', 'visit'].includes(entry.type)) rec.firstContactAt = at;
+  if (patch.status) rec.reached = { ...(l.reached || {}), [patch.status]: (l.reached || {})[patch.status] || at };
+  if (patch.status && patch.status !== 'New' && rec.status === 'New') rec.status = patch.status;
+  if (!rec.assignedTo && S.user?.id) rec.assignedTo = S.user.id;
+  await save('leads', rec, `${l.name || l.phone}: ${entry.type}${entry.outcome ? ' · ' + (OUT[entry.outcome]?.[1] || '') : ''}`);
+  return rec;
+}
+A.leadQuickLog = (id, type) => { const l = leadById(id); if (!l || !can('leads', 2)) return; setTimeout(() => addLeadLog(l, { type, text: '' }, (l.status || 'New') === 'New' ? { status: 'Contacted' } : {}).then(render).catch(() => { }), 300); };
+A.leadSend = (id, i) => { const l = leadById(id); const text = document.getElementById('lm' + i)?.value || ''; window.open(waLink(text, phone10(l.phone)), '_blank', 'noopener'); if (can('leads', 2)) addLeadLog(l, { type: 'whatsapp', text: text.slice(0, 300) }, (l.status || 'New') === 'New' ? { status: 'Contacted' } : {}).then(render).catch(() => { }); };
+A.leadStatus = async (id, st) => { const l = leadById(id); if (st === 'Won') return A.leadWon(id); try { await addLeadLog(l, { type: 'status', status: st }, { status: st }); render(); } catch (e) { toast(e.message, 'bad'); } };
+A.leadLost = id => {
+  const l = leadById(id);
+  formModal({ title: 'Lost lead', sub: l.name, fields: [{ name: 'reason', label: 'Why', type: 'select', options: LOST_REASONS, value: 'Budget' }, { name: 'note', label: 'Note (optional)', type: 'textarea', full: true }], submit: 'Mark lost',
+    onSubmit: async v => { await addLeadLog(l, { type: 'status', status: 'Lost', text: [T(v.reason), v.note].filter(Boolean).join(' · ') }, { status: 'Lost', lostReason: v.reason, lostAt: nowAt(), nextAt: '' }); toast('Marked lost'); render(); } });
+};
+A.leadWon = id => {
+  const l = leadById(id);
+  if (!can('bookings', 2)) { addLeadLog(l, { type: 'status', status: 'Won' }, { status: 'Won', wonAt: nowAt(), nextAt: '' }).then(() => { toast('Marked won'); render(); }); return; }
+  formModal({ title: 'Won: make the booking', sub: l.name, fields: [
+    { name: 'type', label: 'Event type', type: 'select', options: EVENT_TYPES, value: l.eventType || 'Wedding' }, { name: 'date', label: 'Date', type: 'date', required: true, value: l.eventDate || '' },
+    { name: 'endDate', label: 'End date (multi-day)', type: 'date' }, { name: 'pax', label: 'Guests', type: 'number', min: 0, value: l.guests || '' },
+    { name: 'budget', label: 'Package value ₹', type: 'number', min: 0, value: l.quote || '' }, { name: 'stage', label: 'Stage', type: 'select', options: ['Confirmed', 'Quoted'], value: 'Confirmed' }],
+    submit: 'Make booking', onSubmit: async v => {
+      if (!v.date) throw new Error('Pick the date');
+      const ev = { id: uid('e_'), created: Date.now(), items: [], schedule: [], menu: { dishIds: [], pax: +v.pax || 0 }, dispatch: {}, client: l.name || l.phone, phone: l.phone || '', email: l.email || '', type: v.type, stage: v.stage, date: v.date, endDate: v.endDate || '', pax: +v.pax || 0, budget: +v.budget || 0, venue: '', notes: l.message || '', title: `${String(l.name || 'Client').split(' ').slice(-1)[0]} ${v.type}`, leadId: l.id, source: l.source };
+      await save('events', ev, `Booking from lead ${l.name}`);
+      await addLeadLog(l, { type: 'status', status: 'Won', amount: +v.budget || 0 }, { status: 'Won', wonAt: nowAt(), nextAt: '', eventId: ev.id, quote: +v.budget || l.quote || 0, eventDate: v.date });
+      toast('Booking made'); A.go('event', { id: ev.id });
+    } });
+};
+
+/* ---------- follow-up messages, made for each client ---------- */
+function leadMsgs(l) {
+  const st = settings(); const hi = I18N.lang === 'hi'; const biz = st.bizName || ''; const me = (S.me?.name || '').split(' ')[0];
+  const n = (l.name || '').split(' ')[0] || (hi ? 'जी' : ''); const ji = n ? (hi ? `${n} जी` : `${n} ji`) : (hi ? 'जी' : 'ji');
+  const ty = l.eventType ? (hi ? T(l.eventType) : l.eventType.toLowerCase()) : (hi ? 'फ़ंक्शन' : 'event');
+  const d = l.eventDate ? (hi ? T(fmtDate(l.eventDate)) : fmtDate(l.eventDate)) : ''; const g = l.guests ? (hi ? `${l.guests} मेहमानों` : `${l.guests} guests`) : '';
+  const q = l.quote ? inr(l.quote) : ''; const soon = l.eventDate && daysBetween(todayLocal(), l.eventDate) >= 0 && daysBetween(todayLocal(), l.eventDate) <= 75;
+  const free = l.eventDate && !col('events').some(e => RESERVING.includes(e.stage) && e.date <= l.eventDate && eventEnd(e) >= l.eventDate);
+  const out = l.lastOutcome || ((l.status || 'New') === 'New' ? 'new' : l.status === 'Quoted' ? 'wants_quote' : l.status === 'Site visit' ? 'visit_planned' : l.status === 'Negotiation' ? 'budget' : l.status === 'Won' ? 'confirmed' : l.status === 'Lost' ? 'booked_else' : 'interested');
+  const sig = hi ? `\n\n– ${me ? me + ', ' : ''}${biz}` : `\n\n– ${me ? me + ', ' : ''}${biz}`;
+  const forD = d ? (hi ? ` ${d} के` : ` on ${d}`) : '';
+  const E = {
+    new: [['First message', `Namaste ${ji}, thank you for your enquiry for your ${ty}${forD}${g ? ' for ' + g : ''}. I am from ${biz}. ${free ? 'Good news: the date is available right now. ' : ''}When can I call you for 2 minutes to understand what you need?`],
+      ['Short', `Namaste ${ji}, ${biz} here. Got your enquiry${forD}. Can I share our packages and photos here on WhatsApp?`]],
+    no_answer: [['After a missed call', `Namaste ${ji}, I tried calling you about your ${ty}${forD}. Please tell me a good time to call, or reply here and I will send all details on WhatsApp.`]],
+    call_later: [['Call back as asked', `Namaste ${ji}, as you said, I am calling back about your ${ty}${forD}. Is this a good time? If not, just tell me when.`]],
+    wants_quote: [['Quotation sent', `Namaste ${ji}, as discussed I have prepared the quotation for your ${ty}${forD}${g ? ' (' + g + ')' : ''}${q ? ': ' + q : ''}. Please have a look and tell me if you want any change. Happy to help.`],
+      ['Gentle reminder', `Namaste ${ji}, did you get a chance to see our quotation${q ? ' (' + q + ')' : ''}? If anything is unclear or you want a different menu or setup, I can change it today.`],
+      ['Invite for a visit', `Namaste ${ji}, seeing the place helps you decide better. You are welcome to visit any day between 11 am and 7 pm. Shall I book a time for you?`]],
+    visit_planned: [['Visit reminder', `Namaste ${ji}, looking forward to your visit to ${biz}. ${st.address ? 'Address: ' + st.address + (st.city ? ', ' + st.city : '') + '. ' : ''}Please message me when you leave so I can be ready for you.`]],
+    budget: [['Options in budget', `Namaste ${ji}, I understand the budget is important. I have made two more options for your ${ty}${g ? ' with ' + g : ''} that fit better. Shall I send them?`],
+      ['Small token to hold the date', `Namaste ${ji}, to keep your date${d ? ' (' + d + ')' : ''} safe, you can block it with a small advance. The final package we can fix together later.`]],
+    comparing: [['Why us', `Namaste ${ji}, while you compare, here is what our guests like most about ${biz}: clear pricing with no hidden charges, our own team for food and decor, and a manager with you on the day. Happy to answer any question.`],
+      ['Date may go', `Namaste ${ji}, just to let you know: we are getting more enquiries for${d ? ' ' + d : ' your date'}. If you like us, a small advance keeps the date for you.`]],
+    date_issue: [['Other dates', `Namaste ${ji}, I checked the dates. Shall I send you the nearest free dates around${d ? ' ' + d : ' your date'} so you can choose?`]],
+    interested: [['Next step', `Namaste ${ji}, thank you for your time today. As discussed, I will share the details for your ${ty}${forD}. Shall we fix a visit or a call with the family to finalise?`],
+      ['Date may go', `Namaste ${ji}, ${d ? d + ' is a busy date' : 'this season is busy'} and we are getting more enquiries. A small advance will keep the date for you.`]],
+    confirmed: [['Thank you', `Namaste ${ji}, thank you for choosing ${biz} for your ${ty}${forD}! I will send the booking details and the advance receipt here. Our team will take good care of everything.`]],
+    booked_else: [['Stay in touch', `Namaste ${ji}, thank you for considering ${biz}. Best wishes for your ${ty}! For any future function, we are always happy to help.`]],
+    not_interested: [['Stay in touch', `Namaste ${ji}, thank you for your time. If your plans change or for any future function, just message us here.`]]
+  };
+  const H = {
+    new: [['First message', `नमस्ते ${ji}, आपके${forD} ${ty}${g ? ' (' + g + ')' : ''} की पूछताछ के लिए धन्यवाद। मैं ${biz} से बात कर रहा/रही हूं। ${free ? 'अच्छी ख़बर: यह तारीख़ अभी ख़ाली है। ' : ''}आपकी ज़रूरत समझने के लिए 2 मिनट के लिए कब कॉल करूं?`],
+      ['Short', `नमस्ते ${ji}, ${biz} से। आपकी पूछताछ मिली${d ? ' (' + d + ')' : ''}। क्या मैं यहीं व्हाट्सऐप पर हमारे पैकेज और फ़ोटो भेज दूं?`]],
+    no_answer: [['After a missed call', `नमस्ते ${ji}, आपके${forD} ${ty} के बारे में कॉल किया था। बात करने का सही समय बता दीजिए, या यहीं जवाब दीजिए, मैं सारी जानकारी व्हाट्सऐप पर भेज दूंगा/दूंगी।`]],
+    call_later: [['Call back as asked', `नमस्ते ${ji}, आपके कहे अनुसार आपके${forD} ${ty} के बारे में दोबारा संपर्क कर रहा/रही हूं। अभी बात हो सकती है? नहीं तो समय बता दीजिए।`]],
+    wants_quote: [['Quotation sent', `नमस्ते ${ji}, बात के अनुसार आपके${forD} ${ty}${g ? ' (' + g + ')' : ''} का कोटेशन तैयार है${q ? ': ' + q : ''}। एक बार देख लीजिए, कोई बदलाव चाहिए तो बताइए।`],
+      ['Gentle reminder', `नमस्ते ${ji}, क्या आपने हमारा कोटेशन${q ? ' (' + q + ')' : ''} देखा? कुछ समझ न आए या मेन्यू / सजावट में बदलाव चाहिए, तो मैं आज ही बदल दूंगा/दूंगी।`],
+      ['Invite for a visit', `नमस्ते ${ji}, जगह देखकर फ़ैसला करना आसान होता है। आप किसी भी दिन सुबह 11 से शाम 7 बजे के बीच आ सकते हैं। आपके लिए समय तय कर दूं?`]],
+    visit_planned: [['Visit reminder', `नमस्ते ${ji}, ${biz} में आपके आने का इंतज़ार है। ${st.address ? 'पता: ' + st.address + (st.city ? ', ' + st.city : '') + '। ' : ''}निकलते समय मैसेज कर दीजिए, ताकि हम तैयार रहें।`]],
+    budget: [['Options in budget', `नमस्ते ${ji}, बजट ज़रूरी है, हम समझते हैं। आपके ${ty}${g ? ' (' + g + ')' : ''} के लिए दो और विकल्प बनाए हैं जो बजट में बेहतर बैठते हैं। भेज दूं?`],
+      ['Small token to hold the date', `नमस्ते ${ji}, आपकी तारीख़${d ? ' (' + d + ')' : ''} सुरक्षित रखने के लिए थोड़ा एडवांस देकर इसे रोक सकते हैं। फ़ाइनल पैकेज बाद में साथ बैठकर तय कर लेंगे।`]],
+    comparing: [['Why us', `नमस्ते ${ji}, आप तुलना कर रहे हैं, तो बता दें कि हमारे मेहमानों को ${biz} में सबसे ज़्यादा क्या पसंद आता है: साफ़ क़ीमत, कोई छिपा ख़र्च नहीं, खाने और सजावट की अपनी टीम, और उस दिन आपके साथ एक मैनेजर। कोई भी सवाल हो तो पूछिए।`],
+      ['Date may go', `नमस्ते ${ji}, बता दें कि${d ? ' ' + d : ' आपकी तारीख़'} के लिए और भी पूछताछ आ रही है। अगर हम पसंद हैं, तो थोड़ा एडवांस देकर तारीख़ पक्की कर लीजिए।`]],
+    date_issue: [['Other dates', `नमस्ते ${ji}, मैंने तारीख़ें देखीं।${d ? ' ' + d + ' के' : ''} आसपास की ख़ाली तारीख़ें भेज दूं, ताकि आप चुन सकें?`]],
+    interested: [['Next step', `नमस्ते ${ji}, आज समय देने के लिए धन्यवाद। बात के अनुसार आपके${forD} ${ty} की जानकारी भेज रहा/रही हूं। परिवार के साथ फ़ाइनल करने के लिए विज़िट या कॉल रख लें?`],
+      ['Date may go', `नमस्ते ${ji}, ${d ? d + ' व्यस्त तारीख़ है' : 'यह सीज़न व्यस्त है'} और पूछताछ बढ़ रही है। थोड़ा एडवांस देकर तारीख़ आपके लिए रोकी जा सकती है।`]],
+    confirmed: [['Thank you', `नमस्ते ${ji}, आपके${forD} ${ty} के लिए ${biz} चुनने का बहुत धन्यवाद! बुकिंग की जानकारी और एडवांस की रसीद यहीं भेजता/भेजती हूं। हमारी टीम सब कुछ अच्छे से संभालेगी।`]],
+    booked_else: [['Stay in touch', `नमस्ते ${ji}, ${biz} के बारे में सोचने के लिए धन्यवाद। आपके ${ty} के लिए शुभकामनाएं! आगे किसी भी फ़ंक्शन के लिए हम हमेशा हाज़िर हैं।`]],
+    not_interested: [['Stay in touch', `नमस्ते ${ji}, समय देने के लिए धन्यवाद। प्लान बदले या आगे कोई फ़ंक्शन हो, तो यहीं मैसेज कर दीजिए।`]]
+  };
+  const set = (hi ? H : E); let list = (set[out] || set.interested).slice();
+  if (soon && !['confirmed', 'booked_else', 'not_interested', 'comparing', 'interested'].includes(out) && leadOpen(l)) list.push((set.comparing || [])[1]);
+  return list.filter(Boolean).slice(0, 3).map(([label, text]) => ({ label, text: text.replace(/\s+([,.?!।])/g, '$1').replace(/ {2,}/g, ' ') + sig }));
+}
+
+/* ---------- dates: booked, quotation running, enquiries ---------- */
+function dateInfo(d) {
+  const booked = col('events').filter(e => RESERVING.includes(e.stage) && e.date <= d && eventEnd(e) >= d);
+  const quotedEv = col('events').filter(e => ['Quoted', 'Enquiry'].includes(e.stage) && e.date <= d && eventEnd(e) >= d);
+  const quoted = col('leads').filter(l => ['Quoted', 'Negotiation'].includes(l.status) && l.eventDate === d);
+  const enq = col('leads').filter(l => ['New', 'Contacted', 'Site visit'].includes(l.status || 'New') && l.eventDate === d);
+  return { booked, quotedEv, quoted, enq };
+}
+function leadDates() {
+  const m = S.filters.ldMonth || todayLocal().slice(0, 7); const [y, mo] = m.split('-').map(Number);
+  const first = new Date(y, mo - 1, 1); const days = new Date(y, mo, 0).getDate(); const pad = (first.getDay() + 6) % 7;
+  const prev = new Date(y, mo - 2, 1), next = new Date(y, mo, 1); const ym = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const cells = []; for (let i = 0; i < pad; i++) cells.push('<div class="dc empty"></div>');
+  for (let i = 1; i <= days; i++) {
+    const d = `${m}-${String(i).padStart(2, '0')}`; const x = dateInfo(d); const past = d < todayLocal();
+    cells.push(`<button class="dc ${past ? 'past' : ''} ${d === todayLocal() ? 'today' : ''} ${x.booked.length ? 'is-booked' : ''}" onclick="A.dateSheet('${d}')"><span class="dn">${i}</span>
+      <span class="dts">${x.booked.length ? `<span class="dt b" title="${esc(T('Booked'))}">${x.booked.length}</span>` : ''}${x.quoted.length + x.quotedEv.length ? `<span class="dt q" title="${esc(T('Quotation running'))}">${x.quoted.length + x.quotedEv.length}</span>` : ''}${x.enq.length ? `<span class="dt e" title="${esc(T('Enquiry'))}">${x.enq.length}</span>` : ''}</span></button>`);
+  }
+  const monthName = first.toLocaleDateString(I18N.lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' });
+  return `<div class="row-flex" style="justify-content:space-between;margin-bottom:10px"><button class="btn sm" onclick="A.setF('ldMonth','${ym(prev)}')">${ic('back')}</button><b style="font:800 18px var(--f-display)">${esc(monthName)}</b><button class="btn sm" onclick="A.setF('ldMonth','${ym(next)}')" aria-label="Next month">${ic('chev')}</button></div>
+  <div class="dlegend"><span><i class="b"></i>${T('Booked')}</span><span><i class="q"></i>${T('Quotation running')}</span><span><i class="e"></i>${T('Enquiry')}</span></div>
+  <div class="dcal"><div class="dh">${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(x => `<span>${T(x)}</span>`).join('')}</div><div class="dgrid">${cells.join('')}</div></div>
+  <p class="tiny muted" style="margin-top:8px">${T('Tap a date to see who booked it and which clients are asking for it.')}</p>`;
+}
+A.dateSheet = d => {
+  const x = dateInfo(d); const row = (b, t, s, go) => `<button class="row click" onclick="A.closeModal();setTimeout(()=>${go},40)">${b}<div class="main-col"><b>${esc(t)}</b><div class="sub">${s}</div></div>${ic('chev', 'go')}</button>`;
+  modal(`${sheetHead(fmtDay(d), '')}<div class="sheet-b stack">
+    ${typeof venueDayHTML === 'function' ? venueDayHTML(d) : ''}
+    <div><div class="eyebrow">${T('Booked')} (${x.booked.length})</div><div class="card"><div class="rows">${x.booked.map(e => row(pill(T(e.stage), STAGE_TONE[e.stage]), e.title, `${esc(e.client)} · ${num(e.pax)} ${T('guests')}`, `A.go('event',{id:'${e.id}'})`)).join('') || `<div class="row small muted">${T('Free')}</div>`}</div></div></div>
+    <div><div class="eyebrow">${T('Quotation running')} (${x.quoted.length + x.quotedEv.length})</div><div class="card"><div class="rows">${[...x.quoted.map(l => row(leadPill(l), l.name || l.phone, `${esc(T(l.eventType || ''))}${l.quote ? ' · ' + inr(l.quote) : ''}`, `A.go('lead',{id:'${l.id}'})`)), ...x.quotedEv.map(e => row(pill(T(e.stage), STAGE_TONE[e.stage]), e.title, esc(e.client), `A.go('event',{id:'${e.id}'})`))].join('') || `<div class="row small muted">—</div>`}</div></div></div>
+    <div><div class="eyebrow">${T('Enquiry')} (${x.enq.length})</div><div class="card"><div class="rows">${x.enq.map(l => row(leadPill(l), l.name || l.phone, `${esc(T(l.eventType || ''))}${l.guests ? ' · ' + num(l.guests) + ' ' + T('guests') : ''}`, `A.go('lead',{id:'${l.id}'})`)).join('') || `<div class="row small muted">—</div>`}</div></div></div>
+    ${can('leads', 2) ? `<button class="btn" onclick="A.closeModal();setTimeout(()=>A.leadForm('',{eventDate:'${d}'}),40)">${ic('plus')} New lead for this date</button>` : ''}</div>`);
+};
+
+/* ---------- report: which leads convert ---------- */
+function leadReport() {
+  const r = S.filters.ldRange || '30'; const since = r === 'all' ? 0 : Date.now() - (+r) * 864e5;
+  const ls = col('leads').filter(l => (+l.created || Date.parse(l.createdAt || '') || 0) >= since);
+  const won = ls.filter(l => l.status === 'Won'); const lost = ls.filter(l => l.status === 'Lost');
+  const idx = l => { if (l.status === 'Won') return 5; let m = LEAD_ST.indexOf(l.status === 'Lost' ? 'New' : l.status || 'New'); Object.keys(l.reached || {}).forEach(s => { const i = LEAD_ST.indexOf(s); if (i >= 0 && i < 6) m = Math.max(m, i); }); return m; };
+  const funnel = LEAD_ST.slice(0, 6).map((s, i) => [s, ls.filter(l => idx(l) >= i).length]);
+  const conv = ls.length ? Math.round(won.length / ls.length * 100) : 0;
+  const resp = ls.filter(l => l.firstContactAt && l.createdAt).map(l => (msOf(l.firstContactAt) - msOf(l.createdAt)) / 60000).filter(x => x >= 0);
+  const avgResp = resp.length ? Math.round(sum(resp, x => x) / resp.length) : null;
+  const bySrc = [...new Set(ls.map(l => l.source || 'Other'))].map(s => { const a = ls.filter(l => (l.source || 'Other') === s); const w = a.filter(l => l.status === 'Won'); return [s, a.length, w.length, sum(w, l => +l.quote || 0)]; }).sort((a, b) => b[1] - a[1]);
+  const byPerson = [...new Set(ls.map(l => l.assignedTo || ''))].map(u => { const a = ls.filter(l => (l.assignedTo || '') === u); const w = a.filter(l => l.status === 'Won'); const due = a.filter(l => leadLate(l)).length; return [memberName(u) || T('Not assigned'), a.length, w.length, due]; }).sort((a, b) => b[1] - a[1]);
+  const reasons = LOST_REASONS.map(x => [x, lost.filter(l => l.lostReason === x).length]).filter(x => x[1]);
+  const max = Math.max(1, ...funnel.map(f => f[1]));
+  return `<div class="row-flex" style="justify-content:space-between;margin-bottom:12px">${seg('ldRange', [['7', '7 days'], ['30', '30 days'], ['90', '3 months'], ['365', '1 year'], ['all', 'All']], r, 'A.setF')}</div>
+  <div class="kpis">${kpi('Leads', num(ls.length))}${kpi('Won', num(won.length), conv + '% ' + T('converted'), 'good')}${kpi('Lost', num(lost.length), '', lost.length ? 'bad' : '')}${kpi('Value won', inr(sum(won, l => +l.quote || 0)))}${kpi('First reply in', avgResp == null ? '—' : avgResp < 60 ? avgResp + ' min' : Math.round(avgResp / 60) + ' h', T('average'))}</div>
+  <div class="split"><div class="card"><div class="card-h"><h3>${T('How far leads go')}${info('ld-funnel')}</h3></div><div class="funnel">${funnel.map(([s, n], i) => `<div class="fr"><span>${T(s)}</span><div class="fb"><i style="width:${Math.max(2, n / max * 100)}%;background:${i === 5 ? 'var(--good)' : 'var(--brand)'}"></i></div><b class="num">${n}</b><span class="tiny muted">${funnel[0][1] ? Math.round(n / funnel[0][1] * 100) + '%' : ''}</span></div>`).join('')}</div></div>
+  <div class="card"><div class="card-h"><h3>${T('Why leads were lost')}</h3></div>${reasons.length ? `<div class="funnel">${reasons.map(([s, n]) => `<div class="fr"><span>${T(s)}</span><div class="fb"><i style="width:${n / Math.max(...reasons.map(x => x[1])) * 100}%;background:var(--bad)"></i></div><b class="num">${n}</b><span></span></div>`).join('')}</div>` : `<div class="pad small muted" style="padding:0 16px 14px">${T('No lost leads in this period.')}</div>`}</div></div>
+  <div class="card" style="margin-top:14px"><div class="card-h"><h3>${T('Which source brings bookings')}</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>${T('Source')}</th><th class="r">${T('Leads')}</th><th class="r">${T('Won')}</th><th class="r">%</th><th class="r">${T('Value won')}</th></tr></thead><tbody>${bySrc.map(([s, a, w, v]) => `<tr><td>${srcPill(s)}</td><td class="r num">${a}</td><td class="r num">${w}</td><td class="r num">${a ? Math.round(w / a * 100) : 0}%</td><td class="r num">${inr(v)}</td></tr>`).join('') || `<tr><td colspan="5" class="muted">—</td></tr>`}</tbody></table></div></div>
+  <div class="card" style="margin-top:14px"><div class="card-h"><h3>${T('Sales team')}</h3></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>${T('Person')}</th><th class="r">${T('Leads')}</th><th class="r">${T('Won')}</th><th class="r">%</th><th class="r">${T('Follow-ups late')}</th></tr></thead><tbody>${byPerson.map(([n, a, w, d]) => `<tr><td>${esc(n)}</td><td class="r num">${a}</td><td class="r num">${w}</td><td class="r num">${a ? Math.round(w / a * 100) : 0}%</td><td class="r num ${d ? 'bad-t' : ''}">${d}</td></tr>`).join('') || `<tr><td colspan="5" class="muted">—</td></tr>`}</tbody></table></div></div>`;
+}
+
+/* ---------- get leads automatically: lead link, Meta via Make / Zapier / Pabbly, Google Form, CSV ---------- */
+function leadConnect() {
+  const url = S.leadUrl;
+  if (url === undefined) { S.leadUrl = null; S.adapter.leadKey(S.org.orgId, false).then(k => { S.leadUrl = k ? `${location.origin}/api/lead?key=${k}` : ''; render(); }).catch(e => { S.leadUrl = ''; S.leadErr = e.message; render(); }); }
+  const u = url || ''; const gs = googleFormScript(u);
+  return `<div class="stack">
+  <div class="card pad stack-sm"><div class="row-flex" style="gap:10px;flex-wrap:nowrap">${ibox('bolt', '#7C3AED')}<div><b>${T('Your lead link')}</b><div class="small muted">${T('Anything sent to this link becomes a new lead here, rings on your sales team’s phones and shows in Leads within seconds. Keep it private.')}</div></div></div>
+    ${u ? `<div class="mono small link-box">${esc(u)}</div><div class="row-flex"><button class="btn" onclick="A.copy('${esc(u)}')">${ic('copy')} Copy link</button><button class="btn" onclick="A.leadTest()">${ic('send')} Send a test lead</button><button class="linkbtn" style="color:var(--muted)" onclick="confirmBox('Make a new link?','The old link stops working at once. You will have to paste the new link in Make / Zapier / Google Form again.','New link',()=>A.leadKeyReset(),'primary')">${ic('key')} New link</button></div>` : `<div class="small muted">${S.leadErr ? esc(S.leadErr) : T('Loading…')}</div>`}</div>
+  <div class="card"><div class="card-h"><div><h3>${ic('wa')} ${T('Facebook & Instagram lead ads (Meta)')}${info('ld-meta')}</h3><p>${T('Free or low-cost tools connect Meta to your lead link in 10 minutes, without any code.')}</p></div></div>
+    <ol class="help-steps" style="padding:0 16px 14px 36px">
+      <li>${T('Make a free account on Make.com, Zapier or Pabbly Connect.')}</li>
+      <li>${T('Create a new flow. Trigger: “Facebook Lead Ads → New lead”. Log in with Facebook and pick your page and form.')}</li>
+      <li>${T('Action: “HTTP / Webhooks → POST”. URL: your lead link above. Body type: JSON.')}</li>
+      <li>${T('Map the fields: full_name, phone_number, email and your form questions (date, guests, event). Add platform and campaign_name if you like.')}</li>
+      <li>${T('Turn the flow on, then fill your form once with Meta’s Lead Ads Testing Tool. The lead appears here.')}</li></ol></div>
+  <div class="card"><div class="card-h"><div><h3>${ic('file')} ${T('Google Form (live)')}${info('ld-gform')}</h3><p>${T('Every new answer of your Google Form comes here at once.')}</p></div></div>
+    <ol class="help-steps" style="padding:0 16px 8px 36px">
+      <li>${T('Open your Google Form → ⋮ (3 dots) → Apps Script.')}</li>
+      <li>${T('Delete what is there, paste the code below and press Save.')}</li>
+      <li>${T('On the left open Triggers (clock) → Add trigger → function onFormSubmit → event “On form submit” → Save → Allow.')}</li>
+      <li>${T('Fill the form once to test. The answer shows here as a new lead.')}</li></ol>
+    <div style="padding:0 16px 16px"><pre class="code-box">${esc(gs)}</pre><button class="btn" onclick="A.copy(${esc(JSON.stringify(gs))})">${ic('copy')} ${T('Copy the code')}</button></div></div>
+  <div class="card pad stack-sm"><div class="row-flex" style="gap:10px;flex-wrap:nowrap">${ibox('upload', '#0B9B68')}<div><b>${T('Upload leads file')}</b><div class="small muted">${T('Download leads from Meta Ads Manager / Leads Center (CSV or Excel) and upload here. Old leads with the same mobile are skipped.')}</div></div></div>
+    <label class="btn primary" style="align-self:flex-start">${ic('upload')} ${T('Choose file')}<input type="file" accept=".csv,.xlsx,.xls,text/csv" hidden onchange="A.leadFile(this)"></label></div>
+  <div class="card pad small muted">${T('Website or any other form: send the form to your lead link (POST, JSON or form fields). Field names like name, phone, email, date, guests and message are read automatically; everything else is kept with the lead.')}</div>
+  </div>`;
+}
+function googleFormScript(u) {
+  return `// SabManage: send every new Google Form answer to your Leads\nvar URL = '${u || 'YOUR LEAD LINK'}';\nfunction onFormSubmit(e) {\n  var data = { source: 'Google Form' };\n  if (e && e.namedValues) { for (var k in e.namedValues) data[k] = String(e.namedValues[k]); }\n  else if (e && e.response) { e.response.getItemResponses().forEach(function (r) { data[r.getItem().getTitle()] = String(r.getResponse()); }); data.form = FormApp.getActiveForm().getTitle(); }\n  UrlFetchApp.fetch(URL, { method: 'post', contentType: 'application/json', payload: JSON.stringify(data), muteHttpExceptions: true });\n}`;
+}
+A.leadKeyReset = async () => { try { const k = await S.adapter.leadKey(S.org.orgId, true); S.leadUrl = `${location.origin}/api/lead?key=${k}`; toast('New link made'); render(); } catch (e) { toast(e.message, 'bad'); } };
+A.leadTest = async () => {
+  try { const k = (S.leadUrl || '').split('key=')[1]; await S.adapter.leadIntake(k, normLead({ full_name: 'Test Lead', phone_number: '9000000000', event_date: addDays(todayLocal(), 45), guests: 300, message: 'This is a test lead from SabManage. You can delete it.' }, 'Website')); toast(T('Test lead sent. It will show in Leads in a few seconds.')); if (S.adapter.mode !== 'cloud') render(); }
+  catch (e) { toast(e.message, 'bad'); }
+};
+A.leadFile = async input => {
+  const f = input.files?.[0]; input.value = ''; if (!f) return;
+  try {
+    let rows;
+    if (/\.csv$/i.test(f.name) && !/\.xls/i.test(f.name)) { const txt = await f.text(); const isTab = (txt.split('\n')[0].match(/\t/g) || []).length > (txt.split('\n')[0].match(/,/g) || []).length; rows = parseCSV(txt, isTab ? '\t' : ','); }
+    else { await loadScript('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'); const wb = window.XLSX.read(await f.arrayBuffer(), { type: 'array' }); rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false }); }
+    const [head, ...body] = rows.filter(r => r && r.some(x => String(x || '').trim())); if (!head || !body.length) throw new Error('The file is empty');
+    const have = new Set(col('leads').map(l => phone10(l.phone)).filter(Boolean)); const ext = new Set(col('leads').map(l => l.extId).filter(Boolean));
+    const recs = []; let skip = 0;
+    body.forEach(r => { const o = {}; head.forEach((h, i) => { o[String(h || '').trim()] = r[i]; }); const n = normLead(o, 'Meta / Facebook'); const p = phone10(n.phone);
+      if ((!n.name && !p) || (p && have.has(p)) || (n.extId && ext.has(n.extId))) { skip++; return; } if (p) have.add(p);
+      const at = n.extra?.created_time ? String(n.extra.created_time).slice(0, 16).replace(' ', 'T') : nowAt();
+      recs.push({ id: uid('ld_'), created: Date.now(), createdAt: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(at) ? at : nowAt(), status: 'New', ...n, log: [{ at: nowAt(), type: 'lead', by: T('File upload'), text: n.message || '' }], via: 'file' }); });
+    if (!recs.length) { toast(`${T('No new leads in the file')} (${skip} ${T('already here')})`, 'warn'); return; }
+    if (S.adapter.putMany) await S.adapter.putMany(S.org.orgId, 'leads', recs.map(x => ({ ...x, updatedAt: Date.now(), updatedById: S.user.id }))); else for (const x of recs) await save('leads', x);
+    S.data.leads = [...col('leads'), ...recs.filter(x => !col('leads').some(y => y.id === x.id))]; logAct(`Uploaded ${recs.length} leads`);
+    toast(`${recs.length} ${T('leads added')}${skip ? ` · ${skip} ${T('skipped')}` : ''}`); S.params.tab = 'list'; render();
+  } catch (e) { toast(e.message, 'bad'); }
+};
+function parseCSV(txt, sep = ',') {
+  const rows = []; let row = [], cur = '', q = false; txt = txt.replace(/^﻿/, '');
+  for (let i = 0; i < txt.length; i++) { const c = txt[i];
+    if (q) { if (c === '"') { if (txt[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true; else if (c === sep) { row.push(cur); cur = ''; } else if (c === '\n') { row.push(cur.replace(/\r$/, '')); rows.push(row); row = []; cur = ''; } else cur += c; }
+  if (cur || row.length) { row.push(cur.replace(/\r$/, '')); rows.push(row); }
+  return rows;
+}
+
+/* ---------- bell + live notices ---------- */
+EXTRA_ALERTS.push(() => {
+  if (!can('leads')) return [];
+  const out = []; const mgr = lvl('leads') >= 3;
+  col('leads').forEach(l => {
+    if (!mgr && l.assignedTo && l.assignedTo !== S.user?.id) return;
+    if ((l.status || 'New') === 'New' && !(l.log || []).some(x => x.type !== 'lead')) out.push({ tag: 'Lead', tone: 'info', title: `${T('New lead')}: ${l.name || l.phone}`, sub: `${T(l.source || '')} · ${T(leadAge(l) + ' ago')}${l.eventDate ? ' · ' + fmtShort(l.eventDate) : ''}`, go: `A.go('lead',{id:'${l.id}'})` });
+    else if (leadLate(l)) out.push({ tag: 'Follow up', tone: 'warn', title: `${T('Follow up')}: ${l.name || l.phone}`, sub: `${T(l.status || '')} · ${atText(l.nextAt)}`, go: `A.go('lead',{id:'${l.id}'})` });
+  });
+  return out;
+});
+Object.assign(ALERT_STYLE, { Lead: ['megaphone', '#7C3AED'] });
+const _lnLeads = liveNotice; liveNotice = (coll, rec, old) => {
+  if (coll === 'leads' && !old && rec.via === 'link' && can('leads')) { toast(`🔔 ${T('New lead')}: ${rec.name || rec.phone}${rec.source ? ' · ' + T(rec.source) : ''}`, 'warn'); try { Tune.play(); } catch (e) { } return; }
+  return _lnLeads(coll, rec, old);
+};
+
+/* ================= Venue: halls, rooms, guests, function sheet, hospitality =================
+   For businesses that picked 'Venue / Banquet / Resort' at sign-up (settings.bizTypes has 'venue').
+   Collections: spaces (halls / lawns), rooms, stays (a guest in a room for a booking).
+   On a booking: spaceIds (halls used), functions [] (the function sheet: time, hall, pax, setup, food,
+   waiters, lights, decor), roomsNeeded. 'Make hospitality checklist' creates tasks (with `area`) that the
+   team updates in the Live tracker and on the crew screen. */
+Object.assign(ICONS, {
+  bed: 'M3 19V7M3 15h18v4M21 15v-2a3 3 0 0 0-3-3h-7v5M7 12.5a1.8 1.8 0 1 0 0-.01',
+  door: 'M6 21V4h11v17M4 21h16M14 12.5v.01'
+});
+const bizHas = b => !!S.org && (settings().bizTypes || []).includes(b);
+const isVenue = () => !!S.org && !isClinic() && bizHas('venue');
+const SPACE_TYPES = ['Banquet hall', 'Lawn', 'Poolside', 'Terrace', 'Conference room', 'Restaurant', 'Other'];
+const ROOM_TYPES = ['Standard', 'Deluxe', 'Suite', 'Family', 'Cottage / Villa', 'Dormitory'];
+const ROOM_ST = { ready: ['Ready', '#0B9B68'], occupied: ['Guest in room', '#2563EB'], cleaning: ['To clean', '#D97706'], blocked: ['Blocked / repair', '#64748B'] };
+const SETUPS = ['Round tables', 'Buffet', 'Theatre', 'Classroom', 'U-shape', 'Cluster / lounge', 'Mandap', 'Stage & dance floor', 'Cocktail (standing)'];
+const MEALS = ['No food', 'Breakfast', 'Lunch', 'Hi-tea', 'Dinner', 'Cocktail & snacks'];
+const HOSP_AREAS = [['welcome', 'Welcome & reception', 'sparkle', '#DB2777'], ['rooms', 'Rooms & housekeeping', 'bed', '#0F766E'], ['food', 'Food & service', 'utensils', '#16A34A'],
+  ['lights', 'Lights & sound', 'bulb', '#F59E0B'], ['decor', 'Decor & setup', 'sparkle', '#9333EA'], ['transport', 'Transport & pickups', 'truck', '#2563EB'], ['security', 'Security & parking', 'shield', '#475569']];
+const AREA = Object.fromEntries(HOSP_AREAS.map(a => [a[0], a]));
+const VENUE_ALERTS = ['Guest waiting at reception', 'Room not ready', 'Food running short', 'Need more waiters now', 'Lights / sound problem', 'VIP arriving now', 'Clean the hall now'];
+
+const spaceById = id => getById('spaces', id);
+const roomById = id => getById('rooms', id);
+const roomLabel = r => r ? `${r.no}${r.type ? ' · ' + T(r.type) : ''}` : '—';
+const evSpaces = e => (e?.spaceIds || []).map(spaceById).filter(Boolean);
+/* events holding a hall on a date (Confirmed / Setup / Live) */
+const spaceBookings = (sid, d, except) => col('events').filter(e => e.id !== except && RESERVING.includes(e.stage) && (e.spaceIds || []).includes(sid) && e.date <= d && eventEnd(e) >= d);
+const overlap = (a1, a2, b1, b2) => a1 < b2 && b1 < a2;
+const stayOn = (s, d) => s.status !== 'out' && s.from <= d && d < s.to;
+function roomFree(roomId, from, to, except) { return !col('stays').some(s => s.id !== except && s.roomId === roomId && s.status !== 'out' && overlap(from, to, s.from, s.to)); }
+const roomGuest = (roomId, d = todayLocal()) => col('stays').find(s => s.roomId === roomId && (s.status === 'in' || stayOn(s, d)));
+function waitersFor(fn) { const p = +fn.pax || 0; if (!p || fn.meal === 'No food') return 0; const per = fn.setup === 'Buffet' ? 25 : fn.setup === 'Round tables' ? 12 : fn.setup === 'Cocktail (standing)' ? 20 : 15; return Math.ceil(p / per); }
+const fnSort = (a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''));
+
+/* used by Leads: which halls are taken on a date */
+function venueClashText(d) { if (!isVenue()) return ''; const busy = col('spaces').filter(s => spaceBookings(s.id, d).length); return busy.length ? ` · ${T('Halls taken')}: ${busy.map(s => esc(s.name)).join(', ')}` : ''; }
+function venueDayHTML(d) {
+  if (!isVenue() || !col('spaces').length) return '';
+  const rooms = col('rooms'); const used = col('stays').filter(s => stayOn(s, d)).length;
+  return `<div><div class="eyebrow">${T('Halls')}</div><div class="hall-chips">${col('spaces').map(s => { const b = spaceBookings(s.id, d); return `<span class="hall-chip ${b.length ? 'busy' : ''}">${esc(s.name)} · ${b.length ? esc(b[0].title) : T('Free')}</span>`; }).join('')}</div>${rooms.length ? `<div class="tiny muted" style="margin-top:6px">${T('Rooms booked')}: ${used} / ${rooms.length}</div>` : ''}</div>`;
+}
+
+/* ---------- Venue page ---------- */
+V.venue = () => {
+  const tab = S.params.tab || 'today'; const t = todayLocal();
+  const arrive = col('stays').filter(s => s.status === 'expected' && s.from <= t); const leave = col('stays').filter(s => s.status === 'in' && s.to <= t);
+  const clean = col('rooms').filter(r => r.status === 'cleaning');
+  const tabs = [['today', 'Today'], ['spaces', 'Halls & lawns'], ['rooms', 'Rooms', clean.length], ['guests', 'Guests', arrive.length + leave.length]];
+  return pageHead('Venue & rooms', 'Halls, rooms, guests and today’s functions') + `<div class="tabs">${tabs.map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('vn-' + tab)}</div>` +
+    (tab === 'spaces' ? spacesTab() : tab === 'rooms' ? roomsTab() : tab === 'guests' ? guestsTab() : venueToday());
+};
+function venueToday() {
+  const t = todayLocal(); const fns = []; col('events').filter(e => !['Cancelled'].includes(e.stage)).forEach(e => (e.functions || []).filter(f => f.date === t).forEach(f => fns.push({ ...f, ev: e }))); fns.sort(fnSort);
+  const evs = col('events').filter(e => RESERVING.includes(e.stage) && e.date <= t && eventEnd(e) >= t);
+  const arrive = col('stays').filter(s => s.status === 'expected' && s.from <= t).sort(by('from')); const leave = col('stays').filter(s => s.status === 'in' && s.to <= t);
+  const inHouse = col('stays').filter(s => s.status === 'in'); const clean = col('rooms').filter(r => r.status === 'cleaning'); const edit = can('venue', 2);
+  return `<div class="today-strip"><div><b>${fns.length || evs.length}</b><span>${fns.length ? 'Functions today' : 'Events today'}</span></div><div><b>${num(sum(fns, f => +f.pax || 0))}</b><span>Guests to serve</span></div><div><b>${inHouse.length}</b><span>Rooms with guests</span></div><div><b>${clean.length}</b><span>Rooms to clean</span></div></div>
+  ${edit || can('tasks', 2) ? `<div class="big-grid">${[edit && bigBtn('Check in a guest', 'door', '#2563EB', "A.setP('tab','guests')"), edit && bigBtn('Room board', 'bed', MOD.venue.c, "A.setP('tab','rooms')"), can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()'), can('leads') && bigBtn('Leads', 'megaphone', MOD.leads.c, "A.go('leads')")].filter(Boolean).join('')}</div>` : ''}
+  <div class="sec-h"><h2>${T('Today’s functions')}${info('vn-functions')}</h2></div>
+  <div class="card">${fns.length ? `<div class="rows">${fns.map(f => `<button class="row click" onclick="A.go('event',{id:'${f.ev.id}',tab:'venue'})"><span class="timebox" style="--c:${evStyle(f.ev)[1]}"><b>${esc(f.time || '—')}</b><span>${esc(f.end || '')}</span></span><div class="main-col"><b>${esc(f.name || f.ev.title)}</b><div class="sub">${[spaceById(f.spaceId)?.name, f.pax ? num(f.pax) + ' ' + T('pax') : '', f.meal && f.meal !== 'No food' ? T(f.meal) : '', (f.waiters || waitersFor(f)) ? (f.waiters || waitersFor(f)) + ' ' + T('waiters') : ''].filter(Boolean).map(esc).join(' · ')}</div><div class="tiny muted">${esc(f.ev.title)}</div></div>${ic('chev', 'go')}</button>`).join('')}</div>`
+    : evs.length ? `<div class="rows">${evs.map(e => `<button class="row click" onclick="A.go('event',{id:'${e.id}',tab:'venue'})">${datebox(e.date, evStyle(e)[1])}<div class="main-col"><b>${esc(e.title)}</b><div class="sub">${evSpaces(e).map(s => esc(s.name)).join(', ') || T('Add the function sheet')}</div></div>${ic('chev', 'go')}</button>`).join('')}</div>` : empty('No function today', 'Functions from each booking’s function sheet show here with hall, guests, food and waiters.', '', 'calendar', MOD.venue.c)}</div>
+  ${arrive.length || leave.length ? `<div class="sec-h"><h2>${T('Arrivals & departures')}</h2></div><div class="card"><div class="rows">${arrive.map(s => stayRow(s, 'in')).join('')}${leave.map(s => stayRow(s, 'out')).join('')}</div></div>` : ''}
+  ${clean.length ? `<div class="sec-h"><h2>${T('Rooms to clean')}</h2></div><div class="card"><div class="rows">${clean.map(r => `<div class="row">${ibox('bed', ROOM_ST.cleaning[1], 'sm')}<div class="main-col"><b>${T('Room')} ${esc(r.no)}</b><div class="sub">${esc(T(r.type || ''))}${r.floor ? ' · ' + T('Floor') + ' ' + esc(r.floor) : ''}</div></div>${edit ? `<button class="btn sm" onclick="A.roomStatus('${r.id}','ready')">${ic('check')} ${T('Clean, ready')}</button>` : ''}</div>`).join('')}</div></div>` : ''}`;
+}
+
+/* ---------- halls & lawns ---------- */
+function spacesTab() {
+  const sp = col('spaces').slice().sort(by('name')); const days = Array.from({ length: 14 }, (_, i) => addDays(todayLocal(), i)); const edit = can('venue', 2);
+  return `<div class="row-flex" style="justify-content:space-between;margin-bottom:12px"><span class="small muted">${T('Next 14 days. Coloured = booked. Tap to open the booking.')}</span>${edit ? `<button class="btn primary sm" onclick="A.spaceForm()">${ic('plus')} ${T('Hall / lawn')}</button>` : ''}</div>
+  ${sp.length ? `<div class="card"><div class="tbl-wrap"><table class="tbl avail"><thead><tr><th>${T('Hall')}</th>${days.map(d => `<th class="c"><span class="tiny">${esc(fmtDay(d).split(',')[0])}</span><br>${d.slice(8)}</th>`).join('')}</tr></thead><tbody>
+    ${sp.map(s => `<tr><td class="nowrap"><button class="linkbtn" ${edit ? `onclick="A.spaceForm('${s.id}')"` : ''}><b>${esc(s.name)}</b></button><div class="tiny muted">${esc(T(s.type || ''))}${s.seating ? ' · ' + num(s.seating) + ' ' + T('seats') : ''}${s.floating ? ' · ' + num(s.floating) + ' ' + T('standing') : ''}</div></td>${days.map(d => { const b = spaceBookings(s.id, d); const q = col('events').filter(e => ['Quoted', 'Enquiry'].includes(e.stage) && (e.spaceIds || []).includes(s.id) && e.date <= d && eventEnd(e) >= d);
+      return `<td class="c">${b.length ? `<button class="slot b" title="${esc(b[0].title)}" onclick="A.go('event',{id:'${b[0].id}'})">${esc(initials(b[0].client || b[0].title))}</button>` : q.length ? `<button class="slot q" title="${esc(q[0].title)}" onclick="A.go('event',{id:'${q[0].id}'})">?</button>` : `<span class="slot f"></span>`}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div></div>
+    <div class="dlegend" style="margin-top:8px"><span><i class="b"></i>${T('Booked')}</span><span><i class="q"></i>${T('Quotation / enquiry')}</span><span><i class="f"></i>${T('Free')}</span></div>`
+  : `<div class="card">${empty('No halls added', 'Add your banquet halls, lawns and other spaces with their capacity. Then pick them on each booking to see which dates are free.', edit ? `<button class="btn primary" onclick="A.spaceForm()">${ic('plus')} Hall / lawn</button>` : '', 'building', MOD.venue.c)}</div>`}`;
+}
+A.spaceForm = id => {
+  const s = id ? spaceById(id) : { type: 'Banquet hall' };
+  formModal({ title: id ? 'Edit hall / lawn' : 'New hall / lawn', fields: [{ name: 'name', label: 'Name', required: true, value: s.name, placeholder: 'e.g. Crystal Hall' }, { name: 'type', label: 'Type', type: 'select', options: SPACE_TYPES, value: s.type },
+    { name: 'seating', label: 'Seating capacity', type: 'number', min: 0, value: s.seating }, { name: 'floating', label: 'Standing / floating capacity', type: 'number', min: 0, value: s.floating },
+    { name: 'rate', label: 'Rent per day ₹ (optional)', type: 'number', min: 0, value: s.rate }, { name: 'notes', label: 'Notes', value: s.notes, placeholder: 'e.g. AC, stage 20×12 ft, parking 80 cars' }],
+    left: id && can('venue', 3) ? `<button type="button" class="btn danger" onclick="A.delSpace('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { await save('spaces', { ...(id ? s : { id: uid('sp_') }), ...v, seating: +v.seating || 0, floating: +v.floating || 0, rate: +v.rate || 0 }, `${id ? 'Updated' : 'Added'} hall ${v.name}`); toast('Saved'); render(); } });
+};
+A.delSpace = id => { const s = spaceById(id); confirmBox(`Delete ${s.name}?`, 'Bookings keep their details, but this hall will not show in the planner.', 'Delete', async () => { await removeRec('spaces', id, `Deleted hall ${s.name}`); A.closeModal(); render(); }); };
+
+/* ---------- rooms ---------- */
+function roomsTab() {
+  const rooms = col('rooms').slice().sort((a, b) => String(a.floor || '').localeCompare(String(b.floor || ''), undefined, { numeric: true }) || String(a.no).localeCompare(String(b.no), undefined, { numeric: true }));
+  const floors = [...new Set(rooms.map(r => r.floor || ''))]; const edit = can('venue', 2);
+  const count = k => rooms.filter(r => (r.status || 'ready') === k).length;
+  return `<div class="row-flex" style="justify-content:space-between;margin-bottom:12px"><div class="dlegend">${Object.entries(ROOM_ST).map(([k, [l, c]]) => `<span><i style="background:${c}"></i>${T(l)} ${count(k)}</span>`).join('')}</div>${edit ? `<div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.roomsBulk()">${ic('plus')} ${T('Many rooms')}</button><button class="btn primary sm" onclick="A.roomForm()">${ic('plus')} ${T('Room')}</button></div>` : ''}</div>
+  ${rooms.length ? floors.map(f => `<div class="sec-h" style="margin-top:6px"><h2>${f ? T('Floor') + ' ' + esc(f) : T('Rooms')}</h2></div><div class="room-board">${rooms.filter(r => (r.floor || '') === f).map(r => { const st = r.status || 'ready'; const g = roomGuest(r.id);
+    return `<button class="room-tile" style="--c:${ROOM_ST[st][1]}" onclick="A.roomSheet('${r.id}')"><b>${esc(r.no)}</b><span>${esc(T(r.type || ''))}</span><span class="rs">${T(ROOM_ST[st][0])}</span>${g ? `<span class="rg">${esc(g.guest)}</span>` : ''}</button>`; }).join('')}</div>`).join('')
+  : `<div class="card">${empty('No rooms added', 'Add your rooms once (you can add 101 to 120 in one go). Then allot rooms to wedding guests and track cleaning.', edit ? `<button class="btn primary" onclick="A.roomsBulk()">${ic('plus')} Add rooms</button>` : '', 'bed', MOD.venue.c)}</div>`}`;
+}
+A.roomForm = id => {
+  const r = id ? roomById(id) : { type: 'Deluxe', beds: 2, status: 'ready' };
+  formModal({ title: id ? `Room ${r.no}` : 'New room', fields: [{ name: 'no', label: 'Room number', required: true, value: r.no }, { name: 'type', label: 'Type', type: 'select', options: ROOM_TYPES, value: r.type },
+    { name: 'floor', label: 'Floor / block', value: r.floor }, { name: 'beds', label: 'Guests per room', type: 'number', min: 1, value: r.beds }, { name: 'rate', label: 'Rate per night ₹', type: 'number', min: 0, value: r.rate }, { name: 'notes', label: 'Notes', value: r.notes }],
+    left: id && can('venue', 3) ? `<button type="button" class="btn danger" onclick="A.delRoom('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { if (col('rooms').some(x => x.id !== id && String(x.no).toLowerCase() === String(v.no).trim().toLowerCase())) throw new Error('This room number already exists'); await save('rooms', { ...(id ? r : { id: uid('rm_'), status: 'ready' }), ...v, no: String(v.no).trim(), beds: +v.beds || 1, rate: +v.rate || 0 }, `${id ? 'Updated' : 'Added'} room ${v.no}`); toast('Saved'); render(); } });
+};
+A.roomsBulk = () => formModal({ title: 'Add many rooms', sub: 'e.g. 101 to 120 on the first floor', fields: [{ name: 'from', label: 'From number', type: 'number', required: true, value: 101 }, { name: 'to', label: 'To number', type: 'number', required: true, value: 110 },
+  { name: 'type', label: 'Type', type: 'select', options: ROOM_TYPES, value: 'Deluxe' }, { name: 'floor', label: 'Floor / block', value: '1' }, { name: 'beds', label: 'Guests per room', type: 'number', min: 1, value: 2 }, { name: 'rate', label: 'Rate per night ₹', type: 'number', min: 0 }],
+  submit: 'Add rooms', onSubmit: async v => {
+    const a = +v.from, b = +v.to; if (!(a > 0 && b >= a && b - a < 300)) throw new Error('Check the numbers (up to 300 rooms at once)');
+    const have = new Set(col('rooms').map(r => String(r.no))); const recs = [];
+    for (let n = a; n <= b; n++) if (!have.has(String(n))) recs.push({ id: uid('rm_'), no: String(n), type: v.type, floor: v.floor, beds: +v.beds || 1, rate: +v.rate || 0, status: 'ready' });
+    for (const r of recs) await save('rooms', r); logAct(`Added ${recs.length} rooms`); toast(`${recs.length} ${T('rooms added')}`); render();
+  } });
+A.delRoom = id => { const r = roomById(id); confirmBox(`Delete room ${r.no}?`, '', 'Delete', async () => { await removeRec('rooms', id, `Deleted room ${r.no}`); A.closeModal(); render(); }); };
+A.roomSheet = id => {
+  const r = roomById(id); const g = roomGuest(r.id); const edit = can('venue', 2); const st = r.status || 'ready';
+  const next = col('stays').filter(s => s.roomId === id && s.status === 'expected' && s.from >= todayLocal()).sort(by('from'))[0];
+  modal(`${sheetHead(`${T('Room')} ${r.no}`, [T(r.type || ''), r.floor ? T('Floor') + ' ' + r.floor : '', r.beds ? r.beds + ' ' + T('guests') : ''].filter(Boolean).join(' · '))}<div class="sheet-b stack">
+    <div class="row-flex" style="gap:6px">${pill(T(ROOM_ST[st][0]), st === 'ready' ? 'good' : st === 'cleaning' ? 'warn' : st === 'occupied' ? 'primary' : '')}</div>
+    ${g ? `<div class="card pad"><b>${esc(g.guest)}</b><div class="small muted">${esc(g.phone || '')} · ${fmtShort(g.from)} → ${fmtShort(g.to)}${g.eventId && evById(g.eventId) ? ' · ' + esc(evById(g.eventId).title) : ''}</div>${edit ? `<div class="row-flex" style="margin-top:8px">${g.status === 'expected' ? `<button class="btn sm primary" onclick="A.stayMove('${g.id}','in')">${ic('door')} ${T('Check in')}</button>` : `<button class="btn sm" onclick="A.stayMove('${g.id}','out')">${ic('logout')} ${T('Check out')}</button>`}</div>` : ''}</div>` : next ? `<div class="small muted">${T('Next guest')}: <b>${esc(next.guest)}</b> · ${fmtShort(next.from)}</div>` : ''}
+    ${edit ? `<div class="tiles">${Object.entries(ROOM_ST).filter(([k]) => k !== st).map(([k, [l, c]]) => `<button class="tile" onclick="A.roomStatus('${id}','${k}')">${ibox(k === 'ready' ? 'check' : k === 'cleaning' ? 'sparkle' : k === 'occupied' ? 'user' : 'wrench', c)}<span>${T(l)}</span></button>`).join('')}<button class="tile" onclick="A.closeModal();setTimeout(()=>A.roomForm('${id}'),40)">${ibox('edit', '#2563EB')}<span>${T('Edit room')}</span></button></div>` : ''}</div>`);
+};
+A.roomStatus = async (id, st) => { const r = roomById(id); try { await save('rooms', { ...r, status: st, statusAt: nowAt() }, `Room ${r.no}: ${ROOM_ST[st][0]}`); A.closeModal(); toast(`${T('Room')} ${r.no}: ${T(ROOM_ST[st][0])}`); render(); } catch (e) { toast(e.message, 'bad'); } };
+
+/* ---------- guests in rooms ---------- */
+function stayRow(s, act) {
+  const r = roomById(s.roomId); const e = s.eventId ? evById(s.eventId) : null; const edit = can('venue', 2);
+  const act_ = act || (s.status === 'expected' ? 'in' : s.status === 'in' ? 'out' : '');
+  return `<div class="row">${ibox(s.status === 'in' ? 'bed' : s.status === 'out' ? 'check' : 'door', s.status === 'in' ? '#2563EB' : s.status === 'out' ? '#94A3B8' : '#D97706', 'sm')}<div class="main-col"><b>${esc(s.guest)}</b><div class="sub">${r ? T('Room') + ' ' + esc(r.no) : `<span class="warn-t">${T('No room yet')}</span>`} · ${fmtShort(s.from)} → ${fmtShort(s.to)}${s.adults ? ' · ' + s.adults + ' ' + T('guests') : ''}</div>${e ? `<div class="tiny muted">${esc(e.title)}</div>` : ''}</div>
+    ${edit ? `<div class="row-flex" style="gap:4px">${act_ === 'in' ? `<button class="btn sm primary" onclick="A.stayMove('${s.id}','in')">${T('Check in')}</button>` : act_ === 'out' ? `<button class="btn sm" onclick="A.stayMove('${s.id}','out')">${T('Check out')}</button>` : ''}<button class="icon-btn" style="width:34px;height:34px" aria-label="Edit" onclick="A.stayForm('${s.id}')">${ic('edit')}</button></div>` : ''}</div>`;
+}
+function guestsTab() {
+  const f = S.filters.vgF || 'In house'; const t = todayLocal(); const q = (S.filters.vgQ || '').toLowerCase(); let list = col('stays').slice();
+  const F = { 'In house': s => s.status === 'in', Arriving: s => s.status === 'expected' && s.from <= addDays(t, 1), Leaving: s => s.status === 'in' && s.to <= addDays(t, 1), Upcoming: s => s.status === 'expected', All: () => true };
+  list = list.filter(F[f] || F.All); if (q) list = list.filter(s => [s.guest, s.phone, roomById(s.roomId)?.no, evById(s.eventId)?.title].join(' ').toLowerCase().includes(q));
+  list.sort((a, b) => String(a.from).localeCompare(String(b.from)));
+  return `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="${esc(T('Search guest, room or booking'))}" value="${esc(S.filters.vgQ || '')}" oninput="clearTimeout(window._vq);window._vq=setTimeout(()=>A.setF('vgQ',this.value),350)"></div>${can('venue', 2) ? `<button class="btn primary" onclick="A.stayForm()">${ic('plus')} ${T('Guest')}</button>` : ''}</div>
+  <div class="chips" style="margin-bottom:14px">${Object.keys(F).map(c => `<button class="chip ${f === c ? 'on' : ''}" onclick="A.setF('vgF','${c}')">${T(c)} <span class="muted">${col('stays').filter(F[c]).length}</span></button>`).join('')}</div>
+  <div class="card">${list.length ? `<div class="rows">${list.map(s => stayRow(s)).join('')}</div>` : empty('No guests here', 'Add guests from a booking’s Venue plan (rooming list) or with the Guest button.', '', 'bed', MOD.venue.c)}</div>`;
+}
+A.stayForm = (id, preset = {}) => {
+  const s = id ? getById('stays', id) : { status: 'expected', adults: 2, ...preset }; const e = s.eventId ? evById(s.eventId) : null;
+  const from = s.from || e?.date || todayLocal(); const to = s.to || addDays(e?.endDate || e?.date || todayLocal(), 1);
+  const rooms = col('rooms').filter(r => r.id === s.roomId || (r.status !== 'blocked' && roomFree(r.id, from, to, id))).sort((a, b) => String(a.no).localeCompare(String(b.no), undefined, { numeric: true }));
+  const evs = col('events').filter(x => !['Cancelled', 'Closed'].includes(x.stage) && eventEnd(x) >= addDays(todayLocal(), -3)).sort(by('date'));
+  formModal({ title: id ? 'Edit guest' : 'Guest in a room', sub: 'Rooms shown are free on these dates', fields: [
+    { name: 'guest', label: 'Guest name', required: true, value: s.guest }, { name: 'phone', label: 'Mobile', type: 'tel', value: s.phone },
+    { name: 'from', label: 'Check-in date', type: 'date', required: true, value: from }, { name: 'to', label: 'Check-out date', type: 'date', required: true, value: to },
+    { name: 'roomId', label: 'Room', type: 'select', options: [['', 'Allot later'], ...rooms.map(r => [r.id, roomLabel(r)])], value: s.roomId || '' }, { name: 'adults', label: 'People', type: 'number', min: 1, value: s.adults },
+    { name: 'eventId', label: 'Booking (optional)', type: 'select', options: [['', '—'], ...evs.map(x => [x.id, `${x.title} (${fmtShort(x.date)})`])], value: s.eventId || '' }, { name: 'notes', label: 'Notes', value: s.notes, placeholder: 'e.g. needs ground floor, VIP' }],
+    left: id && can('venue', 3) ? `<button type="button" class="btn danger" onclick="A.delStay('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => {
+      if (v.to <= v.from) throw new Error('Check-out must be after check-in');
+      if (v.roomId && !roomFree(v.roomId, v.from, v.to, id)) throw new Error('This room is taken on these dates. Pick another room.');
+      await save('stays', { ...(id ? s : { id: uid('st_'), status: 'expected' }), ...v, adults: +v.adults || 1 }, `${id ? 'Updated' : 'Added'} guest ${v.guest}`); toast('Saved'); render();
+    } });
+};
+A.delStay = id => { const s = getById('stays', id); confirmBox(`Remove ${s.guest}?`, '', 'Remove', async () => { await removeRec('stays', id, `Removed guest ${s.guest}`); A.closeModal(); render(); }); };
+A.stayMove = async (id, to) => {
+  const s = getById('stays', id); const r = roomById(s.roomId);
+  if (to === 'in' && !r) { toast('Allot a room first', 'warn'); A.stayForm(id); return; }
+  try {
+    await save('stays', { ...s, status: to, [to === 'in' ? 'inAt' : 'outAt']: nowAt() }, `${s.guest} checked ${to}`);
+    if (r) await save('rooms', { ...r, status: to === 'in' ? 'occupied' : 'cleaning', statusAt: nowAt() });
+    A.closeModal(); toast(to === 'in' ? `${s.guest}: ${T('checked in')}` : `${s.guest}: ${T('checked out. Room sent for cleaning.')}`); render();
+  } catch (e) { toast(e.message, 'bad'); }
+};
+
+/* ---------- on a booking: Venue plan ---------- */
+EV_TABS.venue = e => {
+  const edit = can('bookings', 2) || can('venue', 2); const fns = (e.functions || []).slice().sort(fnSort);
+  const stays = col('stays').filter(s => s.eventId === e.id).sort(by('guest')); const sp = col('spaces');
+  const tasks = col('tasks').filter(t => t.eventId === e.id && t.area);
+  return `<div class="stack">
+  <div class="card"><div class="card-h"><div><h3>${T('Halls & lawns')}${info('vn-halls')}</h3><p>${T('Pick the spaces this booking uses. A hall already taken on these dates is marked.')}</p></div></div>
+    <div class="hall-chips" style="padding:0 16px 14px">${sp.length ? sp.map(s => { const on = (e.spaceIds || []).includes(s.id); const busy = []; for (let d = e.date; d <= eventEnd(e); d = addDays(d, 1)) spaceBookings(s.id, d, e.id).forEach(x => { if (!busy.includes(x)) busy.push(x); });
+      return `<button class="hall-chip ${on ? 'on' : ''} ${busy.length ? 'busy' : ''}" ${edit ? `onclick="A.toggleSpace('${e.id}','${s.id}')"` : 'disabled'}>${on ? ic('check') : ''} ${esc(s.name)}${s.seating ? ` <span class="tiny">${num(s.seating)}</span>` : ''}${busy.length ? ` <span class="tiny">· ${T('taken')}: ${esc(busy[0].title)}</span>` : ''}</button>`; }).join('') : `<span class="small muted">${T('No halls added yet.')}</span> ${can('venue', 2) ? `<button class="linkbtn" onclick="A.go('venue',{tab:'spaces'})">${T('Add halls')}</button>` : ''}`}</div></div>
+
+  <div class="card"><div class="card-h"><div><h3>${T('Function sheet')}${info('vn-fsheet')}</h3><p>${T('Each function with time, hall, guests, setup, food and waiters. Share it with the team.')}</p></div>
+    <div class="row-flex" style="gap:6px">${fns.length ? `<button class="btn sm" onclick="A.printFsheet('${e.id}')">${ic('print')} ${T('Print')}</button>${waBtn(fsheetText(e), '', 'Share')}` : ''}${edit ? `<button class="btn sm primary" onclick="A.fnForm('${e.id}')">${ic('plus')} ${T('Function')}</button>` : ''}</div></div>
+    ${fns.length ? `<div class="rows">${fns.map(f => `<button class="row ${edit ? 'click' : ''}" ${edit ? `onclick="A.fnForm('${e.id}','${f.id}')"` : ''}><span class="timebox" style="--c:${evStyle(e)[1]}"><b>${esc(f.time || '—')}</b><span>${fmtShort(f.date)}</span></span><div class="main-col"><b>${esc(f.name || T('Function'))}</b><div class="sub">${[spaceById(f.spaceId)?.name, f.pax ? num(f.pax) + ' ' + T('pax') : '', T(f.setup || ''), f.meal && f.meal !== 'No food' ? T(f.meal) : ''].filter(Boolean).map(esc).join(' · ')}</div>${[f.menu, f.lights, f.decor].some(Boolean) ? `<div class="tiny muted">${[f.menu && T('Food') + ': ' + f.menu, f.lights && T('Lights') + ': ' + f.lights, f.decor && T('Decor') + ': ' + f.decor].filter(Boolean).map(esc).join(' · ')}</div>` : ''}</div>${(f.waiters || waitersFor(f)) ? `<span class="pill">${f.waiters || waitersFor(f)} ${T('waiters')}</span>` : ''}</button>`).join('')}</div>`
+    : `<div class="pad small muted" style="padding:0 16px 14px">${T('No function yet. Add Haldi, lunch, sangeet, wedding… one by one.')}</div>`}</div>
+
+  <div class="card"><div class="card-h"><div><h3>${T('Rooms for guests')}${info('vn-rooming')}</h3><p>${stays.length} ${T('guests')} · ${stays.filter(s => s.roomId).length} ${T('with rooms')}${e.roomsNeeded ? ` · ${T('asked for')} ${e.roomsNeeded} ${T('rooms')}` : ''}</p></div>
+    ${edit ? `<div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.roomingPaste('${e.id}')">${ic('users')} ${T('Rooming list')}</button>${stays.some(s => !s.roomId) ? `<button class="btn sm primary" onclick="A.autoRooms('${e.id}')">${ic('bolt')} ${T('Allot rooms')}</button>` : ''}</div>` : ''}</div>
+    ${stays.length ? `<div class="rows">${stays.map(s => stayRow(s)).join('')}</div>` : `<div class="pad small muted" style="padding:0 16px 14px">${T('Paste the guest list from the family; the app gives each a free room.')}</div>`}</div>
+
+  <div class="card"><div class="card-h"><div><h3>${T('Hospitality checklist')}${info('vn-hosp')}</h3><p>${T('Welcome, rooms, food, lights, decor, transport and security: every job with a person and progress.')}</p></div>
+    <div class="row-flex" style="gap:6px">${tasks.length ? `<button class="btn sm" onclick="A.go('tasks')">${ic('pulse')} ${T('Live tracker')}</button>` : ''}${can('tasks', 2) ? `<button class="btn sm primary" onclick="A.hospForm('${e.id}')">${ic('plus')} ${tasks.length ? T('Add jobs') : T('Make checklist')}</button>` : ''}</div></div>
+    ${tasks.length ? HOSP_AREAS.filter(a => tasks.some(t => t.area === a[0])).map(([k, l, i, c]) => { const ts = tasks.filter(t => t.area === k); const p = Math.round(sum(ts, t => +t.progress || 0) / ts.length);
+      return `<details class="hosp-area"><summary><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap">${ibox(i, c, 'sm')}<b class="grow">${T(l)}</b><span class="tiny muted">${ts.filter(t => +t.progress >= 100).length}/${ts.length}</span><b class="num">${p}%</b>${ic('chev', 'go')}</div>${prog(p)}</summary><div class="rows">${ts.map(taskRow).join('')}</div></details>`; }).join('')
+      : `<div class="pad small muted" style="padding:0 16px 14px">${T('Make the checklist in one tap; then give each job to a person.')}</div>`}</div>
+  </div>`;
+};
+A.toggleSpace = async (evId, sid) => {
+  const e = evById(evId); const ids = new Set(e.spaceIds || []); const on = !ids.has(sid); on ? ids.add(sid) : ids.delete(sid);
+  let busy = null; if (on) for (let d = e.date; d <= eventEnd(e); d = addDays(d, 1)) { const b = spaceBookings(sid, d, e.id); if (b.length) { busy = b[0]; break; } }
+  try { await save('events', { ...e, spaceIds: [...ids] }, `${e.title}: ${on ? 'added' : 'removed'} ${spaceById(sid)?.name}`); if (busy) toast(`${T('Careful')}: ${spaceById(sid).name} ${T('is already booked for')} ${busy.title}`, 'warn'); render(); } catch (err) { toast(err.message, 'bad'); }
+};
+A.fnForm = (evId, fid) => {
+  const e = evById(evId); const f = fid ? (e.functions || []).find(x => x.id === fid) : { date: e.date, pax: e.pax, setup: 'Round tables', meal: 'Dinner', spaceId: (e.spaceIds || [])[0] || '' };
+  const sp = col('spaces'); const days = []; for (let d = e.date; d <= eventEnd(e); d = addDays(d, 1)) days.push(d);
+  formModal({ title: fid ? 'Edit function' : 'New function', sub: e.title, fields: [
+    { name: 'name', label: 'Function', required: true, value: f.name, placeholder: 'e.g. Haldi, Lunch, Sangeet, Wedding', autofocus: !fid },
+    { name: 'date', label: 'Date', type: days.length > 1 ? 'select' : 'date', options: days.map(d => [d, fmtDay(d)]), value: f.date },
+    { name: 'time', label: 'From', type: 'time', value: f.time }, { name: 'end', label: 'Till', type: 'time', value: f.end },
+    { name: 'spaceId', label: 'Hall / lawn', type: 'select', options: [['', '—'], ...sp.map(s => [s.id, s.name])], value: f.spaceId }, { name: 'pax', label: 'Guests (pax)', type: 'number', min: 0, value: f.pax },
+    { name: 'setup', label: 'Setup', type: 'select', options: SETUPS, value: f.setup }, { name: 'meal', label: 'Food', type: 'select', options: MEALS, value: f.meal },
+    { name: 'menu', label: 'Menu / counters', value: f.menu, placeholder: 'e.g. Rajasthani thali + 2 live counters', full: true },
+    { name: 'waiters', label: 'Waiters (empty = suggested)', type: 'number', min: 0, value: f.waiters, hint: 'Suggested from guests and setup' }, { name: 'lights', label: 'Lights & sound', value: f.lights, placeholder: 'e.g. DJ, 2 mics, warm lights' },
+    { name: 'decor', label: 'Decor', value: f.decor, placeholder: 'e.g. marigold theme, photo booth', full: true }, { name: 'notes', label: 'Notes for team', type: 'textarea', value: f.notes, full: true }],
+    left: fid ? `<button type="button" class="btn danger" onclick="A.delFn('${evId}','${fid}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { const fns = (e.functions || []).filter(x => x.id !== fid); fns.push({ ...(fid ? f : { id: uid('fn_') }), ...v, pax: +v.pax || 0, waiters: v.waiters === '' ? '' : +v.waiters || 0 });
+      if (v.spaceId && !(e.spaceIds || []).includes(v.spaceId)) e.spaceIds = [...(e.spaceIds || []), v.spaceId];
+      await save('events', { ...e, functions: fns.sort(fnSort) }, `${e.title}: function ${v.name}`); toast('Saved'); render(); } });
+};
+A.delFn = (evId, fid) => confirmBox('Delete this function?', '', 'Delete', async () => { const e = evById(evId); await save('events', { ...e, functions: (e.functions || []).filter(x => x.id !== fid) }); A.closeModal(); render(); });
+function fsheetText(e) {
+  return `${T('Function sheet')}: ${e.title}\n${fmtDate(e.date)}${e.endDate && e.endDate !== e.date ? ' – ' + fmtDate(e.endDate) : ''} · ${e.client}\n\n` + (e.functions || []).slice().sort(fnSort).map(f => `• ${fmtShort(f.date)} ${f.time || ''}${f.end ? '–' + f.end : ''} ${f.name}\n  ${[spaceById(f.spaceId)?.name, f.pax ? f.pax + ' pax' : '', f.setup, f.meal && f.meal !== 'No food' ? f.meal : ''].filter(Boolean).join(' · ')}${f.menu ? '\n  Food: ' + f.menu : ''}${(f.waiters || waitersFor(f)) ? '\n  Waiters: ' + (f.waiters || waitersFor(f)) : ''}${f.lights ? '\n  Lights & sound: ' + f.lights : ''}${f.decor ? '\n  Decor: ' + f.decor : ''}${f.notes ? '\n  Note: ' + f.notes : ''}`).join('\n\n');
+}
+A.printFsheet = evId => {
+  const e = evById(evId); const st = settings(); const w = window.open('', '_blank'); if (!w) { toast('Allow pop-ups to print', 'bad'); return; }
+  const rows = (e.functions || []).slice().sort(fnSort).map(f => `<tr><td><b>${esc(fmtShort(f.date))}</b><br>${esc(f.time || '')}${f.end ? '–' + esc(f.end) : ''}</td><td><b>${esc(f.name || '')}</b>${f.notes ? `<div class="m">${esc(f.notes)}</div>` : ''}</td><td>${esc(spaceById(f.spaceId)?.name || '')}</td><td class="r">${f.pax || ''}</td><td>${esc(f.setup || '')}</td><td>${esc(f.meal && f.meal !== 'No food' ? f.meal : '')}${f.menu ? `<div class="m">${esc(f.menu)}</div>` : ''}</td><td class="r">${f.waiters || waitersFor(f) || ''}</td><td>${esc(f.lights || '')}</td><td>${esc(f.decor || '')}</td></tr>`).join('');
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(e.title)} function sheet</title><style>body{font:13px/1.45 system-ui,sans-serif;color:#111;margin:20px}h1{font-size:20px;margin:0}.top{display:flex;justify-content:space-between;border-bottom:3px solid #0F766E;padding-bottom:8px;margin-bottom:12px}.m{color:#555;font-size:12px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:6px;vertical-align:top;text-align:left}th{background:#F0FDFA;font-size:12px}.r{text-align:right}@media print{button{display:none}}</style></head><body>
+  <div class="top"><div><h1>${esc(st.bizName || '')}</h1><div class="m">${esc([st.address, st.city].filter(Boolean).join(', '))}</div></div><div style="text-align:right"><b>Function sheet</b><div>${esc(e.title)} · ${esc(e.client || '')}</div><div class="m">${fmtDate(e.date)}${e.endDate && e.endDate !== e.date ? ' – ' + fmtDate(e.endDate) : ''} · ${e.pax || ''} guests</div></div></div>
+  <table><thead><tr><th>When</th><th>Function</th><th>Hall</th><th class="r">Pax</th><th>Setup</th><th>Food</th><th class="r">Waiters</th><th>Lights & sound</th><th>Decor</th></tr></thead><tbody>${rows}</tbody></table>
+  ${e.notes ? `<p><b>Notes:</b> ${esc(e.notes)}</p>` : ''}<button onclick="print()" style="margin-top:14px;padding:10px 16px">Print / Save as PDF</button></body></html>`);
+  w.document.close(); setTimeout(() => { try { w.print(); } catch (x) { } }, 400);
+};
+A.roomingPaste = evId => {
+  const e = evById(evId);
+  modal(`<form class="form" onsubmit="A.saveRooming(event,'${evId}')" novalidate>${sheetHead('Rooming list', e.title)}<div class="sheet-b stack">
+    ${fieldHTML({ name: 'list', label: 'One guest per line: name, mobile, people', type: 'textarea', rows: 8, placeholder: 'Ramesh Gupta, 9829012345, 2\nSunita Sharma, 9414011111, 3\nMama ji family, , 4' })}
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'from', label: 'Check-in', type: 'date', value: e.date })}${fieldHTML({ name: 'to', label: 'Check-out', type: 'date', value: addDays(eventEnd(e), 1) })}</div>
+    ${fieldHTML({ name: 'roomsNeeded', label: 'Rooms the client asked for', type: 'number', min: 0, value: e.roomsNeeded || '' })}
+    <label class="check"><input type="checkbox" name="auto" checked> <span>${T('Give each guest a free room now')}</span></label>
+  </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save</button></footer></form>`);
+};
+A.saveRooming = (ev, evId) => {
+  ev.preventDefault(); const v = readForm(ev.target); const auto = ev.target.auto.checked;
+  withBtn(ev, async () => {
+    const e = evById(evId); if (v.to <= v.from) throw new Error('Check-out must be after check-in');
+    const lines = String(v.list || '').split('\n').map(x => x.trim()).filter(Boolean); if (!lines.length && !v.roomsNeeded) throw new Error('Write at least one guest');
+    for (const ln of lines.slice(0, 300)) { const [g, p, n] = ln.split(/[,;\t]/).map(x => (x || '').trim()); if (!g) continue; await save('stays', { id: uid('st_'), eventId: evId, guest: g.slice(0, 80), phone: (p || '').replace(/[^\d+]/g, ''), adults: +n || 2, from: v.from, to: v.to, status: 'expected' }); }
+    if (+v.roomsNeeded !== +(e.roomsNeeded || 0)) await save('events', { ...e, roomsNeeded: +v.roomsNeeded || 0 });
+    A.closeModal(); logAct(`Rooming list for ${e.title}: ${lines.length} guests`);
+    if (auto) await A.autoRooms(evId, true); else { toast('Saved'); render(); }
+  });
+};
+A.autoRooms = async (evId, quiet) => {
+  const need = col('stays').filter(s => s.eventId === evId && !s.roomId && s.status !== 'out').sort((a, b) => (+b.adults || 0) - (+a.adults || 0)); let done = 0;
+  const rooms = col('rooms').filter(r => r.status !== 'blocked').sort((a, b) => String(a.no).localeCompare(String(b.no), undefined, { numeric: true }));
+  for (const s of need) { const r = rooms.find(r => (+r.beds || 2) >= Math.min(+s.adults || 1, 3) && roomFree(r.id, s.from, s.to)) || rooms.find(r => roomFree(r.id, s.from, s.to)); if (!r) break; await save('stays', { ...s, roomId: r.id }); done++; }
+  toast(done === need.length ? `${done} ${T('rooms allotted')}` : `${done} ${T('rooms allotted')} · ${need.length - done} ${T('guests still without a room (not enough free rooms)')}`, done === need.length ? '' : 'warn'); render();
+};
+function hospItems(e) {
+  const fns = (e.functions || []).slice().sort(fnSort); const st = col('stays').filter(s => s.eventId === e.id).length || +e.roomsNeeded || 0;
+  return {
+    welcome: ['Welcome board & flowers at the entrance', 'Reception desk with guest list', 'Welcome drinks ready for arrivals'],
+    rooms: st ? [`Rooms ready for ${st} guest families (clean, towels, toiletries)`, 'Welcome kit and water in every room', 'Room keys ready at reception', 'Housekeeping after check-out'] : ['Bridal / green room ready', 'Washrooms clean every 2 hours'],
+    food: fns.filter(f => f.meal && f.meal !== 'No food').flatMap(f => [`${f.name}: ${f.meal} for ${f.pax || e.pax} pax at ${f.time || '—'}`, `${f.name}: ${f.waiters || waitersFor(f)} waiters briefed and in uniform`]).concat(fns.length ? [] : [`Food for ${e.pax} pax`, 'Waiters briefed and in uniform'], ['Counters, crockery and water stations set']),
+    lights: ['Lights tested in hall and entrance', 'Sound & mic check before guests arrive', 'Generator / power backup ready'],
+    decor: ['Stage & backdrop ready', ...fns.map(f => `${f.name}: ${f.setup || 'setup'} done${f.decor ? ' (' + f.decor + ')' : ''}`), 'Entrance & photo point'],
+    transport: ['Guest pickups from station / airport', 'Parking attendants on duty', 'Luggage help at arrival'],
+    security: ['Security guards on duty', 'Parking plan ready', 'Fire exits clear and marked']
+  };
+}
+A.hospForm = evId => {
+  const e = evById(evId); const items = hospItems(e); const have = new Set(col('tasks').filter(t => t.eventId === evId).map(t => t.title));
+  modal(`<form class="form" onsubmit="A.saveHosp(event,'${evId}')" novalidate>${sheetHead('Hospitality checklist', e.title)}<div class="sheet-b stack">
+    <p class="small muted">${T('Untick what you do not need. Jobs go to the Live tracker; give each job to a person there.')}</p>
+    ${HOSP_AREAS.map(([k, l, i, c]) => `<div class="hosp-pick"><div class="row-flex" style="gap:8px">${ibox(i, c, 'sm')}<b>${T(l)}</b></div>${items[k].map((x, j) => `<label class="check"><input type="checkbox" name="h_${k}_${j}" ${have.has(x) ? 'disabled' : 'checked'}> <span>${esc(x)}${have.has(x) ? ` <span class="tiny muted">(${T('already added')})</span>` : ''}</span></label>`).join('')}</div>`).join('')}
+  </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Add jobs')}</button></footer></form>`, { wide: true });
+};
+A.saveHosp = (ev, evId) => {
+  ev.preventDefault(); const f = ev.target;
+  withBtn(ev, async () => {
+    const e = evById(evId); const items = hospItems(e); let n = 0;
+    for (const [k] of HOSP_AREAS) for (let j = 0; j < items[k].length; j++) { const box = f[`h_${k}_${j}`]; if (box && box.checked && !box.disabled) { await save('tasks', { id: uid('t_'), eventId: evId, title: items[k][j], area: k, progress: 0, assignee: '' }); n++; } }
+    A.closeModal(); logAct(`Hospitality checklist for ${e.title}: ${n} jobs`); toast(`${n} ${T('jobs added')}`); render();
+  });
+};
+
+/* ---------- reminders in the bell ---------- */
+EXTRA_ALERTS.push(() => {
+  if (!isVenue() || !can('venue')) return [];
+  const out = []; const t = todayLocal();
+  const clean = col('rooms').filter(r => r.status === 'cleaning'); if (clean.length) out.push({ tag: 'Rooms', tone: 'warn', title: T(`${clean.length} rooms to clean`), sub: clean.slice(0, 8).map(r => r.no).join(', '), go: "A.go('venue',{tab:'rooms'})" });
+  const arr = col('stays').filter(s => s.status === 'expected' && s.from <= t); if (arr.length) out.push({ tag: 'Rooms', tone: 'info', title: T(`${arr.length} guests arriving today`), sub: T(`${arr.filter(s => !s.roomId).length} without a room`), go: "A.go('venue',{tab:'guests',})" });
+  col('events').filter(e => RESERVING.includes(e.stage) && daysBetween(t, e.date) >= 0 && daysBetween(t, e.date) <= 3 && !(e.functions || []).length).forEach(e => out.push({ tag: 'Confirm', tone: 'warn', title: `${T('Make the function sheet')}: ${e.title}`, sub: fmtDate(e.date), go: `A.go('event',{id:'${e.id}',tab:'venue'})` }));
+  return out;
+});
+Object.assign(ALERT_STYLE, { Rooms: ['bed', '#0F766E'] });
 
 /* ================= SabManage for doctors / clinics =================
    Kind 'clinic' businesses get: Appointments, Patients (readings with charts, messages,
@@ -8177,6 +8985,477 @@ Pain score | दर्द का स्कोर
 Peak flow | पीक फ़्लो
 Waist | कमर
 Urine test | पेशाब की जांच
+`);
+
+/* ================= Leads & venue: ⓘ help + Hindi (Devanagari) ================= */
+Object.assign(HELP, {
+  leads: [['Leads & sales', 'लीड और सेल्स'],
+    ['Every enquiry in one list: from Facebook / Instagram ads, Google Form, website, calls, WhatsApp and walk-ins. Note what each client said, send the suggested follow-up and see who books.', 'हर पूछताछ एक जगह: फ़ेसबुक / इंस्टाग्राम विज्ञापन, गूगल फ़ॉर्म, वेबसाइट, कॉल, व्हाट्सऐप और सीधे आने वाले। हर क्लाइंट ने क्या कहा लिखें, सुझाया गया फ़ॉलो-अप भेजें और देखें कौन बुक करता है।'],
+    [['Tap New lead for a call or walk-in.', 'कॉल या सीधे आए क्लाइंट के लिए “नई लीड” दबाएं।'], ['Open a lead, call or WhatsApp, then tap Update after talking.', 'लीड खोलें, कॉल या व्हाट्सऐप करें, फिर “बात के बाद अपडेट” दबाएं।'], ['Follow up today shows who to contact now.', '“आज का फ़ॉलो-अप” में दिखता है कि अभी किससे बात करनी है।']],
+    ['The owner connects ads and forms once in “Get leads automatically”. New leads then ring on the sales team’s phones.', 'मालिक एक बार “लीड अपने आप पाएं” में विज्ञापन और फ़ॉर्म जोड़ दें। फिर नई लीड सेल्स टीम के फ़ोन पर बजती है।']],
+  lead: [['Lead', 'लीड'], ['One client: details, every call and reply, the next follow-up and messages made for this client.', 'एक क्लाइंट: जानकारी, हर कॉल और जवाब, अगला फ़ॉलो-अप और इसी क्लाइंट के लिए बने मैसेज।'],
+    [['After every talk tap Update after talking and pick the client’s reply.', 'हर बात के बाद “बात के बाद अपडेट” दबाएं और क्लाइंट का जवाब चुनें।'], ['The stage and next follow-up are filled for you; change them if needed.', 'स्टेज और अगला फ़ॉलो-अप अपने आप भर जाते हैं; ज़रूरत हो तो बदलें।'], ['When the client books, tap Won: make booking.', 'क्लाइंट बुक करे तो “जीत गए: बुकिंग बनाएं” दबाएं।']]],
+  'lead-msg': [['Suggested message', 'सुझाया गया मैसेज'], ['Written from the client’s last reply, event, date, guests and quotation. Edit it, then send on WhatsApp. Sending is noted in the history.', 'क्लाइंट के पिछले जवाब, इवेंट, तारीख़, मेहमान और कोटेशन से लिखा गया। बदलें, फिर व्हाट्सऐप पर भेजें। भेजना इतिहास में लिख जाता है।']],
+  'ld-list': [['Leads', 'लीड'], ['Open leads first: late follow-ups on top, then new ones. Filter by stage, source or only yours.', 'खुली लीड पहले: देर वाले फ़ॉलो-अप ऊपर, फिर नई। स्टेज, सोर्स या सिर्फ़ अपनी लीड से छांटें।']],
+  'ld-today': [['Follow up today', 'आज का फ़ॉलो-अप'], ['New leads and follow-ups due till tonight, with a ready message for each.', 'नई लीड और आज रात तक के फ़ॉलो-अप, हर एक के लिए तैयार मैसेज के साथ।']],
+  'ld-dates': [['Dates', 'तारीख़ें'], ['Each date shows bookings, quotations running and enquiries. Tap a date for details.', 'हर तारीख़ पर बुकिंग, चल रहे कोटेशन और पूछताछ दिखती हैं। पूरी जानकारी के लिए तारीख़ पर टैप करें।']],
+  'ld-report': [['Report', 'रिपोर्ट'], ['How many leads came, how far they went, which source brings bookings, why leads were lost and how each sales person is doing.', 'कितनी लीड आईं, कहां तक पहुंचीं, किस सोर्स से बुकिंग आती है, लीड क्यों गईं और हर सेल्स वाला कैसा कर रहा है।']],
+  'ld-connect': [['Get leads automatically', 'लीड अपने आप पाएं'], ['Your private lead link takes leads from Meta ads (through Make, Zapier or Pabbly), Google Forms, your website or a file.', 'आपका निजी लीड लिंक मेटा विज्ञापन (मेक, ज़ैपियर या पैबली से), गूगल फ़ॉर्म, वेबसाइट या फ़ाइल से लीड लेता है।']],
+  'ld-funnel': [['How far leads go', 'लीड कहां तक पहुंचीं'], ['Out of all leads in this period, how many were contacted, visited, quoted, negotiated and won.', 'इस समय की सारी लीड में से कितनों से बात हुई, कितने आए, कितनों को कोटेशन गया, बातचीत हुई और कितने बुक हुए।']],
+  'ld-meta': [['Facebook & Instagram lead ads', 'फ़ेसबुक और इंस्टाग्राम लीड विज्ञापन'], ['Meta does not send leads to other apps by itself. A connector app (Make, Zapier or Pabbly) watches your lead form and sends each new lead to your lead link.', 'मेटा अपने आप दूसरे ऐप को लीड नहीं भेजता। एक जोड़ने वाला ऐप (मेक, ज़ैपियर या पैबली) आपका लीड फ़ॉर्म देखता है और हर नई लीड आपके लीड लिंक पर भेजता है।']],
+  'ld-gform': [['Google Form', 'गूगल फ़ॉर्म'], ['A small script inside your Google Form sends every new answer to your lead link the moment it is submitted.', 'आपके गूगल फ़ॉर्म के अंदर एक छोटी स्क्रिप्ट हर नया जवाब जमा होते ही आपके लीड लिंक पर भेजती है।']],
+  venue: [['Venue & rooms', 'वेन्यू और कमरे'], ['Today’s functions, halls and lawns with free dates, the room board, guests in rooms and cleaning.', 'आज के फ़ंक्शन, हॉल और लॉन की ख़ाली तारीख़ें, कमरों का बोर्ड, कमरों में मेहमान और सफ़ाई।'],
+    [['Add your halls and rooms once.', 'अपने हॉल और कमरे एक बार जोड़ें।'], ['On each booking open Venue plan: halls, function sheet, rooming list and hospitality checklist.', 'हर बुकिंग में “वेन्यू प्लान” खोलें: हॉल, फ़ंक्शन शीट, कमरों की लिस्ट और मेहमाननवाज़ी की चेकलिस्ट।']]],
+  'vn-today': [['Today', 'आज'], ['Functions today with hall, guests, food and waiters, guests arriving or leaving and rooms to clean.', 'आज के फ़ंक्शन हॉल, मेहमान, खाना और वेटर के साथ, आने-जाने वाले मेहमान और साफ़ करने वाले कमरे।']],
+  'vn-spaces': [['Halls & lawns', 'हॉल और लॉन'], ['The next 14 days for every hall. Coloured boxes are booked; a question mark is a quotation or enquiry.', 'हर हॉल के अगले 14 दिन। रंगीन खाने बुक हैं; प्रश्न चिह्न मतलब कोटेशन या पूछताछ।']],
+  'vn-rooms': [['Room board', 'कमरों का बोर्ड'], ['Every room with its colour: ready, guest in room, to clean or blocked. Tap a room to change it.', 'हर कमरा अपने रंग के साथ: तैयार, मेहमान है, सफ़ाई बाकी या बंद। बदलने के लिए कमरे पर टैप करें।']],
+  'vn-guests': [['Guests', 'मेहमान'], ['Guests in rooms, arriving and leaving. Check in and check out from here; checked-out rooms go for cleaning.', 'कमरों में ठहरे, आने वाले और जाने वाले मेहमान। यहीं से चेक-इन और चेक-आउट करें; चेक-आउट वाला कमरा सफ़ाई में चला जाता है।']],
+  'vn-functions': [['Today’s functions', 'आज के फ़ंक्शन'], ['From the function sheet of every booking.', 'हर बुकिंग की फ़ंक्शन शीट से।']],
+  'vn-halls': [['Halls & lawns', 'हॉल और लॉन'], ['Pick the spaces this booking uses. If another confirmed booking has the hall on these dates, it is marked.', 'इस बुकिंग में कौन-से हॉल लगेंगे, चुनें। इन तारीख़ों पर किसी और पक्की बुकिंग में हॉल हो, तो निशान दिखेगा।']],
+  'vn-fsheet': [['Function sheet', 'फ़ंक्शन शीट'], ['Every function with time, hall, guests, setup, food, waiters, lights and decor. Print it or share it on WhatsApp with the team.', 'हर फ़ंक्शन समय, हॉल, मेहमान, सेटअप, खाना, वेटर, लाइट और सजावट के साथ। प्रिंट करें या टीम को व्हाट्सऐप पर भेजें।']],
+  'vn-rooming': [['Rooms for guests', 'मेहमानों के कमरे'], ['Paste the guest list from the family. Allot rooms gives each guest a free room for those dates.', 'परिवार से मिली मेहमानों की लिस्ट चिपकाएं। “कमरे दें” हर मेहमान को उन तारीख़ों का ख़ाली कमरा देता है।']],
+  'vn-hosp': [['Hospitality checklist', 'मेहमाननवाज़ी की चेकलिस्ट'], ['Jobs for welcome, rooms, food, lights, decor, transport and security, made from this booking. They show in the Live tracker and on the crew screen.', 'स्वागत, कमरे, खाना, लाइट, सजावट, गाड़ी और सुरक्षा के काम, इसी बुकिंग से बने। ये लाइव ट्रैकर और क्रू की स्क्रीन पर दिखते हैं।']],
+  'ev-venue': [['Venue plan', 'वेन्यू प्लान'], ['Halls, function sheet, rooms for guests and the hospitality checklist of this booking.', 'इस बुकिंग के हॉल, फ़ंक्शन शीट, मेहमानों के कमरे और मेहमाननवाज़ी की चेकलिस्ट।']]
+});
+I18N.load(Object.keys(HELP).filter(k => /^(leads|lead|lead-msg|ld-|venue|vn-|ev-venue)/.test(k))
+  .flatMap(k => { const [t, w, steps, tip] = HELP[k]; return [t, w, ...(steps || []), ...(tip ? [tip] : [])]; }).map(([en, hi]) => en + ' | ' + hi).join('\n'));
+I18N.load(`
+Leads & Sales | लीड और सेल्स
+Venue & Rooms | वेन्यू और कमरे
+Venue & rooms | वेन्यू और कमरे
+Venue plan | वेन्यू प्लान
+Venue / Banquet / Resort | वेन्यू / बैंक्वेट / रिसॉर्ट
+Halls, rooms, guests, hospitality | हॉल, कमरे, मेहमान, मेहमाननवाज़ी
+Tent, catering, event and venue: pick all that apply. Doctors: pick Doctor / Clinic. | टेंट, कैटरिंग, इवेंट और वेन्यू: जो-जो काम करते हैं सब चुनें। डॉक्टर: “डॉक्टर / क्लिनिक” चुनें।
+Every enquiry from ads, forms, calls and walk-ins in one place | विज्ञापन, फ़ॉर्म, कॉल और सीधे आने वालों की हर पूछताछ एक जगह
+New lead | नई लीड
+New leads | नई लीड
+New lead: {} | नई लीड: {1}
+Call, walk-in or ad | कॉल, सीधे आए या विज्ञापन
+Leads | लीड
+Lead | लीड
+Follow up today | आज का फ़ॉलो-अप
+Dates | तारीख़ें
+Report | रिपोर्ट
+Get leads automatically | लीड अपने आप पाएं
+Quotes running | चल रहे कोटेशन
+Won this month | इस महीने बुक हुए
+Contacted | बात हुई
+Site visit | जगह देखने आए
+Quoted | कोटेशन दिया
+Negotiation | मोल-भाव
+Won | बुक हुए
+Lost | हाथ से गए
+Open | खुली
+Mine | मेरी
+All sources | सभी सोर्स
+Source | सोर्स
+Meta / Facebook | मेटा / फ़ेसबुक
+Instagram | इंस्टाग्राम
+Google Form | गूगल फ़ॉर्म
+Website | वेबसाइट
+Google Ads | गूगल विज्ञापन
+Phone call | फ़ोन कॉल
+Walk-in | सीधे आए
+Referral | किसी के कहने पर
+Wedding portal | शादी वाली वेबसाइट
+Search name, mobile or event | नाम, मोबाइल या इवेंट खोजें
+{} min ago | {1} मिनट पहले
+{} h ago | {1} घंटे पहले
+{} d ago | {1} दिन पहले
+{} min | {1} मिनट
+ago | पहले
+guests | मेहमान
+New leads and follow-ups due till tonight. Send the suggested message, then tap Update to note what the client said. | नई लीड और आज रात तक के फ़ॉलो-अप। सुझाया गया मैसेज भेजें, फिर “अपडेट” दबाकर लिखें कि क्लाइंट ने क्या कहा।
+Last | पिछली बार
+All caught up | सब हो गया
+No follow-up is due today. | आज कोई फ़ॉलो-अप बाकी नहीं है।
+Update | अपडेट
+Update after talking | बात के बाद अपडेट
+Won: make booking | बुक हुए: बुकिंग बनाएं
+Won: make the booking | बुक हुए: बुकिंग बनाएं
+Make booking | बुकिंग बनाएं
+Booking made | बुकिंग बन गई
+already booked for | पहले से बुक है:
+Halls taken | भरे हुए हॉल
+Next follow-up | अगला फ़ॉलो-अप
+Suggested message | सुझाया गया मैसेज
+Made for this client from their last reply. Edit before sending if you like. | इस क्लाइंट के पिछले जवाब से बना। चाहें तो भेजने से पहले बदल लें।
+Send on WhatsApp | व्हाट्सऐप पर भेजें
+What happened so far | अब तक क्या हुआ
+Nothing yet. | अभी कुछ नहीं।
+Lead came in | लीड आई
+Called | कॉल किया
+WhatsApp sent | व्हाट्सऐप भेजा
+Quotation | कोटेशन
+Note | नोट
+Status changed | स्टेज बदली
+Event | इवेंट
+Date | तारीख़
+Guests | मेहमान
+Budget | बजट
+City | शहर
+Handled by | कौन देख रहा है
+Not assigned | किसी को नहीं दी
+Came in | कब आई
+Message | मैसेज
+Lost because | क्यों गई
+Delete lead | लीड हटाएं
+Delete this lead? | यह लीड हटाएं?
+Edit lead | लीड बदलें
+Only the name or mobile is needed | सिर्फ़ नाम या मोबाइल ज़रूरी है
+Client name | क्लाइंट का नाम
+Mobile (WhatsApp) | मोबाइल (व्हाट्सऐप)
+Event date | इवेंट की तारीख़
+e.g. 5–7 lakh | जैसे 5–7 लाख
+Where did it come from | कहां से आई
+Ad / campaign (optional) | विज्ञापन / कैंपेन (ज़रूरी नहीं)
+What they asked for | उन्होंने क्या मांगा
+Write the client name or mobile | क्लाइंट का नाम या मोबाइल लिखें
+This mobile is already a lead. Opening it. | यह मोबाइल पहले से लीड है। वही खोल रहे हैं।
+What did the client say? | क्लाइंट ने क्या कहा?
+How did you talk | बात कैसे हुई
+Call | कॉल
+Client’s reply | क्लाइंट का जवाब
+Interested | रुचि है
+Did not pick up | फ़ोन नहीं उठाया
+Asked to call later | बाद में कॉल करने को कहा
+Wants a quotation | कोटेशन चाहिए
+Site visit fixed | जगह देखने का समय तय
+Budget is a problem | बजट की दिक़्क़त
+Comparing other options | दूसरी जगहों से तुलना
+Date not free / date changed | तारीख़ ख़ाली नहीं / तारीख़ बदली
+Ready to book | बुक करने को तैयार
+Booked somewhere else | कहीं और बुक कर लिया
+Not interested | रुचि नहीं
+In short, what did they say? | थोड़े में, क्या कहा?
+e.g. Liked the lawn, wants 500 pax buffet, father will decide by Sunday | जैसे लॉन पसंद आया, 500 लोगों का बुफ़े चाहिए, पापा रविवार तक बताएंगे
+Stage now | अब की स्टेज
+Quotation ₹ (if given) | कोटेशन ₹ (अगर दिया)
+In 2 hours | 2 घंटे में
+This evening | आज शाम
+Tomorrow | कल
+In 3 days | 3 दिन में
+Next week | अगले हफ़्ते
+Leave empty if no follow-up is needed | फ़ॉलो-अप न करना हो तो ख़ाली छोड़ें
+Pick the client’s reply or write what they said | क्लाइंट का जवाब चुनें या लिखें कि क्या कहा
+Lost lead | लीड हाथ से गई
+Why | क्यों
+Mark lost | गई हुई मानें
+Marked lost | गई हुई मान ली
+Marked won | बुक हुई मान ली
+Plan cancelled | प्लान रद्द
+No response | जवाब नहीं आया
+Date not available | तारीख़ ख़ाली नहीं थी
+Booked elsewhere | कहीं और बुक
+First message | पहला मैसेज
+Short | छोटा
+After a missed call | मिस्ड कॉल के बाद
+Call back as asked | कहे अनुसार दोबारा
+Quotation sent | कोटेशन भेजा
+Gentle reminder | हल्की याद
+Invite for a visit | जगह देखने का न्योता
+Visit reminder | विज़िट की याद
+Options in budget | बजट में विकल्प
+Small token to hold the date | तारीख़ रोकने के लिए थोड़ा एडवांस
+Why us | हम क्यों
+Date may go | तारीख़ जा सकती है
+Other dates | दूसरी तारीख़ें
+Next step | अगला कदम
+Thank you | धन्यवाद
+Stay in touch | संपर्क में रहें
+Booked | बुक
+{} booked | {1} बुक
+quote | कोटेशन
+{} quote | {1} कोटेशन
+enquiry | पूछताछ
+{} enquiry | {1} पूछताछ
+Enquiry | पूछताछ
+Quotation running | कोटेशन चल रहा है
+Quotation / enquiry | कोटेशन / पूछताछ
+Free | ख़ाली
+Tap a date to see who booked it and which clients are asking for it. | तारीख़ पर टैप करें: किसने बुक की और कौन-से क्लाइंट उसे मांग रहे हैं।
+New lead for this date | इस तारीख़ के लिए नई लीड
+Mon | सोम
+Tue | मंगल
+Wed | बुध
+Thu | गुरु
+Fri | शुक्र
+Sat | शनि
+Sun | रवि
+{}% converted | {1}% बुक हुए
+converted | बुक हुए
+Value won | बुकिंग की रक़म
+First reply in | पहला जवाब कितनी देर में
+average | औसत
+How far leads go | लीड कहां तक पहुंचीं
+Why leads were lost | लीड क्यों गईं
+No lost leads in this period. | इस समय में कोई लीड हाथ से नहीं गई।
+Which source brings bookings | किस सोर्स से बुकिंग आती है
+Sales team | सेल्स टीम
+Person | व्यक्ति
+Follow-ups late | देर वाले फ़ॉलो-अप
+Your lead link | आपका लीड लिंक
+Anything sent to this link becomes a new lead here, rings on your sales team’s phones and shows in Leads within seconds. Keep it private. | इस लिंक पर भेजी गई हर चीज़ यहां नई लीड बन जाती है, सेल्स टीम के फ़ोन पर बजती है और कुछ ही सेकंड में लीड में दिखती है। इसे किसी को न दें।
+Copy link | लिंक कॉपी करें
+Send a test lead | टेस्ट लीड भेजें
+New link | नया लिंक
+Loading… | लोड हो रहा है…
+Facebook & Instagram lead ads (Meta) | फ़ेसबुक और इंस्टाग्राम लीड विज्ञापन (मेटा)
+Free or low-cost tools connect Meta to your lead link in 10 minutes, without any code. | मुफ़्त या सस्ते टूल 10 मिनट में, बिना कोड के, मेटा को आपके लीड लिंक से जोड़ देते हैं।
+Make a free account on Make.com, Zapier or Pabbly Connect. | Make.com, Zapier या Pabbly Connect पर मुफ़्त अकाउंट बनाएं।
+Create a new flow. Trigger: “Facebook Lead Ads → New lead”. Log in with Facebook and pick your page and form. | नया फ़्लो बनाएं। ट्रिगर: “Facebook Lead Ads → New lead”। फ़ेसबुक से लॉगिन करें और अपना पेज और फ़ॉर्म चुनें।
+Action: “HTTP / Webhooks → POST”. URL: your lead link above. Body type: JSON. | एक्शन: “HTTP / Webhooks → POST”। URL: ऊपर वाला लीड लिंक। Body type: JSON।
+Map the fields: full_name, phone_number, email and your form questions (date, guests, event). Add platform and campaign_name if you like. | फ़ील्ड जोड़ें: full_name, phone_number, email और फ़ॉर्म के सवाल (तारीख़, मेहमान, इवेंट)। चाहें तो platform और campaign_name भी जोड़ें।
+Turn the flow on, then fill your form once with Meta’s Lead Ads Testing Tool. The lead appears here. | फ़्लो चालू करें, फिर मेटा के Lead Ads Testing Tool से एक बार फ़ॉर्म भरें। लीड यहां दिखेगी।
+Google Form (live) | गूगल फ़ॉर्म (लाइव)
+Every new answer of your Google Form comes here at once. | आपके गूगल फ़ॉर्म का हर नया जवाब तुरंत यहां आता है।
+Open your Google Form → ⋮ (3 dots) → Apps Script. | अपना गूगल फ़ॉर्म खोलें → ⋮ (3 बिंदु) → Apps Script।
+Delete what is there, paste the code below and press Save. | वहां जो लिखा है हटाएं, नीचे वाला कोड चिपकाएं और सेव दबाएं।
+On the left open Triggers (clock) → Add trigger → function onFormSubmit → event “On form submit” → Save → Allow. | बाईं ओर Triggers (घड़ी) खोलें → Add trigger → function onFormSubmit → event “On form submit” → Save → Allow।
+Fill the form once to test. The answer shows here as a new lead. | जांचने के लिए एक बार फ़ॉर्म भरें। जवाब यहां नई लीड बनकर दिखेगा।
+Copy the code | कोड कॉपी करें
+Upload leads file | लीड की फ़ाइल डालें
+Download leads from Meta Ads Manager / Leads Center (CSV or Excel) and upload here. Old leads with the same mobile are skipped. | मेटा Ads Manager / Leads Center से लीड डाउनलोड करें (CSV या Excel) और यहां डालें। उसी मोबाइल वाली पुरानी लीड छोड़ दी जाती हैं।
+Choose file | फ़ाइल चुनें
+Website or any other form: send the form to your lead link (POST, JSON or form fields). Field names like name, phone, email, date, guests and message are read automatically; everything else is kept with the lead. | वेबसाइट या कोई और फ़ॉर्म: फ़ॉर्म को अपने लीड लिंक पर भेजें (POST, JSON या फ़ॉर्म फ़ील्ड)। name, phone, email, date, guests और message जैसे नाम अपने आप पढ़े जाते हैं; बाकी सब लीड के साथ रखा जाता है।
+Test lead sent. It will show in Leads in a few seconds. | टेस्ट लीड भेज दी। कुछ सेकंड में लीड में दिखेगी।
+No new leads in the file | फ़ाइल में कोई नई लीड नहीं
+already here | पहले से हैं
+leads added | लीड जुड़ गईं
+skipped | छोड़ दी गईं
+File upload | फ़ाइल से
+Lead link | लीड लिंक
+Make a new link? | नया लिंक बनाएं?
+New link made | नया लिंक बन गया
+The old link stops working at once. You will have to paste the new link in Make / Zapier / Google Form again. | पुराना लिंक तुरंत बंद हो जाएगा। Make / Zapier / गूगल फ़ॉर्म में नया लिंक फिर से चिपकाना होगा।
+reading to check | जांचने वाली रीडिंग
+Sales Executive | सेल्स एग्ज़ीक्यूटिव
+Halls, rooms, guests and today’s functions | हॉल, कमरे, मेहमान और आज के फ़ंक्शन
+Today | आज
+Halls & lawns | हॉल और लॉन
+Rooms | कमरे
+Guests | मेहमान
+Functions today | आज के फ़ंक्शन
+Events today | आज के इवेंट
+Guests to serve | खिलाने वाले मेहमान
+Rooms with guests | मेहमान वाले कमरे
+Rooms to clean | साफ़ करने वाले कमरे
+{} rooms to clean | साफ़ करने को {1} कमरे
+Check in a guest | मेहमान का चेक-इन
+Room board | कमरों का बोर्ड
+Rooms & guests | कमरे और मेहमान
+Today’s functions | आज के फ़ंक्शन
+Add the function sheet | फ़ंक्शन शीट बनाएं
+No function today | आज कोई फ़ंक्शन नहीं
+Functions from each booking’s function sheet show here with hall, guests, food and waiters. | हर बुकिंग की फ़ंक्शन शीट के फ़ंक्शन यहां हॉल, मेहमान, खाने और वेटर के साथ दिखते हैं।
+Arrivals & departures | आने और जाने वाले मेहमान
+Room | कमरा
+Room {} | कमरा {1}
+Floor | मंज़िल
+Floor {} | मंज़िल {1}
+Clean, ready | साफ़, तैयार
+pax | लोग
+waiters | वेटर
+{} waiters | {1} वेटर
+Next 14 days. Coloured = booked. Tap to open the booking. | अगले 14 दिन। रंगीन = बुक। बुकिंग खोलने के लिए टैप करें।
+Hall / lawn | हॉल / लॉन
+Hall | हॉल
+Halls | हॉल
+seats | सीट
+{} seats | {1} सीट
+standing | खड़े
+{} standing | {1} खड़े
+No halls added | कोई हॉल नहीं जोड़ा
+Add your banquet halls, lawns and other spaces with their capacity. Then pick them on each booking to see which dates are free. | अपने बैंक्वेट हॉल, लॉन और दूसरी जगहें क्षमता के साथ जोड़ें। फिर हर बुकिंग में चुनें, ताकि ख़ाली तारीख़ें दिखें।
+Edit hall / lawn | हॉल / लॉन बदलें
+New hall / lawn | नया हॉल / लॉन
+e.g. Crystal Hall | जैसे क्रिस्टल हॉल
+Banquet hall | बैंक्वेट हॉल
+Lawn | लॉन
+Poolside | पूल के पास
+Terrace | छत
+Conference room | कॉन्फ़्रेंस रूम
+Restaurant | रेस्टोरेंट
+Seating capacity | बैठने की क्षमता
+Standing / floating capacity | खड़े होने की क्षमता
+Rent per day ₹ (optional) | एक दिन का किराया ₹ (ज़रूरी नहीं)
+e.g. AC, stage 20×12 ft, parking 80 cars | जैसे एसी, स्टेज 20×12 फ़ुट, 80 गाड़ियों की पार्किंग
+Many rooms | कई कमरे
+Add many rooms | कई कमरे जोड़ें
+e.g. 101 to 120 on the first floor | जैसे पहली मंज़िल पर 101 से 120
+From number | किस नंबर से
+To number | किस नंबर तक
+Add rooms | कमरे जोड़ें
+rooms added | कमरे जुड़ गए
+Ready | तैयार
+Guest in room | मेहमान है
+To clean | सफ़ाई बाकी
+Blocked / repair | बंद / मरम्मत
+Standard | स्टैंडर्ड
+Deluxe | डीलक्स
+Suite | सुइट
+Family | फ़ैमिली
+Cottage / Villa | कॉटेज / विला
+Dormitory | डॉरमेट्री
+Room number | कमरा नंबर
+Floor / block | मंज़िल / ब्लॉक
+Guests per room | एक कमरे में कितने
+Rate per night ₹ | एक रात का किराया ₹
+New room | नया कमरा
+Edit room | कमरा बदलें
+This room number already exists | यह कमरा नंबर पहले से है
+No rooms added | कोई कमरा नहीं जोड़ा
+Add your rooms once (you can add 101 to 120 in one go). Then allot rooms to wedding guests and track cleaning. | अपने कमरे एक बार जोड़ें (101 से 120 एक साथ जोड़ सकते हैं)। फिर शादी के मेहमानों को कमरे दें और सफ़ाई देखें।
+Next guest | अगला मेहमान
+Check in | चेक-इन
+Check out | चेक-आउट
+checked in | चेक-इन हो गया
+checked out. Room sent for cleaning. | चेक-आउट हो गया। कमरा सफ़ाई में भेजा।
+No room yet | अभी कमरा नहीं
+In house | ठहरे हुए
+Arriving | आने वाले
+Leaving | जाने वाले
+Upcoming | आगे के
+Search guest, room or booking | मेहमान, कमरा या बुकिंग खोजें
+Guest | मेहमान
+No guests here | यहां कोई मेहमान नहीं
+Add guests from a booking’s Venue plan (rooming list) or with the Guest button. | बुकिंग के “वेन्यू प्लान” (कमरों की लिस्ट) से या “मेहमान” बटन से मेहमान जोड़ें।
+Guest in a room | कमरे में मेहमान
+Rooms shown are free on these dates | दिखाए गए कमरे इन तारीख़ों पर ख़ाली हैं
+Guest name | मेहमान का नाम
+Check-in date | चेक-इन की तारीख़
+Check-out date | चेक-आउट की तारीख़
+Allot later | बाद में देंगे
+People | लोग
+Booking (optional) | बुकिंग (ज़रूरी नहीं)
+e.g. needs ground floor, VIP | जैसे नीचे वाली मंज़िल चाहिए, वीआईपी
+Check-out must be after check-in | चेक-आउट, चेक-इन के बाद होना चाहिए
+This room is taken on these dates. Pick another room. | इन तारीख़ों पर यह कमरा भरा है। दूसरा कमरा चुनें।
+Allot a room first | पहले कमरा दें
+Edit guest | मेहमान बदलें
+Pick the spaces this booking uses. A hall already taken on these dates is marked. | इस बुकिंग में कौन-से हॉल लगेंगे, चुनें। इन तारीख़ों पर भरे हॉल पर निशान है।
+taken | भरा
+No halls added yet. | अभी कोई हॉल नहीं जोड़ा।
+Add halls | हॉल जोड़ें
+Function sheet | फ़ंक्शन शीट
+Each function with time, hall, guests, setup, food and waiters. Share it with the team. | हर फ़ंक्शन समय, हॉल, मेहमान, सेटअप, खाने और वेटर के साथ। टीम को भेजें।
+Print | प्रिंट
+Share | भेजें
+Function | फ़ंक्शन
+No function yet. Add Haldi, lunch, sangeet, wedding… one by one. | अभी कोई फ़ंक्शन नहीं। हल्दी, लंच, संगीत, शादी… एक-एक करके जोड़ें।
+Food | खाना
+Lights | लाइट
+Decor | सजावट
+Rooms for guests | मेहमानों के कमरे
+with rooms | को कमरे मिले
+asked for | मांगे
+rooms | कमरे
+Rooming list | कमरों की लिस्ट
+Allot rooms | कमरे दें
+Paste the guest list from the family; the app gives each a free room. | परिवार से मिली मेहमानों की लिस्ट चिपकाएं; ऐप हर एक को ख़ाली कमरा देगा।
+Hospitality checklist | मेहमाननवाज़ी की चेकलिस्ट
+Welcome, rooms, food, lights, decor, transport and security: every job with a person and progress. | स्वागत, कमरे, खाना, लाइट, सजावट, गाड़ी और सुरक्षा: हर काम एक व्यक्ति और प्रगति के साथ।
+Live tracker | लाइव ट्रैकर
+Add jobs | काम जोड़ें
+Make checklist | चेकलिस्ट बनाएं
+Make the checklist in one tap; then give each job to a person. | एक टैप में चेकलिस्ट बनाएं; फिर हर काम किसी को दें।
+Careful | ध्यान दें
+is already booked for | पहले से बुक है:
+Edit function | फ़ंक्शन बदलें
+New function | नया फ़ंक्शन
+e.g. Haldi, Lunch, Sangeet, Wedding | जैसे हल्दी, लंच, संगीत, शादी
+From | कब से
+Till | कब तक
+Hall / lawn | हॉल / लॉन
+Guests (pax) | मेहमान (लोग)
+Setup | सेटअप
+Round tables | गोल टेबल
+Buffet | बुफ़े
+Theatre | थिएटर
+Classroom | क्लासरूम
+U-shape | यू-शेप
+Cluster / lounge | लाउंज
+Mandap | मंडप
+Stage & dance floor | स्टेज और डांस फ़्लोर
+Cocktail (standing) | कॉकटेल (खड़े होकर)
+No food | खाना नहीं
+Breakfast | नाश्ता
+Lunch | लंच
+Hi-tea | हाई-टी
+Dinner | डिनर
+Cocktail & snacks | कॉकटेल और स्नैक्स
+Menu / counters | मेन्यू / काउंटर
+e.g. Rajasthani thali + 2 live counters | जैसे राजस्थानी थाली + 2 लाइव काउंटर
+Waiters (empty = suggested) | वेटर (ख़ाली = सुझाए गए)
+Suggested from guests and setup | मेहमान और सेटअप से सुझाए गए
+Lights & sound | लाइट और साउंड
+e.g. DJ, 2 mics, warm lights | जैसे डीजे, 2 माइक, पीली लाइट
+e.g. marigold theme, photo booth | जैसे गेंदे की थीम, फ़ोटो बूथ
+Notes for team | टीम के लिए नोट
+Delete this function? | यह फ़ंक्शन हटाएं?
+One guest per line: name, mobile, people | एक लाइन में एक मेहमान: नाम, मोबाइल, लोग
+Check-in | चेक-इन
+Check-out | चेक-आउट
+Rooms the client asked for | क्लाइंट ने कितने कमरे मांगे
+Give each guest a free room now | अभी हर मेहमान को ख़ाली कमरा दें
+Write at least one guest | कम से कम एक मेहमान लिखें
+rooms allotted | कमरे दिए
+guests still without a room (not enough free rooms) | मेहमानों को कमरा नहीं मिला (ख़ाली कमरे कम हैं)
+Untick what you do not need. Jobs go to the Live tracker; give each job to a person there. | जो नहीं चाहिए उसका टिक हटाएं। काम लाइव ट्रैकर में जाएंगे; वहां हर काम किसी को दें।
+already added | पहले से जुड़ा
+jobs added | काम जुड़ गए
+Welcome & reception | स्वागत और रिसेप्शन
+Rooms & housekeeping | कमरे और सफ़ाई
+Food & service | खाना और सर्विस
+Decor & setup | सजावट और सेटअप
+Transport & pickups | गाड़ी और पिकअप
+Security & parking | सुरक्षा और पार्किंग
+Welcome board & flowers at the entrance | गेट पर स्वागत बोर्ड और फूल
+Reception desk with guest list | मेहमानों की लिस्ट के साथ रिसेप्शन डेस्क
+Welcome drinks ready for arrivals | आने वालों के लिए वेलकम ड्रिंक तैयार
+Rooms ready for {} guest families (clean, towels, toiletries) | {1} मेहमान परिवारों के कमरे तैयार (साफ़, तौलिये, साबुन-शैंपू)
+Welcome kit and water in every room | हर कमरे में वेलकम किट और पानी
+Room keys ready at reception | रिसेप्शन पर कमरों की चाबियां तैयार
+Housekeeping after check-out | चेक-आउट के बाद सफ़ाई
+Bridal / green room ready | दुल्हन / ग्रीन रूम तैयार
+Washrooms clean every 2 hours | हर 2 घंटे में वॉशरूम साफ़
+{}: {} for {} pax at {} | {1}: {4} बजे {3} लोगों का {2}
+{}: {} waiters briefed and in uniform | {1}: {2} वेटर को समझाया और वर्दी में
+Food for {} pax | {1} लोगों का खाना
+Waiters briefed and in uniform | वेटर को समझाया और वर्दी में
+Counters, crockery and water stations set | काउंटर, क्रॉकरी और पानी की जगह तैयार
+Lights tested in hall and entrance | हॉल और गेट की लाइट जांची
+Sound & mic check before guests arrive | मेहमानों के आने से पहले साउंड और माइक जांच
+Generator / power backup ready | जनरेटर / बिजली बैकअप तैयार
+Stage & backdrop ready | स्टेज और बैकड्रॉप तैयार
+{}: {} done ({}) | {1}: {2} तैयार ({3})
+{}: {} done | {1}: {2} तैयार
+Entrance & photo point | गेट और फ़ोटो पॉइंट
+Guest pickups from station / airport | स्टेशन / एयरपोर्ट से मेहमानों का पिकअप
+Parking attendants on duty | पार्किंग वाले ड्यूटी पर
+Luggage help at arrival | आने पर सामान उठाने में मदद
+Security guards on duty | सुरक्षा गार्ड ड्यूटी पर
+Parking plan ready | पार्किंग प्लान तैयार
+Fire exits clear and marked | आग से बचने के रास्ते ख़ाली और निशान लगे
+guests arriving today | मेहमान आज आ रहे हैं
+{} guests arriving today | {1} मेहमान आज आ रहे हैं
+without a room | बिना कमरे के
+{} without a room | {1} बिना कमरे के
+Make the function sheet | फ़ंक्शन शीट बनाएं
+Guest waiting at reception | रिसेप्शन पर मेहमान इंतज़ार में
+Room not ready | कमरा तैयार नहीं
+Food running short | खाना कम पड़ रहा है
+Need more waiters now | अभी और वेटर चाहिए
+Lights / sound problem | लाइट / साउंड में दिक़्क़त
+VIP arriving now | वीआईपी अभी आ रहे हैं
+Clean the hall now | अभी हॉल साफ़ करें
+My seniors (owner, managers, supervisors) | मेरे सीनियर (मालिक, मैनेजर, सुपरवाइज़र)
+Alert my seniors | सीनियर को अलर्ट
+You can send alerts to your seniors | आप अपने सीनियर को अलर्ट भेज सकते हैं
+Seniors | सीनियर
+From number * | किस नंबर से *
+To number * | किस नंबर तक *
 `);
 
 boot();

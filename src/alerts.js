@@ -53,13 +53,18 @@ const AlertsDB = {
   }
 };
 /* clinic alerts come from the patient link (kinds patient / reading / emergency); to_role limits who gets them */
-const FROM_PATIENT = ['patient', 'reading', 'emergency'];
-const roleOK = a => !a.to_role || (a.to_role === 'doctors' ? ['owner', 'manager'] : ['owner', 'manager', 'supervisor']).includes(S.role || S.me?.role || 'owner');
+const FROM_PATIENT = ['patient', 'reading', 'emergency', 'lead'];
+const ROLE_GROUPS = { doctors: ['owner', 'manager'], managers: ['owner', 'manager', 'supervisor'], sales: ['owner', 'manager', 'sales'] };
+const roleOK = a => !a.to_role || (ROLE_GROUPS[a.to_role] || ROLE_GROUPS.managers).includes(S.role || S.me?.role || 'owner');
 const forMe = a => (FROM_PATIENT.includes(a.kind) || a.from_user !== S.user?.id) && (!a.to_user || a.to_user === S.user?.id) && roleOK(a);
 const isRing = a => ['alert', 'emergency'].includes(a.kind || 'alert');
 /* an emergency stops ringing for everybody as soon as one person taps Seen */
 const seenByMe = a => a.kind === 'emergency' ? Object.keys(a.acks || {}).length > 0 : !!(a.acks || {})[S.user?.id];
-const canSendAlert = () => S.adapter?.mode === 'cloud' ? lvl('tasks') >= 2 : !!S.org && lvl('tasks') >= 2;
+/* everyone can alert their seniors; tasks Edit or more can alert anyone */
+const canSendAlert = () => !!S.org && !['expired', 'suspended'].includes(orgState(S.org));
+const canAlertAll = () => !!S.org && lvl('tasks') >= 2;
+const isSenior = m => ROLE_GROUPS.managers.includes(m.role);
+const quickAlerts = () => (typeof isVenue === 'function' && isVenue() ? VENUE_ALERTS : QUICK_ALERTS);
 
 /* ---------- live updates ---------- */
 let alertChan = null;
@@ -126,15 +131,16 @@ A.ackAlert = async (id, evId) => {
 /* ---------- send ---------- */
 A.alertForm = (toUser) => {
   if (!canSendAlert()) { toast('Your role cannot send alerts. Ask the owner.', 'bad'); return; }
-  const people = S.members.filter(m => m.userId && m.userId !== S.user.id);
+  const all = canAlertAll(); const people = S.members.filter(m => m.userId && m.userId !== S.user.id && (all || isSenior(m)));
+  if (!toUser && !all) toUser = '@seniors';
   const evs = col('events').filter(e => !['Cancelled', 'Closed', 'Completed'].includes(e.stage) && eventEnd(e) >= addDays(todayLocal(), -1)).sort(by('date'));
   modal(`<form class="form" onsubmit="A.sendAlert(event)" novalidate>${sheetHead('Send alert', 'Rings on their phone with the alert tune')}<div class="sheet-b stack">
     ${people.length ? '' : `<div class="banner warn">${ic('alert')}<span>Nobody else has an app login yet. Add your team in Team & access so they get alerts.</span></div>`}
-    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [['', `Everyone (${people.length})`], ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
-    <div class="field"><span>Quick message</span><div class="chips">${QUICK_ALERTS.map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
+    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [...(all ? [['', `Everyone (${people.length})`]] : []), ['@seniors', 'My seniors (owner, managers, supervisors)'], ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
+    <div class="field"><span>Quick message</span><div class="chips">${quickAlerts().map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
     ${fieldHTML({ name: 'title', label: 'Alert', required: true, maxlength: 140, placeholder: 'e.g. Come to the godown now' })}
     ${fieldHTML({ name: 'body', label: 'Details (optional)', type: 'textarea', maxlength: 600 })}
-    ${evs.length ? fieldHTML({ name: 'event', label: 'About booking (optional)', type: 'select', options: [['', '—'], ...evs.map(e => [e.id, `${e.title} (${fmtShort(e.date)})`])] }) : ''}
+    ${evs.length && can('bookings') ? fieldHTML({ name: 'event', label: 'About booking (optional)', type: 'select', options: [['', '—'], ...evs.map(e => [e.id, `${e.title} (${fmtShort(e.date)})`])] }) : ''}
     <label class="check urgent-check"><input type="checkbox" name="urgent" checked> <span><b>Urgent</b>: keeps ringing until they tap “Seen”</span></label>
     <p class="tiny muted">Crew without the app? Use the WhatsApp button on their card in Staff.</p>
   </div><footer class="sheet-f"><span class="grow"></span><button type="button" class="btn ghost" onclick="A.closeModal()">Cancel</button><button class="btn primary" type="submit">${ic('send')} Send alert</button></footer></form>`);
@@ -142,8 +148,9 @@ A.alertForm = (toUser) => {
 A.sendAlert = e => {
   e.preventDefault(); const v = readForm(e.target); if (!(v.title || '').trim()) { toast('Write the alert', 'bad'); return; }
   withBtn(e, async () => {
-    const to = S.members.find(m => m.userId === v.to);
-    const rec = { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, to_user: v.to || null, to_name: to ? to.name : null, from_name: S.me?.name || S.user.name, event_id: v.event || null };
+    const seniors = v.to === '@seniors'; const to = S.members.find(m => m.userId === v.to);
+    if (!seniors && !canAlertAll() && !(to && isSenior(to))) throw new Error('You can send alerts to your seniors');
+    const rec = { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, to_user: seniors ? null : v.to || null, to_name: seniors ? 'Seniors' : to ? to.name : null, from_name: S.me?.name || S.user.name, event_id: v.event || null, ...(seniors ? { to_role: 'managers' } : {}) };
     const a = await AlertsDB.send(rec); S.teamAlerts = [a, ...(S.teamAlerts || []).filter(x => x.id !== a.id)];
     const r = await AlertsDB.push(a.id); A.closeModal(); logAct(`Sent alert: ${rec.title}`);
     toast(r.sent ? `Alert sent. Ringing on ${r.sent} phone${r.sent > 1 ? 's' : ''}.` : 'Alert sent. They will see it when the app is open (phone notifications are not turned on for them yet).');

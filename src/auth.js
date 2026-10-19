@@ -15,7 +15,7 @@ V.auth = () => {
       <button type="button" class="linkbtn" style="align-self:center" onclick="A.forgotModal()">Forgot password?</button></form>`,
     signup: `<form class="stack" onsubmit="A.doSignup(event)">
       <div class="grid2" style="padding:0">${fieldHTML({ name: 'name', label: 'Your name', required: true, autocomplete: 'name' })}${fieldHTML({ name: 'phone', label: 'Mobile', type: 'tel', required: true, placeholder: '98290 12345', autocomplete: 'tel' })}</div>
-      <div class="field"><span>What is your business? *</span><div class="kind-cards">${types}</div><small>Tent, catering and event: pick all that apply. Doctors: pick Doctor / Clinic.</small></div>
+      <div class="field"><span>What is your business? *</span><div class="kind-cards">${types}</div><small>Tent, catering, event and venue: pick all that apply. Doctors: pick Doctor / Clinic.</small></div>
       <label class="field"><span id="bizNameLabel">Business name *</span><input id="f_bizName" name="bizName" required placeholder="e.g. Sharma Enterprises"></label>
       <div id="docFields" class="doc-fields" hidden>${doctorFieldsHTML({})}</div>
       ${fieldHTML({ name: 'email', label: 'Your login ID: email or mobile number', required: true, autocomplete: 'username', hint: 'You will use this to log in every time' })}
@@ -189,7 +189,7 @@ A.resetMfa = (userId, orgId, name) => confirmBox('Reset authenticator?', `${name
 
 /* ---------- business type + doctor verification ---------- */
 const KIND_CARDS = [['tent', 'Tent House', 'Stock, bookings, crew', 'tent', '#2563EB'], ['caterer', 'Caterer / Halwai', 'Menu, ration, plates', 'pot', '#16A34A'],
-  ['event', 'Event Manager', 'Planning, vendors, setup', 'sparkle', '#DB2777'], ['clinic', 'Doctor / Clinic', 'Patients, reports, appointments', 'steth', '#E11D48']];
+  ['event', 'Event Manager', 'Planning, vendors, setup', 'sparkle', '#DB2777'], ['venue', 'Venue / Banquet / Resort', 'Halls, rooms, guests, hospitality', 'building', '#0F766E'], ['clinic', 'Doctor / Clinic', 'Patients, reports, appointments', 'steth', '#E11D48']];
 const COUNCILS = ['National Medical Commission (NMC)', 'Rajasthan Medical Council', 'Delhi Medical Council', 'Maharashtra Medical Council', 'Gujarat Medical Council', 'Uttar Pradesh Medical Council', 'Madhya Pradesh Medical Council', 'Haryana Medical Council', 'Punjab Medical Council', 'Bihar Medical Council', 'West Bengal Medical Council', 'Karnataka Medical Council', 'Tamil Nadu Medical Council', 'Telangana State Medical Council', 'Andhra Pradesh Medical Council', 'Kerala (TCMC)', 'Dental Council (State / DCI)', 'AYUSH / Ayurveda / Homoeopathy Board', 'Physiotherapy Council', 'Other state council'];
 const SPECIALITIES = ['General Physician', 'Diabetologist', 'Cardiologist', 'Physiotherapist', 'Paediatrician', 'Gynaecologist', 'Dermatologist', 'Orthopaedic', 'ENT', 'Eye specialist', 'Dentist', 'Psychiatrist', 'Dietitian', 'Ayurveda', 'Homoeopathy', 'Other'];
 function doctorFieldsHTML(v) {

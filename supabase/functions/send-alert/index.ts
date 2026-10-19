@@ -1,6 +1,7 @@
 // SabManage: send an alert as a phone notification (web push) to the people it is for.
 // Called by the app right after it saves a row in public.alerts. Only the sender can trigger it.
 // The database (cron token) also calls it for clinic alerts: patient / reading / emergency rows, and
+// lead rows (new lead from the lead link → sales team), and
 // { patientAlertId } = a doctor's alert to a patient's own phones (patient link, no login).
 import webpush from "npm:web-push@3.6.7";
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
@@ -36,7 +37,7 @@ Deno.serve(async (req) => {
     }
     if (!alertId) return json({ error: "alertId missing" }, 400);
     const { data: a } = await admin.from("alerts").select("*").eq("id", alertId).maybeSingle();
-    if (!a || (!trusted && a.from_user !== me) || (trusted && !["patient", "reading", "emergency"].includes(a.kind))) return json({ error: "Not allowed" }, 403);
+    if (!a || (!trusted && a.from_user !== me) || (trusted && !["patient", "reading", "emergency", "lead"].includes(a.kind))) return json({ error: "Not allowed" }, 403);
     // an emergency keeps being re-sent (every minute) until someone taps Seen
     if (Date.now() - Date.parse(a.created_at) > (a.kind === "emergency" ? 35 : 15) * 60 * 1000) return json({ error: "Alert is too old to send" }, 400);
     if (a.kind === "emergency" && a.acks && Object.keys(a.acks).length) return json({ sent: 0, seen: true });
@@ -47,8 +48,9 @@ Deno.serve(async (req) => {
       let q = admin.from("org_members").select("user_id").eq("org_id", a.org_id);
       if (a.to_role === "managers") q = q.in("role", ["owner", "manager", "supervisor"]);
       if (a.to_role === "doctors") q = q.in("role", ["owner", "manager"]);
+      if (a.to_role === "sales") q = q.in("role", ["owner", "manager", "sales"]);
       const { data: m } = await q;
-      const fromPatient = ["patient", "reading", "emergency"].includes(a.kind);
+      const fromPatient = ["patient", "reading", "emergency", "lead"].includes(a.kind);
       users = (m || []).map((x: { user_id: string }) => x.user_id).filter((x: string) => fromPatient || x !== a.from_user);
     }
     if (!users.length) return json({ sent: 0, devices: 0 });
@@ -59,9 +61,9 @@ Deno.serve(async (req) => {
     webpush.setVapidDetails("https://sabmanage.com", keys.public, keys.private);
     const payload = JSON.stringify({
       id: a.id, urgent: a.kind !== "update" && !!a.urgent, kind: a.kind || "alert",
-      title: (a.kind === "update" ? "✅ " : a.kind === "patient" ? "💬 " : a.kind === "reading" ? "🔔 " : a.kind === "emergency" || a.urgent ? "🚨 " : "🔔 ") + a.title,
-      body: (["reading", "emergency"].includes(a.kind) ? String(a.body || "") : [a.from_name, a.body].filter(Boolean).join(": ")).slice(0, 400),
-      url: "/app#alert-" + a.id,
+      title: (a.kind === "update" ? "✅ " : a.kind === "patient" ? "💬 " : a.kind === "reading" || a.kind === "lead" ? "🔔 " : a.kind === "emergency" || a.urgent ? "🚨 " : "🔔 ") + a.title,
+      body: (["reading", "emergency", "lead"].includes(a.kind) ? String(a.body || "") : [a.from_name, a.body].filter(Boolean).join(": ")).slice(0, 400),
+      url: a.kind === "lead" && String(a.event_id || "").startsWith("ld:") ? "/app#lead-" + String(a.event_id).slice(3) : "/app#alert-" + a.id,
     });
     // "test on my own phone": wait a few seconds so the person can close the app and lock the phone
     const wait = a.to_user === a.from_user ? Math.max(0, Math.min(20, Number(delay) || 0)) : 0;
