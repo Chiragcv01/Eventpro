@@ -3,7 +3,7 @@
    An allowed business gets "Demo data" (account menu, and a card on an empty home) to load or remove sample
    records for its kind: event (tent / caterer / planner / venue) or clinic. Every demo record has `demo: true`
    and an id starting 'dm_'; removing deletes only those, the business's own records are never touched. */
-const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'patients', 'readings', 'visits', 'appts', 'pmsgs'];
+const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'patients', 'readings', 'visits', 'appts', 'pmsgs'];
 const demoSet = () => S.platform?.demo || {};
 const demoOrgOn = id => !!demoSet().all || (demoSet().orgs || []).includes(id);
 const demoAllowed = () => !!S.org && (S.super || demoOrgOn(S.org.orgId));
@@ -20,7 +20,7 @@ function demoEvent() {
   const S2 = add('staff', { id: dmId('st'), name: 'Suresh Meena', phone: '9829000102', role: 'Rigger', rate: 800, dutyHours: 8 });
   const S3 = add('staff', { id: dmId('st'), name: 'Mahesh Saini', phone: '9829000103', role: 'Waiter', rate: 600, dutyHours: 8 });
   const S4 = add('staff', { id: dmId('st'), name: 'Kailash Sharma', phone: '9829000104', role: 'Halwai', rate: 1200, dutyHours: 10 });
-  add('staff', { id: dmId('st'), name: 'Raju Prajapat', phone: '9829000105', role: 'Helper', rate: 600, dutyHours: 8 });
+  const S5 = add('staff', { id: dmId('st'), name: 'Raju Prajapat', phone: '9829000105', role: 'Helper', rate: 600, dutyHours: 8 });
   const inv = moduleOn('inventory') ? [['Waterproof German hanger 40×60', 'Tents & Shamiana', 4, 8000, 400], ['Shamiana 20×20', 'Tents & Shamiana', 20, 900, 60], ['Chiavari chair (gold)', 'Furniture', 600, 25, 4], ['Round table 6 ft', 'Furniture', 80, 150, 18],
     ['Maharaja sofa', 'Furniture', 12, 1500, 45], ['LED par light', 'Lighting & Sound', 60, 150, 3], ['Sound system 2000 W', 'Lighting & Sound', 3, 6000, 60], ['Silent generator 125 KVA', 'Power & DG', 2, 9000, 1500],
     ['Red carpet roll', 'Decor & Flooring', 120, 200, 15], ['Buffet chafing dish', 'Catering Utensils', 80, 120, 5]].map(([name, category, total, rate, weightKg], i) => add('inventory', { id: dmId('i'), name, category, total, rate, weightKg, damaged: i === 2 ? 6 : 0, bay: 'Rack ' + String.fromCharCode(65 + (i % 4)) + '-' + (i + 1), unit: 'day' })) : [];
@@ -60,6 +60,9 @@ function demoEvent() {
   L({ name: 'Sanjay Bansal', phone: '9876500008', eventType: 'Wedding', eventDate: dD(30), guests: 500, source: 'Website', status: 'Lost', lostReason: 'Budget', lostAt: lg(3000, 'status').at, lastOutcome: 'booked_else', firstContactAt: lg(8000, 'call').at, reached: { Contacted: lg(8000, 'call').at, Quoted: lg(7000, 'call').at }, log: [lg(8100, 'lead'), lg(8000, 'call', { outcome: 'wants_quote', status: 'Quoted', amount: 600000 }), lg(3000, 'status', { status: 'Lost', text: 'Budget · Booked a cheaper lawn' })] }, 8100);
   /* rooms and guests */
   if (venue) {
+    const k = st_ => 's:' + st_.id;
+    [['Housekeeping', 'bed', '#0F766E', [S5, S3], S5, 'Rooms, linen, hall cleaning after every function'], ['Kitchen', 'utensils', '#EA580C', [S4], S4, 'Food for every function'], ['Service / Waiters', 'users', '#2563EB', [S3, S1], S1, 'Welcome drinks, buffet and table service'], ['Decor & lights', 'bulb', '#DB2777', [S2], S2, 'Stage, flowers, lights and sound']]
+      .forEach(([name, icon, color, mem, head, notes]) => add('depts', { id: dmId('dp'), name, icon, color, members: mem.map(k), head: k(head), notes }));
     const R = [['101', 'Deluxe', '1'], ['102', 'Deluxe', '1'], ['103', 'Deluxe', '1'], ['104', 'Deluxe', '1'], ['105', 'Deluxe', '1'], ['106', 'Family', '1'], ['201', 'Suite', '2'], ['202', 'Suite', '2'], ['203', 'Deluxe', '2'], ['204', 'Deluxe', '2']]
       .map(([no, type, floor], i) => add('rooms', { id: dmId('rm'), no, type, floor, beds: type === 'Family' ? 4 : 2, rate: type === 'Suite' ? 6500 : 3500, status: i < 4 ? 'occupied' : i === 4 ? 'cleaning' : i === 9 ? 'blocked' : 'ready', notes: i === 9 ? 'AC repair' : '' }));
     [['Rajesh Sharma (bride’s uncle)', 0, 'in', 3], ['Kamla Devi', 1, 'in', 2], ['Pankaj Sharma', 2, 'in', 2], ['Mama ji family', 3, 'in', 4], ['Neha & Rohan', 6, 'expected', 2], ['Dadi ji', 5, 'expected', 2]].forEach(([guest, ri, status, adults]) =>
@@ -94,18 +97,18 @@ function demoClinic() {
   return out;
 }
 
-A.demoLoad = async () => {
+A.demoLoad = async (quiet) => {
   if (!demoCanUse()) { toast('Demo data is not allowed for this business. Ask SabManage support.', 'bad'); return; }
   if (demoCount()) { toast('Demo data is already loaded', 'warn'); return; }
   try {
     const data = isClinic() ? demoClinic() : demoEvent(); let n = 0; const t = Date.now();
     for (const [c, recs] of Object.entries(data)) {
-      const rows = recs.map(r => ({ ...r, updatedAt: t, updatedById: S.user?.id || '', updatedBy: 'Demo' }));
+      const rows = recs.map(r => ({ ...r, demoDay: todayLocal(), updatedAt: t, updatedById: S.user?.id || '', updatedBy: 'Demo' }));
       await S.adapter.putMany(S.org.orgId, c, rows);
       S.data[c] = [...col(c).filter(x => !rows.some(y => y.id === x.id)), ...rows]; n += rows.length;
     }
     if (S.patLoaded) S.patLoaded = {};
-    logAct(`Loaded demo data (${n} records)`); A.closeModal(); toast(`${T('Demo data loaded')}: ${n} ${T('records')}`); render();
+    logAct(`Loaded demo data (${n} records)`); A.closeModal(); toast(quiet ? T('Demo dates moved to today') : `${T('Demo data loaded')}: ${n} ${T('records')}`); render();
   } catch (e) { toast(e.message, 'bad'); }
 };
 A.demoRemove = () => confirmBox('Remove demo data?', 'Only the sample records are removed. Everything your team added stays.', 'Remove demo data', async () => {
@@ -115,6 +118,11 @@ A.demoRemove = () => confirmBox('Remove demo data?', 'Only the sample records ar
     logAct(`Removed demo data (${n} records)`); A.closeModal(); toast(T('Demo data removed')); A.go('dashboard');
   } catch (e) { toast(e.message, 'bad'); }
 }, 'danger');
+/* demo dates are set on the day it is loaded; next day 'Move to today' reloads it so today's event, arrivals etc. show again */
+const demoStale = () => { const r = DEMO_COLLS.map(c => col(c).find(x => x.demo)).find(Boolean); return !!r && (r.demoDay || '') !== todayLocal(); };
+A.demoRefresh = async () => {
+  try { await S.adapter.delDemo(S.org.orgId, DEMO_COLLS); DEMO_COLLS.forEach(c => { if (S.data[c]) S.data[c] = S.data[c].filter(x => !x.demo); }); await A.demoLoad(true); } catch (e) { toast(e.message, 'bad'); }
+};
 A.demoSheet = () => {
   const n = demoCount(); const clinic = isClinic();
   modal(`${sheetHead('Demo data', S.org?.name || '')}<div class="sheet-b stack">
@@ -129,7 +137,7 @@ A.demoSheet = () => {
 function demoBanner() {
   if (!S.org || !demoCanUse()) return '';
   const n = demoCount();
-  if (n) return `<div class="banner demo-on" style="margin-bottom:12px">${ic('sparkle')}<span><b>${T('Demo data is on')}</b> · ${T('sample records are shown for a demo.')}</span><button class="btn sm" onclick="A.demoSheet()">${T('Remove')}</button></div>`;
+  if (n) return `<div class="banner demo-on" style="margin-bottom:12px">${ic('sparkle')}<span><b>${T('Demo data is on')}</b> · ${T(demoStale() ? 'loaded on an earlier day. Move it to today so today’s work shows.' : 'sample records are shown for a demo.')}</span><div class="demo-acts">${demoStale() ? `<button class="btn sm primary" onclick="A.demoRefresh()">${T('Move to today')}</button>` : ''}<button class="btn sm" onclick="A.demoSheet()">${T('Remove')}</button></div></div>`;
   const empty_ = isClinic() ? !col('patients').length : !col('events').length && !col('leads').length;
   return empty_ || demoOrgOn(S.org.orgId) ? `<div class="card pad row-flex demo-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('sparkle', '#9333EA')}<div class="grow" style="min-width:0"><b>${T('Show the app with demo data')}</b><div class="small muted">${T('Load sample records to give a demo. Remove them in one tap later.')}</div></div><button class="btn primary sm" onclick="A.demoLoad()">${T('Load')}</button></div>` : '';
 }
@@ -155,6 +163,9 @@ function adminDemoCard() {
 
 I18N.load(`
 Demo data | डेमो डेटा
+Move to today | आज पर लाएं
+Demo dates moved to today | डेमो की तारीख़ें आज पर आ गईं
+loaded on an earlier day. Move it to today so today’s work shows. | पहले किसी दिन लोड हुआ था। आज का काम दिखाने के लिए इसे आज पर लाएं।
 Demo data is allowed for every business. Tap “Demo data” on a business to load or remove sample records. | हर बिज़नेस के लिए डेमो डेटा चालू है। सैंपल रिकॉर्ड लोड करने या हटाने के लिए किसी बिज़नेस पर “डेमो डेटा” दबाएं।
 Ask support on WhatsApp | व्हाट्सऐप पर सपोर्ट से पूछें
 Demo data: tap “Allow demo” on a business, then “Demo data” to load or remove sample records. | डेमो डेटा: किसी बिज़नेस पर “डेमो चालू करें” दबाएं, फिर “डेमो डेटा” दबाकर सैंपल रिकॉर्ड लोड करें या हटाएं।

@@ -166,7 +166,7 @@ button.row{width:100%;border:0;border-top:1px solid var(--line2);background:none
 .kpi{--c:var(--brand);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 15px;min-width:0;box-shadow:var(--sh1);display:flex;flex-direction:column;gap:2px}
 .kpi .kt{display:flex;align-items:center;gap:9px;margin-bottom:6px}
 .kpi .kt .eyebrow{font-size:11.5px;line-height:1.25}
-.kpi .v{font:800 clamp(21px,2.6vw,27px)/1.1 var(--f-display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.kpi .v{font:800 clamp(21px,2.6vw,27px)/1.1 var(--f-display);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi .s{font-size:12.5px;color:var(--muted)}
 .kpi.bad .v{color:var(--bad)} .kpi.good .v{color:var(--good)} .kpi.accent .v{color:var(--accent-ink)}
 
@@ -569,8 +569,8 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 
 /* easy home */
 .today-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:14px}
-.today-strip>div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
-.today-strip b{font:800 24px var(--f-display);line-height:1.1}
+.today-strip>div{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.today-strip b{font:800 24px var(--f-display);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .today-strip span{font-size:13px;color:var(--muted);font-weight:600}
 .big-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media (min-width:760px){.big-grid{grid-template-columns:repeat(3,1fr)}.big-grid.two{grid-template-columns:repeat(2,1fr)}}
@@ -758,6 +758,33 @@ span.hall-chip{cursor:default}
 .banner.demo-on { background: #F5F3FF; border-color: #DDD6FE; color: #5B21B6; align-items: center; }
 .banner.demo-on > span { flex: 1; }
 .btn.demo-btn { color: #7E22CE; border-color: #E9D5FF; background: #FAF5FF; }
+
+/* departments (venue) */
+.dept-card{padding:0;overflow:hidden;border-top:4px solid var(--c)}
+.dept-h{display:flex;align-items:center;gap:12px;padding:14px 16px 10px}
+.dept-h .main-col{min-width:0;flex:1}
+.dept-h b{font:800 17px var(--f-display);display:block}
+.dept-note{padding:0 16px 8px;margin:0}
+.dept-f{display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px 14px;border-top:1px solid var(--line)}
+.dept-row{gap:10px}
+.dept-row .main-col{min-width:0;flex:1}
+.dept-row .main-col b{display:block;overflow-wrap:anywhere;line-height:1.25}
+.row-acts{display:flex;gap:6px;flex:none}
+.row-acts .icon-btn{width:36px;height:36px;border-radius:12px}
+.icon-btn.bell-ic{color:#E11D74;border-color:#FBCFE8;background:#FDF2F8}
+.icon-btn.wa-ic{color:#16A34A;border-color:#BBF7D0;background:#F0FDF4}
+.chip.static{cursor:default}
+.chip.static:hover{border-color:var(--line);color:var(--ink2)}
+.pick-list{display:flex;flex-direction:column;gap:6px;max-height:52vh;overflow:auto}
+.pick-row{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:14px;cursor:pointer;background:var(--surface)}
+.pick-row:has(input:checked){border-color:var(--primary);background:#EEF3FF}
+.pick-row input{width:20px;height:20px;flex:none;accent-color:var(--primary)}
+.pick-row .main-col{min-width:0;flex:1}
+.avatar.sm{width:32px;height:32px;font-size:12px}
+@media (max-width:420px){.row-acts .icon-btn{width:34px;height:34px}}
+.demo-acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex:none}
+@media (max-width:420px){.banner.demo-on{flex-wrap:wrap}.banner.demo-on .demo-acts{width:100%;justify-content:flex-start;padding-left:30px}}
+@media (max-width:560px){.today-strip:has(>:nth-child(4):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 </style>
 </head>
@@ -3084,7 +3111,7 @@ const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
+const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
@@ -3696,6 +3723,16 @@ function render() {
 /* things that must run after the screen is drawn (e.g. load signed URLs of private photos / voice notes) */
 const AFTER_RENDER = [];
 function afterRender() { AFTER_RENDER.forEach(f => { try { f(); } catch (e) { } }); }
+/* big numbers (₹2,00,900) shrink to fit their small boxes on phones instead of spilling out */
+function fitNums() {
+  document.querySelectorAll('.today-strip b, .kpi .v').forEach(el => {
+    el.style.fontSize = ''; let fs = parseFloat(getComputedStyle(el).fontSize) || 24; let n = 0;
+    while (el.scrollWidth > el.clientWidth + 1 && fs > 13 && n++ < 24) { fs -= 1; el.style.fontSize = fs + 'px'; }
+  });
+}
+AFTER_RENDER.push(fitNums, () => setTimeout(fitNums, 400));
+window.addEventListener('resize', () => { clearTimeout(window._fitT); window._fitT = setTimeout(fitNums, 150); });
+if (document.fonts?.ready) document.fonts.ready.then(fitNums);
 function navItems() { return MODULES.filter(m => !m.hidden && can(m.key)); }
 function currentModule() { const map = { event: 'bookings', invoice: 'invoices' }; return map[S.view] || S.view; }
 function bizLogo(st, cls = 'logo') { return st.logo ? `<div class="${cls} has-img"><img src="${esc(st.logo)}" alt=""></div>` : `<div class="${cls}">${ic('tent')}</div>`; }
@@ -4041,7 +4078,7 @@ A.alertForm = (toUser) => {
   const evs = col('events').filter(e => !['Cancelled', 'Closed', 'Completed'].includes(e.stage) && eventEnd(e) >= addDays(todayLocal(), -1)).sort(by('date'));
   modal(`<form class="form" onsubmit="A.sendAlert(event)" novalidate>${sheetHead('Send alert', 'Rings on their phone with the alert tune')}<div class="sheet-b stack">
     ${people.length ? '' : `<div class="banner warn">${ic('alert')}<span>Nobody else has an app login yet. Add your team in Team & access so they get alerts.</span></div>`}
-    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [...(all ? [['', `Everyone (${people.length})`]] : []), ['@seniors', 'My seniors (owner, managers, supervisors)'], ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
+    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [...(all ? [['', `Everyone (${people.length})`]] : []), ['@seniors', 'My seniors (owner, managers, supervisors)'], ...(all && typeof deptMembersOf === 'function' && can('venue') ? col('depts').map(d => ['@dept:' + d.id, `${T('Department')}: ${T(d.name)} (${deptMembersOf(d).filter(p => p.userId && p.userId !== S.user.id).length})`]) : []), ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
     <div class="field"><span>Quick message</span><div class="chips">${quickAlerts().map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
     ${fieldHTML({ name: 'title', label: 'Alert', required: true, maxlength: 140, placeholder: 'e.g. Come to the godown now' })}
     ${fieldHTML({ name: 'body', label: 'Details (optional)', type: 'textarea', maxlength: 600 })}
@@ -4053,6 +4090,11 @@ A.alertForm = (toUser) => {
 A.sendAlert = e => {
   e.preventDefault(); const v = readForm(e.target); if (!(v.title || '').trim()) { toast('Write the alert', 'bad'); return; }
   withBtn(e, async () => {
+    if (String(v.to).startsWith('@dept:')) {
+      const d = col('depts').find(x => x.id === v.to.slice(6)); if (!d) throw new Error('Department not found');
+      const r = await sendDeptAlert(d, { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, from_name: S.me?.name || S.user.name, event_id: v.event || null });
+      A.closeModal(); toast(`${T('Alert sent to')} ${r.people} ${T(r.people === 1 ? 'person' : 'people')}${r.sent ? ` · ${T('ringing on')} ${r.sent} ${T(r.sent === 1 ? 'phone' : 'phones')}` : ''}`); render(); return;
+    }
     const seniors = v.to === '@seniors'; const to = S.members.find(m => m.userId === v.to);
     if (!seniors && !canAlertAll() && !(to && isSenior(to))) throw new Error('You can send alerts to your seniors');
     const rec = { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, to_user: seniors ? null : v.to || null, to_name: seniors ? 'Seniors' : to ? to.name : null, from_name: S.me?.name || S.user.name, event_id: v.event || null, ...(seniors ? { to_role: 'managers' } : {}) };
@@ -7232,9 +7274,9 @@ V.venue = () => {
   const tab = S.params.tab || 'today'; const t = todayLocal();
   const arrive = col('stays').filter(s => s.status === 'expected' && s.from <= t); const leave = col('stays').filter(s => s.status === 'in' && s.to <= t);
   const clean = col('rooms').filter(r => r.status === 'cleaning');
-  const tabs = [['today', 'Today'], ['spaces', 'Halls & lawns'], ['rooms', 'Rooms', clean.length], ['guests', 'Guests', arrive.length + leave.length]];
+  const tabs = [['today', 'Today'], ['spaces', 'Halls & lawns'], ['rooms', 'Rooms', clean.length], ['guests', 'Guests', arrive.length + leave.length], ['depts', 'Departments']];
   return pageHead('Venue & rooms', 'Halls, rooms, guests and today’s functions') + `<div class="tabs">${tabs.map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('vn-' + tab)}</div>` +
-    (tab === 'spaces' ? spacesTab() : tab === 'rooms' ? roomsTab() : tab === 'guests' ? guestsTab() : venueToday());
+    (tab === 'spaces' ? spacesTab() : tab === 'rooms' ? roomsTab() : tab === 'guests' ? guestsTab() : tab === 'depts' ? deptsTab() : venueToday());
 };
 function venueToday() {
   const t = todayLocal(); const fns = []; col('events').filter(e => !['Cancelled'].includes(e.stage)).forEach(e => (e.functions || []).filter(f => f.date === t).forEach(f => fns.push({ ...f, ev: e }))); fns.sort(fnSort);
@@ -7242,7 +7284,7 @@ function venueToday() {
   const arrive = col('stays').filter(s => s.status === 'expected' && s.from <= t).sort(by('from')); const leave = col('stays').filter(s => s.status === 'in' && s.to <= t);
   const inHouse = col('stays').filter(s => s.status === 'in'); const clean = col('rooms').filter(r => r.status === 'cleaning'); const edit = can('venue', 2);
   return `<div class="today-strip"><div><b>${fns.length || evs.length}</b><span>${fns.length ? 'Functions today' : 'Events today'}</span></div><div><b>${num(sum(fns, f => +f.pax || 0))}</b><span>Guests to serve</span></div><div><b>${inHouse.length}</b><span>Rooms with guests</span></div><div><b>${clean.length}</b><span>Rooms to clean</span></div></div>
-  ${edit || can('tasks', 2) ? `<div class="big-grid">${[edit && bigBtn('Check in a guest', 'door', '#2563EB', "A.setP('tab','guests')"), edit && bigBtn('Room board', 'bed', MOD.venue.c, "A.setP('tab','rooms')"), can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()'), can('leads') && bigBtn('Leads', 'megaphone', MOD.leads.c, "A.go('leads')")].filter(Boolean).join('')}</div>` : ''}
+  ${edit || can('tasks', 2) ? `<div class="big-grid">${[edit && bigBtn('Check in a guest', 'door', '#2563EB', "A.setP('tab','guests')"), edit && bigBtn('Room board', 'bed', MOD.venue.c, "A.setP('tab','rooms')"), can('tasks', 2) && bigBtn('Alert to team', 'bell', '#E11D74', 'A.alertForm()'), bigBtn('Departments', 'users', '#7C3AED', "A.setP('tab','depts')"), can('leads') && bigBtn('Leads', 'megaphone', MOD.leads.c, "A.go('leads')")].filter(Boolean).join('')}</div>` : ''}
   <div class="sec-h"><h2>${T('Today’s functions')}${info('vn-functions')}</h2></div>
   <div class="card">${fns.length ? `<div class="rows">${fns.map(f => `<button class="row click" onclick="A.go('event',{id:'${f.ev.id}',tab:'venue'})"><span class="timebox" style="--c:${evStyle(f.ev)[1]}"><b>${esc(f.time || '—')}</b><span>${esc(f.end || '')}</span></span><div class="main-col"><b>${esc(f.name || f.ev.title)}</b><div class="sub">${[spaceById(f.spaceId)?.name, f.pax ? num(f.pax) + ' ' + T('pax') : '', f.meal && f.meal !== 'No food' ? T(f.meal) : '', (f.waiters || waitersFor(f)) ? (f.waiters || waitersFor(f)) + ' ' + T('waiters') : ''].filter(Boolean).map(esc).join(' · ')}</div><div class="tiny muted">${esc(f.ev.title)}</div></div>${ic('chev', 'go')}</button>`).join('')}</div>`
     : evs.length ? `<div class="rows">${evs.map(e => `<button class="row click" onclick="A.go('event',{id:'${e.id}',tab:'venue'})">${datebox(e.date, evStyle(e)[1])}<div class="main-col"><b>${esc(e.title)}</b><div class="sub">${evSpaces(e).map(s => esc(s.name)).join(', ') || T('Add the function sheet')}</div></div>${ic('chev', 'go')}</button>`).join('')}</div>` : empty('No function today', 'Functions from each booking’s function sheet show here with hall, guests, food and waiters.', '', 'calendar', MOD.venue.c)}</div>
@@ -7301,7 +7343,7 @@ A.roomSheet = id => {
   const next = col('stays').filter(s => s.roomId === id && s.status === 'expected' && s.from >= todayLocal()).sort(by('from'))[0];
   modal(`${sheetHead(`${T('Room')} ${r.no}`, [T(r.type || ''), r.floor ? T('Floor') + ' ' + r.floor : '', r.beds ? r.beds + ' ' + T('guests') : ''].filter(Boolean).join(' · '))}<div class="sheet-b stack">
     <div class="row-flex" style="gap:6px">${pill(T(ROOM_ST[st][0]), st === 'ready' ? 'good' : st === 'cleaning' ? 'warn' : st === 'occupied' ? 'primary' : '')}</div>
-    ${g ? `<div class="card pad"><b>${esc(g.guest)}</b><div class="small muted">${esc(g.phone || '')} · ${fmtShort(g.from)} → ${fmtShort(g.to)}${g.eventId && evById(g.eventId) ? ' · ' + esc(evById(g.eventId).title) : ''}</div>${edit ? `<div class="row-flex" style="margin-top:8px">${g.status === 'expected' ? `<button class="btn sm primary" onclick="A.stayMove('${g.id}','in')">${ic('door')} ${T('Check in')}</button>` : `<button class="btn sm" onclick="A.stayMove('${g.id}','out')">${ic('logout')} ${T('Check out')}</button>`}</div>` : ''}</div>` : next ? `<div class="small muted">${T('Next guest')}: <b>${esc(next.guest)}</b> · ${fmtShort(next.from)}</div>` : ''}
+    ${g ? `<div class="card pad"><b>${esc(g.guest)}</b><div class="small muted">${esc(g.phone || '')} · ${T(fmtShort(g.from))} → ${T(fmtShort(g.to))}${g.eventId && evById(g.eventId) ? ' · ' + esc(evById(g.eventId).title) : ''}</div>${edit ? `<div class="row-flex" style="margin-top:8px">${g.status === 'expected' ? `<button class="btn sm primary" onclick="A.stayMove('${g.id}','in')">${ic('door')} ${T('Check in')}</button>` : `<button class="btn sm" onclick="A.stayMove('${g.id}','out')">${ic('logout')} ${T('Check out')}</button>`}</div>` : ''}</div>` : next ? `<div class="small muted">${T('Next guest')}: <b>${esc(next.guest)}</b> · ${fmtShort(next.from)}</div>` : ''}
     ${edit ? `<div class="tiles">${Object.entries(ROOM_ST).filter(([k]) => k !== st).map(([k, [l, c]]) => `<button class="tile" onclick="A.roomStatus('${id}','${k}')">${ibox(k === 'ready' ? 'check' : k === 'cleaning' ? 'sparkle' : k === 'occupied' ? 'user' : 'wrench', c)}<span>${T(l)}</span></button>`).join('')}<button class="tile" onclick="A.closeModal();setTimeout(()=>A.roomForm('${id}'),40)">${ibox('edit', '#2563EB')}<span>${T('Edit room')}</span></button></div>` : ''}</div>`);
 };
 A.roomStatus = async (id, st) => { const r = roomById(id); try { await save('rooms', { ...r, status: st, statusAt: nowAt() }, `Room ${r.no}: ${ROOM_ST[st][0]}`); A.closeModal(); toast(`${T('Room')} ${r.no}: ${T(ROOM_ST[st][0])}`); render(); } catch (e) { toast(e.message, 'bad'); } };
@@ -7310,7 +7352,7 @@ A.roomStatus = async (id, st) => { const r = roomById(id); try { await save('roo
 function stayRow(s, act) {
   const r = roomById(s.roomId); const e = s.eventId ? evById(s.eventId) : null; const edit = can('venue', 2);
   const act_ = act || (s.status === 'expected' ? 'in' : s.status === 'in' ? 'out' : '');
-  return `<div class="row">${ibox(s.status === 'in' ? 'bed' : s.status === 'out' ? 'check' : 'door', s.status === 'in' ? '#2563EB' : s.status === 'out' ? '#94A3B8' : '#D97706', 'sm')}<div class="main-col"><b>${esc(s.guest)}</b><div class="sub">${r ? T('Room') + ' ' + esc(r.no) : `<span class="warn-t">${T('No room yet')}</span>`} · ${fmtShort(s.from)} → ${fmtShort(s.to)}${s.adults ? ' · ' + s.adults + ' ' + T('guests') : ''}</div>${e ? `<div class="tiny muted">${esc(e.title)}</div>` : ''}</div>
+  return `<div class="row">${ibox(s.status === 'in' ? 'bed' : s.status === 'out' ? 'check' : 'door', s.status === 'in' ? '#2563EB' : s.status === 'out' ? '#94A3B8' : '#D97706', 'sm')}<div class="main-col"><b>${esc(s.guest)}</b><div class="sub">${r ? T('Room') + ' ' + esc(r.no) : `<span class="warn-t">${T('No room yet')}</span>`} · ${T(fmtShort(s.from))} → ${T(fmtShort(s.to))}${s.adults ? ' · ' + s.adults + ' ' + T('guests') : ''}</div>${e ? `<div class="tiny muted">${esc(e.title)}</div>` : ''}</div>
     ${edit ? `<div class="row-flex" style="gap:4px">${act_ === 'in' ? `<button class="btn sm primary" onclick="A.stayMove('${s.id}','in')">${T('Check in')}</button>` : act_ === 'out' ? `<button class="btn sm" onclick="A.stayMove('${s.id}','out')">${T('Check out')}</button>` : ''}<button class="icon-btn" style="width:34px;height:34px" aria-label="Edit" onclick="A.stayForm('${s.id}')">${ic('edit')}</button></div>` : ''}</div>`;
 }
 function guestsTab() {
@@ -7475,6 +7517,194 @@ EXTRA_ALERTS.push(() => {
   return out;
 });
 Object.assign(ALERT_STYLE, { Rooms: ['bed', '#0F766E'] });
+
+/* ================= Departments (venue): the owner makes own departments, adds / removes people,
+   alerts a whole department or one person. Collection 'depts' (module venue):
+   { id, name, icon, color, head (person key), members: [person key], notes }
+   Person key = 's:<staff id>' (crew record; alerts go to its linked app login) or 'u:<user id>' (app login without a crew record). */
+const DEPT_PRESETS = [['Housekeeping', 'bed', '#0F766E'], ['Kitchen', 'utensils', '#EA580C'], ['Service / Waiters', 'users', '#2563EB'], ['Front office', 'door', '#7C3AED'],
+  ['Decor & lights', 'bulb', '#DB2777'], ['Maintenance', 'wrench', '#64748B'], ['Security', 'shield', '#0F172A'], ['Sales', 'megaphone', '#9333EA'], ['Accounts', 'rupee', '#0B9B68'], ['Parking & valet', 'truck', '#D97706']];
+const DEPT_COLORS = ['#0F766E', '#2563EB', '#EA580C', '#7C3AED', '#DB2777', '#0B9B68', '#D97706', '#9333EA', '#E0344B', '#64748B'];
+const deptById = id => col('depts').find(d => d.id === id);
+const memberPhone = m => String(m.email || '').endsWith('@' + MOBILE_DOMAIN) ? m.email.split('@')[0] : '';
+function deptPeople() {
+  const out = []; const linked = new Set();
+  col('staff').forEach(s => { const m = S.members.find(x => x.staffId === s.id && x.userId); if (m) linked.add(m.userId); out.push({ key: 's:' + s.id, name: s.name || '—', phone: s.phone || (m ? memberPhone(m) : ''), role: s.role || (m ? S.roles[m.role]?.label || m.role : ''), userId: m?.userId || '', appRole: m?.role || '' }); });
+  S.members.filter(m => m.userId && !linked.has(m.userId)).forEach(m => out.push({ key: 'u:' + m.userId, name: m.name || displayId(m.email), phone: memberPhone(m), role: S.roles[m.role]?.label || m.role, userId: m.userId, appRole: m.role }));
+  return out.sort((a, b) => String(a.name).localeCompare(String(b.name)));
+}
+const deptMembersOf = (d, people = deptPeople()) => (d.members || []).map(k => people.find(p => p.key === k)).filter(Boolean);
+const deptsOfPerson = key => col('depts').filter(d => (d.members || []).includes(key));
+/* who can get a personal alert from me: anyone (tasks Edit+) or only seniors */
+const canAlertPerson = p => !!p.userId && p.userId !== S.user?.id && canSendAlert() && (canAlertAll() || ROLE_GROUPS.managers.includes(p.appRole));
+
+function deptsTab() {
+  const list = col('depts').slice().sort(by('name')); const edit = can('venue', 2); const people = deptPeople();
+  const loose = people.filter(p => !list.some(d => (d.members || []).includes(p.key)));
+  const add = edit ? `<button class="btn primary" onclick="A.deptForm()">${ic('plus')} ${T('New department')}</button>` : '';
+  if (!list.length) return `<div class="card">${empty('No departments yet', 'Make your own departments like Housekeeping, Kitchen or Service, add people to each, and send an alert to a whole department or to one person.', add, 'users', MOD.venue.c)}</div>`;
+  return `${edit || canAlertAll() ? `<div class="row-flex" style="gap:8px;margin-bottom:12px">${add}${canAlertAll() ? `<button class="btn" onclick="A.alertForm()">${ic('bell')} ${T('Alert one person')}</button>` : ''}</div>` : ''}
+  <div class="grid g-auto dept-grid">${list.map(d => deptCard(d, people)).join('')}</div>
+  ${loose.length ? `<div class="card pad" style="margin-top:14px"><b class="small">${T('Not in any department')} (${loose.length})</b><div class="chips" style="margin-top:8px">${loose.map(p => `<span class="chip static">${esc(p.name)}</span>`).join('')}</div>${edit ? `<p class="tiny muted" style="margin-top:8px">${T('Open a department and tap “Add / remove people” to put them in.')}</p>` : ''}</div>` : ''}`;
+}
+function deptCard(d, people) {
+  const mem = deptMembersOf(d, people); const head = d.head ? people.find(p => p.key === d.head) : null; const edit = can('venue', 2); const c = d.color || MOD.venue.c;
+  const reach = mem.filter(p => p.userId && p.userId !== S.user?.id).length;
+  return `<div class="card dept-card" style="--c:${c}">
+    <div class="dept-h">${ibox(d.icon || 'users', c)}<div class="main-col"><b>${esc(T(d.name))}</b><div class="sub">${mem.length} ${T(mem.length === 1 ? 'person' : 'people')}${head ? ` · ${T('Head')}: ${esc(head.name)}` : ''}</div></div>${edit ? `<button class="icon-btn" aria-label="Edit department" onclick="A.deptForm('${d.id}')">${ic('edit')}</button>` : ''}</div>
+    ${d.notes ? `<p class="tiny muted dept-note">${esc(d.notes)}</p>` : ''}
+    ${mem.length ? `<div class="rows">${mem.map(p => deptMemberRow(d, p)).join('')}</div>` : `<p class="small muted dept-note">${T('No one in this department yet.')}</p>`}
+    <div class="dept-f">${edit ? `<button class="btn sm" onclick="A.deptMembers('${d.id}')">${ic('users')} ${T('Add / remove people')}</button>` : ''}${canAlertAll() && reach ? `<button class="btn sm primary" onclick="A.deptAlert('${d.id}')">${ic('bell')} ${T('Alert department')}</button>` : ''}</div></div>`;
+}
+function deptMemberRow(d, p) {
+  const ph = String(p.phone || '').replace(/\D/g, '').slice(-10);
+  return `<div class="row dept-row"><div class="avatar">${esc(initials(p.name))}</div><div class="main-col"><b>${esc(p.name)}</b><div class="sub">${d.head === p.key ? `<span class="pill primary">${T('Head')}</span> ` : ''}${esc(T(p.role || ''))}${p.userId ? '' : ` · ${T('no app login')}`}</div></div>
+    <div class="row-acts">${canAlertPerson(p) ? `<button class="icon-btn bell-ic" aria-label="Send alert" title="${T('Send alert')}" onclick="A.alertForm('${p.userId}')">${ic('bell')}</button>` : ''}${ph ? `<a class="icon-btn" aria-label="Call" href="tel:${ph}">${ic('phone')}</a><a class="icon-btn wa-ic" aria-label="WhatsApp" href="${esc(waLink('', ph))}" target="_blank" rel="noopener">${ic('wa')}</a>` : ''}${can('venue', 2) ? `<button class="icon-btn" aria-label="Remove from department" title="${T('Remove from department')}" onclick="A.deptRemove('${d.id}','${p.key}')">${ic('x')}</button>` : ''}</div></div>`;
+}
+
+A.deptForm = id => {
+  const d = id ? deptById(id) : { color: DEPT_COLORS[col('depts').length % DEPT_COLORS.length], icon: 'users', members: [] };
+  const people = deptPeople(); const mem = deptMembersOf(d, people);
+  const used = new Set(col('depts').map(x => String(x.name).toLowerCase()));
+  formModal({ title: id ? 'Edit department' : 'New department', sub: id ? d.name : 'Pick one or write your own name', fields: [
+    { type: 'html', full: true, html: `<input type="hidden" name="icon" value="${esc(d.icon || 'users')}">${id ? '' : `<div class="field"><span>${T('Quick pick')}</span><div class="chips">${DEPT_PRESETS.filter(([n]) => !used.has(n.toLowerCase())).map(([n, icn, c]) => `<button type="button" class="chip" onclick="const f=this.form;f.name.value=${esc(JSON.stringify(n))};f.icon.value='${icn}';f.color.value='${c}'">${ic(icn)} ${esc(T(n))}</button>`).join('')}</div></div>`}` },
+    { name: 'name', label: 'Department name', required: true, value: d.name || '', placeholder: 'e.g. Housekeeping', full: true },
+    { name: 'color', label: 'Colour', type: 'select', value: d.color, options: DEPT_COLORS.map((c, i) => [c, ['Teal', 'Blue', 'Orange', 'Violet', 'Pink', 'Green', 'Amber', 'Purple', 'Red', 'Grey'][i]]) },
+    { name: 'head', label: 'Head of department (optional)', type: 'select', value: d.head || '', options: [['', '—'], ...(id ? mem : people).map(p => [p.key, p.name])] },
+    { name: 'notes', label: 'Work of this department (optional)', type: 'textarea', value: d.notes || '', full: true, placeholder: 'e.g. Rooms, linen, hall cleaning after every function' }],
+    left: id && lvl('venue') >= 3 ? `<button type="button" class="btn ghost danger" onclick="A.delDept('${id}')">${ic('trash')}</button>` : '',
+    submit: id ? 'Save' : 'Next: add people', onSubmit: async v => {
+      const name = (v.name || '').trim(); if (!name) throw new Error('Write the department name');
+      if (col('depts').some(x => x.id !== id && String(x.name).toLowerCase() === name.toLowerCase())) throw new Error('A department with this name already exists');
+      const preset = DEPT_PRESETS.find(([n]) => n.toLowerCase() === name.toLowerCase());
+      const rec = { ...(id ? d : { id: uid('dp_'), members: [] }), name, icon: v.icon && v.icon !== 'users' ? v.icon : preset ? preset[1] : d.icon || 'users', color: v.color || d.color, head: v.head || '', notes: (v.notes || '').trim() };
+      if (rec.head && !rec.members.includes(rec.head)) rec.members = [...rec.members, rec.head];
+      await save('depts', rec, `${id ? 'Updated' : 'Made'} department ${name}`); toast(id ? 'Saved' : 'Department made');
+      if (!id) setTimeout(() => A.deptMembers(rec.id), 60); else render();
+    } });
+};
+A.delDept = id => { const d = deptById(id); confirmBox(`${T('Delete')} ${d.name}?`, 'Only the department goes. The people stay in Staff and Team.', 'Delete', async () => { await removeRec('depts', id, `Deleted department ${d.name}`); A.closeModal(); render(); }); };
+A.deptMembers = id => {
+  const d = deptById(id); if (!d) return; const people = deptPeople(); const on = new Set(d.members || []);
+  modal(`<form class="form" onsubmit="A.saveDeptMembers(event,'${id}')" novalidate>${sheetHead(T('Add / remove people'), T(d.name))}<div class="sheet-b stack">
+    ${people.length ? `<div class="search">${ic('search')}<input placeholder="${T('Search name')}" oninput="const q=this.value.toLowerCase();this.form.querySelectorAll('.pick-row').forEach(r=>r.hidden=!r.dataset.n.includes(q))"></div>
+    <div class="pick-list">${people.map(p => { const other = deptsOfPerson(p.key).filter(x => x.id !== id).map(x => x.name); return `<label class="pick-row" data-n="${esc(String(p.name).toLowerCase())}"><input type="checkbox" name="m" value="${p.key}" data-multi="1" ${on.has(p.key) ? 'checked' : ''}><div class="avatar sm">${esc(initials(p.name))}</div><div class="main-col"><b>${esc(p.name)}</b><div class="sub">${esc(T(p.role || ''))}${p.userId ? '' : ` · ${T('no app login')}`}${other.length ? ` · ${T('also in')} ${other.map(x => esc(T(x))).join(', ')}` : ''}</div></div></label>`; }).join('')}</div>`
+    : `<div class="banner warn">${ic('alert')}<span>${T('No people yet. Add crew in Staff or app logins in Team & access, then put them in departments.')}</span></div>`}
+    <p class="tiny muted">${T('People with an app login get alerts on their phone. For others use Call or WhatsApp.')}</p>
+  </div><footer class="sheet-f">${can('staff', 2) ? `<button type="button" class="btn ghost" onclick="A.closeModal();setTimeout(()=>A.go('staff'),40)">${ic('plus')} ${T('New crew member')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`);
+};
+A.saveDeptMembers = (e, id) => {
+  e.preventDefault(); const d = deptById(id); const keys = [...e.target.querySelectorAll('input[name=m]:checked')].map(x => x.value);
+  withBtn(e, async () => { const rec = { ...d, members: keys, head: keys.includes(d.head) ? d.head : '' }; await save('depts', rec, `${d.name}: ${keys.length} people`); A.closeModal(); toast(`${d.name}: ${keys.length} ${T(keys.length === 1 ? 'person' : 'people')}`); render(); });
+};
+A.deptRemove = (id, key) => {
+  const d = deptById(id); const p = deptPeople().find(x => x.key === key);
+  confirmBox(`${T('Remove')} ${p?.name || ''}?`, `${T('They will not be in')} ${d.name}. ${T('Nothing else changes.')}`, 'Remove', async () => {
+    await save('depts', { ...d, members: (d.members || []).filter(k => k !== key), head: d.head === key ? '' : d.head }, `Removed ${p?.name || 'a person'} from ${d.name}`); toast('Removed'); render(); });
+};
+
+/* alert a whole department: one alert per person with an app login (rings on each phone) */
+async function sendDeptAlert(d, base) {
+  if (!canAlertAll()) throw new Error('Your role cannot alert a department. Ask the owner.');
+  const to = deptMembersOf(d).filter(p => p.userId && p.userId !== S.user.id);
+  if (!to.length) throw new Error('No one in this department has an app login yet');
+  let sent = 0; const out = [];
+  for (const p of to) { const a = await AlertsDB.send({ ...base, to_user: p.userId, to_name: `${p.name} · ${d.name}` }); out.push(a); const r = await AlertsDB.push(a.id); sent += +r.sent || 0; }
+  S.teamAlerts = [...out, ...(S.teamAlerts || [])]; logAct(`Alert to ${d.name}: ${base.title}`);
+  return { people: to.length, sent };
+}
+A.deptAlert = id => {
+  const d = deptById(id); const to = deptMembersOf(d).filter(p => p.userId && p.userId !== S.user.id);
+  modal(`<form class="form" onsubmit="A.sendDeptAlertForm(event,'${id}')" novalidate>${sheetHead(T('Alert department'), `${T(d.name)} · ${to.length} ${T(to.length === 1 ? 'person' : 'people')}`)}<div class="sheet-b stack">
+    <div class="chips">${to.map(p => `<span class="chip static">${esc(p.name)}</span>`).join('')}</div>
+    <div class="field"><span>${T('Quick message')}</span><div class="chips">${quickAlerts().map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
+    ${fieldHTML({ name: 'title', label: 'Alert', required: true, maxlength: 140, placeholder: 'e.g. Hall 2 cleaning now' })}
+    ${fieldHTML({ name: 'body', label: 'Details (optional)', type: 'textarea', maxlength: 600 })}
+    <label class="check urgent-check"><input type="checkbox" name="urgent" checked> <span><b>${T('Urgent')}</b>: ${T('keeps ringing until they tap “Seen”')}</span></label>
+  </div><footer class="sheet-f"><span class="grow"></span><button type="button" class="btn ghost" onclick="A.closeModal()">${T('Cancel')}</button><button class="btn primary" type="submit">${ic('send')} ${T('Send to department')}</button></footer></form>`);
+};
+A.sendDeptAlertForm = (e, id) => {
+  e.preventDefault(); const v = readForm(e.target); if (!(v.title || '').trim()) { toast('Write the alert', 'bad'); return; }
+  withBtn(e, async () => {
+    const r = await sendDeptAlert(deptById(id), { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, from_name: S.me?.name || S.user.name, event_id: null });
+    A.closeModal(); toast(`${T('Alert sent to')} ${r.people} ${T(r.people === 1 ? 'person' : 'people')}${r.sent ? ` · ${T('ringing on')} ${r.sent} ${T(r.sent === 1 ? 'phone' : 'phones')}` : ''}`); render();
+  });
+};
+
+I18N.load(`
+Departments | विभाग
+Department | विभाग
+New department | नया विभाग
+Edit department | विभाग बदलें
+Alert one person | एक व्यक्ति को अलर्ट
+Not in any department | किसी विभाग में नहीं
+Open a department and tap “Add / remove people” to put them in. | विभाग में “लोग जोड़ें / हटाएं” दबाकर इन्हें जोड़ें।
+person | व्यक्ति
+people | लोग
+Head | प्रमुख
+No one in this department yet. | इस विभाग में अभी कोई नहीं है।
+Add / remove people | लोग जोड़ें / हटाएं
+Alert department | विभाग को अलर्ट
+no app login | ऐप लॉगिन नहीं
+Send alert | अलर्ट भेजें
+Remove from department | विभाग से हटाएं
+Pick one or write your own name | एक चुनें या अपना नाम लिखें
+Quick pick | झट से चुनें
+Housekeeping | हाउसकीपिंग
+Kitchen | किचन
+Service / Waiters | सर्विस / वेटर
+Front office | फ्रंट ऑफ़िस
+Decor & lights | सजावट और लाइट
+Maintenance | मेंटेनेंस
+Security | सिक्योरिटी
+Sales | सेल्स
+Accounts | अकाउंट्स
+Parking & valet | पार्किंग और वैले
+Department name | विभाग का नाम
+e.g. Housekeeping | जैसे हाउसकीपिंग
+Colour | रंग
+Teal | हरा-नीला
+Blue | नीला
+Orange | नारंगी
+Violet | बैंगनी
+Pink | गुलाबी
+Green | हरा
+Amber | पीला
+Purple | जामुनी
+Red | लाल
+Grey | स्लेटी
+Head of department (optional) | विभाग प्रमुख (ज़रूरी नहीं)
+Work of this department (optional) | इस विभाग का काम (ज़रूरी नहीं)
+e.g. Rooms, linen, hall cleaning after every function | जैसे कमरे, चादर-तौलिए, हर फ़ंक्शन के बाद हॉल की सफ़ाई
+Next: add people | आगे: लोग जोड़ें
+Write the department name | विभाग का नाम लिखें
+A department with this name already exists | इस नाम का विभाग पहले से है
+Department made | विभाग बन गया
+Only the department goes. The people stay in Staff and Team. | सिर्फ़ विभाग हटेगा। लोग स्टाफ़ और टीम में रहेंगे।
+Search name | नाम खोजें
+also in | इसमें भी
+No people yet. Add crew in Staff or app logins in Team & access, then put them in departments. | अभी कोई व्यक्ति नहीं है। स्टाफ़ में क्रू या टीम और एक्सेस में ऐप लॉगिन जोड़ें, फिर उन्हें विभाग में डालें।
+People with an app login get alerts on their phone. For others use Call or WhatsApp. | ऐप लॉगिन वालों के फ़ोन पर अलर्ट आता है। बाकी के लिए कॉल या व्हाट्सऐप करें।
+New crew member | नया स्टाफ़
+They will not be in | ये अब इसमें नहीं रहेंगे:
+Nothing else changes. | बाकी कुछ नहीं बदलेगा।
+Removed | हटा दिया
+Your role cannot alert a department. Ask the owner. | आपका रोल विभाग को अलर्ट नहीं भेज सकता। मालिक से पूछें।
+No one in this department has an app login yet | इस विभाग में अभी किसी के पास ऐप लॉगिन नहीं है
+e.g. Hall 2 cleaning now | जैसे हॉल 2 की सफ़ाई अभी करें
+Urgent | ज़रूरी
+keeps ringing until they tap “Seen” | जब तक वे “देख लिया” न दबाएं, घंटी बजती रहेगी
+Send to department | विभाग को भेजें
+Alert sent to | अलर्ट भेजा गया:
+ringing on | घंटी बज रही है:
+phone | फ़ोन
+phones | फ़ोन
+No departments yet | अभी कोई विभाग नहीं
+Make your own departments like Housekeeping, Kitchen or Service, add people to each, and send an alert to a whole department or to one person. | हाउसकीपिंग, किचन या सर्विस जैसे अपने विभाग बनाएं, हर एक में लोग जोड़ें, और पूरे विभाग को या किसी एक व्यक्ति को अलर्ट भेजें।
+{} people | {} लोग
+{} person | {} व्यक्ति
+Department: {} ({}) | विभाग: {1} ({2})
+`);
 
 /* ================= SabManage for doctors / clinics =================
    Kind 'clinic' businesses get: Appointments, Patients (readings with charts, messages,
@@ -8404,7 +8634,7 @@ A.portalPaid = (e, id) => { e.preventDefault(); const v = readForm(e.target); wi
    An allowed business gets "Demo data" (account menu, and a card on an empty home) to load or remove sample
    records for its kind: event (tent / caterer / planner / venue) or clinic. Every demo record has `demo: true`
    and an id starting 'dm_'; removing deletes only those, the business's own records are never touched. */
-const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'patients', 'readings', 'visits', 'appts', 'pmsgs'];
+const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'patients', 'readings', 'visits', 'appts', 'pmsgs'];
 const demoSet = () => S.platform?.demo || {};
 const demoOrgOn = id => !!demoSet().all || (demoSet().orgs || []).includes(id);
 const demoAllowed = () => !!S.org && (S.super || demoOrgOn(S.org.orgId));
@@ -8421,7 +8651,7 @@ function demoEvent() {
   const S2 = add('staff', { id: dmId('st'), name: 'Suresh Meena', phone: '9829000102', role: 'Rigger', rate: 800, dutyHours: 8 });
   const S3 = add('staff', { id: dmId('st'), name: 'Mahesh Saini', phone: '9829000103', role: 'Waiter', rate: 600, dutyHours: 8 });
   const S4 = add('staff', { id: dmId('st'), name: 'Kailash Sharma', phone: '9829000104', role: 'Halwai', rate: 1200, dutyHours: 10 });
-  add('staff', { id: dmId('st'), name: 'Raju Prajapat', phone: '9829000105', role: 'Helper', rate: 600, dutyHours: 8 });
+  const S5 = add('staff', { id: dmId('st'), name: 'Raju Prajapat', phone: '9829000105', role: 'Helper', rate: 600, dutyHours: 8 });
   const inv = moduleOn('inventory') ? [['Waterproof German hanger 40×60', 'Tents & Shamiana', 4, 8000, 400], ['Shamiana 20×20', 'Tents & Shamiana', 20, 900, 60], ['Chiavari chair (gold)', 'Furniture', 600, 25, 4], ['Round table 6 ft', 'Furniture', 80, 150, 18],
     ['Maharaja sofa', 'Furniture', 12, 1500, 45], ['LED par light', 'Lighting & Sound', 60, 150, 3], ['Sound system 2000 W', 'Lighting & Sound', 3, 6000, 60], ['Silent generator 125 KVA', 'Power & DG', 2, 9000, 1500],
     ['Red carpet roll', 'Decor & Flooring', 120, 200, 15], ['Buffet chafing dish', 'Catering Utensils', 80, 120, 5]].map(([name, category, total, rate, weightKg], i) => add('inventory', { id: dmId('i'), name, category, total, rate, weightKg, damaged: i === 2 ? 6 : 0, bay: 'Rack ' + String.fromCharCode(65 + (i % 4)) + '-' + (i + 1), unit: 'day' })) : [];
@@ -8461,6 +8691,9 @@ function demoEvent() {
   L({ name: 'Sanjay Bansal', phone: '9876500008', eventType: 'Wedding', eventDate: dD(30), guests: 500, source: 'Website', status: 'Lost', lostReason: 'Budget', lostAt: lg(3000, 'status').at, lastOutcome: 'booked_else', firstContactAt: lg(8000, 'call').at, reached: { Contacted: lg(8000, 'call').at, Quoted: lg(7000, 'call').at }, log: [lg(8100, 'lead'), lg(8000, 'call', { outcome: 'wants_quote', status: 'Quoted', amount: 600000 }), lg(3000, 'status', { status: 'Lost', text: 'Budget · Booked a cheaper lawn' })] }, 8100);
   /* rooms and guests */
   if (venue) {
+    const k = st_ => 's:' + st_.id;
+    [['Housekeeping', 'bed', '#0F766E', [S5, S3], S5, 'Rooms, linen, hall cleaning after every function'], ['Kitchen', 'utensils', '#EA580C', [S4], S4, 'Food for every function'], ['Service / Waiters', 'users', '#2563EB', [S3, S1], S1, 'Welcome drinks, buffet and table service'], ['Decor & lights', 'bulb', '#DB2777', [S2], S2, 'Stage, flowers, lights and sound']]
+      .forEach(([name, icon, color, mem, head, notes]) => add('depts', { id: dmId('dp'), name, icon, color, members: mem.map(k), head: k(head), notes }));
     const R = [['101', 'Deluxe', '1'], ['102', 'Deluxe', '1'], ['103', 'Deluxe', '1'], ['104', 'Deluxe', '1'], ['105', 'Deluxe', '1'], ['106', 'Family', '1'], ['201', 'Suite', '2'], ['202', 'Suite', '2'], ['203', 'Deluxe', '2'], ['204', 'Deluxe', '2']]
       .map(([no, type, floor], i) => add('rooms', { id: dmId('rm'), no, type, floor, beds: type === 'Family' ? 4 : 2, rate: type === 'Suite' ? 6500 : 3500, status: i < 4 ? 'occupied' : i === 4 ? 'cleaning' : i === 9 ? 'blocked' : 'ready', notes: i === 9 ? 'AC repair' : '' }));
     [['Rajesh Sharma (bride’s uncle)', 0, 'in', 3], ['Kamla Devi', 1, 'in', 2], ['Pankaj Sharma', 2, 'in', 2], ['Mama ji family', 3, 'in', 4], ['Neha & Rohan', 6, 'expected', 2], ['Dadi ji', 5, 'expected', 2]].forEach(([guest, ri, status, adults]) =>
@@ -8495,18 +8728,18 @@ function demoClinic() {
   return out;
 }
 
-A.demoLoad = async () => {
+A.demoLoad = async (quiet) => {
   if (!demoCanUse()) { toast('Demo data is not allowed for this business. Ask SabManage support.', 'bad'); return; }
   if (demoCount()) { toast('Demo data is already loaded', 'warn'); return; }
   try {
     const data = isClinic() ? demoClinic() : demoEvent(); let n = 0; const t = Date.now();
     for (const [c, recs] of Object.entries(data)) {
-      const rows = recs.map(r => ({ ...r, updatedAt: t, updatedById: S.user?.id || '', updatedBy: 'Demo' }));
+      const rows = recs.map(r => ({ ...r, demoDay: todayLocal(), updatedAt: t, updatedById: S.user?.id || '', updatedBy: 'Demo' }));
       await S.adapter.putMany(S.org.orgId, c, rows);
       S.data[c] = [...col(c).filter(x => !rows.some(y => y.id === x.id)), ...rows]; n += rows.length;
     }
     if (S.patLoaded) S.patLoaded = {};
-    logAct(`Loaded demo data (${n} records)`); A.closeModal(); toast(`${T('Demo data loaded')}: ${n} ${T('records')}`); render();
+    logAct(`Loaded demo data (${n} records)`); A.closeModal(); toast(quiet ? T('Demo dates moved to today') : `${T('Demo data loaded')}: ${n} ${T('records')}`); render();
   } catch (e) { toast(e.message, 'bad'); }
 };
 A.demoRemove = () => confirmBox('Remove demo data?', 'Only the sample records are removed. Everything your team added stays.', 'Remove demo data', async () => {
@@ -8516,6 +8749,11 @@ A.demoRemove = () => confirmBox('Remove demo data?', 'Only the sample records ar
     logAct(`Removed demo data (${n} records)`); A.closeModal(); toast(T('Demo data removed')); A.go('dashboard');
   } catch (e) { toast(e.message, 'bad'); }
 }, 'danger');
+/* demo dates are set on the day it is loaded; next day 'Move to today' reloads it so today's event, arrivals etc. show again */
+const demoStale = () => { const r = DEMO_COLLS.map(c => col(c).find(x => x.demo)).find(Boolean); return !!r && (r.demoDay || '') !== todayLocal(); };
+A.demoRefresh = async () => {
+  try { await S.adapter.delDemo(S.org.orgId, DEMO_COLLS); DEMO_COLLS.forEach(c => { if (S.data[c]) S.data[c] = S.data[c].filter(x => !x.demo); }); await A.demoLoad(true); } catch (e) { toast(e.message, 'bad'); }
+};
 A.demoSheet = () => {
   const n = demoCount(); const clinic = isClinic();
   modal(`${sheetHead('Demo data', S.org?.name || '')}<div class="sheet-b stack">
@@ -8530,7 +8768,7 @@ A.demoSheet = () => {
 function demoBanner() {
   if (!S.org || !demoCanUse()) return '';
   const n = demoCount();
-  if (n) return `<div class="banner demo-on" style="margin-bottom:12px">${ic('sparkle')}<span><b>${T('Demo data is on')}</b> · ${T('sample records are shown for a demo.')}</span><button class="btn sm" onclick="A.demoSheet()">${T('Remove')}</button></div>`;
+  if (n) return `<div class="banner demo-on" style="margin-bottom:12px">${ic('sparkle')}<span><b>${T('Demo data is on')}</b> · ${T(demoStale() ? 'loaded on an earlier day. Move it to today so today’s work shows.' : 'sample records are shown for a demo.')}</span><div class="demo-acts">${demoStale() ? `<button class="btn sm primary" onclick="A.demoRefresh()">${T('Move to today')}</button>` : ''}<button class="btn sm" onclick="A.demoSheet()">${T('Remove')}</button></div></div>`;
   const empty_ = isClinic() ? !col('patients').length : !col('events').length && !col('leads').length;
   return empty_ || demoOrgOn(S.org.orgId) ? `<div class="card pad row-flex demo-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('sparkle', '#9333EA')}<div class="grow" style="min-width:0"><b>${T('Show the app with demo data')}</b><div class="small muted">${T('Load sample records to give a demo. Remove them in one tap later.')}</div></div><button class="btn primary sm" onclick="A.demoLoad()">${T('Load')}</button></div>` : '';
 }
@@ -8556,6 +8794,9 @@ function adminDemoCard() {
 
 I18N.load(`
 Demo data | डेमो डेटा
+Move to today | आज पर लाएं
+Demo dates moved to today | डेमो की तारीख़ें आज पर आ गईं
+loaded on an earlier day. Move it to today so today’s work shows. | पहले किसी दिन लोड हुआ था। आज का काम दिखाने के लिए इसे आज पर लाएं।
 Demo data is allowed for every business. Tap “Demo data” on a business to load or remove sample records. | हर बिज़नेस के लिए डेमो डेटा चालू है। सैंपल रिकॉर्ड लोड करने या हटाने के लिए किसी बिज़नेस पर “डेमो डेटा” दबाएं।
 Ask support on WhatsApp | व्हाट्सऐप पर सपोर्ट से पूछें
 Demo data: tap “Allow demo” on a business, then “Demo data” to load or remove sample records. | डेमो डेटा: किसी बिज़नेस पर “डेमो चालू करें” दबाएं, फिर “डेमो डेटा” दबाकर सैंपल रिकॉर्ड लोड करें या हटाएं।
@@ -9213,6 +9454,7 @@ Object.assign(HELP, {
   'vn-spaces': [['Halls & lawns', 'हॉल और लॉन'], ['The next 14 days for every hall. Coloured boxes are booked; a question mark is a quotation or enquiry.', 'हर हॉल के अगले 14 दिन। रंगीन खाने बुक हैं; प्रश्न चिह्न मतलब कोटेशन या पूछताछ।']],
   'vn-rooms': [['Room board', 'कमरों का बोर्ड'], ['Every room with its colour: ready, guest in room, to clean or blocked. Tap a room to change it.', 'हर कमरा अपने रंग के साथ: तैयार, मेहमान है, सफ़ाई बाकी या बंद। बदलने के लिए कमरे पर टैप करें।']],
   'vn-guests': [['Guests', 'मेहमान'], ['Guests in rooms, arriving and leaving. Check in and check out from here; checked-out rooms go for cleaning.', 'कमरों में ठहरे, आने वाले और जाने वाले मेहमान। यहीं से चेक-इन और चेक-आउट करें; चेक-आउट वाला कमरा सफ़ाई में चला जाता है।']],
+  'vn-depts': [['Departments', 'विभाग'], ['Make your own departments (Housekeeping, Kitchen, Service, Front office…), put crew and app users in them, and send an alert to a whole department or to one person.', 'अपने विभाग बनाएं (हाउसकीपिंग, किचन, सर्विस, फ्रंट ऑफ़िस…), उनमें स्टाफ़ और ऐप वाले लोग जोड़ें, और पूरे विभाग को या किसी एक व्यक्ति को अलर्ट भेजें।'], [['Tap “New department”, pick a name or write your own.', '“नया विभाग” दबाएं, नाम चुनें या खुद लिखें।'], ['Tick the people for that department. One person can be in more than one department.', 'उस विभाग के लोगों पर टिक करें। एक व्यक्ति एक से ज़्यादा विभाग में हो सकता है।'], ['“Alert department” rings on the phone of everyone in it who has the app. The bell next to a name alerts only that person.', '“विभाग को अलर्ट” से उसमें ऐप वाले सबके फ़ोन पर घंटी बजती है। नाम के पास वाली घंटी सिर्फ़ उसी व्यक्ति को अलर्ट भेजती है।']], ['Crew without the app: use Call or WhatsApp on their name.', 'जिनके पास ऐप नहीं है: उनके नाम पर कॉल या व्हाट्सऐप दबाएं।']],
   'vn-functions': [['Today’s functions', 'आज के फ़ंक्शन'], ['From the function sheet of every booking.', 'हर बुकिंग की फ़ंक्शन शीट से।']],
   'vn-halls': [['Halls & lawns', 'हॉल और लॉन'], ['Pick the spaces this booking uses. If another confirmed booking has the hall on these dates, it is marked.', 'इस बुकिंग में कौन-से हॉल लगेंगे, चुनें। इन तारीख़ों पर किसी और पक्की बुकिंग में हॉल हो, तो निशान दिखेगा।']],
   'vn-fsheet': [['Function sheet', 'फ़ंक्शन शीट'], ['Every function with time, hall, guests, setup, food, waiters, lights and decor. Print it or share it on WhatsApp with the team.', 'हर फ़ंक्शन समय, हॉल, मेहमान, सेटअप, खाना, वेटर, लाइट और सजावट के साथ। प्रिंट करें या टीम को व्हाट्सऐप पर भेजें।']],

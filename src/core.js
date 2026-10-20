@@ -134,7 +134,7 @@ const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
+const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
@@ -746,6 +746,16 @@ function render() {
 /* things that must run after the screen is drawn (e.g. load signed URLs of private photos / voice notes) */
 const AFTER_RENDER = [];
 function afterRender() { AFTER_RENDER.forEach(f => { try { f(); } catch (e) { } }); }
+/* big numbers (₹2,00,900) shrink to fit their small boxes on phones instead of spilling out */
+function fitNums() {
+  document.querySelectorAll('.today-strip b, .kpi .v').forEach(el => {
+    el.style.fontSize = ''; let fs = parseFloat(getComputedStyle(el).fontSize) || 24; let n = 0;
+    while (el.scrollWidth > el.clientWidth + 1 && fs > 13 && n++ < 24) { fs -= 1; el.style.fontSize = fs + 'px'; }
+  });
+}
+AFTER_RENDER.push(fitNums, () => setTimeout(fitNums, 400));
+window.addEventListener('resize', () => { clearTimeout(window._fitT); window._fitT = setTimeout(fitNums, 150); });
+if (document.fonts?.ready) document.fonts.ready.then(fitNums);
 function navItems() { return MODULES.filter(m => !m.hidden && can(m.key)); }
 function currentModule() { const map = { event: 'bookings', invoice: 'invoices' }; return map[S.view] || S.view; }
 function bizLogo(st, cls = 'logo') { return st.logo ? `<div class="${cls} has-img"><img src="${esc(st.logo)}" alt=""></div>` : `<div class="${cls}">${ic('tent')}</div>`; }

@@ -136,7 +136,7 @@ A.alertForm = (toUser) => {
   const evs = col('events').filter(e => !['Cancelled', 'Closed', 'Completed'].includes(e.stage) && eventEnd(e) >= addDays(todayLocal(), -1)).sort(by('date'));
   modal(`<form class="form" onsubmit="A.sendAlert(event)" novalidate>${sheetHead('Send alert', 'Rings on their phone with the alert tune')}<div class="sheet-b stack">
     ${people.length ? '' : `<div class="banner warn">${ic('alert')}<span>Nobody else has an app login yet. Add your team in Team & access so they get alerts.</span></div>`}
-    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [...(all ? [['', `Everyone (${people.length})`]] : []), ['@seniors', 'My seniors (owner, managers, supervisors)'], ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
+    ${fieldHTML({ name: 'to', label: 'Send to', type: 'select', value: toUser || '', options: [...(all ? [['', `Everyone (${people.length})`]] : []), ['@seniors', 'My seniors (owner, managers, supervisors)'], ...(all && typeof deptMembersOf === 'function' && can('venue') ? col('depts').map(d => ['@dept:' + d.id, `${T('Department')}: ${T(d.name)} (${deptMembersOf(d).filter(p => p.userId && p.userId !== S.user.id).length})`]) : []), ...people.map(m => [m.userId, `${m.name} · ${(S.roles[m.role]?.label || m.role)}`])] })}
     <div class="field"><span>Quick message</span><div class="chips">${quickAlerts().map(q => `<button type="button" class="chip" onclick="this.form.title.value=this.textContent">${esc(q)}</button>`).join('')}</div></div>
     ${fieldHTML({ name: 'title', label: 'Alert', required: true, maxlength: 140, placeholder: 'e.g. Come to the godown now' })}
     ${fieldHTML({ name: 'body', label: 'Details (optional)', type: 'textarea', maxlength: 600 })}
@@ -148,6 +148,11 @@ A.alertForm = (toUser) => {
 A.sendAlert = e => {
   e.preventDefault(); const v = readForm(e.target); if (!(v.title || '').trim()) { toast('Write the alert', 'bad'); return; }
   withBtn(e, async () => {
+    if (String(v.to).startsWith('@dept:')) {
+      const d = col('depts').find(x => x.id === v.to.slice(6)); if (!d) throw new Error('Department not found');
+      const r = await sendDeptAlert(d, { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, from_name: S.me?.name || S.user.name, event_id: v.event || null });
+      A.closeModal(); toast(`${T('Alert sent to')} ${r.people} ${T(r.people === 1 ? 'person' : 'people')}${r.sent ? ` · ${T('ringing on')} ${r.sent} ${T(r.sent === 1 ? 'phone' : 'phones')}` : ''}`); render(); return;
+    }
     const seniors = v.to === '@seniors'; const to = S.members.find(m => m.userId === v.to);
     if (!seniors && !canAlertAll() && !(to && isSenior(to))) throw new Error('You can send alerts to your seniors');
     const rec = { title: v.title.trim().slice(0, 140), body: (v.body || '').trim().slice(0, 600) || null, urgent: !!v.urgent, to_user: seniors ? null : v.to || null, to_name: seniors ? 'Seniors' : to ? to.name : null, from_name: S.me?.name || S.user.name, event_id: v.event || null, ...(seniors ? { to_role: 'managers' } : {}) };
