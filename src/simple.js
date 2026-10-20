@@ -27,7 +27,9 @@ function startLiveSync() {
     if (p.eventType === 'DELETE') { S.data[row.collection] = col(row.collection).filter(x => x.id !== row.id); }
     else {
       const rec = row.data; if (!rec || !rec.id) return; const arr = col(row.collection); const i = arr.findIndex(x => x.id === rec.id);
-      const old = i >= 0 ? arr[i] : null; if (i >= 0) arr[i] = rec; else arr.push(rec);
+      const old = i >= 0 ? arr[i] : null;
+      if (rec.archived) { if (i >= 0) arr.splice(i, 1); liveRender(); return; }
+      if (i >= 0) arr[i] = rec; else arr.push(rec);
       if (rec.updatedById && rec.updatedById !== S.user?.id) liveNotice(row.collection, rec, old);
     }
     liveRender();
@@ -90,7 +92,7 @@ function simpleHome() {
 /* ---------- crew home ---------- */
 function crewHome() {
   const sid = S.me?.staffId; const t = todayLocal(); const st = settings();
-  const mine = sid ? col('tasks').filter(x => x.assignee === sid && (x.progress < 100 || (x.updatedAt && todayLocal(new Date(x.updatedAt)) === t))) : [];
+  const mine = col('tasks').filter(x => ((sid && x.assignee === sid) || x.assigneeUser === S.user.id) && (x.progress < 100 || (x.updatedAt && todayLocal(new Date(x.updatedAt)) === t)));
   const evIds = [...new Set(mine.map(x => x.eventId).filter(Boolean))];
   const evs = [...new Set([...evIds.map(evById).filter(Boolean), ...evToday()])];
   const marked = LS.get('ep_att_' + S.org.orgId + '_' + t, null);

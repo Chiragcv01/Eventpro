@@ -260,7 +260,7 @@ A.delCrewMoney = id => confirmBox('Delete this entry?', '', 'Delete', async () =
 A.payout = async (sid, month, amount) => { try { await save('payouts', { id: month + '_' + sid, staffId: sid, month, amount, date: todayLocal() }, `Paid ${inr(amount)} wages to ${getById('staff', sid)?.name} for ${month}`); render(); } catch (err) { toast(err.message, 'bad'); } };
 
 /* ================= Live tracker ================= */
-function canTask(t) { if (lvl('tasks') >= 3) return true; if (lvl('tasks') < 2) return false; return !S.me?.staffId || t.assignee === S.me.staffId; }
+function canTask(t) { if (lvl('tasks') >= 3) return true; if (lvl('tasks') < 2) return false; if (t.assigneeUser && t.assigneeUser === S.user?.id) return true; if (t.deptId && typeof isDeptHead === 'function' && isDeptHead(t.deptId)) return true; return !S.me?.staffId || t.assignee === S.me.staffId; }
 function taskRow(t) {
   const s = getById('staff', t.assignee); const ok = canTask(t);
   return `<div class="row" style="flex-wrap:wrap">${ibox(t.progress >= 100 ? 'check' : 'pulse', t.progress >= 100 ? '#0B9B68' : '#0EA5E9', 'sm')}<div class="main-col" style="min-width:160px"><b>${esc(t.title)}</b><div class="sub">${esc(s?.name || 'Unassigned')}${t.note ? ' · ' + esc(t.note) : ''}</div></div>

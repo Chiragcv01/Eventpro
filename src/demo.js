@@ -3,7 +3,7 @@
    An allowed business gets "Demo data" (account menu, and a card on an empty home) to load or remove sample
    records for its kind: event (tent / caterer / planner / venue) or clinic. Every demo record has `demo: true`
    and an id starting 'dm_'; removing deletes only those, the business's own records are never touched. */
-const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'patients', 'readings', 'visits', 'appts', 'pmsgs'];
+const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'checklists', 'patients', 'readings', 'visits', 'appts', 'pmsgs'];
 const demoSet = () => S.platform?.demo || {};
 const demoOrgOn = id => !!demoSet().all || (demoSet().orgs || []).includes(id);
 const demoAllowed = () => !!S.org && (S.super || demoOrgOn(S.org.orgId));
@@ -62,7 +62,20 @@ function demoEvent() {
   if (venue) {
     const k = st_ => 's:' + st_.id;
     [['Housekeeping', 'bed', '#0F766E', [S5, S3], S5, 'Rooms, linen, hall cleaning after every function'], ['Kitchen', 'utensils', '#EA580C', [S4], S4, 'Food for every function'], ['Service / Waiters', 'users', '#2563EB', [S3, S1], S1, 'Welcome drinks, buffet and table service'], ['Decor & lights', 'bulb', '#DB2777', [S2], S2, 'Stage, flowers, lights and sound']]
-      .forEach(([name, icon, color, mem, head, notes]) => add('depts', { id: dmId('dp'), name, icon, color, members: mem.map(k), head: k(head), notes }));
+      .map(([name, icon, color, mem, head, notes]) => add('depts', { id: dmId('dp'), name, icon, color, members: mem.map(k), head: k(head), notes, people: Object.fromEntries(mem.map(x => [k(x), { name: x.name, phone: x.phone, role: x.role }])) }))
+      .forEach((d, i) => {
+        const items = list => list.map(text => ({ id: dmId('ci'), text }));
+        if (i === 0) {
+          const it = items(['Change bedsheets and pillow covers', 'Clean the bathroom', 'Fresh towels and toiletries', 'Check AC, TV and lights', 'Dust and mop the floor', 'Refill drinking water']);
+          add('checklists', { id: dmId('cl'), deptId: d.id, deptName: d.name, title: 'Room cleaning', kind: 'daily', eventId: '', items: it, assignKey: '', shareWith: [], checks: { [dD(0)]: { [it[0].id]: { by: S3.name, at: '09:10' }, [it[1].id]: { by: S3.name, at: '09:25' }, [it[2].id]: { by: S5.name, at: '09:40' } } }, createdBy: S5.name });
+          add('tasks', { id: dmId('t'), deptId: d.id, deptName: d.name, title: 'Rooms 101 to 104 ready for Sharma family', assignee: S3.id, date: dD(0), eventId: E1.id, progress: 50, note: 'Extra mattress in 104', createdBy: S5.name });
+          add('tasks', { id: dmId('t'), deptId: d.id, deptName: d.name, title: 'Hall cleaning after Haldi', assignee: S5.id, date: dD(0), eventId: E1.id, progress: 0, createdBy: S5.name });
+        }
+        if (i === 2) {
+          const it = items(['Chairs and tables as per layout', 'Stage and backdrop ready', 'Lights and sound tested', 'AC on one hour before', 'Washrooms clean', 'Entry gate decor ready']);
+          add('checklists', { id: dmId('cl'), deptId: d.id, deptName: d.name, title: 'Hall setup before function', kind: 'event', eventId: E1.id, items: it, assignKey: '', shareWith: [], checks: { e: { [it[0].id]: { by: S1.name, at: '16:05' } } }, createdBy: S1.name });
+        }
+      });
     const R = [['101', 'Deluxe', '1'], ['102', 'Deluxe', '1'], ['103', 'Deluxe', '1'], ['104', 'Deluxe', '1'], ['105', 'Deluxe', '1'], ['106', 'Family', '1'], ['201', 'Suite', '2'], ['202', 'Suite', '2'], ['203', 'Deluxe', '2'], ['204', 'Deluxe', '2']]
       .map(([no, type, floor], i) => add('rooms', { id: dmId('rm'), no, type, floor, beds: type === 'Family' ? 4 : 2, rate: type === 'Suite' ? 6500 : 3500, status: i < 4 ? 'occupied' : i === 4 ? 'cleaning' : i === 9 ? 'blocked' : 'ready', notes: i === 9 ? 'AC repair' : '' }));
     [['Rajesh Sharma (bride’s uncle)', 0, 'in', 3], ['Kamla Devi', 1, 'in', 2], ['Pankaj Sharma', 2, 'in', 2], ['Mama ji family', 3, 'in', 4], ['Neha & Rohan', 6, 'expected', 2], ['Dadi ji', 5, 'expected', 2]].forEach(([guest, ri, status, adults]) =>

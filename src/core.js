@@ -134,7 +134,7 @@ const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
+const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', checklists: 'tasks', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
@@ -143,6 +143,7 @@ const ROLE_DEFAULTS = {
   accountant: { label: 'Accountant', perms: { leads: 1, venue: 1, dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
   supervisor: { label: 'Site Supervisor', perms: { leads: 0, venue: 2, dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
   sales: { label: 'Sales Executive', perms: { leads: 2, venue: 1, dashboard: 1, bookings: 2, tasks: 1, inventory: 0, catering: 1, vendors: 0, staff: 0, tools: 0, invoices: 1, payments: 0, expenses: 0, reports: 0, reviews: 1, marketing: 2, team: 0, settings: 0 } },
+  head: { label: 'Department Head', perms: { leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } },
   staff: { label: 'Crew / Staff', perms: { leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const CLINIC_ROLES = {
@@ -292,6 +293,9 @@ const LocalDB = (() => {
     },
     async listInvites(orgId) { return load().invites.filter(i => i.orgId === orgId && !i.usedBy && i.expires > Date.now()); },
     async revokeInvite(code) { const db = load(); db.invites = db.invites.filter(i => i.code !== code); persist(); },
+    async joinWithCode(code, email, password, name) { const db = load(); code = String(code).toUpperCase().trim(); const inv = db.invites.find(i => i.code === code && !i.usedBy && i.expires > Date.now()); if (!inv) throw new Error('Invite code not found, expired or already used.'); const u = await this.signUp({ email, password, name, phone: '' }); return this.acceptInvite(u.id, code, name); },
+    async inviteUsedBy(code) { return load().invites.find(i => i.code === code)?.usedBy || null; },
+    async deptNames(orgId) { return Object.values(load().records[orgId]?.depts || {}).map(d => ({ id: d.id, name: d.name })); },
     async updateMember(orgId, userId, patch) { const db = load(); const m = db.members.find(x => x.orgId === orgId && x.userId === userId); if (m) Object.assign(m, patch); persist(); },
     async removeMember(orgId, userId) { const db = load(); db.members = db.members.filter(x => !(x.orgId === orgId && x.userId === userId)); persist(); },
     async signUpBusiness({ email, password, name, phone, bizName, roles, settings }) {
@@ -413,6 +417,9 @@ const CloudDB = {
   async acceptInvite(userId, code, displayName) { const { data, error } = await this.sb.rpc('accept_invite', { p_code: String(code).toUpperCase().trim(), p_display_name: displayName || null }); if (error) throw this.err(error); return data; },
   async listInvites(orgId) { const { data, error } = await this.sb.from('invites').select('*').eq('org_id', orgId).is('used_by', null).gt('expires_at', new Date().toISOString()); if (error) return []; return data.map(i => ({ code: i.code, role: i.role, name: i.display_name })); },
   async revokeInvite(code) { await this.sb.from('invites').delete().eq('code', code); },
+  async joinWithCode(code, email, password, name) { return this.rpc('join_with_code', { p_code: String(code).toUpperCase().trim(), p_email: email, p_password: password, p_name: name }); },
+  async inviteUsedBy(code) { const { data } = await this.sb.from('invites').select('used_by').eq('code', code).maybeSingle(); return data?.used_by || null; },
+  async deptNames(orgId) { const { data, error } = await this.sb.rpc('dept_names', { p_org: orgId }); if (error) throw this.err(error); return data || []; },
   async updateMember(orgId, userId, patch) { const p = {}; if (patch.role) p.role = patch.role; if ('staffId' in patch) p.staff_id = patch.staffId || null; if ('perms' in patch) p.perms = patch.perms && Object.keys(patch.perms).length ? patch.perms : null; const { error } = await this.sb.from('org_members').update(p).match({ org_id: orgId, user_id: userId }); if (error) throw this.err(error); },
   async removeMember(orgId, userId) { const { error } = await this.sb.from('org_members').delete().match({ org_id: orgId, user_id: userId }); if (error) throw this.err(error); },
   async createGuest(orgId, eventId, days) { const token = guestToken(); const { error } = await this.sb.from('guest_links').insert({ token, org_id: orgId, event_id: eventId, expires_at: new Date(Date.now() + days * 864e5).toISOString() }); if (error) throw this.err(error); return token; },
@@ -646,6 +653,7 @@ async function boot() {
   if (h.startsWith('p-')) { try { await A.openPortal(h.slice(2)); return; } catch (e) { S.portal = null; S.portalError = e.message; $('#app').innerHTML = portalErrorScreen(e.message); return; } }
   if (h.startsWith('guest-')) { try { await A.openGuest(h.slice(6)); return; } catch (e) { try { history.replaceState(null, '', location.pathname); } catch (x) { } S.authTab = 'guest'; render(); setTimeout(() => toast(e.message, 'bad'), 50); return; } }
   if (h === 'signup-clinic') { S.preKind = 'clinic'; }
+  if (/^join-[A-Z0-9-]{6,12}$/i.test(h)) { S.authTab = 'join'; S.joinCode = h.slice(5).toUpperCase(); try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   if (h === 'signup' || h === 'login' || h === 'signup-clinic') { S.authTab = h.startsWith('signup') && S.platform?.allowSignup !== false ? 'signup' : 'login'; try { history.replaceState(null, '', location.pathname); } catch (e) { } }
   try { const u = await S.adapter.current(); if (u) { if (await needsMfa()) { S.mfaPending = u; render(); return; } S.user = u; await afterLogin(); return; } } catch (e) { }
   render();
@@ -677,6 +685,8 @@ async function openOrg(orgId, override) {
   S.me = meM || { name: S.user.name + (S.super ? ' (Super Admin)' : ''), role: 'owner' };
   S.role = meM ? meM.role : (S.super ? 'owner' : o.role);
   S.perms = S.role === 'owner' ? allPerms(3) : { ...(S.roles[S.role]?.perms || {}), ...(S.me.perms || {}) };
+  ['tasks', 'checklists'].forEach(c => { if (S.data[c]) S.data[c] = S.data[c].filter(x => !x.archived); });
+  if (typeof applyDeptScope === 'function') applyDeptScope();
   S.patLoaded = {};
   S.invites = []; S.invitesLoaded = false; S.draft = null; S.dirty = false;
   if (!o.viewAs) LS.set('ep3_lastOrg', orgId);

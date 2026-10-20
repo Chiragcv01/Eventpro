@@ -12,7 +12,17 @@ V.auth = () => {
       ${fieldHTML({ name: 'email', label: 'Login ID (email or mobile number)', required: true, autocomplete: 'username', placeholder: 'you@business.in or 98290 12345' })}
       ${fieldHTML({ name: 'password', label: 'Password', type: 'password', required: true, autocomplete: 'current-password' })}
       <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">Log in</button>
-      <button type="button" class="linkbtn" style="align-self:center" onclick="A.forgotModal()">Forgot password?</button></form>`,
+      <button type="button" class="linkbtn" style="align-self:center" onclick="A.forgotModal()">Forgot password?</button>
+      <button type="button" class="btn ghost block" onclick="A.authTab('join')">${ic('users')} Have an invite code from your team? Join here</button></form>`,
+    join: `<form class="stack" onsubmit="A.doJoin(event)">
+      <div class="banner">${ic('users')}<span>For people whose owner or head sent them an invite code. You make your own login here.</span></div>
+      ${fieldHTML({ name: 'code', label: 'Invite code', required: true, placeholder: 'ABCD-2345', value: S.joinCode || '' })}
+      ${fieldHTML({ name: 'name', label: 'Your name', required: true, autocomplete: 'name' })}
+      ${fieldHTML({ name: 'email', label: 'Your login ID: mobile number or email', required: true, autocomplete: 'username', placeholder: '98290 12345' })}
+      ${fieldHTML({ name: 'password', label: 'Password (min 6 characters)', type: 'password', required: true, minlength: 6, autocomplete: 'new-password' })}
+      <label class="check terms"><input type="checkbox" name="terms" required> <span>I agree to the <a href="/terms" target="_blank" rel="noopener">Terms of use</a> and <a href="/privacy" target="_blank" rel="noopener">Privacy policy</a></span></label>
+      <button class="btn primary block" style="min-height:50px;font-size:16px" type="submit">Join my team</button>
+      <button type="button" class="linkbtn" style="align-self:center" onclick="A.authTab('login')">Back to log in</button></form>`,
     signup: `<form class="stack" onsubmit="A.doSignup(event)">
       <div class="grid2" style="padding:0">${fieldHTML({ name: 'name', label: 'Your name', required: true, autocomplete: 'name' })}${fieldHTML({ name: 'phone', label: 'Mobile', type: 'tel', required: true, placeholder: '98290 12345', autocomplete: 'tel' })}</div>
       <div class="field"><span>What is your business? *</span><div class="kind-cards">${types}</div><small>Tent, catering, event and venue: pick all that apply. Doctors: pick Doctor / Clinic.</small></div>
@@ -74,11 +84,11 @@ A.doSignup = e => {
 A.doJoin = e => {
   const v = formVals(e); if (!v) return;
   withBtn(e, async () => {
-    v.email = loginId(v.email); if (!v.email.includes('@')) throw new Error('Enter an email or a 10-digit mobile number');
-    LS.set('ep3_pending', { kind: 'join', email: v.email, name: v.name, code: v.code });
-    const u = await S.adapter.signUp(v);
-    if (u.pendingConfirm) { S.authTab = 'login'; render(); toast('Confirm your email, then log in. You will join the team automatically.'); return; }
-    S.user = u; await afterLogin();
+    const email = loginId(v.email); if (!email.includes('@')) throw new Error('Enter an email or a 10-digit mobile number');
+    if ((v.password || '').length < 6) throw new Error('Password must be at least 6 characters');
+    const orgId = await S.adapter.joinWithCode(v.code, email, v.password, (v.name || '').trim());
+    S.user = await S.adapter.signIn(email, v.password); LS.set('ep3_lastOrg', orgId);
+    await afterLogin(); toast('Welcome! You joined your team.');
   });
 };
 A.doGuest = e => { const v = formVals(e); if (!v) return; withBtn(e, () => A.openGuest(v.code)); };
@@ -95,6 +105,7 @@ A.newPasswordModal = () => formModal({ title: 'Set a new password', fields: [{ n
 
 V.noOrg = () => `<div class="auth"><section class="auth-brand"><div class="inner"><div class="row-flex"><div class="logo">${MARK_SVG}</div><b style="font:800 21px var(--f-display)">SabManage</b></div><h1>Namaste, <em>${esc((S.user.name || '').split(' ')[0] || 'ji')}</em>!</h1><p>Your login works, but you are not part of any business yet. Start your own business, or ask your employer to add you from their Team & Access screen.</p></div></section>
 <section class="auth-side"><div class="auth-card"><div class="auth-top"><span></span>${langSwitch()}</div><div class="card pad stack"><h2>Get started</h2>
+<button class="checkcard" onclick="A.joinModal()">${ibox('users', '#0D9488')}<span class="grow" style="text-align:left">I have an invite code<div class="tiny muted" style="font-weight:500">Join the team that invited you</div></span>${ic('chev')}</button>
 <button class="checkcard" onclick="A.newOrgModal()">${ibox('store', '#1F5EFF')}<span class="grow" style="text-align:left">Create my business<div class="tiny muted" style="font-weight:500">You become the Owner</div></span>${ic('chev')}</button>
 <button class="btn ghost block" onclick="A.logout()">${ic('logout')} Log out</button></div></div></section></div>`;
 A.newOrgModal = () => formModal({
