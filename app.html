@@ -810,6 +810,74 @@ span.hall-chip{cursor:default}
 .check-item.on{background:#F0FDF4;border-color:#BBF7D0}
 .check-item.on .ci-t{text-decoration:line-through;text-decoration-color:#86EFAC;color:var(--ink2)}
 .ev-pick[hidden]{display:none}
+/* clinic speciality tools */
+.spec-head{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--c) 7%,#fff);border:1px solid color-mix(in srgb,var(--c) 20%,#fff);margin-bottom:12px;flex-wrap:wrap}
+.spec-head b{font:800 16px var(--f-display);display:block}
+.mini-line{width:100%;height:auto;display:block;margin-top:6px}
+.mini-line text{font:600 10px var(--f-body);fill:var(--muted)}
+.bad-t{color:var(--bad);font-weight:700}
+.teeth{display:flex;flex-direction:column;gap:6px;overflow-x:auto;padding-bottom:4px}
+.jaw{display:flex;justify-content:center;gap:10px;min-width:max-content}
+.jaw .q{display:flex;gap:3px}
+.jaw .q:first-child{padding-right:10px;border-right:2px dashed var(--line)}
+.jaw-line{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:600;border-top:2px solid var(--line);padding-top:4px;min-width:max-content}
+.tooth{position:relative;width:34px;height:42px;border-radius:10px 10px 14px 14px;border:1.5px solid #CBD5E1;background:var(--t);display:grid;place-items:center;cursor:pointer;font:700 11.5px var(--f-body);color:#1E293B;padding:0}
+.tooth.mark{border-color:color-mix(in srgb,var(--t) 70%,#000)}
+.tooth.gone{opacity:.55;background:repeating-linear-gradient(45deg,#E2E8F0 0 4px,#F8FAFC 4px 8px)}
+.tooth i{position:absolute;top:-4px;right:-4px;width:10px;height:10px;border-radius:50%;background:#E11D48;border:2px solid #fff}
+.tooth:disabled{cursor:default}
+.tooth-legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:12px;font-size:12px;color:var(--ink2)}
+.tooth-legend span{display:inline-flex;align-items:center;gap:5px}
+.tooth-legend i{width:12px;height:12px;border-radius:4px;border:1px solid #CBD5E1;display:inline-block}
+.tooth-legend i.dot{border-radius:50%;background:#E11D48;border-color:#E11D48}
+.chip-radio .sw{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid #94A3B8;margin-right:5px;vertical-align:-1px}
+.tooth-no{min-width:44px;text-align:center;font:800 13px var(--f-display);background:#ECFEFF;color:#0E7490;border-radius:10px;padding:6px 4px;flex:none}
+.plan-tot{display:flex;flex-wrap:wrap;gap:14px;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.plan-tot b{font:800 15px var(--f-display);color:var(--ink);margin-left:4px}
+.eye-va{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--ink2)}
+.eye-tbl,.eye-in{width:100%;border-collapse:collapse;font-size:13.5px}
+.eye-tbl th,.eye-tbl td,.eye-in th,.eye-in td{border:1px solid var(--line);padding:6px 8px;text-align:center}
+.eye-tbl thead th,.eye-in thead th{background:var(--surface2);font-size:12px}
+.eye-in input{width:100%;min-width:62px;padding:8px 6px;text-align:center}
+.eye-grid{display:grid;grid-template-columns:minmax(120px,1.4fr) 1fr 1fr;gap:8px 10px;align-items:center;font-size:13.5px}
+.eye-grid>b{font-size:12px;color:var(--muted);text-transform:uppercase}
+.onco-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.onco-grid span{display:block;font-size:11.5px;color:var(--muted);font-weight:600}
+.onco-grid b{font-size:14px}
+.cyc-bar{display:flex;flex-wrap:wrap;gap:5px}
+.cyc-bar i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font:700 12px var(--f-body);font-style:normal;background:var(--surface2);border:1px solid var(--line);color:var(--muted)}
+.cyc-bar i.on{background:var(--good);border-color:var(--good);color:#fff}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:520px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.preg-bar{position:relative;height:12px;border-radius:12px;background:#FCE7F3;margin:10px 0 18px}
+.preg-bar i{position:absolute;inset:0 auto 0 0;width:var(--p);border-radius:12px;background:linear-gradient(90deg,#F472B6,#E11D74)}
+.preg-bar span{position:absolute;top:16px;transform:translateX(-50%);font-size:11px;color:var(--muted);font-weight:600}
+.step-row{cursor:pointer;gap:12px}
+.step-row input{width:22px;height:22px;accent-color:var(--good);flex:none}
+.step-row.done b{text-decoration:line-through;color:var(--muted)}
+.step-row.now{background:#FFFBEB}
+.vacc-grp .chips{margin-top:8px}
+.chip-check.vacc input:checked+span{background:#DCFCE7;border-color:#22C55E;color:#166534}
+.chip-check.vacc.late span{border-color:#FCA5A5;color:#B91C1C}
+.scale-q{padding:10px 0;border-bottom:1px solid var(--line)}
+.scale-q b{display:block;margin-bottom:8px;line-height:1.35;font-size:14px}
+.scale-total{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--surface2)}
+.scale-total b{font:800 26px var(--f-display)}
+.meal-list{display:grid;gap:8px}
+.meal-list>div{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.meal-list span{font-size:12.5px;font-weight:700;color:#C2410C}
+.meal-list p{margin:0;white-space:pre-line}
+@media (max-width:480px){.meal-list>div{grid-template-columns:1fr;gap:2px}}
+.spec-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.spec-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;cursor:pointer;background:var(--surface)}
+.spec-opt input{width:20px;height:20px;accent-color:var(--c);flex:none}
+.spec-opt:has(input:checked){border-color:var(--c);background:color-mix(in srgb,var(--c) 6%,#fff)}
+.spec-opt b{display:block;font-size:14px}.spec-opt small{display:block;font-size:12px;color:var(--muted);line-height:1.3}
+.att-chips{display:flex;gap:5px;flex-wrap:wrap}
+.att{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 10px;font:600 13px var(--f-body);cursor:pointer;color:var(--ink2)}
+.att.on.good{background:#DCFCE7;border-color:#22C55E;color:#166534}.att.on.warn{background:#FEF3C7;border-color:#F59E0B;color:#92400E}.att.on.info{background:#DBEAFE;border-color:#3B82F6;color:#1E40AF}.att.on.bad{background:#FEE2E2;border-color:#EF4444;color:#991B1B}
+@media (max-width:640px){.teeth{overflow:visible}.jaw{flex-direction:column;gap:6px;min-width:0}.jaw .q,.jaw .q:first-child{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;padding:0;border:0}.jaw .q::before{content:attr(data-l);grid-column:1/-1;font-size:11.5px;color:var(--muted);font-weight:700}.tooth{width:100%;height:40px}.jaw-line{display:none}.jaw-line+.jaw{border-top:2px solid var(--line);padding-top:6px}}
+.sal-tbl th,.sal-tbl td{white-space:nowrap}.sal-tbl td:first-child,.sal-tbl th:first-child{white-space:normal;min-width:150px}
 
 </style>
 </head>
@@ -3118,14 +3186,14 @@ const MODULES = [
   { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event', 'venue'] },
   { key: 'catering', label: 'Catering', icon: 'pot', group: 'Operations', biz: ['caterer', 'event', 'venue'] },
   { key: 'vendors', label: 'Vendors & POs', icon: 'handshake', group: 'Operations' },
-  { key: 'staff', label: 'Staff & Wages', icon: 'users', group: 'Operations' },
+  { key: 'staff', label: 'Staff & Wages', el: 'Staff & Wages', cl: 'Staff & Salary', icon: 'users', group: 'Operations', kinds: ['event', 'clinic'] },
   { key: 'tools', label: 'Planner Tools', icon: 'ruler', group: 'Operations', biz: ['tent', 'event'] },
   { key: 'invoices', label: 'Invoices', icon: 'receipt', group: 'Money' },
   { key: 'payments', label: 'Payments', icon: 'rupee', group: 'Money' },
-  { key: 'expenses', label: 'Expenses', icon: 'wallet', group: 'Money' },
-  { key: 'reports', label: 'Reports & P&L', icon: 'chart', group: 'Money' },
+  { key: 'expenses', label: 'Expenses', icon: 'wallet', group: 'Money', kinds: ['event', 'clinic'] },
+  { key: 'reports', label: 'Reports & P&L', el: 'Reports & P&L', cl: 'Income & expenses', icon: 'chart', group: 'Money', kinds: ['event', 'clinic'] },
   { key: 'reviews', label: 'Reviews', icon: 'star', group: 'Business' },
-  { key: 'marketing', label: 'Marketing', icon: 'megaphone', group: 'Business' },
+  { key: 'marketing', label: 'Marketing', icon: 'megaphone', group: 'Business', kinds: ['event', 'clinic'] },
   { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business', kinds: ['event', 'clinic'] },
   { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business', kinds: ['event', 'clinic'] }
 ];
@@ -3150,9 +3218,9 @@ const ROLE_DEFAULTS = {
 };
 const CLINIC_ROLES = {
   owner: { label: 'Doctor (Owner)', perms: allPerms(3), locked: true },
-  manager: { label: 'Associate doctor', perms: { dashboard: 1, appointments: 3, patients: 3, medical: 3, tasks: 2, team: 1, settings: 1 } },
-  supervisor: { label: 'Receptionist', perms: { dashboard: 1, appointments: 3, patients: 2, medical: 0, tasks: 2, team: 0, settings: 0 } },
-  staff: { label: 'Nurse / Assistant', perms: { dashboard: 1, appointments: 1, patients: 2, medical: 1, tasks: 1, team: 0, settings: 0 } }
+  manager: { label: 'Associate doctor', perms: { dashboard: 1, appointments: 3, patients: 3, medical: 3, tasks: 2, staff: 2, expenses: 2, reports: 1, marketing: 2, team: 1, settings: 1 } },
+  supervisor: { label: 'Receptionist', perms: { dashboard: 1, appointments: 3, patients: 2, medical: 0, tasks: 2, staff: 0, expenses: 2, reports: 0, marketing: 2, team: 0, settings: 0 } },
+  staff: { label: 'Nurse / Assistant', perms: { dashboard: 1, appointments: 1, patients: 2, medical: 1, tasks: 1, staff: 0, expenses: 0, reports: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const STAGES = ['Enquiry', 'Quoted', 'Confirmed', 'Setup', 'Live', 'Completed', 'Closed', 'Cancelled'];
 const RESERVING = ['Confirmed', 'Setup', 'Live'];
@@ -3688,6 +3756,7 @@ async function openOrg(orgId, override) {
   S.role = meM ? meM.role : (S.super ? 'owner' : o.role);
   S.perms = S.role === 'owner' ? allPerms(3) : { ...(S.roles[S.role]?.perms || {}), ...(S.me.perms || {}) };
   ['tasks', 'checklists'].forEach(c => { if (S.data[c]) S.data[c] = S.data[c].filter(x => !x.archived); });
+  MODULES.forEach(m => { if (m.cl) m.label = (o.kind || 'event') === 'clinic' ? m.cl : m.el; });
   if (typeof applyDeptScope === 'function') applyDeptScope();
   S.patLoaded = {};
   S.invites = []; S.invitesLoaded = false; S.draft = null; S.dirty = false;
@@ -3762,7 +3831,7 @@ function afterRender() { AFTER_RENDER.forEach(f => { try { f(); } catch (e) { } 
 function fitNums() {
   document.querySelectorAll('.today-strip b, .kpi .v').forEach(el => {
     el.style.fontSize = ''; let fs = parseFloat(getComputedStyle(el).fontSize) || 24; let n = 0;
-    while (el.scrollWidth > el.clientWidth + 1 && fs > 13 && n++ < 24) { fs -= 1; el.style.fontSize = fs + 'px'; }
+    while (el.scrollWidth > el.clientWidth && fs > 12 && n++ < 30) { fs -= 1; el.style.fontSize = fs + 'px'; }
   });
 }
 AFTER_RENDER.push(fitNums, () => setTimeout(fitNums, 400));
@@ -4683,7 +4752,7 @@ A.resetMfa = (userId, orgId, name) => confirmBox('Reset authenticator?', `${name
 const KIND_CARDS = [['tent', 'Tent House', 'Stock, bookings, crew', 'tent', '#2563EB'], ['caterer', 'Caterer / Halwai', 'Menu, ration, plates', 'pot', '#16A34A'],
   ['event', 'Event Manager', 'Planning, vendors, setup', 'sparkle', '#DB2777'], ['venue', 'Venue / Banquet / Resort', 'Halls, rooms, guests, hospitality', 'building', '#0F766E'], ['clinic', 'Doctor / Clinic', 'Patients, reports, appointments', 'steth', '#E11D48']];
 const COUNCILS = ['National Medical Commission (NMC)', 'Rajasthan Medical Council', 'Delhi Medical Council', 'Maharashtra Medical Council', 'Gujarat Medical Council', 'Uttar Pradesh Medical Council', 'Madhya Pradesh Medical Council', 'Haryana Medical Council', 'Punjab Medical Council', 'Bihar Medical Council', 'West Bengal Medical Council', 'Karnataka Medical Council', 'Tamil Nadu Medical Council', 'Telangana State Medical Council', 'Andhra Pradesh Medical Council', 'Kerala (TCMC)', 'Dental Council (State / DCI)', 'AYUSH / Ayurveda / Homoeopathy Board', 'Physiotherapy Council', 'Other state council'];
-const SPECIALITIES = ['General Physician', 'Diabetologist', 'Cardiologist', 'Physiotherapist', 'Paediatrician', 'Gynaecologist', 'Dermatologist', 'Orthopaedic', 'ENT', 'Eye specialist', 'Dentist', 'Psychiatrist', 'Dietitian', 'Ayurveda', 'Homoeopathy', 'Other'];
+const SPECIALITIES = ['General Physician', 'Diabetologist', 'Cardiologist', 'Physiotherapist', 'Paediatrician', 'Gynaecologist', 'Dermatologist', 'Orthopaedic', 'ENT', 'Eye specialist', 'Dentist', 'Psychiatrist', 'Dietitian', 'Oncologist (Cancer)', 'Neurologist', 'Nephrologist', 'Urologist', 'Pulmonologist', 'Gastroenterologist', 'General Surgeon', 'Ayurveda', 'Homoeopathy', 'Other'];
 function doctorFieldsHTML(v) {
   return `<div class="banner" style="font-size:13px">${ic('shield')}<span>For patient safety we check every doctor. Upload your registration certificate. The app opens after our team approves it, usually within 24 hours.</span></div>
   <div class="grid2" style="padding:0">
@@ -7834,11 +7903,11 @@ function deptListsTab(d, lists, head) {
 }
 function checklistRow(x, showDept) {
   const n = (x.items || []).length; const dn = listDone(x); const e = x.eventId ? evById(x.eventId) : null; const full = n && dn >= n;
-  return `<button class="row click" onclick="A.checklistOpen('${x.id}')">${ibox(full ? 'check' : 'file', full ? '#0B9B68' : MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${showDept ? `${T('From')} ${esc(T(x.deptName || ''))} · ` : ''}${x.kind === 'event' ? (e ? `${esc(e.title)} · ${T(fmtShort(e.date))}` : T('Event')) : T('Every day')}${x.assignKey && deptById(x.deptId) ? ` · ${esc(personName(deptById(x.deptId), x.assignKey))}` : ''}</div></div><span class="list-prog ${full ? 'full' : ''}"><b>${dn}/${n}</b><i style="--p:${n ? Math.round(dn / n * 100) : 0}%"></i></span></button>`;
+  return `<button class="row click" onclick="A.checklistOpen('${x.id}')">${ibox(full ? 'check' : 'file', full ? '#0B9B68' : MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${showDept ? `${T('Shared by')} ${esc(T(x.deptName || ''))} · ` : ''}${x.kind === 'event' ? (e ? `${esc(e.title)} · ${T(fmtShort(e.date))}` : T('Event')) : T('Every day')}${x.assignKey && deptById(x.deptId) ? ` · ${esc(personName(deptById(x.deptId), x.assignKey))}` : ''}</div></div><span class="list-prog ${full ? 'full' : ''}"><b>${dn}/${n}</b><i style="--p:${n ? Math.round(dn / n * 100) : 0}%"></i></span></button>`;
 }
 function deptSharedTab(items) {
   return `<div class="banner" style="margin-bottom:12px">${ic('eye')}<span>${T('Another department shared these with you. You can see them but not change them.')}</span></div>
-    <div class="card"><div class="rows">${items.map(x => x.items ? checklistRow(x, true) : `<div class="row">${ibox('pulse', MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${T('From')} ${esc(T(x.deptName || ''))}${x.date ? ' · ' + T(fmtShort(x.date)) : ''}</div></div>${pill((+x.progress || 0) >= 100 ? T('Done') : (+x.progress || 0) + '%', (+x.progress || 0) >= 100 ? 'good' : '')}</div>`).join('')}</div></div>`;
+    <div class="card"><div class="rows">${items.map(x => x.items ? checklistRow(x, true) : `<div class="row">${ibox('pulse', MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${T('Shared by')} ${esc(T(x.deptName || ''))}${x.date ? ' · ' + T(fmtShort(x.date)) : ''}</div></div>${pill((+x.progress || 0) >= 100 ? T('Done') : (+x.progress || 0) + '%', (+x.progress || 0) >= 100 ? 'good' : '')}</div>`).join('')}</div></div>`;
 }
 
 /* share with other departments: the head cannot read other departments, so names come from public.dept_names */
@@ -8316,7 +8385,7 @@ async function loadPatientData(pid, force) {
 }
 const pReadings = pid => col('readings').filter(r => r.patientId === pid).sort((a, b) => String(b.at).localeCompare(String(a.at)));
 const pMsgs = pid => col('pmsgs').filter(r => r.patientId === pid).sort((a, b) => String(a.at).localeCompare(String(b.at)) || (+a.updatedAt || 0) - (+b.updatedAt || 0));
-const pVisits = pid => col('visits').filter(r => r.patientId === pid).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+const pVisits = pid => col('visits').filter(r => r.patientId === pid && !r.kind).sort((a, b) => String(b.date).localeCompare(String(a.date)));
 const pAppts = pid => col('appts').filter(a => a.patientId === pid).sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
 
 /* ---------- private files (photos, reports, voice notes) ---------- */
@@ -8544,7 +8613,7 @@ V.patient = () => {
   const p = patientById(S.params.id); if (!p) return pageHead('Patient', '', '', "A.go('patients')") + empty('Patient not found', '');
   loadPatientData(p.id); const loading = S.adapter.mode === 'cloud' && S.patLoaded?.[p.id] !== true; RN = rulesFor(p);
   const tab = S.params.tab || 'health'; const rd = pReadings(p.id); const msgs = pMsgs(p.id); const unread = +p.unread || 0;
-  const tabs = [['health', 'Health'], ['readings', 'Readings'], ...(can('medical') ? [['records', 'Records']] : []), ['messages', 'Messages', unread], ...(can('appointments') ? [['fees', 'Visits & fees']] : [])];
+  const tabs = [['health', 'Health'], ['readings', 'Readings'], ...(typeof specTabs === 'function' ? specTabs(p) : []), ...(can('medical') ? [['records', 'Records']] : []), ['messages', 'Messages', unread], ...(can('appointments') ? [['fees', 'Visits & fees']] : [])];
   const phone = p.phone ? String(p.phone).replace(/\D/g, '').slice(-10) : '';
   const head = `<button class="back" onclick="A.go('patients')">${ic('back')} Patients</button>
   <div class="card pad pat-head"><div class="row-flex" style="flex-wrap:nowrap;align-items:flex-start"><div class="avatar" style="width:54px;height:54px;font-size:19px;background:#FFE4EA;color:#9F1239">${esc(initials(p.name))}</div>
@@ -8555,6 +8624,7 @@ V.patient = () => {
   ${patientBanners(p)}
   <div class="tabs">${tabs.map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('pt-' + tab)}</div>`;
   if (loading) return head + `<div class="card">${empty('Loading…', '', '', 'pulse', '#94A3B8')}</div>`;
+  if (tab.startsWith('sp-') && can('medical') && typeof specView === 'function') return head + specView(tab.slice(3), p);
   if (tab === 'readings') return head + readingsTab(p, rd);
   if (tab === 'records' && can('medical')) return head + recordsTab(p);
   if (tab === 'messages') { if (unread && can('patients', 2)) setTimeout(() => A.markRead(p.id), 600); return head + messagesTab(p, msgs); }
@@ -9126,6 +9196,735 @@ A.portalPay = async () => {
 };
 A.portalPaid = (e, id) => { e.preventDefault(); const v = readForm(e.target); withBtn(e, async () => { await S.adapter.portalPaid(S.portal.token, id, v.utr || ''); A.closeModal(); toast(T('Thank you! The clinic will confirm.')); await portalReload(); }); };
 
+/* ================= Speciality tools for clinics =================
+   Each doctor gets tools for their speciality (Settings → Tools for your speciality; default from the speciality picked
+   at sign-up): dentist teeth chart + treatment plan, eye exam + spectacle Rx, cancer care (diagnosis, stage, chemo
+   cycles with counts), pregnancy (EDD, weeks, scans, ANC visits), child growth + vaccines, therapy sessions & packages
+   (physio, skin, ayurveda, dialysis), mood scales (PHQ-9, GAD-7), diet plans + body measurements.
+   Data lives in collection 'visits' (module medical, loaded per patient, so the front desk never sees it):
+   one summary record per tool and patient: id 'sp_<tool>_<patientId>', kind '<tool>';
+   log entries: kind 'eye' | 'cycle' | 'anc' | 'growth' | 'session' | 'scale' | 'body'.
+   Only neutral reminders are copied to the patient record (patient.dues = [{k, label, date}]) for the clinic home. */
+Object.assign(ICONS, {
+  tooth: 'M7 3c-2.5 0-4 2-4 4.5 0 2 .8 3.5 1.5 5 .7 1.6.8 3.5 1.2 5.5.3 1.7.8 3 1.8 3s1.4-1.5 1.8-3.3c.3-1.5.8-2.7 1.7-2.7s1.4 1.2 1.7 2.7c.4 1.8.8 3.3 1.8 3.3s1.5-1.3 1.8-3c.4-2 .5-3.9 1.2-5.5.7-1.5 1.5-3 1.5-5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z',
+  ribbon: 'M12 3a4 4 0 0 0-4 4c0 2.2 1.4 4.3 2.6 6.1L6.5 20.5l3 .4L12 16.4l2.5 4.5 3-.4-4.1-7.4C14.6 11.3 16 9.2 16 7a4 4 0 0 0-4-4z',
+  baby: 'M12 3.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM7 21v-3.5a5 5 0 0 1 10 0V21M9.5 15.5h5',
+  mind: 'M9.5 4A3.5 3.5 0 0 0 6 7.5v.3A3 3 0 0 0 4 10.5a3 3 0 0 0 1.4 2.6A3.5 3.5 0 0 0 9 18h.5V4zM14.5 4A3.5 3.5 0 0 1 18 7.5v.3a3 3 0 0 1 2 2.7 3 3 0 0 1-1.4 2.6A3.5 3.5 0 0 1 15 18h-.5V4zM9.5 18v2.5M14.5 18v2.5'
+});
+const SPEC = {
+  dental: { label: 'Teeth', long: 'Teeth chart & treatment plan', icon: 'tooth', c: '#0891B2' },
+  eye: { label: 'Eye', long: 'Eye exam & glasses', icon: 'eye', c: '#2563EB' },
+  onco: { label: 'Cancer care', long: 'Cancer care: stage, chemo cycles, counts', icon: 'ribbon', c: '#DB2777' },
+  preg: { label: 'Pregnancy', long: 'Pregnancy: due date, weeks, scans, check-ups', icon: 'heart', c: '#E11D74' },
+  child: { label: 'Growth & vaccines', long: 'Child growth & vaccines', icon: 'baby', c: '#16A34A' },
+  sessions: { label: 'Sessions', long: 'Therapy sessions & packages', icon: 'clock', c: '#7C3AED' },
+  scales: { label: 'Mood scales', long: 'Mood scales (PHQ-9, GAD-7)', icon: 'mind', c: '#0F766E' },
+  diet: { label: 'Diet plan', long: 'Diet plan & body measurements', icon: 'utensils', c: '#EA580C' }
+};
+const SPEC_DEFAULT = { 'Dentist': ['dental'], 'Eye specialist': ['eye'], 'Oncologist (Cancer)': ['onco'], 'Gynaecologist': ['preg'], 'Paediatrician': ['child'], 'Physiotherapist': ['sessions'],
+  'Orthopaedic': ['sessions'], 'Dermatologist': ['sessions'], 'Ayurveda': ['sessions'], 'Nephrologist': ['sessions'], 'Psychiatrist': ['scales'], 'Dietitian': ['diet'] };
+/* readings / lab tests that each speciality usually follows (added to Settings → Readings on one tap) */
+const SPEC_TESTS = {
+  'Diabetologist': [['HbA1c', '%', { high: 6.5 }], ['Fasting insulin', 'µIU/mL', {}], ['Waist', 'cm', {}]],
+  'Cardiologist': [['Cholesterol (total)', 'mg/dL', { high: 200 }], ['LDL', 'mg/dL', { high: 130 }], ['HDL', 'mg/dL', { low: 40 }], ['Triglycerides', 'mg/dL', { high: 150 }]],
+  'Oncologist (Cancer)': [['Haemoglobin', 'g/dL', { low: 10, critLow: 8 }], ['WBC', '×10³/µL', { low: 4, critLow: 2 }], ['Platelets', '×10³/µL', { low: 150, critLow: 75 }]],
+  'Nephrologist': [['Creatinine', 'mg/dL', { high: 1.2 }], ['Urea', 'mg/dL', { high: 45 }], ['eGFR', 'mL/min', { low: 60, critLow: 15 }], ['Potassium', 'mmol/L', { low: 3.5, high: 5.5, critHigh: 6.5 }]],
+  'Gynaecologist': [['Haemoglobin', 'g/dL', { low: 11, critLow: 7 }], ['TSH', 'mIU/L', { low: 0.4, high: 4.5 }]],
+  'General Physician': [['HbA1c', '%', { high: 6.5 }], ['TSH', 'mIU/L', { low: 0.4, high: 4.5 }], ['Haemoglobin', 'g/dL', { low: 11 }]],
+  'Pulmonologist': [['Peak flow', 'L/min', {}]], 'Physiotherapist': [['Pain score', '0–10', { high: 6 }]], 'Orthopaedic': [['Pain score', '0–10', { high: 6 }], ['Uric acid', 'mg/dL', { high: 7 }]],
+  'Gastroenterologist': [['SGPT (ALT)', 'U/L', { high: 45 }], ['Bilirubin (total)', 'mg/dL', { high: 1.2 }]], 'Dietitian': [['Waist', 'cm', {}], ['Body fat', '%', {}]]
+};
+const specTools = () => { const st = settings(); return Array.isArray(st.specTools) ? st.specTools.filter(k => SPEC[k]) : (SPEC_DEFAULT[st.specialisation] || []); };
+const specId = (tool, pid) => `sp_${tool}_${pid}`;
+const specSum = (tool, pid) => getById('visits', specId(tool, pid));
+const specLog = (pid, kind) => col('visits').filter(v => v.patientId === pid && v.kind === kind).sort((a, b) => String(b.date).localeCompare(String(a.date)) || (b.created || 0) - (a.created || 0));
+const dShort = d => d ? T(fmtShort(d)) : '—';
+const nOr = v => v === '' || v == null ? '' : +v;
+async function saveSpec(rec, msg) { need('medical', 2); await save('visits', rec, msg); await updateDues(rec.patientId); }
+const specCan = () => can('medical', 2);
+function specHead(tool, sub, acts = '') { const t = SPEC[tool]; return `<div class="spec-head" style="--c:${t.c}">${ibox(t.icon, t.c)}<div class="grow" style="min-width:0"><b>${T(t.long)}</b>${sub ? `<div class="small muted">${sub}</div>` : ''}</div>${acts}</div>`; }
+/* small line chart: pts = [{x: label, y: number}] */
+function miniLine(pts, c = '#2563EB', unit = '') {
+  pts = pts.filter(p => p.y !== '' && p.y != null && isFinite(+p.y)); if (pts.length < 2) return '';
+  const W = 320, H = 110, pad = 22; const ys = pts.map(p => +p.y); const lo = Math.min(...ys), hi = Math.max(...ys), span = hi - lo || 1;
+  const x = i => pad + (W - pad * 2) * i / (pts.length - 1); const y = v => H - pad - (H - pad * 2) * (v - lo) / span;
+  return `<svg class="mini-line" viewBox="0 0 ${W} ${H}" role="img" aria-label="Trend"><polyline fill="none" stroke="${c}" stroke-width="2.5" points="${pts.map((p, i) => `${x(i)},${y(+p.y)}`).join(' ')}"/>${pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(+p.y)}" r="3.5" fill="${c}"><title>${esc(p.x)}: ${p.y}${unit}</title></circle>`).join('')}<text x="${pad}" y="13">${esc(String(hi))}${unit}</text><text x="${pad}" y="${H - 4}">${esc(String(lo))}${unit}</text></svg>`;
+}
+function clinicPrint(p, title, body) {
+  const st = settings(); const w = window.open('', '_blank'); if (!w) { toast('Allow pop-ups to print', 'bad'); return; }
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(p.name)} · ${esc(title)}</title><style>body{font:15px/1.5 system-ui,sans-serif;color:#111;max-width:760px;margin:24px auto;padding:0 18px}h1{font-size:22px;margin:0}h2{font-size:18px;margin:18px 0 8px}.top{display:flex;justify-content:space-between;gap:16px;border-bottom:3px solid #C2185B;padding-bottom:10px;margin-bottom:14px}.muted{color:#555;font-size:13px}table{border-collapse:collapse;width:100%;margin:8px 0}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f4f4f6}.r{text-align:right}.sign{margin-top:44px;text-align:right}@media print{button{display:none}}</style></head><body>
+  <div class="top"><div>${st.logo ? `<img src="${esc(st.logo)}" alt="" style="height:54px">` : ''}<h1>${esc(st.bizName || '')}</h1><div class="muted">${esc([st.address, st.city].filter(Boolean).join(', '))}${st.phone ? ' · ' + esc(st.phone) : ''}</div></div>
+  <div style="text-align:right"><b>Dr. ${esc(st.doctorName || '')}</b><div class="muted">${esc(st.qualification || '')}${st.specialisation ? ' · ' + esc(st.specialisation) : ''}</div><div class="muted">Reg. No. ${esc(st.regNo || '—')}</div></div></div>
+  <div style="display:flex;justify-content:space-between"><div><b>${esc(p.name)}</b> <span class="muted">${esc(ageSex(p))}</span></div><div class="muted">${fmtDate(todayLocal())}</div></div>
+  <h2>${esc(title)}</h2>${body}
+  <div class="sign">${st.stamp ? `<img src="${esc(st.stamp)}" alt="" style="height:60px"><br>` : ''}Dr. ${esc(st.doctorName || '')}</div>
+  <button onclick="print()" style="margin-top:20px;padding:10px 16px">Print / Save as PDF</button></body></html>`);
+  w.document.close(); setTimeout(() => { try { w.print(); } catch (e) { } }, 400);
+}
+
+/* ---------- patient page: which tabs, which screen ---------- */
+const specTabs = p => can('medical') ? specTools().map(k => ['sp-' + k, SPEC[k].label]) : [];
+function specView(tool, p) {
+  const f = { dental: dentalTab, eye: eyeTab, onco: oncoTab, preg: pregTab, child: childTab, sessions: sessionsTab, scales: scalesTab, diet: dietTab }[tool];
+  return f ? f(p) : '';
+}
+
+/* ---------- reminders copied to the patient (shown on the clinic home and in Marketing → Recall) ---------- */
+async function updateDues(pid) {
+  const p = patientById(pid); if (!p) return; const out = []; const t = todayLocal();
+  const on = specSum('onco', pid); const cyc = specLog(pid, 'cycle').find(c => c.nextDate);
+  if (on && on.status !== 'done' && cyc?.nextDate) out.push({ k: 'onco', label: 'Next treatment cycle', date: cyc.nextDate });
+  const pg = specSum('preg', pid);
+  if (pg && pg.status !== 'delivered' && pg.status !== 'ended') { const nx = pregNextAnc(pg, pid); if (nx) out.push({ k: 'anc', label: 'Pregnancy check-up', date: nx }); const edd = pregEdd(pg); if (edd && edd >= t) out.push({ k: 'edd', label: 'Due date (EDD)', date: edd }); }
+  const ch = specSum('child', pid); if (ch?.dob) { const nv = childNextVaccine(ch); if (nv) out.push({ k: 'vacc', label: `Vaccine: ${nv.name}`, date: nv.due }); }
+  const eyeR = specLog(pid, 'eye').find(x => x.next); if (eyeR?.next && eyeR.next >= addDays(t, -30)) out.push({ k: 'eye', label: 'Eye check-up', date: eyeR.next });
+  const pk = activePkg(pid); if (pk && pk.left <= 1) out.push({ k: 'pkg', label: pk.left ? 'Last session of package' : 'Package finished', date: t });
+  const old = JSON.stringify(p.dues || []), now = JSON.stringify(out);
+  if (old !== now && can('patients', 2)) { try { await save('patients', { ...p, dues: out }); } catch (e) { } }
+}
+const allDues = (days = 7) => { const lim = addDays(todayLocal(), days); const out = []; col('patients').forEach(p => (p.dues || []).forEach(d => { if (d.date && d.date <= lim) out.push({ ...d, p }); })); return out.sort((a, b) => a.date.localeCompare(b.date)); };
+function dueMsg(d) {
+  const st = settings(); const day = fmtDate(d.date);
+  return I18N.lang === 'hi' ? `नमस्ते ${d.p.name} जी 🙏\n${st.bizName} से याद दिला रहे हैं: आपका ${T(d.label)} ${day} को है। कृपया समय तय करने के लिए जवाब दें।\n${st.phone || ''}`
+    : `Namaste ${d.p.name} ji 🙏\nA reminder from ${st.bizName}: your ${d.label.toLowerCase()} is on ${day}. Please reply to fix a time.\n${st.phone || ''}`;
+}
+function dueCard() {
+  const list = allDues(7); if (!list.length || !can('patients')) return '';
+  const t = todayLocal();
+  return `<div class="sec-h"><h2>${T('Due soon')}${info('c-dues')}</h2></div><div class="card"><div class="rows">${list.slice(0, 12).map(d => `<div class="row" style="flex-wrap:wrap"><button class="avatar linkish" style="background:#FFE4EA;color:#9F1239" onclick="A.go('patient',{id:'${d.p.id}'})">${esc(initials(d.p.name))}</button><div class="main-col" style="min-width:150px"><b>${esc(d.p.name)}</b><div class="sub">${esc(T(d.label))} · ${dShort(d.date)}</div></div>${pill(d.date < t ? T('Overdue') : d.date === t ? T('Today') : dShort(d.date), d.date < t ? 'bad' : d.date === t ? 'warn' : '')}<div class="row-flex" style="gap:6px">${d.p.phone ? waBtn(dueMsg(d), d.p.phone, T('Send reminder')) : ''}${can('appointments', 2) ? `<button class="btn sm" onclick="A.apptForm({patientId:'${d.p.id}',date:'${d.date >= t ? d.date : t}'})">${ic('calendar')} ${T('Book')}</button>` : ''}</div></div>`).join('')}</div></div>`;
+}
+
+/* ================= 1. Dentist: teeth chart + treatment plan ================= */
+const TEETH_ADULT = [[18, 17, 16, 15, 14, 13, 12, 11], [21, 22, 23, 24, 25, 26, 27, 28], [48, 47, 46, 45, 44, 43, 42, 41], [31, 32, 33, 34, 35, 36, 37, 38]];
+const TEETH_CHILD = [[55, 54, 53, 52, 51], [61, 62, 63, 64, 65], [85, 84, 83, 82, 81], [71, 72, 73, 74, 75]];
+const TOOTH_ST = { ok: ['Healthy', '#FFFFFF'], caries: ['Decay', '#FBBF24'], filled: ['Filled', '#60A5FA'], rct: ['Root canal', '#A78BFA'], crown: ['Crown / cap', '#38BDF8'], bridge: ['Bridge', '#818CF8'],
+  implant: ['Implant', '#2DD4BF'], missing: ['Missing', '#CBD5E1'], extract: ['To extract', '#FB7185'], pain: ['Pain / sensitive', '#FB923C'], mobile: ['Loose', '#F472B6'] };
+const DENTAL_PROCS = [['Consultation & check-up', 300], ['X-ray (IOPA)', 200], ['OPG X-ray', 600], ['Scaling & polishing', 800], ['Filling (composite)', 1200], ['Root canal (RCT)', 4500], ['Crown – metal ceramic', 5000], ['Crown – zirconia', 10000],
+  ['Extraction', 800], ['Wisdom tooth surgery', 3500], ['Implant', 25000], ['Bridge (per unit)', 5000], ['Complete denture', 15000], ['Braces (full)', 35000], ['Teeth whitening', 6000], ['Fluoride / sealant', 600]];
+const PLAN_ST = { planned: ['Planned', ''], doing: ['In progress', 'warn'], done: ['Done', 'good'] };
+const dentalRec = pid => specSum('dental', pid) || { id: specId('dental', pid), patientId: pid, kind: 'dental', date: todayLocal(), teeth: {}, plan: [], child: false };
+function toothBtn(pid, no, rec) {
+  const s = rec.teeth?.[no] || {}; const st = TOOTH_ST[s.st] || TOOTH_ST.ok; const inPlan = (rec.plan || []).some(x => x.status !== 'done' && String(x.teeth || '').split(/[ ,]+/).includes(String(no)));
+  return `<button class="tooth ${s.st && s.st !== 'ok' ? 'mark' : ''} ${s.st === 'missing' ? 'gone' : ''}" style="--t:${st[1]}" title="${esc(T(st[0]))}${s.note ? ' · ' + esc(s.note) : ''}" ${specCan() ? `onclick="A.toothSheet('${pid}',${no})"` : 'disabled'}><span>${no}</span>${inPlan ? '<i></i>' : ''}</button>`;
+}
+function dentalTab(p) {
+  const rec = dentalRec(p.id); const rows = rec.child ? TEETH_CHILD : TEETH_ADULT; const plan = rec.plan || [];
+  const tot = sum(plan, x => +x.fee || 0), done = sum(plan.filter(x => x.status === 'done'), x => +x.fee || 0);
+  const used = Object.entries(TOOTH_ST).filter(([k]) => k === 'ok' || Object.values(rec.teeth || {}).some(t => t.st === k));
+  return specHead('dental', T('Tap a tooth to mark it or plan its treatment.'), specCan() ? `<button class="btn sm" onclick="A.dentalChild('${p.id}')">${T(rec.child ? 'Adult teeth' : 'Child teeth')}</button>` : '') + `
+  <div class="card pad"><div class="teeth">
+    <div class="jaw"><div class="q" data-l="${T('Upper right')}">${rows[0].map(n => toothBtn(p.id, n, rec)).join('')}</div><div class="q" data-l="${T('Upper left')}">${rows[1].map(n => toothBtn(p.id, n, rec)).join('')}</div></div>
+    <div class="jaw-line"><span>${T('Right')}</span><span>${T('Upper')} ↑ · ↓ ${T('Lower')}</span><span>${T('Left')}</span></div>
+    <div class="jaw"><div class="q" data-l="${T('Lower right')}">${rows[2].map(n => toothBtn(p.id, n, rec)).join('')}</div><div class="q" data-l="${T('Lower left')}">${rows[3].map(n => toothBtn(p.id, n, rec)).join('')}</div></div></div>
+    <div class="tooth-legend">${used.map(([k, [l, c]]) => `<span><i style="background:${c}"></i>${T(l)}</span>`).join('')}<span><i class="dot"></i>${T('In treatment plan')}</span></div></div>
+  <div class="sec-h"><h2>${T('Treatment plan')}</h2><div class="row-flex" style="gap:6px">${plan.length ? `<button class="btn sm" onclick="A.dentalPrint('${p.id}')">${ic('print')} ${T('Estimate')}</button>${p.phone ? waBtn(dentalEstimateText(p, rec), p.phone, T('Send'), 'btn sm wa') : ''}` : ''}${specCan() ? `<button class="btn sm primary" onclick="A.planForm('${p.id}')">${ic('plus')} ${T('Add treatment')}</button>` : ''}</div></div>
+  <div class="card">${plan.length ? `<div class="rows">${plan.map(x => `<button class="row click" onclick="A.planForm('${p.id}','${x.id}')"><span class="tooth-no">${esc(x.teeth || '—')}</span><div class="main-col"><b>${esc(T(x.proc))}</b><div class="sub">${x.status === 'done' && x.doneOn ? dShort(x.doneOn) + ' · ' : ''}${esc(x.note || '')}</div></div>${pill(T(PLAN_ST[x.status]?.[0] || 'Planned'), PLAN_ST[x.status]?.[1] || '')}<b class="num">${inr(+x.fee || 0)}</b></button>`).join('')}</div>
+    <div class="plan-tot"><span>${T('Total')} <b>${inr(tot)}</b></span><span>${T('Done')} <b>${inr(done)}</b></span><span>${T('Remaining')} <b>${inr(tot - done)}</b></span></div>` : empty('No treatment planned', 'Add fillings, root canal, crowns or cleaning with the fee. Print or send the estimate to the patient.', '', 'tooth', SPEC.dental.c)}</div>`;
+}
+A.dentalChild = async pid => { const r = dentalRec(pid); try { await saveSpec({ ...r, child: !r.child }); render(); } catch (e) { toast(e.message, 'bad'); } };
+A.toothSheet = (pid, no) => {
+  const r = dentalRec(pid); const s = r.teeth?.[no] || {};
+  modal(`<form class="form" onsubmit="A.saveTooth(event,'${pid}',${no})" novalidate>${sheetHead(`${T('Tooth')} ${no}`, toothName(no))}<div class="sheet-b stack">
+    <div class="field"><span>${T('Condition')}</span><div class="chips">${Object.entries(TOOTH_ST).map(([k, [l, c]]) => `<label class="chip-radio"><input type="radio" name="st" value="${k}" ${(s.st || 'ok') === k ? 'checked' : ''}><span><i class="sw" style="background:${c}"></i>${T(l)}</span></label>`).join('')}</div></div>
+    ${fieldHTML({ name: 'note', label: 'Note (optional)', value: s.note || '', placeholder: 'e.g. Deep caries distal, sensitive to cold' })}
+    <label class="check"><input type="checkbox" name="addPlan"> <span>${T('Also add a treatment for this tooth')}</span></label>
+  </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`);
+};
+const toothName = no => { const n = +no; const child = n > 50; const q = Math.floor(n / 10) % 4 || 4; const pos = n % 10; const side = [1, 4, 5, 8].includes(Math.floor(n / 10)) ? T('Right') : T('Left'); const jaw = [1, 2, 5, 6].includes(Math.floor(n / 10)) ? T('Upper') : T('Lower');
+  const names = child ? ['', 'Central incisor', 'Lateral incisor', 'Canine', 'First molar', 'Second molar'] : ['', 'Central incisor', 'Lateral incisor', 'Canine', 'First premolar', 'Second premolar', 'First molar', 'Second molar', 'Third molar (wisdom)']; void q;
+  return `${jaw} ${side} · ${T(names[pos] || '')}${child ? ' · ' + T('milk tooth') : ''}`; };
+A.saveTooth = (e, pid, no) => {
+  e.preventDefault(); const f = e.target; const v = readForm(f); const st = f.querySelector('input[name=st]:checked')?.value || 'ok';
+  withBtn(e, async () => {
+    const r = dentalRec(pid); const teeth = { ...(r.teeth || {}) }; if (st === 'ok' && !v.note) delete teeth[no]; else teeth[no] = { st, note: (v.note || '').trim() };
+    await saveSpec({ ...r, teeth }, `Tooth ${no}: ${TOOTH_ST[st][0]}`); A.closeModal(); render();
+    if (v.addPlan) setTimeout(() => A.planForm(pid, '', String(no), st), 60);
+  });
+};
+A.planForm = (pid, id, teeth, st) => {
+  const r = dentalRec(pid); const x = id ? (r.plan || []).find(y => y.id === id) : { teeth: teeth || '', status: 'planned', proc: { caries: 'Filling (composite)', rct: 'Root canal (RCT)', extract: 'Extraction', missing: 'Implant', pain: 'Consultation & check-up' }[st] || '' };
+  const fee = x.fee ?? (DENTAL_PROCS.find(d => d[0] === x.proc)?.[1] || '');
+  modal(`<form class="form" onsubmit="A.savePlan(event,'${pid}','${id || ''}')" novalidate>${sheetHead(T(id ? 'Edit treatment' : 'Add treatment'), patientById(pid)?.name || '')}<div class="sheet-b stack">
+    <div class="field"><span>${T('Treatment')}</span><select name="proc" onchange="const o=this.selectedOptions[0];if(o.dataset.fee&&!this.form.fee.dataset.touched)this.form.fee.value=o.dataset.fee">${DENTAL_PROCS.map(([n, f]) => `<option value="${esc(n)}" data-fee="${f}" ${x.proc === n ? 'selected' : ''}>${esc(T(n))} · ${inr(f)}</option>`).join('')}${x.proc && !DENTAL_PROCS.some(d => d[0] === x.proc) ? `<option selected value="${esc(x.proc)}">${esc(x.proc)}</option>` : ''}</select></div>
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'teeth', label: 'Tooth number(s)', value: x.teeth || '', placeholder: 'e.g. 36 or 11, 21' })}${fieldHTML({ name: 'fee', label: 'Fee ₹', type: 'number', min: 0, value: fee }).replace('<input', '<input oninput="this.dataset.touched=1"')}</div>
+    <div class="field"><span>${T('Status')}</span><div class="chips">${Object.entries(PLAN_ST).map(([k, [l]]) => `<label class="chip-radio"><input type="radio" name="status" value="${k}" ${(x.status || 'planned') === k ? 'checked' : ''}><span>${T(l)}</span></label>`).join('')}</div></div>
+    ${fieldHTML({ name: 'note', label: 'Note (optional)', value: x.note || '', placeholder: 'e.g. 2 sittings, cap after 1 week' })}
+  </div><footer class="sheet-f">${id ? `<button type="button" class="btn ghost danger" onclick="A.delPlan('${pid}','${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`);
+};
+A.savePlan = (e, pid, id) => {
+  e.preventDefault(); const f = e.target; const v = readForm(f); const status = f.querySelector('input[name=status]:checked')?.value || 'planned';
+  withBtn(e, async () => {
+    const r = dentalRec(pid); const plan = [...(r.plan || [])]; const old = id ? plan.find(y => y.id === id) : null;
+    const item = { ...(old || { id: uid('tp_') }), proc: v.proc, teeth: (v.teeth || '').trim(), fee: +v.fee || 0, status, note: (v.note || '').trim(), doneOn: status === 'done' ? (old?.doneOn || todayLocal()) : '' };
+    const teeth = { ...(r.teeth || {}) };
+    if (status === 'done') { const to = { 'Filling (composite)': 'filled', 'Root canal (RCT)': 'rct', 'Crown – metal ceramic': 'crown', 'Crown – zirconia': 'crown', 'Extraction': 'missing', 'Implant': 'implant', 'Bridge (per unit)': 'bridge' }[v.proc]; if (to) item.teeth.split(/[ ,]+/).filter(Boolean).forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: to }; }); }
+    if (old) plan[plan.indexOf(old)] = item; else plan.push(item);
+    await saveSpec({ ...r, plan, teeth }, `${item.proc} ${item.teeth ? '(' + item.teeth + ')' : ''}: ${status}`); A.closeModal(); toast('Saved'); render();
+  });
+};
+A.delPlan = (pid, id) => confirmBox('Remove this treatment?', '', 'Remove', async () => { const r = dentalRec(pid); await saveSpec({ ...r, plan: (r.plan || []).filter(x => x.id !== id) }); A.closeModal(); render(); });
+function dentalEstimateText(p, r) {
+  const st = settings(); const plan = (r.plan || []).filter(x => x.status !== 'done'); const tot = sum(plan, x => +x.fee || 0);
+  return `${I18N.lang === 'hi' ? 'नमस्ते' : 'Namaste'} ${p.name} ji 🙏\n${st.bizName} — ${T('Treatment estimate')}\n${plan.map(x => `• ${T(x.proc)}${x.teeth ? ' (' + x.teeth + ')' : ''}: ${inr(+x.fee || 0)}`).join('\n')}\n${T('Total')}: ${inr(tot)}\n${st.phone || ''}`;
+}
+A.dentalPrint = pid => {
+  const p = patientById(pid); const r = dentalRec(pid); const plan = r.plan || []; const marked = Object.entries(r.teeth || {}).filter(([, t]) => t.st && t.st !== 'ok');
+  clinicPrint(p, 'Dental treatment estimate', `${marked.length ? `<p><b>Findings:</b> ${marked.map(([n, t]) => `${n} – ${esc(TOOTH_ST[t.st]?.[0] || t.st)}${t.note ? ' (' + esc(t.note) + ')' : ''}`).join('; ')}</p>` : ''}
+    <table><thead><tr><th>Tooth</th><th>Treatment</th><th>Status</th><th class="r">Fee</th></tr></thead><tbody>${plan.map(x => `<tr><td>${esc(x.teeth || '—')}</td><td>${esc(x.proc)}${x.note ? `<div class="muted">${esc(x.note)}</div>` : ''}</td><td>${esc(PLAN_ST[x.status]?.[0] || '')}</td><td class="r">${inr(+x.fee || 0)}</td></tr>`).join('')}
+    <tr><th colspan="3" class="r">Total</th><th class="r">${inr(sum(plan, x => +x.fee || 0))}</th></tr></tbody></table><p class="muted">Fees are an estimate and may change if the treatment changes.</p>`);
+};
+
+/* ================= 2. Eye: vision, glasses power, eye pressure ================= */
+const VA_OPTS = ['', '6/5', '6/6', '6/9', '6/12', '6/18', '6/24', '6/36', '6/60', '5/60', '3/60', '1/60', 'CF', 'HM', 'PL+', 'NPL'];
+const NEAR_OPTS = ['', 'N5', 'N6', 'N8', 'N10', 'N12', 'N18', 'N24', 'N36'];
+const pw = v => v === '' || v == null ? '—' : (+v > 0 ? '+' : '') + (+v).toFixed(2);
+function eyeRxTable(x) {
+  const r = x.rx || {}; const row = s => `<td>${pw(r[s]?.sph)}</td><td>${pw(r[s]?.cyl)}</td><td>${r[s]?.axis ?? '—'}${r[s]?.axis !== '' && r[s]?.axis != null ? '°' : ''}</td><td>${pw(r[s]?.add)}</td>`;
+  return `<table class="eye-tbl"><thead><tr><th></th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th></tr></thead><tbody><tr><th>${T('Right')} (OD)</th>${row('r')}</tr><tr><th>${T('Left')} (OS)</th>${row('l')}</tr></tbody></table>`;
+}
+function eyeTab(p) {
+  const list = specLog(p.id, 'eye'); const last = list[0];
+  const iop = list.slice().reverse().map(x => ({ x: fmtShort(x.date), r: x.iop?.r, l: x.iop?.l }));
+  return specHead('eye', last ? `${T('Last check')}: ${dShort(last.date)}${last.next ? ` · ${T('Next')}: ${dShort(last.next)}` : ''}` : '', specCan() ? `<button class="btn sm primary" onclick="A.eyeForm('${p.id}')">${ic('plus')} ${T('Eye exam')}</button>` : '') +
+  (list.length ? `${iop.filter(x => x.r || x.l).length > 1 ? `<div class="card pad"><b class="small">${T('Eye pressure (IOP) trend')}</b><div class="grid2" style="padding:0">${miniLine(iop.map(x => ({ x: x.x, y: x.r })), '#2563EB', '')}${miniLine(iop.map(x => ({ x: x.x, y: x.l })), '#DB2777', '')}</div><div class="tiny muted">${T('Blue = right eye, pink = left eye (mmHg)')}</div></div>` : ''}
+    <div class="stack-sm" style="margin-top:12px">${list.map(x => `<div class="card pad stack-sm"><div class="row-flex" style="justify-content:space-between"><b>${dShort(x.date)}</b><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.eyePrint('${x.id}')">${ic('print')} ${T('Glasses Rx')}</button>${specCan() ? `<button class="icon-btn" aria-label="Edit" onclick="A.eyeForm('${p.id}','${x.id}')">${ic('edit')}</button>` : ''}</div></div>
+      <div class="eye-va"><span>${T('Vision')} R <b>${esc(x.va?.r || '—')}</b> · L <b>${esc(x.va?.l || '—')}</b></span>${x.bcva?.r || x.bcva?.l ? `<span>${T('With glasses')} R <b>${esc(x.bcva?.r || '—')}</b> · L <b>${esc(x.bcva?.l || '—')}</b></span>` : ''}${x.near?.r || x.near?.l ? `<span>${T('Near')} R <b>${esc(x.near?.r || '—')}</b> · L <b>${esc(x.near?.l || '—')}</b></span>` : ''}${x.iop?.r || x.iop?.l ? `<span class="${+x.iop?.r > 21 || +x.iop?.l > 21 ? 'bad-t' : ''}">IOP R <b>${x.iop?.r ?? '—'}</b> · L <b>${x.iop?.l ?? '—'}</b> mmHg</span>` : ''}</div>
+      ${eyeRxTable(x)}${x.diagnosis ? `<div class="small"><b>${T('Diagnosis')}:</b> ${esc(x.diagnosis)}</div>` : ''}${x.findings ? `<div class="small muted">${esc(x.findings)}</div>` : ''}${x.advice ? `<div class="small"><b>${T('Advice')}:</b> ${esc(x.advice)}</div>` : ''}</div>`).join('')}</div>`
+  : `<div class="card">${empty('No eye exam yet', 'Record vision, glasses power and eye pressure. Print the glasses prescription in one tap.', specCan() ? `<button class="btn primary" onclick="A.eyeForm('${p.id}')">${ic('plus')} ${T('Eye exam')}</button>` : '', 'eye', SPEC.eye.c)}</div>`);
+}
+A.eyeForm = (pid, id) => {
+  const x = id ? getById('visits', id) : { date: todayLocal(), rx: { r: {}, l: {} }, va: {}, bcva: {}, near: {}, iop: {} };
+  const sel = (name, opts, val) => `<select name="${name}">${opts.map(o => `<option ${o === (val || '') ? 'selected' : ''} value="${o}">${o || '—'}</option>`).join('')}</select>`;
+  const num = (name, val, step = '0.25', min = -30, max = 30) => `<input name="${name}" type="number" step="${step}" min="${min}" max="${max}" inputmode="decimal" value="${val ?? ''}">`;
+  const rxRow = s => `<tr><th>${T(s === 'r' ? 'Right' : 'Left')}</th><td>${num(s + '.sph', x.rx?.[s]?.sph)}</td><td>${num(s + '.cyl', x.rx?.[s]?.cyl)}</td><td>${num(s + '.axis', x.rx?.[s]?.axis, '1', 0, 180)}</td><td>${num(s + '.add', x.rx?.[s]?.add, '0.25', 0, 4)}</td></tr>`;
+  modal(`<form class="form" onsubmit="A.saveEye(event,'${pid}','${id || ''}')" novalidate>${sheetHead(T('Eye exam'), patientById(pid)?.name || '')}<div class="sheet-b stack">
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: x.date })}${fieldHTML({ name: 'next', label: 'Next check-up (optional)', type: 'date', value: x.next || '' })}</div>
+    <div class="eye-grid"><b></b><b>${T('Right')}</b><b>${T('Left')}</b>
+      <span>${T('Vision (without glasses)')}</span>${sel('va.r', VA_OPTS, x.va?.r)}${sel('va.l', VA_OPTS, x.va?.l)}
+      <span>${T('Vision with glasses')}</span>${sel('bcva.r', VA_OPTS, x.bcva?.r)}${sel('bcva.l', VA_OPTS, x.bcva?.l)}
+      <span>${T('Near vision')}</span>${sel('near.r', NEAR_OPTS, x.near?.r)}${sel('near.l', NEAR_OPTS, x.near?.l)}
+      <span>${T('Eye pressure (IOP, mmHg)')}</span>${num('iop.r', x.iop?.r, '1', 0, 80)}${num('iop.l', x.iop?.l, '1', 0, 80)}</div>
+    <div class="field"><span>${T('Glasses power')}</span><div class="tbl-wrap"><table class="eye-in"><thead><tr><th></th><th>SPH</th><th>CYL</th><th>AXIS</th><th>ADD</th></tr></thead><tbody>${rxRow('r')}${rxRow('l')}</tbody></table></div></div>
+    ${fieldHTML({ name: 'findings', label: 'Findings (anterior segment, fundus)', type: 'textarea', rows: 2, value: x.findings || '' })}
+    ${fieldHTML({ name: 'diagnosis', label: 'Diagnosis', value: x.diagnosis || '', placeholder: 'e.g. Myopia, early cataract, glaucoma suspect' })}
+    ${fieldHTML({ name: 'advice', label: 'Advice (glasses, lens, drops)', type: 'textarea', rows: 2, value: x.advice || '' })}
+  </div><footer class="sheet-f">${id ? `<button type="button" class="btn ghost danger" onclick="A.delSpecLog('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`, { wide: true });
+};
+A.saveEye = (e, pid, id) => {
+  e.preventDefault(); const v = readForm(e.target); const g = k => v[k] ?? '';
+  withBtn(e, async () => {
+    const base = id ? getById('visits', id) : { id: uid('ey_'), patientId: pid, kind: 'eye', created: Date.now() };
+    const rx = s => ({ sph: nOr(g(s + '.sph')), cyl: nOr(g(s + '.cyl')), axis: nOr(g(s + '.axis')), add: nOr(g(s + '.add')) });
+    const rec = { ...base, date: v.date || todayLocal(), next: v.next || '', va: { r: g('va.r'), l: g('va.l') }, bcva: { r: g('bcva.r'), l: g('bcva.l') }, near: { r: g('near.r'), l: g('near.l') }, iop: { r: nOr(g('iop.r')), l: nOr(g('iop.l')) }, rx: { r: rx('r'), l: rx('l') }, findings: (v.findings || '').trim(), diagnosis: (v.diagnosis || '').trim(), advice: (v.advice || '').trim() };
+    await saveSpec(rec, `Eye exam for ${patientById(pid)?.name}`); A.closeModal(); toast('Saved'); render();
+    if (+rec.iop.r > 21 || +rec.iop.l > 21) setTimeout(() => toast(T('Eye pressure is above 21 mmHg'), 'warn'), 600);
+  });
+};
+A.eyePrint = id => { const x = getById('visits', id); const p = patientById(x.patientId); clinicPrint(p, 'Spectacle prescription', `${eyeRxTable(x).replace(/ class="eye-tbl"/, '')}<p>Vision: R ${esc(x.va?.r || '—')} · L ${esc(x.va?.l || '—')}${x.bcva?.r || x.bcva?.l ? ` &nbsp; With glasses: R ${esc(x.bcva?.r || '—')} · L ${esc(x.bcva?.l || '—')}` : ''}</p>${x.diagnosis ? `<p><b>Diagnosis:</b> ${esc(x.diagnosis)}</p>` : ''}${x.advice ? `<p><b>Advice:</b> ${esc(x.advice)}</p>` : ''}${x.next ? `<p><b>Next check-up:</b> ${fmtDate(x.next)}</p>` : ''}`); };
+A.delSpecLog = id => confirmBox('Delete this entry?', '', 'Delete', async () => { const x = getById('visits', id); await removeRec('visits', id, 'Deleted a record'); await updateDues(x.patientId); A.closeModal(); render(); });
+
+/* ================= 3. Cancer care ================= */
+const ONCO_TYPES = ['Chemo cycle', 'Immunotherapy', 'Targeted therapy', 'Hormone therapy', 'Radiation', 'Surgery', 'Scan / review', 'Follow-up'];
+const bsaOf = (h, w) => h && w ? Math.round(Math.sqrt(h * w / 3600) * 100) / 100 : '';
+const lowCounts = x => { const out = []; if (x.hb !== '' && x.hb != null && +x.hb < 8) out.push('Hb ' + x.hb); if (x.wbc !== '' && x.wbc != null && +x.wbc < 3) out.push('WBC ' + x.wbc); if (x.anc !== '' && x.anc != null && +x.anc < 1.5) out.push('ANC ' + x.anc); if (x.plt !== '' && x.plt != null && +x.plt < 100) out.push('Platelets ' + x.plt); return out; };
+function oncoTab(p) {
+  const s = specSum('onco', p.id); const log = specLog(p.id, 'cycle'); const chemo = log.filter(x => x.type === 'Chemo cycle'); const t = todayLocal();
+  const next = log.find(x => x.nextDate)?.nextDate; const done = chemo.length; const planned = +s?.cycles || 0;
+  const head = specHead('onco', s ? [s.site, s.stage ? T('Stage') + ' ' + s.stage : '', s.intent ? T(s.intent) : ''].filter(Boolean).map(esc).join(' · ') : T('Add the diagnosis first.'), specCan() ? `<button class="btn sm" onclick="A.oncoForm('${p.id}')">${ic('edit')} ${T('Diagnosis')}</button>` : '');
+  if (!s) return head + `<div class="card">${empty('No cancer details yet', 'Add site, type, stage, regimen and number of cycles. Then log every cycle with weight, dose and blood counts.', specCan() ? `<button class="btn primary" onclick="A.oncoForm('${p.id}')">${ic('plus')} ${T('Add diagnosis')}</button>` : '', 'ribbon', SPEC.onco.c)}</div>`;
+  const lc = log[0] ? lowCounts(log[0]) : [];
+  return head + `<div class="today-strip"><div><b>${done}${planned ? '/' + planned : ''}</b><span>${T('Cycles done')}</span></div><div><b>${next ? dShort(next) : '—'}</b><span>${next && next < t ? T('Overdue') : T('Next cycle')}</span></div><div><b>${s.ecog !== '' && s.ecog != null ? s.ecog : '—'}</b><span>ECOG</span></div></div>
+    ${planned ? `<div class="card pad"><div class="cyc-bar">${Array.from({ length: planned }, (_, i) => `<i class="${i < done ? 'on' : ''}">${i + 1}</i>`).join('')}</div></div>` : ''}
+    ${lc.length ? `<div class="banner bad" style="margin-top:12px">${ic('alert')}<span><b>${T('Low counts in the last entry')}:</b> ${esc(lc.join(', '))}. ${T('Check before the next cycle.')}</span></div>` : ''}
+    <div class="card pad stack-sm" style="margin-top:12px"><div class="onco-grid">${[['Type / histology', s.histology], ['Diagnosed on', s.diagDate ? fmtDate(s.diagDate) : ''], ['TNM', s.tnm], ['Markers', s.markers], ['Regimen', s.regimen], ['Every', s.interval ? s.interval + ' ' + T('days') : ''], ['Height', s.height ? s.height + ' cm' : '']].filter(x => x[1]).map(([l, v]) => `<div><span>${T(l)}</span><b>${esc(v)}</b></div>`).join('')}</div>${s.notes ? `<div class="small muted">${esc(s.notes)}</div>` : ''}</div>
+    <div class="sec-h"><h2>${T('Treatment log')}</h2>${specCan() ? `<button class="btn sm primary" onclick="A.cycleForm('${p.id}')">${ic('plus')} ${T('Add cycle / treatment')}</button>` : ''}</div>
+    <div class="card">${log.length ? `<div class="rows">${log.map(x => { const low = lowCounts(x); return `<button class="row click" onclick="A.cycleForm('${p.id}','${x.id}')">${ibox(x.type === 'Chemo cycle' ? 'drop' : x.type === 'Radiation' ? 'bolt' : x.type === 'Surgery' ? 'wrench' : 'file', SPEC.onco.c, 'sm')}<div class="main-col"><b>${esc(T(x.type))}${x.cycleNo ? ' ' + x.cycleNo : ''}</b><div class="sub">${dShort(x.date)}${x.weight ? ` · ${x.weight} kg` : ''}${x.bsa ? ` · BSA ${x.bsa}` : ''}${x.drugs ? ' · ' + esc(String(x.drugs).split('\n')[0]) : ''}</div>${[x.hb !== '' && x.hb != null ? 'Hb ' + x.hb : '', x.wbc !== '' && x.wbc != null ? 'WBC ' + x.wbc : '', x.plt !== '' && x.plt != null ? 'Plt ' + x.plt : ''].filter(Boolean).length ? `<div class="tiny ${low.length ? 'bad-t' : 'muted'}">${[x.hb !== '' && x.hb != null ? 'Hb ' + x.hb : '', x.wbc !== '' && x.wbc != null ? 'WBC ' + x.wbc : '', x.plt !== '' && x.plt != null ? 'Plt ' + x.plt : ''].filter(Boolean).join(' · ')}</div>` : ''}${x.effects ? `<div class="tiny muted">${T('Side effects')}: ${esc(x.effects)}${x.grade ? ' (G' + x.grade + ')' : ''}</div>` : ''}</div>${x.nextDate ? pill(T('Next') + ' ' + dShort(x.nextDate), x.nextDate < t ? 'bad' : '') : ''}</button>`; }).join('')}</div>` : empty('Nothing logged yet', 'Log each chemo cycle, radiation or surgery here.', '', 'ribbon', SPEC.onco.c)}</div>`;
+}
+A.oncoForm = pid => {
+  const s = specSum('onco', pid) || { intent: 'Curative', interval: 21 };
+  formModal({ title: 'Cancer diagnosis', sub: patientById(pid)?.name, fields: [
+    { name: 'site', label: 'Cancer site', value: s.site, required: true, placeholder: 'e.g. Breast (left), Lung, Oral cavity' },
+    { name: 'histology', label: 'Type / histology', value: s.histology, placeholder: 'e.g. Invasive ductal carcinoma' },
+    { name: 'stage', label: 'Stage', type: 'select', options: ['', 'I', 'II', 'III', 'IV', 'Not known'], value: s.stage },
+    { name: 'tnm', label: 'TNM', value: s.tnm, placeholder: 'e.g. T2 N1 M0' },
+    { name: 'diagDate', label: 'Diagnosed on', type: 'date', value: s.diagDate },
+    { name: 'markers', label: 'Markers (ER/PR/HER2, EGFR…)', value: s.markers },
+    { name: 'ecog', label: 'ECOG (0–4)', type: 'select', options: [['', '—'], ['0', '0 · Fully active'], ['1', '1 · Light work'], ['2', '2 · Self care, up >50%'], ['3', '3 · Limited self care'], ['4', '4 · Bed bound']], value: s.ecog ?? '' },
+    { name: 'intent', label: 'Intent', type: 'select', options: ['Curative', 'Adjuvant', 'Neoadjuvant', 'Palliative'], value: s.intent },
+    { name: 'regimen', label: 'Regimen', value: s.regimen, placeholder: 'e.g. AC → Paclitaxel' },
+    { name: 'cycles', label: 'Cycles planned', type: 'number', min: 0, max: 60, value: s.cycles },
+    { name: 'interval', label: 'Days between cycles', type: 'number', min: 1, max: 90, value: s.interval || 21 },
+    { name: 'height', label: 'Height (cm, for BSA)', type: 'number', min: 40, max: 230, value: s.height },
+    { name: 'status', label: 'Treatment', type: 'select', options: [['', 'Ongoing'], ['done', 'Completed / on follow-up']], value: s.status || '' },
+    { name: 'notes', label: 'Notes', type: 'textarea', value: s.notes, full: true }],
+    onSubmit: async v => { const base = specSum('onco', pid) || { id: specId('onco', pid), patientId: pid, kind: 'onco', created: Date.now() };
+      await saveSpec({ ...base, ...v, date: todayLocal(), cycles: nOr(v.cycles), interval: +v.interval || 21, height: nOr(v.height), ecog: v.ecog }, `Cancer details for ${patientById(pid)?.name}`); render(); } });
+};
+A.cycleForm = (pid, id) => {
+  const s = specSum('onco', pid) || {}; const chemo = specLog(pid, 'cycle').filter(x => x.type === 'Chemo cycle');
+  const x = id ? getById('visits', id) : { date: todayLocal(), type: 'Chemo cycle', cycleNo: chemo.length + 1, nextDate: addDays(todayLocal(), +s.interval || 21) };
+  modal(`<form class="form" onsubmit="A.saveCycle(event,'${pid}','${id || ''}')" novalidate>${sheetHead(T(id ? 'Edit treatment' : 'Add cycle / treatment'), patientById(pid)?.name || '')}<div class="sheet-b stack">
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'type', label: 'What', type: 'select', options: ONCO_TYPES.map(t => [t, T(t)]), value: x.type })}${fieldHTML({ name: 'cycleNo', label: 'Cycle no.', type: 'number', min: 0, value: x.cycleNo })}
+    ${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: x.date })}${fieldHTML({ name: 'nextDate', label: 'Next cycle due', type: 'date', value: x.nextDate || '' })}
+    ${fieldHTML({ name: 'weight', label: 'Weight (kg)', type: 'number', step: '0.1', min: 1, value: x.weight }).replace('<input', `<input oninput="const h=${+s.height || 0};this.form.querySelector('.bsa').textContent=h&&this.value?'BSA '+Math.round(Math.sqrt(h*this.value/3600)*100)/100+' m²':''"`)}<div class="field"><span>BSA</span><b class="bsa" style="padding:12px 0">${x.bsa ? 'BSA ' + x.bsa + ' m²' : s.height ? '' : T('Add height in the diagnosis for BSA')}</b></div></div>
+    ${fieldHTML({ name: 'drugs', label: 'Drugs and doses (one per line)', type: 'textarea', rows: 3, value: x.drugs || '', placeholder: 'e.g. Paclitaxel 175 mg/m² – 300 mg' })}
+    <div class="field"><span>${T('Blood counts before this cycle')}</span><div class="grid4">${[['hb', 'Hb g/dL'], ['wbc', 'WBC ×10³'], ['anc', 'ANC ×10³'], ['plt', 'Platelets ×10³']].map(([k, l]) => `<label class="field"><span>${l}</span><input name="${k}" type="number" step="0.1" min="0" inputmode="decimal" value="${x[k] ?? ''}"></label>`).join('')}</div></div>
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'effects', label: 'Side effects', value: x.effects || '', placeholder: 'e.g. Nausea, mouth ulcers, fatigue' })}${fieldHTML({ name: 'grade', label: 'Worst grade (0–4)', type: 'select', options: ['', '0', '1', '2', '3', '4'], value: x.grade || '' })}</div>
+    ${fieldHTML({ name: 'note', label: 'Note', value: x.note || '' })}
+  </div><footer class="sheet-f">${id ? `<button type="button" class="btn ghost danger" onclick="A.delSpecLog('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`, { wide: true });
+};
+A.saveCycle = (e, pid, id) => {
+  e.preventDefault(); const v = readForm(e.target); const s = specSum('onco', pid) || {};
+  withBtn(e, async () => {
+    const base = id ? getById('visits', id) : { id: uid('cy_'), patientId: pid, kind: 'cycle', created: Date.now() };
+    const rec = { ...base, type: v.type, cycleNo: nOr(v.cycleNo), date: v.date || todayLocal(), nextDate: v.nextDate || '', weight: nOr(v.weight), bsa: bsaOf(+s.height, +v.weight), drugs: (v.drugs || '').trim(), hb: nOr(v.hb), wbc: nOr(v.wbc), anc: nOr(v.anc), plt: nOr(v.plt), effects: (v.effects || '').trim(), grade: v.grade || '', note: (v.note || '').trim() };
+    await saveSpec(rec, `${rec.type} ${rec.cycleNo || ''} for ${patientById(pid)?.name}`); A.closeModal(); toast('Saved'); render();
+    const low = lowCounts(rec); if (low.length) setTimeout(() => toast(`${T('Low counts')}: ${low.join(', ')}`, 'warn'), 600);
+  });
+};
+
+/* ================= 4. Pregnancy ================= */
+const PREG_STEPS = [['dating', 'Dating / viability scan', 6, 10], ['nt', 'NT scan + double marker', 11, 14], ['td1', 'Td vaccine – 1st dose', 4, 36], ['ifa', 'Start iron & calcium', 14, 16], ['anomaly', 'Anomaly (level 2) scan', 18, 22],
+  ['td2', 'Td vaccine – 2nd dose (4 weeks after 1st)', 8, 36], ['gtt', 'Sugar test (GTT)', 24, 28], ['growth', 'Growth scan', 28, 32], ['doppler', 'Doppler / NST if needed', 32, 37], ['plan', 'Delivery plan & hospital', 36, 38]];
+const pregEdd = s => s.eddScan || (s.lmp ? addDays(s.lmp, 280) : '');
+const pregGA = (s, on = todayLocal()) => { const edd = pregEdd(s); if (!edd) return null; const d = 280 - daysBetween(on, edd); return d < 0 ? null : { w: Math.floor(d / 7), d: d % 7, days: d }; };
+const gaText = g => g ? `${g.w}${T('w')} ${g.d}${T('d')}` : '—';
+function pregNextAnc(s, pid) {
+  const last = specLog(pid, 'anc')[0]; const g = pregGA(s); if (!g) return '';
+  const gap = g.w < 28 ? 28 : g.w < 36 ? 14 : 7; const from = last?.date || todayLocal(); const nx = addDays(from, gap);
+  return pregEdd(s) && nx > addDays(pregEdd(s), 14) ? '' : nx;
+}
+const stepState = (s, k, w1, w2) => { const done = (s.steps || {})[k]; if (done) return ['done', done]; const lmp = s.lmp || (pregEdd(s) ? addDays(pregEdd(s), -280) : ''); if (!lmp) return ['', '']; const a = addDays(lmp, w1 * 7), b = addDays(lmp, w2 * 7); const t = todayLocal(); return [t < a ? 'later' : t <= b ? 'now' : 'missed', t < a ? a : b]; };
+function pregTab(p) {
+  const s = specSum('preg', p.id); const t = todayLocal();
+  if (!s) return specHead('preg', '') + `<div class="card">${empty('No pregnancy record', 'Add the last period date (LMP). The app works out the due date, weeks, scan dates and the next check-up.', specCan() ? `<button class="btn primary" onclick="A.pregForm('${p.id}')">${ic('plus')} ${T('Start pregnancy record')}</button>` : '', 'heart', SPEC.preg.c)}</div>`;
+  const g = pregGA(s); const edd = pregEdd(s); const anc = specLog(p.id, 'anc'); const nx = pregNextAnc(s, p.id); const ended = ['delivered', 'ended'].includes(s.status);
+  const tri = g ? (g.w < 13 ? T('1st trimester') : g.w < 28 ? T('2nd trimester') : T('3rd trimester')) : '';
+  return specHead('preg', ended ? `${T(s.status === 'delivered' ? 'Delivered' : 'Pregnancy ended')}${s.deliveryDate ? ' · ' + dShort(s.deliveryDate) : ''}${s.outcome ? ' · ' + esc(T(s.outcome)) : ''}` : `${gaText(g)} · ${tri}`, specCan() ? `<button class="btn sm" onclick="A.pregForm('${p.id}')">${ic('edit')} ${T('Details')}</button>` : '') + `
+    ${ended ? '' : `<div class="today-strip"><div><b>${gaText(g)}</b><span>${T('Weeks now')}</span></div><div><b>${edd ? dShort(edd) : '—'}</b><span>${T('Due date (EDD)')}</span></div><div><b>${nx ? dShort(nx) : '—'}</b><span>${nx && nx < t ? T('Check-up overdue') : T('Next check-up')}</span></div></div>
+    ${g ? `<div class="card pad"><div class="preg-bar"><i style="--p:${Math.min(100, Math.round(g.days / 280 * 100))}%"></i><span style="left:${13 / 40 * 100}%">13w</span><span style="left:${28 / 40 * 100}%">28w</span><span style="left:${37 / 40 * 100}%">37w</span></div></div>` : ''}`}
+    <div class="card pad stack-sm" style="margin-top:12px"><div class="onco-grid">${[['LMP', s.lmp ? fmtDate(s.lmp) : ''], ['G P A L', [s.g, s.p, s.a, s.l].some(x => x !== '' && x != null) ? `G${s.g || 0} P${s.p || 0} A${s.a || 0} L${s.l || 0}` : ''], ['Blood group', s.blood], ['Risk', s.risk]].filter(x => x[1]).map(([l, v]) => `<div><span>${T(l)}</span><b>${esc(v)}</b></div>`).join('')}</div></div>
+    ${ended ? '' : `<div class="sec-h"><h2>${T('Scans & tests')}</h2></div><div class="card"><div class="rows">${PREG_STEPS.map(([k, l, w1, w2]) => { const [st, d] = stepState(s, k, w1, w2); return `<label class="row step-row ${st}"><input type="checkbox" ${st === 'done' ? 'checked' : ''} ${specCan() ? `onchange="A.pregStep('${p.id}','${k}',this.checked)"` : 'disabled'}><div class="main-col"><b>${T(l)}</b><div class="sub">${w1}–${w2} ${T('weeks')}${d ? ` · ${st === 'done' ? T('Done') + ' ' + dShort(d) : st === 'later' ? T('From') + ' ' + dShort(d) : st === 'now' ? T('Due by') + ' ' + dShort(d) : T('Window passed') + ' ' + dShort(d)}` : ''}</div></div>${st === 'now' ? pill(T('Due now'), 'warn') : st === 'missed' ? pill(T('Missed?'), 'bad') : ''}</label>`; }).join('')}</div></div>`}
+    <div class="sec-h"><h2>${T('Check-ups (ANC)')}</h2>${specCan() && !ended ? `<button class="btn sm primary" onclick="A.ancForm('${p.id}')">${ic('plus')} ${T('Add check-up')}</button>` : ''}</div>
+    <div class="card">${anc.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>${T('Date')}</th><th>${T('Weeks')}</th><th>${T('Weight')}</th><th>BP</th><th>FHR</th><th>${T('Fundal ht')}</th><th>Hb</th><th></th></tr></thead><tbody>${anc.map(x => `<tr class="${+x.sys >= 140 || +x.dia >= 90 ? 'row-crit' : ''}"><td>${dShort(x.date)}</td><td>${esc(x.ga || '')}</td><td>${x.weight || '—'}</td><td>${x.sys ? x.sys + '/' + x.dia : '—'}</td><td>${x.fhr || '—'}</td><td>${x.fundal || '—'}</td><td>${x.hb || '—'}</td><td>${specCan() ? `<button class="icon-btn" aria-label="Edit" onclick="A.ancForm('${p.id}','${x.id}')">${ic('edit')}</button>` : ''}</td></tr>`).join('')}</tbody></table></div>` : empty('No check-up yet', 'Add weight, BP, baby heart rate and fundal height at every visit.', '', 'heart', SPEC.preg.c)}</div>`;
+}
+A.pregForm = pid => {
+  const s = specSum('preg', pid) || {};
+  formModal({ title: 'Pregnancy details', sub: patientById(pid)?.name, fields: [
+    { name: 'lmp', label: 'Last period date (LMP)', type: 'date', value: s.lmp, hint: 'Due date = LMP + 280 days' },
+    { name: 'eddScan', label: 'Due date by scan (optional)', type: 'date', value: s.eddScan, hint: 'If the scan date differs, this is used' },
+    { name: 'g', label: 'Gravida (G)', type: 'number', min: 0, max: 20, value: s.g }, { name: 'p', label: 'Para (P)', type: 'number', min: 0, max: 20, value: s.p },
+    { name: 'a', label: 'Abortions (A)', type: 'number', min: 0, max: 20, value: s.a }, { name: 'l', label: 'Living (L)', type: 'number', min: 0, max: 20, value: s.l },
+    { name: 'blood', label: 'Blood group', type: 'select', options: ['', 'A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'O+', 'O−'], value: s.blood },
+    { name: 'risk', label: 'Risk factors', value: s.risk, placeholder: 'e.g. Previous C-section, thyroid, twins' },
+    { name: 'status', label: 'Status', type: 'select', options: [['', 'Ongoing'], ['delivered', 'Delivered'], ['ended', 'Pregnancy ended']], value: s.status || '' },
+    { name: 'deliveryDate', label: 'Delivery date', type: 'date', value: s.deliveryDate },
+    { name: 'outcome', label: 'Delivery', type: 'select', options: ['', 'Normal delivery', 'C-section', 'Assisted delivery'], value: s.outcome },
+    { name: 'baby', label: 'Baby (weight, sex)', value: s.baby, placeholder: 'e.g. 3.1 kg, girl' }],
+    onSubmit: async v => { if (!v.lmp && !v.eddScan) throw new Error('Add the LMP or the scan due date');
+      const base = specSum('preg', pid) || { id: specId('preg', pid), patientId: pid, kind: 'preg', created: Date.now(), steps: {} };
+      await saveSpec({ ...base, ...v, date: todayLocal() }, `Pregnancy details for ${patientById(pid)?.name}`); render(); } });
+};
+A.pregStep = async (pid, k, on) => { const s = specSum('preg', pid); const steps = { ...(s.steps || {}) }; if (on) steps[k] = todayLocal(); else delete steps[k]; try { await saveSpec({ ...s, steps }); render(); } catch (e) { toast(e.message, 'bad'); } };
+A.ancForm = (pid, id) => {
+  const s = specSum('preg', pid) || {}; const x = id ? getById('visits', id) : { date: todayLocal() };
+  formModal({ title: id ? 'Edit check-up' : 'Pregnancy check-up', sub: `${patientById(pid)?.name} · ${gaText(pregGA(s, x.date))}`, fields: [
+    { name: 'date', label: 'Date', type: 'date', value: x.date }, { name: 'weight', label: 'Weight (kg)', type: 'number', step: '0.1', value: x.weight },
+    { name: 'sys', label: 'BP upper', type: 'number', value: x.sys }, { name: 'dia', label: 'BP lower', type: 'number', value: x.dia },
+    { name: 'fhr', label: 'Baby heart rate (FHR, bpm)', type: 'number', value: x.fhr }, { name: 'fundal', label: 'Fundal height (cm)', type: 'number', value: x.fundal },
+    { name: 'hb', label: 'Hb (g/dL)', type: 'number', step: '0.1', value: x.hb }, { name: 'urine', label: 'Urine albumin / sugar', value: x.urine, placeholder: 'e.g. Nil / Nil' },
+    { name: 'note', label: 'Notes', type: 'textarea', value: x.note, full: true }],
+    left: id ? `<button type="button" class="btn ghost danger" onclick="A.delSpecLog('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { const base = id ? x : { id: uid('an_'), patientId: pid, kind: 'anc', created: Date.now() };
+      const rec = { ...base, ...v, date: v.date || todayLocal(), ga: gaText(pregGA(s, v.date || todayLocal())) }; ['weight', 'sys', 'dia', 'fhr', 'fundal', 'hb'].forEach(k => rec[k] = nOr(v[k]));
+      await saveSpec(rec, `Pregnancy check-up for ${patientById(pid)?.name}`); render();
+      if (+rec.sys >= 140 || +rec.dia >= 90) setTimeout(() => toast(T('High BP in pregnancy: check for pre-eclampsia'), 'bad'), 500); } });
+};
+
+/* ================= 5. Child: growth + vaccines ================= */
+const VACCINES = [[0, 'BCG'], [0, 'OPV-0'], [0, 'Hep B-1'], [42, 'DTP-1'], [42, 'IPV-1'], [42, 'Hib-1'], [42, 'Hep B-2'], [42, 'Rotavirus-1'], [42, 'PCV-1'],
+  [70, 'DTP-2'], [70, 'IPV-2'], [70, 'Hib-2'], [70, 'Hep B-3'], [70, 'Rotavirus-2'], [70, 'PCV-2'], [98, 'DTP-3'], [98, 'IPV-3'], [98, 'Hib-3'], [98, 'Hep B-4'], [98, 'Rotavirus-3'], [98, 'PCV-3'],
+  [183, 'Influenza-1'], [213, 'Influenza-2'], [274, 'MMR-1'], [274, 'Typhoid conjugate'], [365, 'Hep A-1'], [456, 'MMR-2'], [456, 'Varicella-1'], [456, 'PCV booster'],
+  [487, 'DTP booster-1'], [487, 'IPV booster'], [487, 'Hib booster'], [548, 'Hep A-2'], [548, 'Varicella-2'], [1643, 'DTP booster-2'], [1643, 'MMR-3'], [3650, 'Tdap'], [3650, 'HPV-1'], [3833, 'HPV-2']];
+const vKey = n => n.toLowerCase().replace(/[^a-z0-9]/g, '');
+const ageText = (dob, on = todayLocal()) => { const d = daysBetween(dob, on); if (d < 0) return ''; if (d < 60) return `${Math.floor(d / 7)} ${T('weeks')}`; const m = Math.floor(d / 30.44); return m < 24 ? `${m} ${T('months')}` : `${Math.floor(m / 12)} ${T('yrs')} ${m % 12 ? (m % 12) + ' ' + T('months') : ''}`; };
+function childNextVaccine(s) { const t = todayLocal(); const g = s.given || {}; const v = VACCINES.find(([d, n]) => !g[vKey(n)] && addDays(s.dob, d) >= addDays(t, -60)); return v ? { name: v[1], due: addDays(s.dob, v[0]) } : null; }
+function childTab(p) {
+  const s = specSum('child', p.id); const t = todayLocal();
+  if (!s?.dob) return specHead('child', '') + `<div class="card">${empty('Add the date of birth', 'The app makes the vaccine chart with dates and shows the growth record.', specCan() ? `<button class="btn primary" onclick="A.childForm('${p.id}')">${ic('plus')} ${T('Date of birth')}</button>` : '', 'baby', SPEC.child.c)}</div>`;
+  const gr = specLog(p.id, 'growth'); const last = gr[0]; const g = s.given || {}; const groups = [];
+  VACCINES.forEach(([d, n]) => { let gp = groups.find(x => x.d === d); if (!gp) groups.push(gp = { d, list: [] }); gp.list.push(n); });
+  const wt = gr.slice().reverse().map(x => ({ x: ageText(s.dob, x.date), y: x.weight })); const ht = gr.slice().reverse().map(x => ({ x: ageText(s.dob, x.date), y: x.height }));
+  const nv = childNextVaccine(s);
+  return specHead('child', `${T('Age')}: ${ageText(s.dob)} · ${T('Born')} ${dShort(s.dob)}`, specCan() ? `<button class="btn sm" onclick="A.childForm('${p.id}')">${ic('edit')}</button>` : '') + `
+    <div class="today-strip"><div><b>${last?.weight ? last.weight + ' kg' : '—'}</b><span>${T('Weight')}</span></div><div><b>${last?.height ? last.height + ' cm' : '—'}</b><span>${T('Height')}</span></div><div><b>${nv ? esc(nv.name) : '✓'}</b><span>${nv ? (nv.due < t ? T('Vaccine overdue') : T('Next vaccine') + ' · ' + dShort(nv.due)) : T('Vaccines up to date')}</span></div></div>
+    <div class="sec-h"><h2>${T('Growth')}</h2>${specCan() ? `<button class="btn sm primary" onclick="A.growthForm('${p.id}')">${ic('plus')} ${T('Add weight & height')}</button>` : ''}</div>
+    ${gr.length > 1 ? `<div class="card pad"><div class="grid2" style="padding:0"><div><b class="small">${T('Weight')} (kg)</b>${miniLine(wt, '#16A34A', '')}</div><div><b class="small">${T('Height')} (cm)</b>${miniLine(ht, '#2563EB', '')}</div></div></div>` : ''}
+    <div class="card">${gr.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>${T('Date')}</th><th>${T('Age')}</th><th>${T('Weight')}</th><th>${T('Height')}</th><th>${T('Head')}</th><th>BMI</th><th></th></tr></thead><tbody>${gr.map(x => `<tr><td>${dShort(x.date)}</td><td>${ageText(s.dob, x.date)}</td><td>${x.weight || '—'}</td><td>${x.height || '—'}</td><td>${x.hc || '—'}</td><td>${x.weight && x.height ? (x.weight / Math.pow(x.height / 100, 2)).toFixed(1) : '—'}</td><td>${specCan() ? `<button class="icon-btn" aria-label="Edit" onclick="A.growthForm('${p.id}','${x.id}')">${ic('edit')}</button>` : ''}</td></tr>`).join('')}</tbody></table></div>` : `<p class="small muted dept-note" style="padding-top:12px">${T('No weight or height yet.')}</p>`}</div>
+    <div class="sec-h"><h2>${T('Vaccines')}${info('sp-vacc')}</h2></div>
+    <div class="stack-sm">${groups.map(gp => { const due = addDays(s.dob, gp.d); return `<div class="card pad vacc-grp"><div class="row-flex" style="justify-content:space-between"><b>${gp.d === 0 ? T('At birth') : ageText(s.dob, due)}</b><span class="small muted">${dShort(due)}</span></div><div class="chips">${gp.list.map(n => { const on = g[vKey(n)]; const late = !on && due < t; return `<label class="chip-check vacc ${late ? 'late' : ''}"><input type="checkbox" ${on ? 'checked' : ''} ${specCan() ? `onchange="A.vaccTick('${p.id}','${esc(n)}',this.checked)"` : 'disabled'}><span>${esc(n)}${on ? ' · ' + dShort(on) : ''}</span></label>`; }).join('')}</div></div>`; }).join('')}</div>`;
+}
+A.childForm = pid => { const s = specSum('child', pid) || {}; formModal({ title: 'Child details', sub: patientById(pid)?.name, fields: [{ name: 'dob', label: 'Date of birth', type: 'date', required: true, value: s.dob }, { name: 'birthWeight', label: 'Birth weight (kg)', type: 'number', step: '0.01', value: s.birthWeight }, { name: 'notes', label: 'Notes (birth history, allergies)', type: 'textarea', value: s.notes, full: true }],
+  onSubmit: async v => { const base = specSum('child', pid) || { id: specId('child', pid), patientId: pid, kind: 'child', created: Date.now(), given: {} }; await saveSpec({ ...base, ...v, birthWeight: nOr(v.birthWeight), date: todayLocal() }, `Child details for ${patientById(pid)?.name}`); render(); } }); };
+A.vaccTick = async (pid, n, on) => { const s = specSum('child', pid); const given = { ...(s.given || {}) }; if (on) given[vKey(n)] = todayLocal(); else delete given[vKey(n)]; try { await saveSpec({ ...s, given }, `${n} ${on ? 'given' : 'unmarked'}`); render(); } catch (e) { toast(e.message, 'bad'); } };
+A.growthForm = (pid, id) => { const x = id ? getById('visits', id) : { date: todayLocal() }; formModal({ title: 'Weight & height', sub: patientById(pid)?.name, fields: [{ name: 'date', label: 'Date', type: 'date', value: x.date }, { name: 'weight', label: 'Weight (kg)', type: 'number', step: '0.01', value: x.weight }, { name: 'height', label: 'Height / length (cm)', type: 'number', step: '0.1', value: x.height }, { name: 'hc', label: 'Head size (cm)', type: 'number', step: '0.1', value: x.hc }],
+  left: id ? `<button type="button" class="btn ghost danger" onclick="A.delSpecLog('${id}')">${ic('trash')}</button>` : '',
+  onSubmit: async v => { if (!v.weight && !v.height && !v.hc) throw new Error('Fill at least one number'); const base = id ? x : { id: uid('gr_'), patientId: pid, kind: 'growth', created: Date.now() }; await saveSpec({ ...base, date: v.date || todayLocal(), weight: nOr(v.weight), height: nOr(v.height), hc: nOr(v.hc) }, `Growth record for ${patientById(pid)?.name}`); render(); } }); };
+
+/* ================= 6. Therapy sessions & packages (physio, skin, ayurveda, dialysis…) ================= */
+const SESSION_QUICK = { 'Physiotherapist': ['IFT', 'TENS', 'Ultrasound', 'Hot pack', 'Exercises', 'Traction', 'Manual therapy', 'Taping'], 'Orthopaedic': ['Physiotherapy', 'Plaster check', 'Dressing', 'Injection'],
+  'Dermatologist': ['Chemical peel', 'Laser', 'PRP', 'Hydrafacial', 'Microneedling'], 'Ayurveda': ['Abhyanga', 'Shirodhara', 'Swedana', 'Basti', 'Nasya'], 'Nephrologist': ['Dialysis'] };
+const activePkg = pid => { const s = specSum('pkg', pid); const pk = (s?.pkgs || []).filter(x => !x.closed).slice(-1)[0]; if (!pk) return null; const used = specLog(pid, 'session').filter(x => x.pkgId === pk.id).length; return { ...pk, used, left: Math.max(0, (+pk.total || 0) - used) }; };
+function sessionsTab(p) {
+  const s = specSum('pkg', p.id); const pk = activePkg(p.id); const log = specLog(p.id, 'session');
+  const pain = log.slice().reverse().filter(x => x.painAfter !== '' && x.painAfter != null).map(x => ({ x: fmtShort(x.date), y: x.painAfter }));
+  return specHead('sessions', pk ? `${esc(pk.name)} · ${pk.used}/${pk.total} ${T('used')}` : T('No active package'), specCan() ? `<button class="btn sm" onclick="A.pkgForm('${p.id}')">${ic('plus')} ${T('Package')}</button>` : '') + `
+    ${pk ? `<div class="card pad stack-sm"><div class="row-flex" style="justify-content:space-between"><b>${esc(pk.name)}</b><span class="small">${pk.fee ? inr(pk.fee) + ' · ' : ''}${T('from')} ${dShort(pk.start)}</span></div><div class="cyc-bar">${Array.from({ length: Math.min(+pk.total || 0, 40) }, (_, i) => `<i class="${i < pk.used ? 'on' : ''}">${i + 1}</i>`).join('')}</div>${pk.left <= 1 ? `<div class="banner warn">${ic('alert')}<span>${T(pk.left ? 'Only one session left in this package.' : 'This package is finished. Start a new one.')}</span></div>` : ''}</div>` : ''}
+    ${pain.length > 1 ? `<div class="card pad" style="margin-top:12px"><b class="small">${T('Pain after session (0–10)')}</b>${miniLine(pain, SPEC.sessions.c, '')}</div>` : ''}
+    <div class="sec-h"><h2>${T('Sessions')}</h2>${specCan() ? `<button class="btn sm primary" onclick="A.sessionForm('${p.id}')">${ic('plus')} ${T('Add session')}</button>` : ''}</div>
+    <div class="card">${log.length ? `<div class="rows">${log.map(x => `<button class="row click" onclick="A.sessionForm('${p.id}','${x.id}')">${ibox('clock', SPEC.sessions.c, 'sm')}<div class="main-col"><b>${esc(x.therapy || T('Session'))}</b><div class="sub">${dShort(x.date)}${x.area ? ' · ' + esc(x.area) : ''}${x.painBefore !== '' && x.painBefore != null ? ` · ${T('Pain')} ${x.painBefore} → ${x.painAfter ?? '—'}` : ''}</div>${x.note ? `<div class="tiny muted">${esc(x.note)}</div>` : ''}</div></button>`).join('')}</div>` : empty('No session yet', 'Log each session with the therapy and pain score. Sell packages (e.g. 10 sessions) and see how many are left.', '', 'clock', SPEC.sessions.c)}</div>
+    ${(s?.pkgs || []).length > 1 ? `<div class="sec-h"><h2>${T('Old packages')}</h2></div><div class="card"><div class="rows">${s.pkgs.filter(x => x.id !== pk?.id).map(x => `<div class="row"><div class="main-col"><b>${esc(x.name)}</b><div class="sub">${x.total} ${T('sessions')} · ${dShort(x.start)}${x.fee ? ' · ' + inr(x.fee) : ''}</div></div></div>`).join('')}</div></div>` : ''}`;
+}
+A.pkgForm = pid => formModal({ title: 'New package', sub: patientById(pid)?.name, fields: [{ name: 'name', label: 'Package name', required: true, placeholder: 'e.g. Knee physio – 10 sessions' }, { name: 'total', label: 'Number of sessions', type: 'number', min: 1, max: 200, required: true, value: 10 }, { name: 'fee', label: 'Package fee ₹', type: 'number', min: 0 }, { name: 'start', label: 'Start date', type: 'date', value: todayLocal() }],
+  onSubmit: async v => { const base = specSum('pkg', pid) || { id: specId('pkg', pid), patientId: pid, kind: 'pkg', created: Date.now(), pkgs: [] }; const pkgs = (base.pkgs || []).map(x => ({ ...x, closed: true })); pkgs.push({ id: uid('pk_'), name: v.name.trim(), total: +v.total || 1, fee: +v.fee || 0, start: v.start || todayLocal() }); await saveSpec({ ...base, pkgs, date: todayLocal() }, `Package ${v.name} for ${patientById(pid)?.name}`); render(); } });
+A.sessionForm = (pid, id) => {
+  const x = id ? getById('visits', id) : { date: todayLocal() }; const pk = activePkg(pid); const quick = SESSION_QUICK[settings().specialisation] || SESSION_QUICK.Physiotherapist;
+  formModal({ title: id ? 'Edit session' : 'Session', sub: `${patientById(pid)?.name}${pk && !id ? ` · ${pk.name} (${pk.used + 1}/${pk.total})` : ''}`, fields: [
+    { type: 'html', full: true, html: `<div class="field"><span>${T('Quick pick')}</span><div class="chips">${quick.map(q => `<button type="button" class="chip" onclick="const t=this.form.therapy;t.value=t.value?t.value+', '+this.textContent:this.textContent">${esc(q)}</button>`).join('')}</div></div>` },
+    { name: 'therapy', label: 'Therapy / procedure', value: x.therapy, full: true, required: true }, { name: 'area', label: 'Body part / area', value: x.area, placeholder: 'e.g. Right knee, lower back' }, { name: 'date', label: 'Date', type: 'date', value: x.date },
+    { name: 'painBefore', label: 'Pain before (0–10)', type: 'number', min: 0, max: 10, value: x.painBefore }, { name: 'painAfter', label: 'Pain after (0–10)', type: 'number', min: 0, max: 10, value: x.painAfter },
+    { name: 'note', label: 'Notes / home exercises', type: 'textarea', value: x.note, full: true }],
+    left: id ? `<button type="button" class="btn ghost danger" onclick="A.delSpecLog('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { const base = id ? x : { id: uid('ss_'), patientId: pid, kind: 'session', created: Date.now(), pkgId: pk && pk.left > 0 ? pk.id : '' }; await saveSpec({ ...base, therapy: v.therapy.trim(), area: (v.area || '').trim(), date: v.date || todayLocal(), painBefore: nOr(v.painBefore), painAfter: nOr(v.painAfter), note: (v.note || '').trim() }, `Session for ${patientById(pid)?.name}`); render(); } });
+};
+
+/* ================= 7. Mood scales (PHQ-9, GAD-7) ================= */
+const SCALES = {
+  phq9: { name: 'PHQ-9 (depression)', q: ['Little interest or pleasure in doing things', 'Feeling down, depressed, or hopeless', 'Trouble falling or staying asleep, or sleeping too much', 'Feeling tired or having little energy', 'Poor appetite or overeating', 'Feeling bad about yourself, or that you are a failure or have let yourself or your family down', 'Trouble concentrating on things, such as reading the newspaper or watching television', 'Moving or speaking so slowly that other people could have noticed, or the opposite: being so fidgety or restless that you have been moving around a lot more than usual', 'Thoughts that you would be better off dead, or of hurting yourself in some way'],
+    sev: [[4, 'Minimal', 'good'], [9, 'Mild', ''], [14, 'Moderate', 'warn'], [19, 'Moderately severe', 'bad'], [27, 'Severe', 'bad']] },
+  gad7: { name: 'GAD-7 (anxiety)', q: ['Feeling nervous, anxious, or on edge', 'Not being able to stop or control worrying', 'Worrying too much about different things', 'Trouble relaxing', 'Being so restless that it is hard to sit still', 'Becoming easily annoyed or irritable', 'Feeling afraid, as if something awful might happen'],
+    sev: [[4, 'Minimal', 'good'], [9, 'Mild', ''], [14, 'Moderate', 'warn'], [21, 'Severe', 'bad']] }
+};
+const SCALE_ANS = ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'];
+const sevOf = (k, sc) => SCALES[k].sev.find(([m]) => sc <= m) || SCALES[k].sev.slice(-1)[0];
+function scalesTab(p) {
+  const log = specLog(p.id, 'scale');
+  return specHead('scales', T('Over the last 2 weeks. Fill with the patient, or read the questions to them.'), specCan() ? `<div class="row-flex" style="gap:6px"><button class="btn sm primary" onclick="A.scaleForm('${p.id}','phq9')">PHQ-9</button><button class="btn sm primary" onclick="A.scaleForm('${p.id}','gad7')">GAD-7</button></div>` : '') +
+  ['phq9', 'gad7'].map(k => { const xs = log.filter(x => x.scale === k); if (!xs.length) return ''; const pts = xs.slice().reverse().map(x => ({ x: fmtShort(x.date), y: x.score })); return `<div class="card pad stack-sm" style="margin-top:12px"><b>${T(SCALES[k].name)}</b>${miniLine(pts, SPEC.scales.c, '')}<div class="rows">${xs.map(x => { const [, l, tone] = sevOf(k, x.score); return `<button class="row click" onclick="A.scaleForm('${p.id}','${k}','${x.id}')"><div class="main-col"><b>${x.score}</b><div class="sub">${dShort(x.date)}</div></div>${k === 'phq9' && +x.answers?.[8] > 0 ? pill(T('Item 9 positive'), 'bad') : ''}${pill(T(l), tone)}</button>`; }).join('')}</div></div>`; }).join('') +
+  (log.length ? '' : `<div class="card">${empty('No scale filled yet', 'PHQ-9 for depression and GAD-7 for anxiety. The score and its trend show here.', '', 'mind', SPEC.scales.c)}</div>`);
+}
+A.scaleForm = (pid, k, id) => {
+  const sc = SCALES[k]; const x = id ? getById('visits', id) : { date: todayLocal(), answers: [] };
+  modal(`<form class="form" onsubmit="A.saveScale(event,'${pid}','${k}','${id || ''}')" novalidate>${sheetHead(T(sc.name), patientById(pid)?.name || '')}<div class="sheet-b stack">
+    <p class="small muted">${T('Over the last 2 weeks, how often have you been bothered by the following problems?')}</p>
+    ${sc.q.map((q, i) => `<div class="scale-q"><b>${i + 1}. ${esc(T(q))}</b><div class="chips">${SCALE_ANS.map((a, j) => `<label class="chip-radio"><input type="radio" name="q${i}" value="${j}" ${+x.answers?.[i] === j && x.answers?.[i] !== undefined ? 'checked' : ''} onchange="A.scaleLive(this.form,'${k}')"><span>${j} · ${T(a)}</span></label>`).join('')}</div></div>`).join('')}
+    <div class="scale-total"><span>${T('Score')}</span><b id="scTot">${id ? x.score : 0}</b><span id="scSev"></span></div>
+    ${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: x.date })}
+  </div><footer class="sheet-f">${id ? `<button type="button" class="btn ghost danger" onclick="A.delSpecLog('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`, { wide: true });
+  setTimeout(() => { const f = document.querySelector('#modalRoot form'); if (f) A.scaleLive(f, k); }, 30);
+};
+A.scaleLive = (f, k) => { const n = SCALES[k].q.length; let s = 0; for (let i = 0; i < n; i++) s += +(f.querySelector(`input[name=q${i}]:checked`)?.value || 0); const el = document.getElementById('scTot'); if (el) el.textContent = s; const sv = document.getElementById('scSev'); if (sv) sv.innerHTML = pill(T(sevOf(k, s)[1]), sevOf(k, s)[2]); };
+A.saveScale = (e, pid, k, id) => {
+  e.preventDefault(); const f = e.target; const n = SCALES[k].q.length; const answers = []; for (let i = 0; i < n; i++) { const v = f.querySelector(`input[name=q${i}]:checked`)?.value; if (v === undefined) { toast(`${T('Answer question')} ${i + 1}`, 'bad'); return; } answers.push(+v); }
+  withBtn(e, async () => {
+    const score = answers.reduce((a, b) => a + b, 0); const base = id ? getById('visits', id) : { id: uid('sc_'), patientId: pid, kind: 'scale', created: Date.now() };
+    await saveSpec({ ...base, scale: k, answers, score, date: f.date.value || todayLocal() }, `${SCALES[k].name}: ${score}`); A.closeModal(); render();
+    if (k === 'phq9' && answers[8] > 0) setTimeout(() => toast(T('PHQ-9 item 9 is positive: assess safety today'), 'bad'), 500);
+  });
+};
+
+/* ================= 8. Diet plan + body measurements ================= */
+const DIET_MEALS = [['early', 'Early morning'], ['breakfast', 'Breakfast'], ['mid', 'Mid-morning'], ['lunch', 'Lunch'], ['evening', 'Evening'], ['dinner', 'Dinner'], ['bed', 'Bedtime']];
+const DIET_GOALS = ['Weight loss', 'Weight gain', 'Diabetes control', 'PCOS', 'Thyroid', 'Heart health', 'Kidney diet', 'Pregnancy', 'Sports / muscle gain', 'General healthy eating'];
+function dietTab(p) {
+  const s = specSum('diet', p.id); const body = specLog(p.id, 'body'); const first = body[body.length - 1], last = body[0];
+  const wt = body.slice().reverse().map(x => ({ x: fmtShort(x.date), y: x.weight }));
+  return specHead('diet', s ? `${esc(T(s.goal || ''))}${s.kcal ? ' · ' + s.kcal + ' kcal' : ''}${s.updated ? ' · ' + T('updated') + ' ' + dShort(s.updated) : ''}` : '', specCan() ? `<button class="btn sm primary" onclick="A.dietForm('${p.id}')">${ic('edit')} ${T(s ? 'Edit plan' : 'Make diet plan')}</button>` : '') + `
+    ${last ? `<div class="today-strip"><div><b>${last.weight ?? '—'} kg</b><span>${T('Weight')}${first && first !== last && last.weight && first.weight ? ` (${(last.weight - first.weight > 0 ? '+' : '') + (last.weight - first.weight).toFixed(1)})` : ''}</span></div><div><b>${last.waist ?? '—'} cm</b><span>${T('Waist')}</span></div><div><b>${last.fat ?? '—'}%</b><span>${T('Body fat')}</span></div></div>` : ''}
+    ${wt.length > 1 ? `<div class="card pad"><b class="small">${T('Weight')} (kg)</b>${miniLine(wt, SPEC.diet.c, '')}</div>` : ''}
+    ${s ? `<div class="card pad stack-sm" style="margin-top:12px"><div class="row-flex" style="justify-content:space-between"><b>${T('Diet plan')}</b><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.dietPrint('${p.id}')">${ic('print')}</button>${p.phone ? waBtn(dietText(p, s), p.phone, T('Send'), 'btn sm wa') : ''}</div></div>
+      <div class="meal-list">${DIET_MEALS.filter(([k]) => s.meals?.[k]).map(([k, l]) => `<div><span>${T(l)}</span><p>${esc(s.meals[k])}</p></div>`).join('')}</div>${[s.water ? `${T('Water')}: ${s.water} L` : '', s.protein ? `${T('Protein')}: ${s.protein} g` : ''].filter(Boolean).length ? `<div class="small">${[s.water ? `${T('Water')}: ${s.water} L` : '', s.protein ? `${T('Protein')}: ${s.protein} g` : ''].filter(Boolean).join(' · ')}</div>` : ''}${s.avoid ? `<div class="small"><b>${T('Avoid')}:</b> ${esc(s.avoid)}</div>` : ''}${s.notes ? `<div class="small muted">${esc(s.notes)}</div>` : ''}</div>` : `<div class="card">${empty('No diet plan yet', 'Write the meal plan once, then send it on WhatsApp or print it.', '', 'utensils', SPEC.diet.c)}</div>`}
+    <div class="sec-h"><h2>${T('Body measurements')}</h2>${specCan() ? `<button class="btn sm primary" onclick="A.bodyForm('${p.id}')">${ic('plus')} ${T('Add')}</button>` : ''}</div>
+    <div class="card">${body.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>${T('Date')}</th><th>${T('Weight')}</th><th>${T('Waist')}</th><th>${T('Hip')}</th><th>${T('Body fat')}</th><th></th></tr></thead><tbody>${body.map(x => `<tr><td>${dShort(x.date)}</td><td>${x.weight ?? '—'}</td><td>${x.waist ?? '—'}</td><td>${x.hip ?? '—'}</td><td>${x.fat ?? '—'}</td><td>${specCan() ? `<button class="icon-btn" aria-label="Edit" onclick="A.bodyForm('${p.id}','${x.id}')">${ic('edit')}</button>` : ''}</td></tr>`).join('')}</tbody></table></div>` : `<p class="small muted dept-note" style="padding-top:12px">${T('No measurement yet.')}</p>`}</div>`;
+}
+const dietText = (p, s) => `${p.name} ji · ${T('Diet plan')} (${settings().bizName})\n${T(s.goal || '')}${s.kcal ? ' · ' + s.kcal + ' kcal' : ''}\n\n${DIET_MEALS.filter(([k]) => s.meals?.[k]).map(([k, l]) => `*${T(l)}:* ${s.meals[k]}`).join('\n')}${s.water ? `\n\n💧 ${T('Water')}: ${s.water} L` : ''}${s.avoid ? `\n🚫 ${T('Avoid')}: ${s.avoid}` : ''}${s.notes ? `\n\n${s.notes}` : ''}`;
+A.dietForm = pid => {
+  const s = specSum('diet', pid) || { meals: {} };
+  formModal({ title: 'Diet plan', sub: patientById(pid)?.name, wide: true, fields: [
+    { name: 'goal', label: 'Goal', type: 'select', options: ['', ...DIET_GOALS], value: s.goal }, { name: 'kcal', label: 'Calories per day', type: 'number', min: 0, value: s.kcal },
+    { name: 'protein', label: 'Protein (g/day)', type: 'number', min: 0, value: s.protein }, { name: 'water', label: 'Water (litres/day)', type: 'number', step: '0.5', min: 0, value: s.water },
+    ...DIET_MEALS.map(([k, l]) => ({ name: 'm_' + k, label: l, type: 'textarea', rows: 2, value: s.meals?.[k] || '', full: true })),
+    { name: 'avoid', label: 'Avoid', value: s.avoid, full: true, placeholder: 'e.g. Sugar, maida, fried snacks' }, { name: 'notes', label: 'Notes', type: 'textarea', value: s.notes, full: true }],
+    onSubmit: async v => { const base = specSum('diet', pid) || { id: specId('diet', pid), patientId: pid, kind: 'diet', created: Date.now() }; const meals = Object.fromEntries(DIET_MEALS.map(([k]) => [k, (v['m_' + k] || '').trim()]));
+      await saveSpec({ ...base, goal: v.goal, kcal: nOr(v.kcal), protein: nOr(v.protein), water: nOr(v.water), meals, avoid: (v.avoid || '').trim(), notes: (v.notes || '').trim(), updated: todayLocal(), date: todayLocal() }, `Diet plan for ${patientById(pid)?.name}`); render(); } });
+};
+A.dietPrint = pid => { const p = patientById(pid); const s = specSum('diet', pid); clinicPrint(p, 'Diet plan', `<p><b>${esc(s.goal || '')}</b>${s.kcal ? ' · ' + s.kcal + ' kcal/day' : ''}${s.protein ? ' · protein ' + s.protein + ' g' : ''}${s.water ? ' · water ' + s.water + ' L' : ''}</p><table><tbody>${DIET_MEALS.filter(([k]) => s.meals?.[k]).map(([k, l]) => `<tr><th style="width:150px">${l}</th><td>${esc(s.meals[k]).replace(/\n/g, '<br>')}</td></tr>`).join('')}</tbody></table>${s.avoid ? `<p><b>Avoid:</b> ${esc(s.avoid)}</p>` : ''}${s.notes ? `<p>${esc(s.notes)}</p>` : ''}`); };
+A.bodyForm = (pid, id) => { const x = id ? getById('visits', id) : { date: todayLocal() }; formModal({ title: 'Body measurements', sub: patientById(pid)?.name, fields: [{ name: 'date', label: 'Date', type: 'date', value: x.date }, { name: 'weight', label: 'Weight (kg)', type: 'number', step: '0.1', value: x.weight }, { name: 'waist', label: 'Waist (cm)', type: 'number', step: '0.5', value: x.waist }, { name: 'hip', label: 'Hip (cm)', type: 'number', step: '0.5', value: x.hip }, { name: 'fat', label: 'Body fat (%)', type: 'number', step: '0.1', value: x.fat }],
+  left: id ? `<button type="button" class="btn ghost danger" onclick="A.delSpecLog('${id}')">${ic('trash')}</button>` : '',
+  onSubmit: async v => { const base = id ? x : { id: uid('bd_'), patientId: pid, kind: 'body', created: Date.now() }; await saveSpec({ ...base, date: v.date || todayLocal(), weight: nOr(v.weight), waist: nOr(v.waist), hip: nOr(v.hip), fat: nOr(v.fat) }, `Measurements for ${patientById(pid)?.name}`); render(); } }); };
+
+/* ---------- quick words in the visit form, per speciality ---------- */
+const SPEC_QUICK = {
+  dental: ['Toothache', 'Sensitivity', 'Bleeding gums', 'Swelling', 'Broken tooth', 'Dental caries', 'Gingivitis', 'Periapical abscess', 'Impacted wisdom tooth'],
+  eye: ['Blurred vision', 'Redness', 'Watering', 'Itching', 'Headache on reading', 'Myopia', 'Presbyopia', 'Cataract', 'Conjunctivitis', 'Dry eye', 'Glaucoma suspect'],
+  onco: ['Fatigue', 'Nausea', 'Vomiting', 'Mouth ulcers', 'Fever after chemo', 'Pain', 'Loss of appetite', 'Neuropathy'],
+  preg: ['Routine ANC', 'Nausea / vomiting', 'Bleeding PV', 'Pain abdomen', 'Reduced fetal movements', 'Swelling feet', 'Anaemia', 'GDM', 'PIH'],
+  child: ['Fever', 'Cough & cold', 'Loose motions', 'Vomiting', 'Not eating well', 'Rash', 'Vaccination visit', 'Growth check'],
+  sessions: ['Knee pain', 'Back pain', 'Neck pain', 'Frozen shoulder', 'Sciatica', 'Post-surgery rehab', 'Sports injury'],
+  scales: ['Low mood', 'Anxiety', 'Poor sleep', 'Panic attacks', 'Stress', 'Follow-up review'],
+  diet: ['Weight loss', 'Weight gain', 'Diabetes diet', 'PCOS diet', 'Thyroid diet', 'Follow-up']
+};
+const _visitFormSpec = A.visitForm;
+A.visitForm = (...a) => {
+  _visitFormSpec(...a); const words = [...new Set(specTools().flatMap(k => SPEC_QUICK[k] || []))]; if (!words.length) return;
+  const ta = document.querySelector('#modalRoot textarea[name=complaint]'); const fld = ta?.closest('.field'); if (!fld) return;
+  const box = document.createElement('div'); box.className = 'field';
+  box.innerHTML = `<span>${T('Quick words')}</span><div class="chips">${words.map(w => `<button type="button" class="chip" data-w="${esc(w)}">${esc(T(w))}</button>`).join('')}</div>`;
+  box.addEventListener('click', ev => { const b = ev.target.closest('button[data-w]'); if (!b) return; const w = T(b.dataset.w); ta.value = ta.value ? ta.value.replace(/[,\s]*$/, '') + ', ' + w : w; ta.focus(); });
+  fld.parentNode.insertBefore(box, fld);
+};
+
+/* ---------- Settings: choose the tools ---------- */
+function specSettingsCard() {
+  const st = settings(); const on = new Set(specTools()); const edit = can('settings', 2);
+  const tests = (SPEC_TESTS[st.specialisation] || []).filter(([n]) => !(st.tests || []).some(t => String(t.name).toLowerCase() === n.toLowerCase()));
+  return `<div class="card pad stack-sm"><h3>${ic('steth')} ${T('Tools for your speciality')}${info('c-spec')}</h3><p class="small muted">${T('These show as tabs on every patient page. Pick the ones you use; a clinic can use more than one.')}</p>
+    <div class="spec-pick">${Object.entries(SPEC).map(([k, t]) => `<label class="spec-opt" style="--c:${t.c}"><input type="checkbox" value="${k}" ${on.has(k) ? 'checked' : ''} ${edit ? `onchange="A.specToggle('${k}',this.checked)"` : 'disabled'}>${ibox(t.icon, t.c, 'sm')}<span><b>${T(t.label)}</b><small>${T(t.long)}</small></span></label>`).join('')}</div>
+    ${tests.length && edit ? `<div class="banner">${ic('plus')}<span class="grow">${T('Readings used by')} ${esc(T(st.specialisation))}: ${tests.map(t => esc(t[0])).join(', ')}</span><button class="btn sm primary" onclick="A.addSpecTests()">${T('Add them')}</button></div>` : ''}</div>`;
+}
+A.specToggle = async (k, on) => { const cur = new Set(specTools()); if (on) cur.add(k); else cur.delete(k); try { await saveSettingsRec({ specTools: [...cur] }); toast(on ? T('Tool turned on') : T('Tool turned off')); render(); } catch (e) { toast(e.message, 'bad'); } };
+A.addSpecTests = async () => {
+  const st = settings(); const have = st.tests || []; const add = (SPEC_TESTS[st.specialisation] || []).filter(([n]) => !have.some(t => String(t.name).toLowerCase() === n.toLowerCase()));
+  const tests = [...have, ...add.map(([name, unit]) => ({ key: 't_' + Math.random().toString(36).slice(2, 8), name, unit, type: 'number' }))];
+  const rules = { ...(st.rules || {}) }; tests.slice(have.length).forEach((t, i) => { const r = add[i][2]; if (r && Object.keys(r).length) rules[t.key] = r; });
+  try { await saveSettingsRec({ tests, rules }); toast(`${add.length} ${T('readings added')}`); render(); } catch (e) { toast(e.message, 'bad'); }
+};
+const _clinicSettingsSpec = clinicSettings;
+clinicSettings = () => _clinicSettingsSpec().replace('<form class="card" onsubmit="A.saveClinicSettings(event)">', specSettingsCard() + '<form class="card" onsubmit="A.saveClinicSettings(event)">');
+const _clinicHomeSpec = clinicHome;
+clinicHome = () => { const h = _clinicHomeSpec(); const d = dueCard(); if (!d) return h; const i = h.indexOf('<div class="sec-h"><h2>Today’s queue'); return i > 0 ? h.slice(0, i) + d + h.slice(i) : h + d; };
+
+/* ---------- demo data for the speciality tools that are turned on ---------- */
+function specDemo(add, P, dD) {
+  const on = new Set(specTools()); const id = p => 'dm_' + p + '_' + Math.random().toString(36).slice(2, 8); const [P1, P2, P3, P4, P5] = P;
+  const v = r => add('visits', { created: Date.now(), ...r });
+  if (on.has('dental')) v({ id: specId('dental', P2.id), patientId: P2.id, kind: 'dental', date: dD(-7), child: false, teeth: { 16: { st: 'caries', note: 'Deep, sensitive to cold' }, 26: { st: 'rct' }, 36: { st: 'missing' }, 46: { st: 'filled' }, 48: { st: 'extract', note: 'Impacted wisdom tooth' } },
+    plan: [{ id: id('tp'), teeth: '16', proc: 'Root canal (RCT)', fee: 4500, status: 'doing', note: '2nd sitting due' }, { id: id('tp'), teeth: '16', proc: 'Crown – zirconia', fee: 10000, status: 'planned' }, { id: id('tp'), teeth: '36', proc: 'Implant', fee: 25000, status: 'planned' }, { id: id('tp'), teeth: '48', proc: 'Wisdom tooth surgery', fee: 3500, status: 'planned' }, { id: id('tp'), teeth: '', proc: 'Scaling & polishing', fee: 800, status: 'done', doneOn: dD(-7) }] });
+  if (on.has('eye')) { v({ id: id('ey'), patientId: P3.id, kind: 'eye', date: dD(-180), va: { r: '6/12', l: '6/9' }, bcva: { r: '6/6', l: '6/6' }, near: { r: 'N8', l: 'N8' }, iop: { r: 18, l: 19 }, rx: { r: { sph: -1.25, cyl: -0.5, axis: 180, add: 1.5 }, l: { sph: -1, cyl: '', axis: '', add: 1.5 } }, diagnosis: 'Myopia with presbyopia', advice: 'Bifocal glasses' });
+    v({ id: id('ey'), patientId: P3.id, kind: 'eye', date: dD(-2), next: dD(5), va: { r: '6/18', l: '6/12' }, bcva: { r: '6/9', l: '6/6' }, near: { r: 'N10', l: 'N8' }, iop: { r: 23, l: 20 }, rx: { r: { sph: -1.5, cyl: -0.75, axis: 175, add: 2 }, l: { sph: -1.25, cyl: -0.25, axis: 10, add: 2 } }, findings: 'Early nuclear sclerosis both eyes', diagnosis: 'Early cataract, glaucoma suspect (right)', advice: 'New glasses. Repeat IOP and field test in 1 week.' }); }
+  if (on.has('onco')) { v({ id: specId('onco', P1.id), patientId: P1.id, kind: 'onco', date: dD(-70), site: 'Oral cavity (left buccal mucosa)', histology: 'Squamous cell carcinoma', stage: 'III', tnm: 'T3 N1 M0', diagDate: dD(-80), markers: '', ecog: '1', intent: 'Curative', regimen: 'Cisplatin + 5-FU', cycles: 6, interval: 21, height: 168 });
+    [[-63, 1, 84, 12.1, 6.2, 210], [-42, 2, 83, 11.0, 5.1, 180], [-21, 3, 82, 9.6, 4.2, 150], [0, 4, 81, 7.8, 2.6, 92]].forEach(([n, c, w, hb, wbc, plt]) => v({ id: id('cy'), patientId: P1.id, kind: 'cycle', type: 'Chemo cycle', cycleNo: c, date: dD(n), nextDate: dD(n + 21), weight: w, bsa: bsaOf(168, w), drugs: 'Cisplatin 75 mg/m²\n5-FU 750 mg/m² × 4 days', hb, wbc, anc: '', plt, effects: c > 2 ? 'Nausea, mouth ulcers' : 'Mild nausea', grade: c > 2 ? '2' : '1' })); }
+  if (on.has('preg')) { v({ id: specId('preg', P4.id), patientId: P4.id, kind: 'preg', date: dD(-140), lmp: dD(-168), g: 2, p: 1, a: 0, l: 1, blood: 'B+', risk: 'Previous C-section', steps: { dating: dD(-120), nt: dD(-80), td1: dD(-100), ifa: dD(-70), anomaly: dD(-25) } });
+    [[-120, 52, 110, 70, ''], [-80, 54, 112, 72, 152], [-50, 56.5, 118, 76, 148], [-20, 58.2, 122, 80, 146]].forEach(([n, w, s, d, f]) => v({ id: id('an'), patientId: P4.id, kind: 'anc', date: dD(n), ga: gaText(pregGA({ lmp: dD(-168) }, dD(n))), weight: w, sys: s, dia: d, fhr: f, fundal: n > -60 ? 24 + (n + 50) / 10 : '', hb: 10.8, urine: 'Nil / Nil' })); }
+  if (on.has('child')) { v({ id: specId('child', P5.id), patientId: P5.id, kind: 'child', date: dD(-30), dob: dD(-2950), birthWeight: 3.0, given: Object.fromEntries(VACCINES.filter(([d]) => d <= 1643).map(([d, n]) => [vKey(n), dD(-2950 + d + 2)])) });
+    [[-700, 18.5, 108], [-365, 21, 116], [-30, 23.5, 122]].forEach(([n, w, h]) => v({ id: id('gr'), patientId: P5.id, kind: 'growth', date: dD(n), weight: w, height: h, hc: '' })); }
+  if (on.has('sessions')) { const pk = id('pk'); v({ id: specId('pkg', P2.id), patientId: P2.id, kind: 'pkg', date: dD(-20), pkgs: [{ id: pk, name: 'Knee physio – 10 sessions', total: 10, fee: 5000, start: dD(-20) }] });
+    [[-20, 8, 6], [-17, 7, 6], [-14, 7, 5], [-10, 6, 4], [-6, 5, 3], [-2, 4, 2]].forEach(([n, a, b]) => v({ id: id('ss'), patientId: P2.id, kind: 'session', pkgId: pk, date: dD(n), therapy: 'IFT, Exercises', area: 'Right knee', painBefore: a, painAfter: b, note: '' })); }
+  if (on.has('scales')) [[-56, 18, [2, 2, 3, 2, 2, 2, 2, 2, 1]], [-28, 12, [2, 1, 2, 2, 1, 1, 2, 1, 0]], [-1, 7, [1, 1, 1, 1, 1, 1, 1, 0, 0]]].forEach(([n, sc, ans]) => v({ id: id('sc'), patientId: P2.id, kind: 'scale', scale: 'phq9', date: dD(n), answers: ans, score: sc }));
+  if (on.has('diet')) { v({ id: specId('diet', P2.id), patientId: P2.id, kind: 'diet', date: dD(-30), updated: dD(-30), goal: 'Weight loss', kcal: 1400, protein: 60, water: 3, meals: { early: 'Warm water with lemon, 5 soaked almonds', breakfast: 'Vegetable poha or 2 besan chilla + curd', mid: '1 fruit (apple / guava)', lunch: '2 multigrain roti, dal, sabzi, salad', evening: 'Green tea + roasted chana', dinner: '1 roti or daliya, sabzi, paneer / dal', bed: 'Haldi milk (toned)' }, avoid: 'Sugar, maida, fried snacks, cold drinks', notes: 'Walk 40 minutes daily.' });
+    [[-30, 78.5, 96, 104, 36], [-15, 77.0, 94, 103, 35], [-1, 75.4, 92, 101, 34]].forEach(([n, w, wa, h, f]) => v({ id: id('bd'), patientId: P2.id, kind: 'body', date: dD(n), weight: w, waist: wa, hip: h, fat: f })); }
+}
+
+/* ================= Clinic business side: Staff & salary, Expenses, Income & expenses, Marketing =================
+   The event versions of these pages are about crew duties, bookings and events; clinics get their own versions on the
+   same collections (staff, attendance, advances, payouts, expenses), switched by isClinic().
+   Clinic staff are paid a monthly salary: salary − (absent days + half days ÷ 2 + leaves above the free ones) × salary ÷ days
+   in month + bonus − advance. Income = appointment fees received (appts.paid). */
+const CLINIC_STAFF_ROLES = ['Receptionist', 'Nurse', 'Compounder / Pharmacist', 'Assistant', 'Lab technician', 'Dental assistant', 'Optometrist', 'Physiotherapist', 'Cleaner / Ward boy', 'Visiting doctor', 'Other'];
+const CLINIC_EXP = ['Rent', 'Electricity & water', 'Medicines & consumables', 'Lab tests (outside)', 'Equipment & repair', 'Staff tea & food', 'Marketing & ads', 'Phone, internet & software', 'Cleaning & laundry', 'Misc'];
+const CEXP_STYLE = { 'Rent': ['building', '#7C3AED'], 'Electricity & water': ['bolt', '#F59E0B'], 'Medicines & consumables': ['drop', '#E11D48'], 'Lab tests (outside)': ['file', '#0891B2'], 'Equipment & repair': ['wrench', '#64748B'], 'Staff tea & food': ['pot', '#16A34A'], 'Marketing & ads': ['megaphone', '#9333EA'], 'Phone, internet & software': ['globe', '#2563EB'], 'Cleaning & laundry': ['sparkle', '#0D9488'], 'Misc': ['dots', '#94A3B8'], 'Staff salary': ['users', '#0D9488'] };
+const ATT_ST = [['P', 'Present', 'good'], ['H', 'Half day', 'warn'], ['L', 'Leave', 'info'], ['A', 'Absent', 'bad']];
+const dim = m => new Date(+m.slice(0, 4), +m.slice(5, 7), 0).getDate();
+function salaryOf(s, month) {
+  const att = col('attendance').filter(a => a.staffId === s.id && (a.date || '').startsWith(month)); const c = k => att.filter(a => a.status === k).length;
+  const days = dim(month); let base = +s.salary || 0;
+  if (s.joinDate && s.joinDate.slice(0, 7) === month) base = Math.round(base * (days - (+s.joinDate.slice(8, 10) - 1)) / days);
+  if (s.joinDate && s.joinDate.slice(0, 7) > month) base = 0;
+  const perDay = (+s.salary || 0) / days; const free = s.leaves === '' || s.leaves == null ? 2 : +s.leaves;
+  const r = { P: c('P'), H: c('H'), L: c('L'), A: c('A') }; r.paidL = Math.min(r.L, free); r.cutDays = r.A + r.H * 0.5 + Math.max(0, r.L - free);
+  r.base = base; r.cut = Math.round(perDay * r.cutDays);
+  const money = col('advances').filter(a => a.staffId === s.id && (a.date || '').startsWith(month));
+  r.adv = sum(money.filter(x => smKind(x) === 'advance'), x => x.amount); r.bonus = sum(money.filter(x => smKind(x) === 'bonus'), x => x.amount);
+  r.net = Math.max(0, r.base - r.cut + r.bonus - r.adv); r.cost = Math.max(0, r.base - r.cut + r.bonus); return r;
+}
+/* the running month counts salary only up to today, so mid-month profit is not shown as a big loss */
+const salaryCost = month => { const t = todayLocal(); const k = month === t.slice(0, 7) ? +t.slice(8, 10) / dim(month) : month > t.slice(0, 7) ? 0 : 1; return Math.round(sum(col('staff'), s => salaryOf(s, month).cost) * k); };
+
+/* ---------- Staff & salary ---------- */
+function clinicStaff() {
+  const tab = S.params.tab || 'roster'; const edit = can('staff', 2); const seeMoney = edit || can('reports');
+  const head = pageHead('Staff & salary', 'Your team, daily attendance, monthly salary, advances and salary slips.', edit ? `<button class="btn" onclick="A.cMoneyForm()">${ic('rupee')} ${T('Advance / bonus')}</button><button class="btn primary" onclick="A.cStaffForm()">${ic('plus')} ${T('Add staff')}</button>` : '');
+  const tabs = `<div class="tabs">${[['roster', 'Team'], ['attendance', 'Attendance'], ...(seeMoney ? [['salary', 'Salary'], ['money', 'Advances & bonus']] : [])].map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${T(l)}</button>`).join('')}${tabHelp('cs-' + tab)}</div>`;
+  const staff = col('staff').slice().sort(by('name'));
+  if (!staff.length) return head + `<div class="card">${empty('No staff added yet', 'Add your receptionist, nurse, compounder and other staff with their monthly salary. Then mark attendance daily; salary is worked out by itself.', edit ? `<button class="btn primary" onclick="A.cStaffForm()">${ic('plus')} ${T('Add staff')}</button>` : '', 'users', MOD.staff.c)}</div>`;
+  if (tab === 'attendance') {
+    const date = S.filters.attDate || todayLocal(); const cnt = k => staff.filter(s => (getById('attendance', date + '_' + s.id) || {}).status === k).length;
+    return head + tabs + `<div class="toolbar"><input type="date" style="width:auto" value="${date}" onchange="A.setF('attDate',this.value)">${ATT_ST.map(([k, l, tone]) => pill(cnt(k) + ' ' + T(l), tone)).join('')}${edit ? `<button class="btn sm" onclick="A.markAll('${date}')">${T('Mark all present')}</button>` : ''}</div>
+    <div class="card"><div class="rows">${staff.map(s => { const a = getById('attendance', date + '_' + s.id) || {}; return `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(s.name))}</div><div class="main-col" style="min-width:130px"><b>${esc(s.name)}</b><div class="sub">${esc(T(s.role || ''))}</div></div><div class="att-chips">${ATT_ST.map(([k, l, tone]) => `<button class="att ${a.status === k ? 'on ' + tone : ''}" ${edit ? `onclick="A.mark('${s.id}','${date}','${k}',null)"` : 'disabled'}>${T(l)}</button>`).join('')}</div></div>`; }).join('')}</div></div>
+    <p class="tiny muted" style="margin-top:8px">${T('Leave: the first free leaves in a month are paid (set per person). Absent and extra leave days are cut from salary.')}</p>`;
+  }
+  if (tab === 'salary' && seeMoney) {
+    const month = S.filters.payMonth || todayLocal().slice(0, 7); const rows = staff.map(s => ({ s, r: salaryOf(s, month), paid: getById('payouts', month + '_' + s.id) }));
+    return head + tabs + `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('payMonth',this.value)"><b class="num">${T('Total')} ${inr(sum(rows, x => x.r.net))}</b></div>
+    <div class="card"><div class="tbl-wrap"><table class="tbl sal-tbl"><thead><tr><th>${T('Staff')}</th><th class="r">${T('Present')}</th><th class="r">${T('Half')}</th><th class="r">${T('Leave')}</th><th class="r">${T('Absent')}</th><th class="r">${T('Salary')}</th><th class="r">${T('Cut')}</th><th class="r">${T('Bonus')}</th><th class="r">${T('Advance')}</th><th class="r">${T('To pay')}</th><th></th></tr></thead><tbody>
+    ${rows.map(({ s, r, paid }) => `<tr><td><b>${esc(s.name)}</b><div class="tiny muted">${esc(T(s.role || ''))} · ${inr(s.salary)}/${T('month')}</div></td><td class="r">${r.P}</td><td class="r">${r.H}</td><td class="r">${r.L}${r.L ? ` <span class="tiny muted">(${r.paidL} ${T('paid')})</span>` : ''}</td><td class="r">${r.A}</td><td class="r">${inr(r.base)}</td><td class="r" style="color:var(--bad)">${r.cut ? '− ' + inr(r.cut) : '—'}</td><td class="r">${r.bonus ? '+ ' + inr(r.bonus) : '—'}</td><td class="r" style="color:var(--bad)">${r.adv ? '− ' + inr(r.adv) : '—'}</td><td class="r"><b>${inr(r.net)}</b></td>
+      <td class="r"><div class="row-flex" style="gap:6px;justify-content:flex-end;flex-wrap:nowrap">${paid ? pill(T('Paid') + ' ' + dShort(paid.date), 'good') : edit ? `<button class="btn sm primary" onclick="A.payout('${s.id}','${month}',${r.net})">${T('Mark paid')}</button>` : ''}${s.phone ? waBtn(slipText(s, r, month), s.phone, T('Slip'), 'btn sm wa') : ''}</div></td></tr>`).join('')}
+    </tbody></table></div></div><p class="tiny muted" style="margin-top:8px">${T('To pay = salary − cut for absent / half days / extra leave + bonus − advance. A person who joined this month gets salary from the joining day.')}</p>`;
+  }
+  if (tab === 'money' && seeMoney) {
+    const month = S.filters.cmMonth || todayLocal().slice(0, 7); const list = col('advances').filter(x => (x.date || '').startsWith(month)).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    return head + tabs + `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('cmMonth',this.value)">${pill(T('Advance') + ' ' + inr(sum(list.filter(x => smKind(x) === 'advance'), x => x.amount)), 'warn')}${pill(T('Bonus') + ' ' + inr(sum(list.filter(x => smKind(x) === 'bonus'), x => x.amount)), 'primary')}</div>
+    <div class="card"><div class="rows">${list.map(x => { const s = getById('staff', x.staffId); const k = smKind(x); return `<div class="row ${edit ? 'click' : ''}" ${edit ? `onclick="A.cMoneyForm('${x.id}')"` : ''}>${ibox(k === 'bonus' ? 'gift' : 'rupee', k === 'bonus' ? '#DB2777' : '#EA580C')}<div class="main-col"><b>${esc(s?.name || '—')}</b><div class="sub">${dShort(x.date)}${x.note ? ' · ' + esc(x.note) : ''}</div></div>${pill(T(k === 'bonus' ? 'Bonus' : 'Advance'), k === 'bonus' ? 'primary' : 'warn')}<b class="num">${inr(x.amount)}</b></div>`; }).join('') || empty('Nothing this month', 'Advances are cut from the salary; bonus is added.')}</div></div>`;
+  }
+  const t = todayLocal(); const month = t.slice(0, 7);
+  return head + tabs + `<div class="grid g-auto">${staff.map(s => { const a = getById('attendance', t + '_' + s.id); const st = ATT_ST.find(x => x[0] === a?.status); const linked = S.members.find(m => m.staffId === s.id); const r = salaryOf(s, month);
+    return `<div class="card pad stack-sm"><div class="row-flex" style="flex-wrap:nowrap"><div class="avatar">${esc(initials(s.name))}</div><div style="min-width:0;flex:1"><b>${esc(s.name)}</b><div class="tiny muted">${esc(T(s.role || ''))}${s.phone ? ' · ' + esc(s.phone) : ''}</div></div>${st ? pill(T(st[1]), st[2]) : pill(T('Not marked'), '')}</div>
+      <div class="row-flex small" style="justify-content:space-between"><span class="muted">${seeMoney ? inr(s.salary) + '/' + T('month') + ' · ' : ''}${r.P} ${T('days present this month')}</span>${linked ? pill(T('App login'), 'primary') : ''}</div>
+      <div class="row-flex">${s.phone ? `<a class="btn sm" href="tel:${esc(String(s.phone).replace(/\D/g, '').slice(-10))}">${ic('phone')}</a>${waBtn('', s.phone, 'WhatsApp')}` : ''}${edit ? `<button class="btn sm ghost" onclick="A.cStaffForm('${s.id}')">${ic('edit')} ${T('Edit')}</button>` : ''}</div></div>`; }).join('')}</div>`;
+}
+const slipText = (s, r, month) => { const m = new Date(month + '-01T00:00').toLocaleDateString(I18N.lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' }); return `${settings().bizName} · ${T('Salary slip')} ${m}\n${s.name} (${T(s.role || '')})\n${T('Present')} ${r.P} · ${T('Half day')} ${r.H} · ${T('Leave')} ${r.L} · ${T('Absent')} ${r.A}\n${T('Salary')}: ${inr(r.base)}${r.cut ? `\n${T('Cut')}: − ${inr(r.cut)}` : ''}${r.bonus ? `\n${T('Bonus')}: + ${inr(r.bonus)}` : ''}${r.adv ? `\n${T('Advance')}: − ${inr(r.adv)}` : ''}\n*${T('To pay')}: ${inr(r.net)}*`; };
+A.cStaffForm = id => {
+  const s = id ? getById('staff', id) : { role: 'Receptionist', leaves: 2, joinDate: todayLocal() };
+  formModal({ title: id ? 'Edit staff' : 'Add staff', fields: [
+    { name: 'name', label: 'Name', required: true, value: s.name }, { name: 'phone', label: 'Mobile', type: 'tel', value: s.phone },
+    { name: 'role', label: 'Work', type: 'select', options: CLINIC_STAFF_ROLES.map(r => [r, T(r)]), value: s.role }, { name: 'salary', label: 'Monthly salary ₹', type: 'number', min: 0, required: true, value: s.salary },
+    { name: 'leaves', label: 'Free leaves per month', type: 'number', min: 0, max: 31, value: s.leaves ?? 2, hint: 'Leaves up to this number are paid' }, { name: 'joinDate', label: 'Joining date', type: 'date', value: s.joinDate }],
+    left: id && can('staff', 3) ? `<button type="button" class="btn danger" onclick="A.delStaff('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { await save('staff', Object.assign(id ? s : { id: uid('st_') }, v, { salary: +v.salary || 0, leaves: v.leaves === '' ? 2 : +v.leaves, payType: 'month' }), `${id ? 'Updated' : 'Added'} staff ${v.name}`); render(); } });
+};
+A.cMoneyForm = (id, sid) => {
+  if (!col('staff').length) { toast('Add your staff first', 'warn'); A.cStaffForm(); return; }
+  const x = id ? getById('advances', id) : { kind: 'advance', staffId: sid || '', date: todayLocal() };
+  formModal({ title: id ? 'Edit entry' : 'Advance / bonus', fields: [
+    { name: 'staffId', label: 'Staff', type: 'select', options: col('staff').map(s => [s.id, s.name]), value: x.staffId, required: true, full: true },
+    { name: 'kind', label: 'Type', type: 'select', options: [['advance', T('Advance (cut from salary)')], ['bonus', T('Bonus (added to salary)')]], value: smKind(x) },
+    { name: 'amount', label: 'Amount ₹', type: 'number', min: 1, required: true, value: x.amount }, { name: 'date', label: 'Date', type: 'date', value: x.date }, { name: 'note', label: 'Note', value: x.note, full: true }],
+    left: id && can('staff', 3) ? `<button type="button" class="btn danger" onclick="A.delCrewMoney('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { const s = getById('staff', v.staffId); await save('advances', Object.assign(id ? x : { id: uid('ad_') }, v, { amount: +v.amount }), `${v.kind === 'bonus' ? 'Bonus' : 'Advance'} ${inr(v.amount)} to ${s?.name}`); render(); } });
+};
+
+/* ---------- Expenses ---------- */
+function clinicExpenses() {
+  const month = S.filters.expMonth || todayLocal().slice(0, 7); const edit = can('expenses', 2);
+  const list = col('expenses').filter(x => (x.date || '').startsWith(month)).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const sal = can('staff') || can('reports') ? salaryCost(month) : 0; const lines = [...list.map(x => ({ cat: x.category, amount: +x.amount || 0 })), ...(sal ? [{ cat: 'Staff salary', amount: sal }] : [])];
+  const tot = sum(lines, x => x.amount); const cats = [...new Set(lines.map(x => x.cat))].map(c => [c, sum(lines.filter(x => x.cat === c), x => x.amount)]).sort((a, b) => b[1] - a[1]);
+  const style = c => CEXP_STYLE[c] || CEXP_STYLE.Misc;
+  return pageHead('Expenses', 'Rent, bills, medicines, equipment and every other clinic cost. Staff salary comes from Staff by itself.', edit ? `<button class="btn primary" onclick="A.cExpForm()">${ic('plus')} ${T('Add expense')}</button>` : '') +
+  `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('expMonth',this.value)"><b class="num">${inr(tot)} ${T('this month')}</b></div>
+  <div class="split"><div class="card"><div class="rows">${sal ? `<button class="row click" onclick="A.go('staff',{tab:'salary'})">${ibox('users', '#0D9488')}<div class="main-col"><b>${T('Staff salary')}</b><div class="sub">${T(month === todayLocal().slice(0, 7) ? 'So far this month, from Staff → Salary' : 'From Staff → Salary')}</div></div><b class="num">${inr(sal)}</b></button>` : ''}${list.map(x => { const [i, c] = style(x.category); return `<div class="row ${edit ? 'click' : ''}" ${edit ? `onclick="A.cExpForm('${x.id}')"` : ''}>${ibox(i, c)}<div class="main-col"><b>${esc(T(x.category || 'Misc'))}</b><div class="sub">${dShort(x.date)}${x.mode ? ' · ' + esc(T(x.mode)) : ''}${x.note ? ' · ' + esc(x.note) : ''}</div></div><b class="num">${inr(x.amount)}</b></div>`; }).join('') || (sal ? '' : empty('No expenses this month', 'Add rent, electricity, medicines and other costs.'))}</div></div>
+  <div class="card pad stack-sm"><h3>${T('By category')}</h3>${cats.map(([c, v]) => `<div><div class="row-flex small" style="justify-content:space-between"><span class="row-flex" style="gap:8px">${ibox(style(c)[0], style(c)[1], 'sm')}${esc(T(c))}</span><b class="num">${inr(v)}</b></div>${prog(tot ? v / tot * 100 : 0)}</div>`).join('') || `<span class="muted small">${T('Nothing yet')}</span>`}</div></div>`;
+}
+A.cExpForm = id => {
+  const x = id ? getById('expenses', id) : { date: todayLocal(), category: CLINIC_EXP[0], mode: 'Cash' };
+  formModal({ title: id ? 'Edit expense' : 'Add expense', fields: [{ name: 'category', label: 'Type', type: 'select', options: CLINIC_EXP.map(c => [c, T(c)]), value: x.category }, { name: 'amount', label: 'Amount ₹', type: 'number', min: 1, required: true, value: x.amount },
+    { name: 'date', label: 'Date', type: 'date', value: x.date }, { name: 'mode', label: 'Paid by', type: 'select', options: ['Cash', 'UPI', 'Bank transfer', 'Card', 'Cheque'].map(m => [m, T(m)]), value: x.mode }, { name: 'note', label: 'Note', value: x.note, full: true, placeholder: 'e.g. October rent, BP machine repair' }],
+    left: id && can('expenses', 3) ? `<button type="button" class="btn danger" onclick="A.delExp('${id}')">${ic('trash')}</button>` : '',
+    onSubmit: async v => { await save('expenses', Object.assign(id ? x : { id: uid('x_') }, v, { amount: +v.amount, eventId: '' }), `${id ? 'Updated' : 'Added'} expense ${inr(v.amount)} (${v.category})`); render(); } });
+};
+
+/* ---------- Income & expenses ---------- */
+const feeDay = a => a.paidAt || a.date || '';
+function clinicReports() {
+  const p = S.filters.period || 'month'; const [a, b] = periodRange(p); const t = todayLocal(); const inR = d => d && d >= a && d <= b;
+  const paid = col('appts').filter(x => x.paid && inR(feeDay(x))); const income = sum(paid, x => +x.fee || 0);
+  const visits = col('appts').filter(x => x.status === 'done' && inR(x.date)).length; const newPts = col('patients').filter(x => x.created && inR(todayLocal(new Date(x.created)))).length;
+  const exp = sum(col('expenses').filter(x => inR(x.date)), x => +x.amount || 0);
+  const mlist = []; { let m = (a === '0000-01-01' ? (col('appts').map(feeDay).filter(Boolean).sort()[0] || t) : a).slice(0, 7); const end = (b > t ? t : b).slice(0, 7); let guard = 0; while (m <= end && guard++ < 120) { mlist.push(m); const d = new Date(m + '-01T00:00'); m = todayLocal(new Date(d.getFullYear(), d.getMonth() + 1, 1)).slice(0, 7); } }
+  const sal = sum(mlist, m => salaryCost(m)); const cost = exp + sal; const net = income - cost;
+  const months = []; const base = new Date(t + 'T00:00'); for (let k = 5; k >= 0; k--) months.push(todayLocal(new Date(base.getFullYear(), base.getMonth() - k, 1)).slice(0, 7));
+  const minc = months.map(m => sum(col('appts').filter(x => x.paid && feeDay(x).startsWith(m)), x => +x.fee || 0));
+  const mcost = months.map(m => sum(col('expenses').filter(x => (x.date || '').startsWith(m)), x => +x.amount || 0) + salaryCost(m));
+  const byMode = ['clinic', 'video', 'whatsapp'].map(k => [k, sum(paid.filter(x => (x.mode || 'clinic') === k), x => +x.fee || 0), paid.filter(x => (x.mode || 'clinic') === k).length]).filter(x => x[2]);
+  const byCat = [...new Set(col('expenses').filter(x => inR(x.date)).map(x => x.category))].map(c => [c, sum(col('expenses').filter(x => inR(x.date) && x.category === c), x => +x.amount || 0)]).concat(sal ? [['Staff salary', sal]] : []).sort((x, y) => y[1] - x[1]);
+  const due = sum(col('appts').filter(feeDue), x => +x.fee || 0);
+  return pageHead('Income & expenses', `${fmtDate(a === '0000-01-01' ? null : a)} – ${fmtDate(b === '9999-12-31' || b > t ? t : b)}`, `${seg('period', [['month', 'This month'], ['last', 'Last month'], ['fy', 'This FY'], ['all', 'All time']], p, 'A.setF')}${!FRAMED ? `<button class="btn sm" onclick="A.clinicCSV()">${ic('download')} CSV</button>` : ''}`) +
+  `<div class="kpis">${kpi('Fees received', inr(income), `${paid.length} ${T('payments')} · ${visits} ${T('visits')}`, 'good', 'rupee', '#0B9B68')}${kpi('Expenses', inr(cost), `${T('Bills')} ${inr(exp)} · ${T('Salary')} ${inr(sal)}`, '', 'wallet', '#EA580C')}${kpi('Profit', inr(net), net < 0 ? T('Loss in this period') : income ? (net / income * 100).toFixed(0) + '% ' + T('of fees') : '', net >= 0 ? 'good' : 'bad', 'chart', '#2563EB')}${kpi('Fees to collect', inr(due), `${newPts} ${T('new patients')}`, due ? 'accent' : '', 'clock', '#D97706')}</div>
+  <div class="split"><div class="card pad"><div class="row-flex" style="justify-content:space-between;margin-bottom:8px"><h3>${T('Last 6 months')}</h3><div class="legend"><span><i style="background:var(--primary)"></i>${T('Fees')}</span><span><i style="background:var(--accent)"></i>${T('Expenses')}</span></div></div><div class="chart">${barChart(months, minc, mcost)}</div></div>
+  <div class="card pad stack-sm"><h3>${T('Where the money goes')}</h3>${byCat.map(([c, v]) => `<div><div class="row-flex small" style="justify-content:space-between"><span>${esc(T(c || 'Misc'))}</span><b class="num">${inr(v)}</b></div>${prog(cost ? v / cost * 100 : 0)}</div>`).join('') || `<span class="muted small">${T('Nothing yet')}</span>`}
+    ${byMode.length ? `<h3 style="margin-top:10px">${T('Fees by type')}</h3>${byMode.map(([k, v, n]) => `<div class="row-flex small" style="justify-content:space-between"><span>${T({ clinic: 'In clinic', video: 'Video call', whatsapp: 'WhatsApp call' }[k])} · ${n}</span><b class="num">${inr(v)}</b></div>`).join('')}` : ''}</div></div>`;
+}
+A.clinicCSV = () => {
+  const p = S.filters.period || 'month'; const [a, b] = periodRange(p); const inR = d => d && d >= a && d <= b; const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = [...col('appts').filter(x => x.paid && inR(feeDay(x))).map(x => [feeDay(x), 'Income', 'Fee ' + (x.mode || 'clinic'), x.patientName || '', x.payMode || '', +x.fee || 0]),
+    ...col('expenses').filter(x => inR(x.date)).map(x => [x.date, 'Expense', x.category, x.note || '', x.mode || '', -(+x.amount || 0)])].sort((x, y) => String(x[0]).localeCompare(String(y[0])));
+  downloadFile('clinic-income-expenses.csv', '﻿Date,Type,Head,Details,Mode,Amount\n' + rows.map(r => r.map(q).join(',')).join('\n'), 'text/csv'); logAct('Downloaded income & expenses');
+};
+
+/* ---------- Marketing for clinics ---------- */
+const CMK_TABS = [['recall', 'Recall patients'], ['reviews', 'Google reviews'], ['messages', 'Health messages'], ['qr', 'QR poster'], ['share', 'Share clinic']];
+const lastVisitOf = pid => col('appts').filter(a => a.patientId === pid && a.status === 'done').map(a => a.date).sort().pop() || '';
+const upcomingOf = pid => col('appts').some(a => a.patientId === pid && ['booked', 'requested'].includes(a.status) && a.date >= todayLocal());
+function clinicMarketing() {
+  const tab = CMK_TABS.find(t => t[0] === S.params.tab) ? S.params.tab : 'recall';
+  const head = pageHead('Marketing', 'Free tools to bring patients back: recall reminders, Google reviews, health messages and a QR poster.');
+  return head + `<div class="tabs">${CMK_TABS.map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${T(l)}</button>`).join('')}${tabHelp('cmk-' + tab)}</div>` + ({ recall: cmkRecall, reviews: cmkReviews, messages: cmkMessages, qr: () => MK.qr(), share: cmkShare })[tab]();
+}
+function recallMsg(p, days) {
+  const st = settings();
+  return I18N.lang === 'hi' ? `नमस्ते ${p.name} जी 🙏\n${st.bizName} से। आपकी पिछली जांच को ${days} दिन हो गए हैं। सेहत ठीक रखने के लिए एक बार फ़ॉलो-अप जांच करवा लें। समय बुक करने के लिए जवाब दें।\n${st.timings ? st.timings + '\n' : ''}${st.phone || ''}`
+    : `Namaste ${p.name} ji 🙏\nThis is ${st.bizName}. It has been ${days} days since your last check-up. A follow-up visit helps keep your health on track. Reply to book a time.\n${st.timings ? st.timings + '\n' : ''}${st.phone || ''}`;
+}
+function cmkRecall() {
+  const gap = +(S.filters.recallGap || 60); const t = todayLocal(); const edit = can('patients', 2);
+  const list = col('patients').map(p => ({ p, last: lastVisitOf(p.id) })).filter(x => x.last && daysBetween(x.last, t) >= gap && !upcomingOf(x.p.id) && !(x.p.recallAt && daysBetween(x.p.recallAt, t) < 15)).sort((a, b) => a.last.localeCompare(b.last));
+  const dues = typeof allDues === 'function' ? allDues(7) : [];
+  return `${typeof dueCard === 'function' ? dueCard() : ''}
+  <div class="sec-h"><h2>${T('Not seen for a while')}</h2></div>
+  <div class="toolbar">${seg('recallGap', [['30', '30+ days'], ['60', '60+ days'], ['90', '90+ days'], ['180', '6+ months']], String(gap), 'A.setF')}<span class="small muted">${list.length} ${T('patients')}</span></div>
+  <div class="banner" style="margin-bottom:12px">${ic('megaphone')}<span>${T('Patients who had a visit but no check-up since. Send a reminder; tap Done and they hide for 15 days.')}</span></div>
+  <div class="card"><div class="rows">${list.map(({ p, last }) => { const d = daysBetween(last, t); return `<div class="row" style="flex-wrap:wrap"><div class="avatar" style="background:#FFE4EA;color:#9F1239">${esc(initials(p.name))}</div><div class="main-col" style="min-width:160px"><b>${esc(p.name)}</b><div class="sub">${T('Last visit')} ${dShort(last)} · ${d} ${T('days')}${p.conditions ? ' · ' + esc(p.conditions) : ''}</div></div><div class="row-flex" style="gap:6px;flex-wrap:wrap">${p.phone ? waBtn(recallMsg(p, d), p.phone, T('Send reminder')) : ''}${can('appointments', 2) ? `<button class="btn sm" onclick="A.apptForm({patientId:'${p.id}'})">${ic('calendar')} ${T('Book')}</button>` : ''}${edit ? `<button class="btn sm ghost" onclick="A.recallDone('${p.id}')">${ic('check')} ${T('Done')}</button>` : ''}</div></div>`; }).join('') || empty('Nobody to recall', 'Patients whose last visit was long ago show here.', '', 'check', '#0B9B68')}</div></div>${dues.length ? '' : ''}`;
+}
+A.recallDone = async pid => { const p = patientById(pid); try { await save('patients', { ...p, recallAt: todayLocal() }, `Reminded ${p.name} for a check-up`); toast('Done'); render(); } catch (e) { toast(e.message, 'bad'); } };
+function cReviewMsg(p) { const st = settings(); return I18N.lang === 'hi' ? `नमस्ते ${p.name} जी 🙏\n${st.bizName} पर आने के लिए धन्यवाद। अगर इलाज से आपको आराम मिला हो, तो गूगल पर 2 लाइन लिख दें। इससे दूसरे मरीज़ों को भी मदद मिलती है:\n${st.googleReview || ''}\nधन्यवाद!` : `Namaste ${p.name} ji 🙏\nThank you for visiting ${st.bizName}. If you are feeling better, please write 2 lines about us on Google. It helps other patients find us:\n${st.googleReview || ''}\nThank you!`; }
+function cmkReviews() {
+  const st = settings(); const t = todayLocal(); const edit = can('patients', 2);
+  const list = col('patients').map(p => ({ p, last: lastVisitOf(p.id) })).filter(x => x.last && daysBetween(x.last, t) <= 15 && !(x.p.reviewAskedAt && daysBetween(x.p.reviewAskedAt, t) < 180)).sort((a, b) => b.last.localeCompare(a.last));
+  return `<form class="card pad stack-sm" onsubmit="A.saveReviewLink(event)"><b>${T('Your Google review link')}</b><div class="row-flex" style="flex-wrap:nowrap"><input name="googleReview" value="${esc(st.googleReview || '')}" placeholder="https://g.page/r/…/review" ${can('settings', 2) ? '' : 'disabled'}>${can('settings', 2) ? `<button class="btn primary" type="submit">${T('Save')}</button>` : ''}</div><span class="tiny muted">${T('Google Maps → your clinic → Ask for reviews → copy the link.')}</span></form>
+  ${st.googleReview ? '' : `<div class="banner warn" style="margin-top:12px">${ic('alert')}<span>${T('Add your review link first. Then send it to happy patients after their visit.')}</span></div>`}
+  <div class="sec-h"><h2>${T('Seen in the last 15 days')}</h2></div>
+  <div class="card"><div class="rows">${list.map(({ p, last }) => `<div class="row" style="flex-wrap:wrap"><div class="avatar" style="background:#FEF3C7;color:#92400E">${esc(initials(p.name))}</div><div class="main-col" style="min-width:160px"><b>${esc(p.name)}</b><div class="sub">${T('Visit')} ${dShort(last)}</div></div><div class="row-flex" style="gap:6px">${p.phone && st.googleReview ? waBtn(cReviewMsg(p), p.phone, T('Ask for review')) : ''}${edit ? `<button class="btn sm ghost" onclick="A.cReviewAsked('${p.id}')">${ic('check')} ${T('Asked')}</button>` : ''}</div></div>`).join('') || empty('No recent patient to ask', 'Patients seen in the last 15 days show here.', '', 'star', '#F59E0B')}</div></div>`;
+}
+A.saveReviewLink = async e => { e.preventDefault(); const v = readForm(e.target); try { await saveSettingsRec({ googleReview: (v.googleReview || '').trim() }); toast('Saved'); render(); } catch (err) { toast(err.message, 'bad'); } };
+A.cReviewAsked = async pid => { const p = patientById(pid); try { await save('patients', { ...p, reviewAskedAt: todayLocal() }); render(); } catch (e) { toast(e.message, 'bad'); } };
+const HEALTH_MSGS = [
+  ['Festival greeting', 'Namaste {name} ji 🙏\n{clinic} wishes you and your family a very happy festival. Stay healthy and safe!\n{phone}', 'नमस्ते {name} जी 🙏\n{clinic} की ओर से आपको और आपके परिवार को त्योहार की हार्दिक शुभकामनाएं। स्वस्थ रहें, सुरक्षित रहें!\n{phone}'],
+  ['Free check-up camp', 'Namaste {name} ji 🙏\n{clinic} is holding a FREE health check-up camp (BP, sugar, weight) on ____ from __ to __. Bring your family. Reply to book a slot.\n{phone}', 'नमस्ते {name} जी 🙏\n{clinic} में ____ को __ से __ बजे तक मुफ़्त जांच शिविर (बीपी, शुगर, वज़न) है। परिवार के साथ आएं। समय बुक करने के लिए जवाब दें।\n{phone}'],
+  ['Rainy season care', 'Namaste {name} ji 🙏\nRainy season tips from {clinic}: drink boiled or filtered water, keep water from collecting (dengue, malaria), use mosquito nets. Fever for more than 2 days? Please see us.\n{phone}', 'नमस्ते {name} जी 🙏\n{clinic} की ओर से बारिश के मौसम की सलाह: उबला या फ़िल्टर पानी पिएं, कहीं पानी जमा न होने दें (डेंगू, मलेरिया), मच्छरदानी लगाएं। 2 दिन से ज़्यादा बुखार हो तो दिखाने आएं।\n{phone}'],
+  ['Winter care', 'Namaste {name} ji 🙏\nWinter care from {clinic}: keep warm, walk daily, check your BP and sugar regularly. Elderly and children: take extra care against cold and cough.\n{phone}', 'नमस्ते {name} जी 🙏\n{clinic} की ओर से सर्दी में सलाह: गर्म कपड़े पहनें, रोज़ टहलें, बीपी और शुगर नियमित जांचें। बुज़ुर्ग और बच्चे सर्दी-खांसी से ख़ास बचें।\n{phone}'],
+  ['New timing / service', 'Namaste {name} ji 🙏\nGood news from {clinic}: ________. Timings: {timings}\n{phone}', 'नमस्ते {name} जी 🙏\n{clinic} से ख़ुशख़बरी: ________। समय: {timings}\n{phone}'],
+  ['Clinic closed', 'Namaste {name} ji 🙏\n{clinic} will be closed on ____. For emergencies please call {phone}.', 'नमस्ते {name} जी 🙏\n{clinic} ____ को बंद रहेगा। ज़रूरत हो तो {phone} पर कॉल करें।']];
+function cmkMessages() {
+  const st = settings(); const i = +(S.filters.hmIdx || 0); const who = S.filters.hmWho || 'all'; const cond = (S.filters.hmCond || '').toLowerCase(); const t = todayLocal();
+  const tpl = HEALTH_MSGS[i] || HEALTH_MSGS[0]; const raw = (S.filters.hmText ?? '') || (I18N.lang === 'hi' ? tpl[2] : tpl[1]);
+  const fill = (s, p) => s.replace(/\{name\}/g, p ? p.name : '…').replace(/\{clinic\}/g, st.bizName || '').replace(/\{phone\}/g, st.phone || '').replace(/\{timings\}/g, st.timings || '');
+  let list = col('patients').filter(p => p.phone);
+  if (who === 'recent') list = list.filter(p => { const l = lastVisitOf(p.id); return l && daysBetween(l, t) <= 90; });
+  if (who === 'cond' && cond) list = list.filter(p => String(p.conditions || '').toLowerCase().includes(cond));
+  return `<div class="banner" style="margin-bottom:12px">${ic('wa')}<span>${T('WhatsApp does not allow one-tap bulk messages from a normal number. Tap Send on each patient; the message is ready, you only press send.')}</span></div>
+  <div class="split"><div class="card pad stack-sm"><div class="field"><span>${T('Message')}</span><div class="chips">${HEALTH_MSGS.map((m, j) => `<button class="chip ${j === i ? 'on' : ''}" onclick="S.filters.hmText='';A.setF('hmIdx','${j}')">${T(m[0])}</button>`).join('')}</div></div>
+    <label class="field"><span>${T('Edit the message ({name} becomes the patient’s name)')}</span><textarea rows="7" onchange="S.filters.hmText=this.value;render()">${esc(raw)}</textarea></label>
+    <div class="field"><span>${T('Send to')}</span>${seg('hmWho', [['all', 'All patients'], ['recent', 'Seen in 90 days'], ['cond', 'By illness']], who, 'A.setF')}</div>
+    ${who === 'cond' ? `<input placeholder="${T('e.g. diabetes, BP, thyroid')}" value="${esc(S.filters.hmCond || '')}" onchange="A.setF('hmCond',this.value)">` : ''}</div>
+  <div class="card"><div class="card-h"><h3>${list.length} ${T('patients')}</h3>${list.length ? `<button class="btn sm" onclick="A.copyNumbers()">${ic('copy')} ${T('Copy numbers')}</button>` : ''}</div><div class="rows" style="max-height:60vh;overflow:auto">${list.slice(0, 300).map(p => `<div class="row"><div class="main-col"><b>${esc(p.name)}</b><div class="sub">${esc(p.phone)}${p.conditions ? ' · ' + esc(p.conditions) : ''}</div></div>${waBtn(fill(raw, p), p.phone, T('Send'))}</div>`).join('') || empty('No patient with a mobile number', '')}</div></div></div>`;
+}
+A.copyNumbers = () => { const who = S.filters.hmWho || 'all'; const cond = (S.filters.hmCond || '').toLowerCase(); const t = todayLocal(); let list = col('patients').filter(p => p.phone); if (who === 'recent') list = list.filter(p => { const l = lastVisitOf(p.id); return l && daysBetween(l, t) <= 90; }); if (who === 'cond' && cond) list = list.filter(p => String(p.conditions || '').toLowerCase().includes(cond)); const txt = list.map(p => '+91' + String(p.phone).replace(/\D/g, '').slice(-10)).join('\n'); navigator.clipboard?.writeText(txt).then(() => toast(`${list.length} ${T('numbers copied')}`), () => toast('Could not copy', 'bad')); };
+function clinicCardText() { const st = settings(); return `*${st.bizName || ''}*\nDr. ${st.doctorName || ''}${st.qualification ? ' (' + st.qualification + ')' : ''}${st.specialisation ? '\n' + T(st.specialisation) : ''}${st.timings ? '\n🕘 ' + st.timings : ''}${st.address || st.city ? '\n📍 ' + [st.address, st.city].filter(Boolean).join(', ') : ''}\n📞 ${st.phone || ''}${st.googleReview ? `\n⭐ ${T('Our reviews')}: ${st.googleReview}` : ''}`; }
+function cmkShare() {
+  const P = S.platform || DEFAULT_PLATFORM; const link = `https://sabmanage.com/?ref=${refCode(S.org.orgId)}`;
+  const msg = I18N.lang === 'hi' ? `नमस्ते डॉक्टर साहब 🙏 मैं अपने क्लिनिक के मरीज़, रीडिंग, अपॉइंटमेंट, फ़ीस और स्टाफ़ का पूरा हिसाब ${P.appName || 'SabManage'} ऐप पर रखता हूं। आप भी देखिए: ${link}` : `Namaste Doctor 🙏 I run my clinic's patients, readings, appointments, fees and staff on ${P.appName || 'SabManage'}. Have a look: ${link}`;
+  return `<div class="grid g-auto"><div class="card pad stack">${ibox('share', '#0B9B68', 'lg')}<h3>${T('Share your clinic')}</h3><p class="small muted">${T('Your timings, address, phone and review link in one message. Send to new patients or post in WhatsApp groups.')}</p><pre class="share-pre">${esc(clinicCardText())}</pre><div class="row-flex">${waBtn(clinicCardText(), '', T('Send on WhatsApp'), 'btn wa')}</div></div>
+    ${S.role === 'owner' ? `<div class="card pad stack">${ibox('gift', '#E11D74', 'lg')}<h3>${T('Refer another doctor')}</h3><p class="small muted">${T('Know a doctor who could use this? Send them your link.')}${P.referralReward ? ' ' + esc(P.referralReward) : ''}</p>${waBtn(msg, '', T('Send on WhatsApp'), 'btn wa')}</div>` : ''}</div>`;
+}
+
+/* ---------- switch the pages for clinics ---------- */
+const _vStaff = V.staff, _vExp = V.expenses, _vRep = V.reports, _vMk = V.marketing;
+V.staff = () => isClinic() ? clinicStaff() : _vStaff();
+V.expenses = () => isClinic() ? clinicExpenses() : _vExp();
+V.reports = () => isClinic() ? clinicReports() : _vRep();
+V.marketing = () => isClinic() ? clinicMarketing() : _vMk();
+const _enquiryLink = enquiryLink; enquiryLink = () => isClinic() ? waLink('Namaste, I want an appointment', settings().phone) : _enquiryLink();
+
 /* ================= Demo data (to show the app to someone) =================
    The Super Admin decides who may use it: platform settings `demo` = { all: bool, orgs: [orgId] }.
    An allowed business gets "Demo data" (account menu, and a card on an empty home) to load or remove sample
@@ -9235,6 +10034,14 @@ function demoClinic() {
   add('pmsgs', { id: dmId('pm'), patientId: P1.id, from: 'patient', at: dAt(0, '08:40'), text: 'Since morning I feel dizzy and have a headache.', files: [], by: P1.name });
   add('pmsgs', { id: dmId('pm'), patientId: P3.id, from: 'patient', at: dAt(-1, '19:05'), text: 'Today’s readings sent. Feeling better.', files: [], by: P3.name });
   add('pmsgs', { id: dmId('pm'), patientId: P3.id, from: 'clinic', at: dAt(-1, '20:10'), text: 'Good. Continue the same medicines. See you on video call tomorrow.', files: [], by: 'Clinic' });
+  /* fees from earlier weeks, so Income & expenses has numbers */
+  const PP = [P1, P2, P3, P4, P5]; for (let n = -70; n <= -1; n++) { if (new Date(dD(n) + 'T00:00').getDay() === 0) continue; for (let k = 0; k < 6; k++) { const p = PP[(n * 7 + k) % 5 < 0 ? ((n * 7 + k) % 5) + 5 : (n * 7 + k) % 5]; ap(p, { date: dD(n), time: ['10:00', '10:30', '11:15', '12:00', '17:30', '18:15'][k], mode: k === 4 ? 'video' : 'clinic', status: 'done', fee: k === 4 ? 400 : 500, paid: true, payMode: k % 2 ? 'Cash' : 'UPI', paidAt: dD(n), reason: 'Follow-up' }); } }
+  /* staff, attendance, salary money and expenses */
+  const SF = [['Pooja Verma', 'Receptionist', 12000], ['Sunita Kumari', 'Nurse', 15000], ['Ravi Saini', 'Compounder / Pharmacist', 10000]].map(([name, role, salary], i) => add('staff', { id: dmId('st'), name, role, salary, leaves: 2, payType: 'month', phone: '98290222' + (10 + i), joinDate: dD(-400) }));
+  const t0 = new Date(dD(0) + 'T00:00'); for (let d = 1; d <= t0.getDate(); d++) { const day = dD(d - t0.getDate()); if (new Date(day + 'T00:00').getDay() === 0) continue; SF.forEach((s, i) => add('attendance', { id: day + '_' + s.id, staffId: s.id, date: day, status: i === 2 && d === 3 ? 'A' : i === 1 && d === 5 ? 'L' : i === 0 && d === 6 ? 'H' : 'P' })); }
+  add('advances', { id: dmId('ad'), staffId: SF[2].id, kind: 'advance', amount: 2000, date: dD(-2), note: 'Family function' });
+  [['Rent', 18000, 0, 'Bank transfer'], ['Electricity & water', 3200, -4, 'UPI'], ['Medicines & consumables', 8500, -6, 'Cash'], ['Staff tea & food', 900, -1, 'Cash'], ['Marketing & ads', 1500, -9, 'UPI']].forEach(([category, amount, n, mode]) => add('expenses', { id: dmId('x'), category, amount, date: dD(n), mode, note: 'Demo', eventId: '' }));
+  if (typeof specDemo === 'function') specDemo(add, [P1, P2, P3, P4, P5], dD);
   return out;
 }
 
@@ -9249,6 +10056,7 @@ A.demoLoad = async (quiet) => {
       S.data[c] = [...col(c).filter(x => !rows.some(y => y.id === x.id)), ...rows]; n += rows.length;
     }
     if (S.patLoaded) S.patLoaded = {};
+    if (isClinic() && typeof updateDues === 'function') for (const p of col('patients').filter(x => x.demo)) { try { await updateDues(p.id); } catch (e) { } }
     logAct(`Loaded demo data (${n} records)`); A.closeModal(); toast(quiet ? T('Demo dates moved to today') : `${T('Demo data loaded')}: ${n} ${T('records')}`); render();
   } catch (e) { toast(e.message, 'bad'); }
 };
@@ -9939,6 +10747,611 @@ Pain score | दर्द का स्कोर
 Peak flow | पीक फ़्लो
 Waist | कमर
 Urine test | पेशाब की जांच
+`);
+
+/* ⓘ help + Hindi for clinic speciality tools and the clinic business pages (staff, expenses, income, marketing) */
+Object.assign(HELP, {
+  'c-staff': [['Staff & salary', 'स्टाफ़ और सैलरी'], ['Your clinic team with monthly salary. Mark attendance daily; the salary for the month is worked out by itself.', 'मासिक सैलरी के साथ आपकी क्लिनिक टीम। रोज़ हाज़िरी लगाएं; महीने की सैलरी अपने आप बन जाती है।']],
+  'cs-roster': [['Team', 'टीम'], ['Everyone who works at the clinic, with today’s attendance.', 'क्लिनिक में काम करने वाले सभी लोग, आज की हाज़िरी के साथ।']],
+  'cs-attendance': [['Attendance', 'हाज़िरी'], ['Tap Present, Half day, Leave or Absent for each person. Pick another date to fix an old day.', 'हर व्यक्ति के लिए हाज़िर, आधा दिन, छुट्टी या गैरहाज़िर दबाएं। पुराना दिन ठीक करने के लिए तारीख़ बदलें।']],
+  'cs-salary': [['Salary', 'सैलरी'], ['Salary for the month: absent days, half days and leave above the free ones are cut; bonus is added; advance is cut. Mark paid and send the slip on WhatsApp.', 'महीने की सैलरी: गैरहाज़िर दिन, आधे दिन और मुफ़्त से ज़्यादा छुट्टी कटती है; इनाम जुड़ता है; एडवांस कटता है। पेड मार्क करें और स्लिप व्हाट्सऐप पर भेजें।']],
+  'cs-money': [['Advances & bonus', 'एडवांस और इनाम'], ['Advance given during the month is cut from salary. Bonus is added to it.', 'महीने में दिया गया एडवांस सैलरी से कटता है। इनाम उसमें जुड़ता है।']],
+  'c-expenses': [['Expenses', 'खर्च'], ['Rent, bills, medicines and other costs. Staff salary is added from Staff by itself.', 'किराया, बिल, दवाइयां और बाकी खर्च। स्टाफ़ की सैलरी स्टाफ़ से अपने आप जुड़ती है।']],
+  'c-reports': [['Income & expenses', 'कमाई और खर्च'], ['Fees received from appointments, minus expenses and salary = profit. Fees count on the day they were received.', 'अपॉइंटमेंट की मिली फ़ीस में से खर्च और सैलरी घटाकर = मुनाफ़ा। फ़ीस उसी दिन गिनी जाती है जिस दिन मिली।']],
+  'c-marketing': [['Marketing', 'मार्केटिंग'], ['Bring patients back and get more: recall reminders, Google reviews, health messages, QR poster.', 'मरीज़ों को वापस बुलाएं और नए पाएं: फ़ॉलो-अप याद, गूगल रिव्यू, सेहत संदेश, क्यूआर पोस्टर।']],
+  'cmk-recall': [['Recall patients', 'मरीज़ों को फिर बुलाएं'], ['Due soon: cycles, check-ups, vaccines from the speciality tools. Below: patients not seen for a while.', 'जल्द बाकी: स्पेशलिटी टूल से साइकिल, जांच, टीके। नीचे: जो मरीज़ काफ़ी समय से नहीं आए।']],
+  'cmk-reviews': [['Google reviews', 'गूगल रिव्यू'], ['Patients seen in the last 15 days. Send your review link; more reviews bring more new patients.', 'पिछले 15 दिन में आए मरीज़। अपना रिव्यू लिंक भेजें; ज़्यादा रिव्यू से ज़्यादा नए मरीज़ आते हैं।']],
+  'cmk-messages': [['Health messages', 'सेहत संदेश'], ['Ready messages for festivals, camps and seasons. Pick who gets it and send one by one on WhatsApp.', 'त्योहार, कैंप और मौसम के लिए तैयार संदेश। किसे भेजना है चुनें और व्हाट्सऐप पर एक-एक करके भेजें।']],
+  'cmk-qr': [['QR poster', 'क्यूआर पोस्टर'], ['Print and keep at reception. Scanning opens WhatsApp with your clinic, or your Google review page.', 'प्रिंट करके रिसेप्शन पर रखें। स्कैन करते ही आपके क्लिनिक का व्हाट्सऐप या गूगल रिव्यू पेज खुलता है।']],
+  'cmk-share': [['Share clinic', 'क्लिनिक शेयर करें'], ['A ready message with your timings, address and phone.', 'आपके समय, पता और फ़ोन के साथ तैयार संदेश।']],
+  'c-dues': [['Due soon', 'जल्द बाकी'], ['Next chemo cycle, pregnancy check-up, vaccine or eye check-up in the next 7 days or overdue. Send a reminder or book the time.', 'अगले 7 दिन में या बीत चुकी: अगली कीमो साइकिल, गर्भावस्था जांच, टीका या आंख की जांच। याद दिलाएं या समय बुक करें।']],
+  'c-spec': [['Tools for your speciality', 'आपकी स्पेशलिटी के टूल'], ['Each tool adds a tab on the patient page. Records stay private to doctors (front desk cannot see them).', 'हर टूल मरीज़ के पेज पर एक टैब जोड़ता है। ये रिकॉर्ड सिर्फ़ डॉक्टर देखते हैं (रिसेप्शन नहीं)।']],
+  'sp-vacc': [['Vaccines', 'टीके'], ['Based on the common IAP schedule. Tick what is given; the next due vaccine shows on the clinic home.', 'आम आईएपी शेड्यूल के हिसाब से। जो लगा उस पर टिक करें; अगला बाकी टीका क्लिनिक होम पर दिखता है।']],
+  'pt-sp-dental': [['Teeth', 'दांत'], ['Tap a tooth to mark decay, filling, root canal, missing and more. Add treatments with fees; print or send the estimate.', 'दांत दबाकर सड़न, फ़िलिंग, रूट कैनाल, टूटा आदि मार्क करें। फ़ीस के साथ इलाज जोड़ें; अनुमान प्रिंट करें या भेजें।']],
+  'pt-sp-eye': [['Eye', 'आंख'], ['Vision, glasses power, near vision and eye pressure for both eyes. Print the glasses prescription.', 'दोनों आंखों की नज़र, चश्मे का नंबर, पास की नज़र और आंख का दबाव। चश्मे का पर्चा प्रिंट करें।']],
+  'pt-sp-onco': [['Cancer care', 'कैंसर केयर'], ['Diagnosis, stage, regimen, then each cycle with weight, BSA, dose and blood counts. Low counts are marked; next cycle date shows on the home.', 'डायग्नोसिस, स्टेज, रेजिमेन, फिर हर साइकिल वज़न, बीएसए, डोज़ और ब्लड काउंट के साथ। कम काउंट पर निशान; अगली साइकिल की तारीख़ होम पर दिखती है।']],
+  'pt-sp-preg': [['Pregnancy', 'गर्भावस्था'], ['From the LMP: due date, weeks, scans and tests with their windows, and every check-up. High BP is marked.', 'एलएमपी से: डिलीवरी की तारीख़, हफ़्ते, स्कैन और टेस्ट के समय, और हर जांच। हाई बीपी पर निशान।']],
+  'pt-sp-child': [['Growth & vaccines', 'बढ़त और टीके'], ['Weight, height and head size with charts, and the vaccine chart with dates from the birth date.', 'वज़न, लंबाई और सिर का नाप चार्ट के साथ, और जन्म तारीख़ से टीकों का चार्ट।']],
+  'pt-sp-sessions': [['Sessions', 'सेशन'], ['Each therapy session with pain before and after. Packages show how many sessions are left.', 'हर थेरेपी सेशन, पहले और बाद के दर्द के साथ। पैकेज में दिखता है कितने सेशन बचे।']],
+  'pt-sp-scales': [['Mood scales', 'मूड स्केल'], ['PHQ-9 and GAD-7 with score, severity and trend.', 'पीएचक्यू-9 और जीएडी-7, स्कोर, गंभीरता और ट्रेंड के साथ।']],
+  'pt-sp-diet': [['Diet plan', 'डाइट प्लान'], ['Meal plan for the day, sent on WhatsApp or printed, and body measurements over time.', 'दिन भर का खाने का प्लान, व्हाट्सऐप पर भेजें या प्रिंट करें, और समय के साथ शरीर के नाप।']]
+});
+I18N.load(Object.keys(HELP).filter(k => /^(c-staff|cs-|c-expenses|c-reports|c-marketing|cmk-|c-dues|c-spec|sp-|pt-sp-)/.test(k))
+  .flatMap(k => { const [t, w, steps, tip] = HELP[k]; return [t, w, ...(steps || []), ...(tip ? [tip] : [])]; }).map(([en, hi]) => en + ' | ' + hi).join('\n'));
+I18N.load(`
+To pay | देना है
+Leave | छुट्टी
+Salary | सैलरी
+Half day | आधा दिन
+Half | आधा
+Cut | कटौती
+Right | दायां
+Left | बायां
+Upper | ऊपर
+Lower | नीचे
+Height | लंबाई
+Planned | तय है
+In progress | चल रहा है
+weeks | हफ़्ते
+months | महीने
+days | दिन
+Visit | विज़िट
+Session | सेशन
+Sessions | सेशन
+Score | स्कोर
+Package | पैकेज
+Fees | फ़ीस
+Treatment | इलाज
+Diagnosis | डायग्नोसिस
+Diagnosis: | डायग्नोसिस:
+Advice | सलाह
+Advice: | सलाह:
+Water | पानी
+Protein | प्रोटीन
+Goal | लक्ष्य
+Avoid | परहेज़
+Avoid: | परहेज़:
+Delivery | डिलीवरी
+Ongoing | चल रहा है
+Born | जन्म
+Next | अगला
+Last visit | पिछली विज़िट
+this month | इस महीने
+month | महीना
+Advance (cut from salary) | एडवांस (सैलरी से कटेगा)
+Bonus (added to salary) | इनाम (सैलरी में जुड़ेगा)
+Not marked | मार्क नहीं
+Monthly salary ₹ | मासिक सैलरी ₹
+Bank transfer | बैंक ट्रांसफ़र
+payments | पेमेंट
+visits | विज़िट
+new patients | नए मरीज़
+patients | मरीज़
+Our reviews | हमारे रिव्यू
+Week | हफ़्ता
+Weeks | हफ़्ते
+Pain | दर्द
+What | क्या
+Every | हर
+Edit plan | प्लान बदलें
+Make diet plan | डाइट प्लान बनाएं
+Diet plan | डाइट प्लान
+updated | अपडेट
+used | इस्तेमाल हुए
+from | से
+No active package | कोई चालू पैकेज नहीं
+Old packages | पुराने पैकेज
+Shared by | शेयर किया:
+Send reminder | याद दिलाएं
+Loss in this period | इस समय में घाटा
+of fees | फ़ीस का
+w | ह
+d | दि
+Staff & Salary | स्टाफ़ और सैलरी
+Staff & salary | स्टाफ़ और सैलरी
+Income & expenses | कमाई और खर्च
+Your team, daily attendance, monthly salary, advances and salary slips. | आपकी टीम, रोज़ की हाज़िरी, मासिक सैलरी, एडवांस और सैलरी स्लिप।
+Add staff | स्टाफ़ जोड़ें
+Edit staff | स्टाफ़ बदलें
+Advance / bonus | एडवांस / इनाम
+Advances & bonus | एडवांस और इनाम
+No staff added yet | अभी कोई स्टाफ़ नहीं जोड़ा
+Add your receptionist, nurse, compounder and other staff with their monthly salary. Then mark attendance daily; salary is worked out by itself. | अपने रिसेप्शनिस्ट, नर्स, कंपाउंडर और बाकी स्टाफ़ को मासिक सैलरी के साथ जोड़ें। फिर रोज़ हाज़िरी लगाएं; सैलरी अपने आप बन जाएगी।
+Leave: the first free leaves in a month are paid (set per person). Absent and extra leave days are cut from salary. | छुट्टी: महीने की मुफ़्त छुट्टियों का पैसा मिलता है (हर व्यक्ति के लिए तय करें)। गैरहाज़िर और ज़्यादा छुट्टी के दिन सैलरी से कटते हैं।
+To pay = salary − cut for absent / half days / extra leave + bonus − advance. A person who joined this month gets salary from the joining day. | देना है = सैलरी − गैरहाज़िर / आधे दिन / ज़्यादा छुट्टी की कटौती + इनाम − एडवांस। इस महीने जुड़े व्यक्ति को जुड़ने के दिन से सैलरी मिलती है।
+Salary slip | सैलरी स्लिप
+Slip | स्लिप
+paid | पेड
+days present this month | दिन इस महीने हाज़िर
+Free leaves per month | महीने की मुफ़्त छुट्टियां
+Leaves up to this number are paid | इतनी छुट्टियों तक पैसा नहीं कटता
+Joining date | जुड़ने की तारीख़
+Nothing this month | इस महीने कुछ नहीं
+Advances are cut from the salary; bonus is added. | एडवांस सैलरी से कटता है; इनाम जुड़ता है।
+Add your staff first | पहले स्टाफ़ जोड़ें
+Edit entry | एंट्री बदलें
+Receptionist | रिसेप्शनिस्ट
+Nurse | नर्स
+Compounder / Pharmacist | कंपाउंडर / फ़ार्मासिस्ट
+Assistant | सहायक
+Lab technician | लैब टेक्नीशियन
+Dental assistant | डेंटल असिस्टेंट
+Optometrist | ऑप्टोमेट्रिस्ट
+Physiotherapist | फ़िज़ियोथेरेपिस्ट
+Cleaner / Ward boy | सफ़ाई कर्मी / वार्ड बॉय
+Visiting doctor | विज़िटिंग डॉक्टर
+Rent, bills, medicines, equipment and every other clinic cost. Staff salary comes from Staff by itself. | किराया, बिल, दवाइयां, उपकरण और क्लिनिक का हर खर्च। स्टाफ़ की सैलरी स्टाफ़ से अपने आप आती है।
+Rent | किराया
+Electricity & water | बिजली और पानी
+Medicines & consumables | दवाइयां और सामान
+Lab tests (outside) | लैब टेस्ट (बाहर)
+Equipment & repair | उपकरण और मरम्मत
+Staff tea & food | स्टाफ़ चाय-नाश्ता
+Marketing & ads | मार्केटिंग और विज्ञापन
+Phone, internet & software | फ़ोन, इंटरनेट और सॉफ़्टवेयर
+Cleaning & laundry | सफ़ाई और धुलाई
+Staff salary | स्टाफ़ सैलरी
+From Staff → Salary | स्टाफ़ → सैलरी से
+So far this month, from Staff → Salary | इस महीने अब तक, स्टाफ़ → सैलरी से
+Remaining | बाकी
+Paid by | कैसे दिया
+Add rent, electricity, medicines and other costs. | किराया, बिजली, दवाइयां और बाकी खर्च जोड़ें।
+e.g. October rent, BP machine repair | जैसे अक्टूबर का किराया, बीपी मशीन की मरम्मत
+Fees received | मिली फ़ीस
+Bills | बिल
+Fees by type | फ़ीस किस तरह की
+Recall patients | मरीज़ों को फिर बुलाएं
+Health messages | सेहत संदेश
+Share clinic | क्लिनिक शेयर करें
+Free tools to bring patients back: recall reminders, Google reviews, health messages and a QR poster. | मरीज़ों को वापस लाने के मुफ़्त टूल: फ़ॉलो-अप याद, गूगल रिव्यू, सेहत संदेश और क्यूआर पोस्टर।
+Not seen for a while | काफ़ी समय से नहीं आए
+30+ days | 30+ दिन
+60+ days | 60+ दिन
+90+ days | 90+ दिन
+6+ months | 6+ महीने
+Patients who had a visit but no check-up since. Send a reminder; tap Done and they hide for 15 days. | जो एक बार आए पर उसके बाद जांच नहीं करवाई। याद दिलाएं; हो गया दबाने पर 15 दिन के लिए छिप जाएंगे।
+Nobody to recall | बुलाने के लिए कोई नहीं
+Patients whose last visit was long ago show here. | जिनकी पिछली विज़िट बहुत पहले हुई, वे यहां दिखेंगे।
+Your Google review link | आपका गूगल रिव्यू लिंक
+Google Maps → your clinic → Ask for reviews → copy the link. | गूगल मैप्स → आपका क्लिनिक → रिव्यू मांगें → लिंक कॉपी करें।
+Add your review link first. Then send it to happy patients after their visit. | पहले अपना रिव्यू लिंक डालें। फिर संतुष्ट मरीज़ों को विज़िट के बाद भेजें।
+Seen in the last 15 days | पिछले 15 दिन में आए
+No recent patient to ask | पूछने के लिए कोई हाल का मरीज़ नहीं
+Patients seen in the last 15 days show here. | पिछले 15 दिन में आए मरीज़ यहां दिखेंगे।
+WhatsApp does not allow one-tap bulk messages from a normal number. Tap Send on each patient; the message is ready, you only press send. | आम नंबर से व्हाट्सऐप एक साथ सबको भेजने नहीं देता। हर मरीज़ पर भेजें दबाएं; संदेश तैयार है, बस भेजना है।
+Edit the message ({name} becomes the patient’s name) | संदेश बदलें ({name} की जगह मरीज़ का नाम आएगा)
+All patients | सभी मरीज़
+Seen in 90 days | 90 दिन में आए
+By illness | बीमारी के हिसाब से
+e.g. diabetes, BP, thyroid | जैसे डायबिटीज़, बीपी, थायरॉइड
+Copy numbers | नंबर कॉपी करें
+numbers copied | नंबर कॉपी हुए
+No patient with a mobile number | मोबाइल नंबर वाला कोई मरीज़ नहीं
+Festival greeting | त्योहार की बधाई
+Free check-up camp | मुफ़्त जांच शिविर
+Rainy season care | बारिश में सावधानी
+Winter care | सर्दी में सावधानी
+New timing / service | नया समय / नई सेवा
+Clinic closed | क्लिनिक बंद
+Share your clinic | अपना क्लिनिक शेयर करें
+Your timings, address, phone and review link in one message. Send to new patients or post in WhatsApp groups. | आपका समय, पता, फ़ोन और रिव्यू लिंक एक संदेश में। नए मरीज़ों को भेजें या व्हाट्सऐप ग्रुप में डालें।
+Refer another doctor | किसी और डॉक्टर को बताएं
+Know a doctor who could use this? Send them your link. | कोई डॉक्टर जिसके काम आए? उन्हें अपना लिंक भेजें।
+Due soon | जल्द बाकी
+Next treatment cycle | अगली इलाज साइकिल
+Pregnancy check-up | गर्भावस्था जांच
+Due date (EDD) | डिलीवरी की तारीख़ (ईडीडी)
+Eye check-up | आंख की जांच
+Last session of package | पैकेज का आखिरी सेशन
+Package finished | पैकेज पूरा
+Teeth | दांत
+Eye | आंख
+Cancer care | कैंसर केयर
+Pregnancy | गर्भावस्था
+Growth & vaccines | बढ़त और टीके
+Mood scales | मूड स्केल
+Teeth chart & treatment plan | दांतों का चार्ट और इलाज प्लान
+Eye exam & glasses | आंख की जांच और चश्मा
+Cancer care: stage, chemo cycles, counts | कैंसर केयर: स्टेज, कीमो साइकिल, काउंट
+Pregnancy: due date, weeks, scans, check-ups | गर्भावस्था: डिलीवरी तारीख़, हफ़्ते, स्कैन, जांच
+Child growth & vaccines | बच्चे की बढ़त और टीके
+Therapy sessions & packages | थेरेपी सेशन और पैकेज
+Mood scales (PHQ-9, GAD-7) | मूड स्केल (पीएचक्यू-9, जीएडी-7)
+Diet plan & body measurements | डाइट प्लान और शरीर के नाप
+Tools for your speciality | आपकी स्पेशलिटी के टूल
+These show as tabs on every patient page. Pick the ones you use; a clinic can use more than one. | ये हर मरीज़ के पेज पर टैब बनकर दिखते हैं। जो इस्तेमाल करते हैं वे चुनें; एक क्लिनिक कई चुन सकता है।
+Readings used by | इनके काम की रीडिंग:
+Add them | जोड़ें
+readings added | रीडिंग जोड़ी गईं
+Tool turned on | टूल चालू
+Tool turned off | टूल बंद
+Quick words | झट से शब्द
+Tap a tooth to mark it or plan its treatment. | दांत दबाएं, उसे मार्क करें या इलाज तय करें।
+Child teeth | बच्चे के दांत
+Adult teeth | बड़ों के दांत
+Upper right | ऊपर दायां
+Upper left | ऊपर बायां
+Lower right | नीचे दायां
+Lower left | नीचे बायां
+Upper ↑ · ↓ Lower | ऊपर ↑ · ↓ नीचे
+In treatment plan | इलाज प्लान में
+Treatment plan | इलाज प्लान
+Estimate | अनुमान
+Treatment estimate | इलाज का अनुमान
+Add treatment | इलाज जोड़ें
+Edit treatment | इलाज बदलें
+Left | बायां
+No treatment planned | कोई इलाज तय नहीं
+Add fillings, root canal, crowns or cleaning with the fee. Print or send the estimate to the patient. | फ़ीस के साथ फ़िलिंग, रूट कैनाल, कैप या सफ़ाई जोड़ें। अनुमान प्रिंट करें या मरीज़ को भेजें।
+Tooth | दांत
+Condition | हालत
+Note (optional) | नोट (ज़रूरी नहीं)
+e.g. Deep caries distal, sensitive to cold | जैसे गहरी सड़न, ठंडा लगता है
+Also add a treatment for this tooth | इस दांत का इलाज भी जोड़ें
+Tooth number(s) | दांत नंबर
+e.g. 36 or 11, 21 | जैसे 36 या 11, 21
+e.g. 2 sittings, cap after 1 week | जैसे 2 सिटिंग, 1 हफ़्ते बाद कैप
+Healthy | ठीक
+Decay | सड़न
+Filled | फ़िलिंग
+Root canal | रूट कैनाल
+Crown / cap | कैप
+Bridge | ब्रिज
+Implant | इम्प्लांट
+Missing | नहीं है
+To extract | निकालना है
+Pain / sensitive | दर्द / ठंडा-गरम लगना
+Loose | हिलता है
+milk tooth | दूध का दांत
+Central incisor | सामने का दांत
+Lateral incisor | बगल का सामने का दांत
+Canine | कैनाइन (नुकीला दांत)
+First premolar | पहला प्रीमोलर
+Second premolar | दूसरा प्रीमोलर
+First molar | पहली दाढ़
+Second molar | दूसरी दाढ़
+Third molar (wisdom) | अक्ल दाढ़
+Consultation & check-up | सलाह और जांच
+X-ray (IOPA) | एक्स-रे (आईओपीए)
+OPG X-ray | ओपीजी एक्स-रे
+Scaling & polishing | सफ़ाई और पॉलिश
+Filling (composite) | फ़िलिंग (कंपोज़िट)
+Root canal (RCT) | रूट कैनाल (आरसीटी)
+Crown – metal ceramic | कैप – मेटल सेरामिक
+Crown – zirconia | कैप – ज़िरकोनिया
+Extraction | दांत निकालना
+Wisdom tooth surgery | अक्ल दाढ़ की सर्जरी
+Bridge (per unit) | ब्रिज (हर यूनिट)
+Complete denture | पूरी बत्तीसी (डेंचर)
+Braces (full) | ब्रेसेज़ (पूरे)
+Teeth whitening | दांत सफ़ेद करना
+Fluoride / sealant | फ़्लोराइड / सीलेंट
+Eye exam | आंख की जांच
+Last check | पिछली जांच
+Eye pressure (IOP) trend | आंख के दबाव (आईओपी) का ट्रेंड
+Blue = right eye, pink = left eye (mmHg) | नीला = दाईं आंख, गुलाबी = बाईं आंख (mmHg)
+Glasses Rx | चश्मे का पर्चा
+Vision | नज़र
+Vision R | नज़र R
+With glasses | चश्मे के साथ
+With glasses R | चश्मे के साथ R
+Near | पास
+Near R | पास R
+No eye exam yet | अभी आंख की जांच नहीं
+Record vision, glasses power and eye pressure. Print the glasses prescription in one tap. | नज़र, चश्मे का नंबर और आंख का दबाव लिखें। चश्मे का पर्चा एक टैप में प्रिंट करें।
+Next check-up (optional) | अगली जांच (ज़रूरी नहीं)
+Vision (without glasses) | नज़र (बिना चश्मे)
+Vision with glasses | चश्मे के साथ नज़र
+Near vision | पास की नज़र
+Eye pressure (IOP, mmHg) | आंख का दबाव (आईओपी, mmHg)
+Glasses power | चश्मे का नंबर
+Findings (anterior segment, fundus) | जांच में मिला (आगे का हिस्सा, फ़ंडस)
+e.g. Myopia, early cataract, glaucoma suspect | जैसे मायोपिया, शुरुआती मोतियाबिंद, ग्लूकोमा का शक
+Advice (glasses, lens, drops) | सलाह (चश्मा, लेंस, ड्रॉप)
+Eye pressure is above 21 mmHg | आंख का दबाव 21 mmHg से ज़्यादा है
+Add the diagnosis first. | पहले डायग्नोसिस जोड़ें।
+No cancer details yet | अभी कैंसर की जानकारी नहीं
+Add site, type, stage, regimen and number of cycles. Then log every cycle with weight, dose and blood counts. | जगह, प्रकार, स्टेज, रेजिमेन और साइकिल की संख्या जोड़ें। फिर हर साइकिल वज़न, डोज़ और ब्लड काउंट के साथ लिखें।
+Add diagnosis | डायग्नोसिस जोड़ें
+Cycles done | हुई साइकिल
+Next cycle | अगली साइकिल
+Low counts in the last entry | पिछली एंट्री में काउंट कम
+Check before the next cycle. | अगली साइकिल से पहले जांचें।
+Low counts | काउंट कम
+Type / histology | प्रकार / हिस्टोलॉजी
+Diagnosed on | डायग्नोसिस की तारीख़
+Markers | मार्कर
+Regimen | रेजिमेन
+Treatment log | इलाज का रिकॉर्ड
+Add cycle / treatment | साइकिल / इलाज जोड़ें
+Nothing logged yet | अभी कुछ नहीं लिखा
+Log each chemo cycle, radiation or surgery here. | हर कीमो साइकिल, रेडिएशन या सर्जरी यहां लिखें।
+Side effects | साइड इफ़ेक्ट
+Stage | स्टेज
+Curative | ठीक करने के लिए (क्यूरेटिव)
+Adjuvant | सहायक (एडजुवेंट)
+Neoadjuvant | सर्जरी से पहले (नियोएडजुवेंट)
+Palliative | आराम के लिए (पैलिएटिव)
+Cancer diagnosis | कैंसर डायग्नोसिस
+Cancer site | कैंसर की जगह
+e.g. Breast (left), Lung, Oral cavity | जैसे स्तन (बायां), फेफड़ा, मुंह
+Type / histology | प्रकार / हिस्टोलॉजी
+e.g. Invasive ductal carcinoma | जैसे इनवेसिव डक्टल कार्सिनोमा
+Not known | पता नहीं
+e.g. T2 N1 M0 | जैसे T2 N1 M0
+Markers (ER/PR/HER2, EGFR…) | मार्कर (ER/PR/HER2, EGFR…)
+ECOG (0–4) | ईसीओजी (0–4)
+0 · Fully active | 0 · पूरी तरह सक्रिय
+1 · Light work | 1 · हल्का काम
+2 · Self care, up >50% | 2 · अपना काम खुद, आधे से ज़्यादा समय उठे
+3 · Limited self care | 3 · अपना काम मुश्किल से
+4 · Bed bound | 4 · बिस्तर पर
+Intent | उद्देश्य
+e.g. AC → Paclitaxel | जैसे AC → Paclitaxel
+Cycles planned | कितनी साइकिल
+Days between cycles | साइकिल के बीच दिन
+Height (cm, for BSA) | लंबाई (cm, बीएसए के लिए)
+Treatment | इलाज
+Completed / on follow-up | पूरा / फ़ॉलो-अप पर
+Chemo cycle | कीमो साइकिल
+Immunotherapy | इम्यूनोथेरेपी
+Targeted therapy | टारगेटेड थेरेपी
+Hormone therapy | हार्मोन थेरेपी
+Radiation | रेडिएशन
+Surgery | सर्जरी
+Scan / review | स्कैन / रिव्यू
+Follow-up | फ़ॉलो-अप
+Cycle no. | साइकिल नंबर
+Next cycle due | अगली साइकिल कब
+Weight (kg) | वज़न (kg)
+Add height in the diagnosis for BSA | बीएसए के लिए डायग्नोसिस में लंबाई डालें
+Drugs and doses (one per line) | दवा और डोज़ (हर लाइन में एक)
+Blood counts before this cycle | इस साइकिल से पहले ब्लड काउंट
+e.g. Nausea, mouth ulcers, fatigue | जैसे जी मिचलाना, मुंह के छाले, थकान
+Worst grade (0–4) | सबसे ज़्यादा ग्रेड (0–4)
+No pregnancy record | गर्भावस्था का रिकॉर्ड नहीं
+Add the last period date (LMP). The app works out the due date, weeks, scan dates and the next check-up. | आखिरी माहवारी की तारीख़ (एलएमपी) डालें। ऐप डिलीवरी की तारीख़, हफ़्ते, स्कैन की तारीख़ें और अगली जांच निकाल देगा।
+Start pregnancy record | गर्भावस्था रिकॉर्ड शुरू करें
+1st trimester | पहली तिमाही
+2nd trimester | दूसरी तिमाही
+3rd trimester | तीसरी तिमाही
+Delivered | डिलीवरी हो गई
+Pregnancy ended | गर्भावस्था समाप्त
+Weeks now | अभी हफ़्ते
+Check-up overdue | जांच बाकी रह गई
+Next check-up | अगली जांच
+G P A L | जी पी ए एल
+Blood group | ब्लड ग्रुप
+Risk | जोखिम
+Scans & tests | स्कैन और टेस्ट
+Due by | इस तारीख़ तक
+Window passed | समय निकल गया
+Due now | अभी करना है
+Missed? | छूट गया?
+Dating / viability scan | डेटिंग / वायबिलिटी स्कैन
+NT scan + double marker | एनटी स्कैन + डबल मार्कर
+Td vaccine – 1st dose | टीडी टीका – पहली खुराक
+Start iron & calcium | आयरन और कैल्शियम शुरू
+Anomaly (level 2) scan | एनॉमली (लेवल 2) स्कैन
+Td vaccine – 2nd dose (4 weeks after 1st) | टीडी टीका – दूसरी खुराक (पहली के 4 हफ़्ते बाद)
+Sugar test (GTT) | शुगर टेस्ट (जीटीटी)
+Growth scan | ग्रोथ स्कैन
+Doppler / NST if needed | डॉप्लर / एनएसटी ज़रूरत हो तो
+Delivery plan & hospital | डिलीवरी प्लान और अस्पताल
+Check-ups (ANC) | जांचें (एएनसी)
+Add check-up | जांच जोड़ें
+Fundal ht | फ़ंडल ऊंचाई
+No check-up yet | अभी कोई जांच नहीं
+Add weight, BP, baby heart rate and fundal height at every visit. | हर विज़िट पर वज़न, बीपी, बच्चे की धड़कन और फ़ंडल ऊंचाई लिखें।
+Pregnancy details | गर्भावस्था की जानकारी
+Last period date (LMP) | आखिरी माहवारी की तारीख़ (एलएमपी)
+Due date = LMP + 280 days | डिलीवरी तारीख़ = एलएमपी + 280 दिन
+Due date by scan (optional) | स्कैन से डिलीवरी तारीख़ (ज़रूरी नहीं)
+If the scan date differs, this is used | स्कैन की तारीख़ अलग हो तो यही मानी जाएगी
+Gravida (G) | ग्रेविडा (G)
+Para (P) | पैरा (P)
+Abortions (A) | गर्भपात (A)
+Living (L) | जीवित (L)
+Risk factors | जोखिम
+e.g. Previous C-section, thyroid, twins | जैसे पहले सी-सेक्शन, थायरॉइड, जुड़वां
+Delivery date | डिलीवरी की तारीख़
+Normal delivery | नॉर्मल डिलीवरी
+C-section | सी-सेक्शन
+Assisted delivery | असिस्टेड डिलीवरी
+Baby (weight, sex) | बच्चा (वज़न, लड़का/लड़की)
+e.g. 3.1 kg, girl | जैसे 3.1 kg, लड़की
+Add the LMP or the scan due date | एलएमपी या स्कैन वाली तारीख़ डालें
+Edit check-up | जांच बदलें
+Baby heart rate (FHR, bpm) | बच्चे की धड़कन (एफ़एचआर, bpm)
+Fundal height (cm) | फ़ंडल ऊंचाई (cm)
+Hb (g/dL) | हीमोग्लोबिन (g/dL)
+Urine albumin / sugar | पेशाब में एल्बुमिन / शुगर
+e.g. Nil / Nil | जैसे Nil / Nil
+High BP in pregnancy: check for pre-eclampsia | गर्भावस्था में हाई बीपी: प्री-एक्लेम्पसिया की जांच करें
+Add the date of birth | जन्म की तारीख़ डालें
+The app makes the vaccine chart with dates and shows the growth record. | ऐप तारीख़ों के साथ टीकों का चार्ट बनाता है और बढ़त का रिकॉर्ड दिखाता है।
+Date of birth | जन्म की तारीख़
+Vaccine overdue | टीका बाकी रह गया
+Next vaccine | अगला टीका
+Vaccines up to date | सभी टीके लग गए
+Growth | बढ़त
+Add weight & height | वज़न और लंबाई जोड़ें
+Head | सिर
+No weight or height yet. | अभी वज़न या लंबाई नहीं।
+Vaccines | टीके
+At birth | जन्म पर
+Child details | बच्चे की जानकारी
+Birth weight (kg) | जन्म का वज़न (kg)
+Notes (birth history, allergies) | नोट (जन्म की जानकारी, एलर्जी)
+Weight & height | वज़न और लंबाई
+Height / length (cm) | लंबाई (cm)
+Head size (cm) | सिर का नाप (cm)
+Fill at least one number | कम से कम एक नंबर भरें
+Only one session left in this package. | इस पैकेज में सिर्फ़ एक सेशन बचा है।
+This package is finished. Start a new one. | यह पैकेज पूरा हो गया। नया शुरू करें।
+Pain after session (0–10) | सेशन के बाद दर्द (0–10)
+Add session | सेशन जोड़ें
+No session yet | अभी कोई सेशन नहीं
+Log each session with the therapy and pain score. Sell packages (e.g. 10 sessions) and see how many are left. | हर सेशन थेरेपी और दर्द स्कोर के साथ लिखें। पैकेज (जैसे 10 सेशन) दें और देखें कितने बचे।
+New package | नया पैकेज
+Package name | पैकेज का नाम
+e.g. Knee physio – 10 sessions | जैसे घुटने की फ़िज़ियो – 10 सेशन
+Number of sessions | कितने सेशन
+Package fee ₹ | पैकेज फ़ीस ₹
+Start date | शुरू की तारीख़
+Edit session | सेशन बदलें
+Therapy / procedure | थेरेपी / प्रोसीजर
+Body part / area | शरीर का हिस्सा
+e.g. Right knee, lower back | जैसे दायां घुटना, कमर का निचला हिस्सा
+Pain before (0–10) | पहले दर्द (0–10)
+Pain after (0–10) | बाद में दर्द (0–10)
+Notes / home exercises | नोट / घर की कसरत
+Over the last 2 weeks. Fill with the patient, or read the questions to them. | पिछले 2 हफ़्तों के बारे में। मरीज़ के साथ भरें, या सवाल पढ़कर सुनाएं।
+No scale filled yet | अभी कोई स्केल नहीं भरा
+PHQ-9 for depression and GAD-7 for anxiety. The score and its trend show here. | डिप्रेशन के लिए पीएचक्यू-9 और घबराहट के लिए जीएडी-7। स्कोर और उसका ट्रेंड यहां दिखेगा।
+PHQ-9 (depression) | पीएचक्यू-9 (डिप्रेशन)
+GAD-7 (anxiety) | जीएडी-7 (घबराहट)
+Item 9 positive | सवाल 9 हां
+Over the last 2 weeks, how often have you been bothered by the following problems? | पिछले 2 हफ़्तों में, नीचे दी गई परेशानियों से आप कितनी बार परेशान हुए?
+Not at all | बिल्कुल नहीं
+Several days | कुछ दिन
+More than half the days | आधे से ज़्यादा दिन
+Nearly every day | लगभग हर दिन
+Answer question | इस सवाल का जवाब दें:
+PHQ-9 item 9 is positive: assess safety today | पीएचक्यू-9 सवाल 9 हां है: आज ही सुरक्षा का आकलन करें
+Minimal | बहुत कम
+Mild | हल्का
+Moderate | मध्यम
+Moderately severe | काफ़ी गंभीर
+Severe | गंभीर
+Little interest or pleasure in doing things | किसी काम में रुचि या ख़ुशी कम होना
+Feeling down, depressed, or hopeless | उदास, निराश या ना-उम्मीद महसूस करना
+Trouble falling or staying asleep, or sleeping too much | नींद आने या टिके रहने में दिक़्क़त, या बहुत ज़्यादा सोना
+Feeling tired or having little energy | थकान या ताक़त कम लगना
+Poor appetite or overeating | भूख कम लगना या ज़्यादा खाना
+Feeling bad about yourself, or that you are a failure or have let yourself or your family down | अपने बारे में बुरा लगना, या लगना कि आप नाकाम हैं या आपने ख़ुद को या परिवार को निराश किया है
+Trouble concentrating on things, such as reading the newspaper or watching television | ध्यान लगाने में दिक़्क़त, जैसे अख़बार पढ़ने या टीवी देखने में
+Moving or speaking so slowly that other people could have noticed, or the opposite: being so fidgety or restless that you have been moving around a lot more than usual | इतना धीरे चलना या बोलना कि दूसरों को पता चले, या उल्टा: इतनी बेचैनी कि आम दिनों से बहुत ज़्यादा इधर-उधर घूमना
+Thoughts that you would be better off dead, or of hurting yourself in some way | ऐसे ख़याल कि मर जाना बेहतर है, या ख़ुद को किसी तरह चोट पहुंचाने के ख़याल
+Feeling nervous, anxious, or on edge | घबराहट, बेचैनी या तनाव महसूस करना
+Not being able to stop or control worrying | चिंता को रोक या क़ाबू न कर पाना
+Worrying too much about different things | अलग-अलग बातों की बहुत ज़्यादा चिंता करना
+Trouble relaxing | आराम न कर पाना
+Being so restless that it is hard to sit still | इतनी बेचैनी कि टिककर बैठना मुश्किल हो
+Becoming easily annoyed or irritable | जल्दी चिढ़ जाना या ग़ुस्सा आना
+Feeling afraid, as if something awful might happen | डर लगना, जैसे कुछ बुरा होने वाला है
+Body fat | शरीर की चर्बी
+Hip | कूल्हा
+Body measurements | शरीर के नाप
+No diet plan yet | अभी डाइट प्लान नहीं
+Write the meal plan once, then send it on WhatsApp or print it. | एक बार खाने का प्लान लिखें, फिर व्हाट्सऐप पर भेजें या प्रिंट करें।
+No measurement yet. | अभी कोई नाप नहीं।
+Calories per day | रोज़ की कैलोरी
+Protein (g/day) | प्रोटीन (g/दिन)
+Water (litres/day) | पानी (लीटर/दिन)
+Early morning | सुबह जल्दी
+Breakfast | नाश्ता
+Mid-morning | दोपहर से पहले
+Lunch | दोपहर का खाना
+Evening | शाम
+Dinner | रात का खाना
+Bedtime | सोने से पहले
+e.g. Sugar, maida, fried snacks | जैसे चीनी, मैदा, तली चीज़ें
+Waist (cm) | कमर (cm)
+Hip (cm) | कूल्हा (cm)
+Body fat (%) | शरीर की चर्बी (%)
+Weight loss | वज़न घटाना
+Weight gain | वज़न बढ़ाना
+Diabetes control | डायबिटीज़ कंट्रोल
+PCOS | पीसीओएस
+Thyroid | थायरॉइड
+Heart health | दिल की सेहत
+Kidney diet | किडनी डाइट
+Sports / muscle gain | खेल / मसल बढ़ाना
+General healthy eating | सामान्य सेहतमंद खाना
+Toothache | दांत दर्द
+Sensitivity | ठंडा-गरम लगना
+Bleeding gums | मसूड़ों से ख़ून
+Swelling | सूजन
+Broken tooth | टूटा दांत
+Dental caries | दांत में सड़न
+Gingivitis | मसूड़ों की सूजन
+Periapical abscess | जड़ में पस (पेरीएपिकल एब्सेस)
+Impacted wisdom tooth | फंसी हुई अक्ल दाढ़
+Blurred vision | धुंधला दिखना
+Redness | लाली
+Watering | पानी आना
+Itching | खुजली
+Headache on reading | पढ़ते समय सिरदर्द
+Myopia | मायोपिया (दूर का कम दिखना)
+Presbyopia | प्रेसबायोपिया (पास का कम दिखना)
+Cataract | मोतियाबिंद
+Conjunctivitis | आंख आना (कंजंक्टिवाइटिस)
+Dry eye | सूखी आंख
+Glaucoma suspect | ग्लूकोमा का शक
+Fatigue | थकान
+Nausea | जी मिचलाना
+Vomiting | उल्टी
+Mouth ulcers | मुंह के छाले
+Fever after chemo | कीमो के बाद बुखार
+Loss of appetite | भूख न लगना
+Neuropathy | हाथ-पैर में झनझनाहट (न्यूरोपैथी)
+Routine ANC | नियमित जांच (एएनसी)
+Nausea / vomiting | जी मिचलाना / उल्टी
+Bleeding PV | योनि से ख़ून आना
+Pain abdomen | पेट दर्द
+Reduced fetal movements | बच्चे की हलचल कम
+Swelling feet | पैरों में सूजन
+Anaemia | ख़ून की कमी
+GDM | गर्भावस्था की डायबिटीज़ (जीडीएम)
+PIH | गर्भावस्था में हाई बीपी (पीआईएच)
+Fever | बुखार
+Cough & cold | खांसी-ज़ुकाम
+Loose motions | दस्त
+Not eating well | ठीक से न खाना
+Rash | दाने
+Vaccination visit | टीके के लिए
+Growth check | बढ़त की जांच
+Knee pain | घुटने का दर्द
+Back pain | कमर दर्द
+Neck pain | गर्दन दर्द
+Frozen shoulder | फ़्रोज़न शोल्डर
+Sciatica | साइटिका
+Post-surgery rehab | सर्जरी के बाद रिहैब
+Sports injury | खेल की चोट
+Low mood | उदासी
+Anxiety | घबराहट
+Poor sleep | नींद ठीक न आना
+Panic attacks | पैनिक अटैक
+Stress | तनाव
+Follow-up review | फ़ॉलो-अप जांच
+Diabetes diet | डायबिटीज़ डाइट
+PCOS diet | पीसीओएस डाइट
+Thyroid diet | थायरॉइड डाइट
+IFT | आईएफ़टी
+TENS | टेन्स
+Ultrasound | अल्ट्रासाउंड
+Hot pack | गर्म सेंक
+Exercises | कसरत
+Traction | ट्रैक्शन
+Manual therapy | मैनुअल थेरेपी
+Taping | टेपिंग
+Oncologist (Cancer) | कैंसर विशेषज्ञ
+Neurologist | न्यूरोलॉजिस्ट
+Nephrologist | किडनी विशेषज्ञ
+Urologist | यूरोलॉजिस्ट
+Pulmonologist | फेफड़ों के विशेषज्ञ
+Gastroenterologist | पेट के विशेषज्ञ
+General Surgeon | जनरल सर्जन
+{} months | {} महीने
+{} weeks | {} हफ़्ते
+{} patients | {} मरीज़
+{} new patients | {} नए मरीज़
+{} payments · {} visits | {1} पेमेंट · {2} विज़िट
+{} Leave | {} छुट्टी
+{} Half day | {} आधा दिन
+{} Present | {} हाज़िर
+{} Absent | {} गैरहाज़िर
 `);
 
 /* ================= Leads & venue: ⓘ help + Hindi (Devanagari) ================= */

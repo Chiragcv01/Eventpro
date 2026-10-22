@@ -111,7 +111,7 @@ async function loadPatientData(pid, force) {
 }
 const pReadings = pid => col('readings').filter(r => r.patientId === pid).sort((a, b) => String(b.at).localeCompare(String(a.at)));
 const pMsgs = pid => col('pmsgs').filter(r => r.patientId === pid).sort((a, b) => String(a.at).localeCompare(String(b.at)) || (+a.updatedAt || 0) - (+b.updatedAt || 0));
-const pVisits = pid => col('visits').filter(r => r.patientId === pid).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+const pVisits = pid => col('visits').filter(r => r.patientId === pid && !r.kind).sort((a, b) => String(b.date).localeCompare(String(a.date)));
 const pAppts = pid => col('appts').filter(a => a.patientId === pid).sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
 
 /* ---------- private files (photos, reports, voice notes) ---------- */
@@ -339,7 +339,7 @@ V.patient = () => {
   const p = patientById(S.params.id); if (!p) return pageHead('Patient', '', '', "A.go('patients')") + empty('Patient not found', '');
   loadPatientData(p.id); const loading = S.adapter.mode === 'cloud' && S.patLoaded?.[p.id] !== true; RN = rulesFor(p);
   const tab = S.params.tab || 'health'; const rd = pReadings(p.id); const msgs = pMsgs(p.id); const unread = +p.unread || 0;
-  const tabs = [['health', 'Health'], ['readings', 'Readings'], ...(can('medical') ? [['records', 'Records']] : []), ['messages', 'Messages', unread], ...(can('appointments') ? [['fees', 'Visits & fees']] : [])];
+  const tabs = [['health', 'Health'], ['readings', 'Readings'], ...(typeof specTabs === 'function' ? specTabs(p) : []), ...(can('medical') ? [['records', 'Records']] : []), ['messages', 'Messages', unread], ...(can('appointments') ? [['fees', 'Visits & fees']] : [])];
   const phone = p.phone ? String(p.phone).replace(/\D/g, '').slice(-10) : '';
   const head = `<button class="back" onclick="A.go('patients')">${ic('back')} Patients</button>
   <div class="card pad pat-head"><div class="row-flex" style="flex-wrap:nowrap;align-items:flex-start"><div class="avatar" style="width:54px;height:54px;font-size:19px;background:#FFE4EA;color:#9F1239">${esc(initials(p.name))}</div>
@@ -350,6 +350,7 @@ V.patient = () => {
   ${patientBanners(p)}
   <div class="tabs">${tabs.map(([k, l, n]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${l}${n ? ` <span class="tabn">${n}</span>` : ''}</button>`).join('')}${tabHelp('pt-' + tab)}</div>`;
   if (loading) return head + `<div class="card">${empty('Loading…', '', '', 'pulse', '#94A3B8')}</div>`;
+  if (tab.startsWith('sp-') && can('medical') && typeof specView === 'function') return head + specView(tab.slice(3), p);
   if (tab === 'readings') return head + readingsTab(p, rd);
   if (tab === 'records' && can('medical')) return head + recordsTab(p);
   if (tab === 'messages') { if (unread && can('patients', 2)) setTimeout(() => A.markRead(p.id), 600); return head + messagesTab(p, msgs); }

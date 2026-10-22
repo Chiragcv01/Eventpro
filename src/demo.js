@@ -107,6 +107,14 @@ function demoClinic() {
   add('pmsgs', { id: dmId('pm'), patientId: P1.id, from: 'patient', at: dAt(0, '08:40'), text: 'Since morning I feel dizzy and have a headache.', files: [], by: P1.name });
   add('pmsgs', { id: dmId('pm'), patientId: P3.id, from: 'patient', at: dAt(-1, '19:05'), text: 'Today’s readings sent. Feeling better.', files: [], by: P3.name });
   add('pmsgs', { id: dmId('pm'), patientId: P3.id, from: 'clinic', at: dAt(-1, '20:10'), text: 'Good. Continue the same medicines. See you on video call tomorrow.', files: [], by: 'Clinic' });
+  /* fees from earlier weeks, so Income & expenses has numbers */
+  const PP = [P1, P2, P3, P4, P5]; for (let n = -70; n <= -1; n++) { if (new Date(dD(n) + 'T00:00').getDay() === 0) continue; for (let k = 0; k < 6; k++) { const p = PP[(n * 7 + k) % 5 < 0 ? ((n * 7 + k) % 5) + 5 : (n * 7 + k) % 5]; ap(p, { date: dD(n), time: ['10:00', '10:30', '11:15', '12:00', '17:30', '18:15'][k], mode: k === 4 ? 'video' : 'clinic', status: 'done', fee: k === 4 ? 400 : 500, paid: true, payMode: k % 2 ? 'Cash' : 'UPI', paidAt: dD(n), reason: 'Follow-up' }); } }
+  /* staff, attendance, salary money and expenses */
+  const SF = [['Pooja Verma', 'Receptionist', 12000], ['Sunita Kumari', 'Nurse', 15000], ['Ravi Saini', 'Compounder / Pharmacist', 10000]].map(([name, role, salary], i) => add('staff', { id: dmId('st'), name, role, salary, leaves: 2, payType: 'month', phone: '98290222' + (10 + i), joinDate: dD(-400) }));
+  const t0 = new Date(dD(0) + 'T00:00'); for (let d = 1; d <= t0.getDate(); d++) { const day = dD(d - t0.getDate()); if (new Date(day + 'T00:00').getDay() === 0) continue; SF.forEach((s, i) => add('attendance', { id: day + '_' + s.id, staffId: s.id, date: day, status: i === 2 && d === 3 ? 'A' : i === 1 && d === 5 ? 'L' : i === 0 && d === 6 ? 'H' : 'P' })); }
+  add('advances', { id: dmId('ad'), staffId: SF[2].id, kind: 'advance', amount: 2000, date: dD(-2), note: 'Family function' });
+  [['Rent', 18000, 0, 'Bank transfer'], ['Electricity & water', 3200, -4, 'UPI'], ['Medicines & consumables', 8500, -6, 'Cash'], ['Staff tea & food', 900, -1, 'Cash'], ['Marketing & ads', 1500, -9, 'UPI']].forEach(([category, amount, n, mode]) => add('expenses', { id: dmId('x'), category, amount, date: dD(n), mode, note: 'Demo', eventId: '' }));
+  if (typeof specDemo === 'function') specDemo(add, [P1, P2, P3, P4, P5], dD);
   return out;
 }
 
@@ -121,6 +129,7 @@ A.demoLoad = async (quiet) => {
       S.data[c] = [...col(c).filter(x => !rows.some(y => y.id === x.id)), ...rows]; n += rows.length;
     }
     if (S.patLoaded) S.patLoaded = {};
+    if (isClinic() && typeof updateDues === 'function') for (const p of col('patients').filter(x => x.demo)) { try { await updateDues(p.id); } catch (e) { } }
     logAct(`Loaded demo data (${n} records)`); A.closeModal(); toast(quiet ? T('Demo dates moved to today') : `${T('Demo data loaded')}: ${n} ${T('records')}`); render();
   } catch (e) { toast(e.message, 'bad'); }
 };

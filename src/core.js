@@ -116,14 +116,14 @@ const MODULES = [
   { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event', 'venue'] },
   { key: 'catering', label: 'Catering', icon: 'pot', group: 'Operations', biz: ['caterer', 'event', 'venue'] },
   { key: 'vendors', label: 'Vendors & POs', icon: 'handshake', group: 'Operations' },
-  { key: 'staff', label: 'Staff & Wages', icon: 'users', group: 'Operations' },
+  { key: 'staff', label: 'Staff & Wages', el: 'Staff & Wages', cl: 'Staff & Salary', icon: 'users', group: 'Operations', kinds: ['event', 'clinic'] },
   { key: 'tools', label: 'Planner Tools', icon: 'ruler', group: 'Operations', biz: ['tent', 'event'] },
   { key: 'invoices', label: 'Invoices', icon: 'receipt', group: 'Money' },
   { key: 'payments', label: 'Payments', icon: 'rupee', group: 'Money' },
-  { key: 'expenses', label: 'Expenses', icon: 'wallet', group: 'Money' },
-  { key: 'reports', label: 'Reports & P&L', icon: 'chart', group: 'Money' },
+  { key: 'expenses', label: 'Expenses', icon: 'wallet', group: 'Money', kinds: ['event', 'clinic'] },
+  { key: 'reports', label: 'Reports & P&L', el: 'Reports & P&L', cl: 'Income & expenses', icon: 'chart', group: 'Money', kinds: ['event', 'clinic'] },
   { key: 'reviews', label: 'Reviews', icon: 'star', group: 'Business' },
-  { key: 'marketing', label: 'Marketing', icon: 'megaphone', group: 'Business' },
+  { key: 'marketing', label: 'Marketing', icon: 'megaphone', group: 'Business', kinds: ['event', 'clinic'] },
   { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business', kinds: ['event', 'clinic'] },
   { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business', kinds: ['event', 'clinic'] }
 ];
@@ -148,9 +148,9 @@ const ROLE_DEFAULTS = {
 };
 const CLINIC_ROLES = {
   owner: { label: 'Doctor (Owner)', perms: allPerms(3), locked: true },
-  manager: { label: 'Associate doctor', perms: { dashboard: 1, appointments: 3, patients: 3, medical: 3, tasks: 2, team: 1, settings: 1 } },
-  supervisor: { label: 'Receptionist', perms: { dashboard: 1, appointments: 3, patients: 2, medical: 0, tasks: 2, team: 0, settings: 0 } },
-  staff: { label: 'Nurse / Assistant', perms: { dashboard: 1, appointments: 1, patients: 2, medical: 1, tasks: 1, team: 0, settings: 0 } }
+  manager: { label: 'Associate doctor', perms: { dashboard: 1, appointments: 3, patients: 3, medical: 3, tasks: 2, staff: 2, expenses: 2, reports: 1, marketing: 2, team: 1, settings: 1 } },
+  supervisor: { label: 'Receptionist', perms: { dashboard: 1, appointments: 3, patients: 2, medical: 0, tasks: 2, staff: 0, expenses: 2, reports: 0, marketing: 2, team: 0, settings: 0 } },
+  staff: { label: 'Nurse / Assistant', perms: { dashboard: 1, appointments: 1, patients: 2, medical: 1, tasks: 1, staff: 0, expenses: 0, reports: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const STAGES = ['Enquiry', 'Quoted', 'Confirmed', 'Setup', 'Live', 'Completed', 'Closed', 'Cancelled'];
 const RESERVING = ['Confirmed', 'Setup', 'Live'];
@@ -686,6 +686,7 @@ async function openOrg(orgId, override) {
   S.role = meM ? meM.role : (S.super ? 'owner' : o.role);
   S.perms = S.role === 'owner' ? allPerms(3) : { ...(S.roles[S.role]?.perms || {}), ...(S.me.perms || {}) };
   ['tasks', 'checklists'].forEach(c => { if (S.data[c]) S.data[c] = S.data[c].filter(x => !x.archived); });
+  MODULES.forEach(m => { if (m.cl) m.label = (o.kind || 'event') === 'clinic' ? m.cl : m.el; });
   if (typeof applyDeptScope === 'function') applyDeptScope();
   S.patLoaded = {};
   S.invites = []; S.invitesLoaded = false; S.draft = null; S.dirty = false;
@@ -760,7 +761,7 @@ function afterRender() { AFTER_RENDER.forEach(f => { try { f(); } catch (e) { } 
 function fitNums() {
   document.querySelectorAll('.today-strip b, .kpi .v').forEach(el => {
     el.style.fontSize = ''; let fs = parseFloat(getComputedStyle(el).fontSize) || 24; let n = 0;
-    while (el.scrollWidth > el.clientWidth + 1 && fs > 13 && n++ < 24) { fs -= 1; el.style.fontSize = fs + 'px'; }
+    while (el.scrollWidth > el.clientWidth && fs > 12 && n++ < 30) { fs -= 1; el.style.fontSize = fs + 'px'; }
   });
 }
 AFTER_RENDER.push(fitNums, () => setTimeout(fitNums, 400));

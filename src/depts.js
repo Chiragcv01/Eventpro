@@ -266,11 +266,11 @@ function deptListsTab(d, lists, head) {
 }
 function checklistRow(x, showDept) {
   const n = (x.items || []).length; const dn = listDone(x); const e = x.eventId ? evById(x.eventId) : null; const full = n && dn >= n;
-  return `<button class="row click" onclick="A.checklistOpen('${x.id}')">${ibox(full ? 'check' : 'file', full ? '#0B9B68' : MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${showDept ? `${T('From')} ${esc(T(x.deptName || ''))} · ` : ''}${x.kind === 'event' ? (e ? `${esc(e.title)} · ${T(fmtShort(e.date))}` : T('Event')) : T('Every day')}${x.assignKey && deptById(x.deptId) ? ` · ${esc(personName(deptById(x.deptId), x.assignKey))}` : ''}</div></div><span class="list-prog ${full ? 'full' : ''}"><b>${dn}/${n}</b><i style="--p:${n ? Math.round(dn / n * 100) : 0}%"></i></span></button>`;
+  return `<button class="row click" onclick="A.checklistOpen('${x.id}')">${ibox(full ? 'check' : 'file', full ? '#0B9B68' : MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${showDept ? `${T('Shared by')} ${esc(T(x.deptName || ''))} · ` : ''}${x.kind === 'event' ? (e ? `${esc(e.title)} · ${T(fmtShort(e.date))}` : T('Event')) : T('Every day')}${x.assignKey && deptById(x.deptId) ? ` · ${esc(personName(deptById(x.deptId), x.assignKey))}` : ''}</div></div><span class="list-prog ${full ? 'full' : ''}"><b>${dn}/${n}</b><i style="--p:${n ? Math.round(dn / n * 100) : 0}%"></i></span></button>`;
 }
 function deptSharedTab(items) {
   return `<div class="banner" style="margin-bottom:12px">${ic('eye')}<span>${T('Another department shared these with you. You can see them but not change them.')}</span></div>
-    <div class="card"><div class="rows">${items.map(x => x.items ? checklistRow(x, true) : `<div class="row">${ibox('pulse', MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${T('From')} ${esc(T(x.deptName || ''))}${x.date ? ' · ' + T(fmtShort(x.date)) : ''}</div></div>${pill((+x.progress || 0) >= 100 ? T('Done') : (+x.progress || 0) + '%', (+x.progress || 0) >= 100 ? 'good' : '')}</div>`).join('')}</div></div>`;
+    <div class="card"><div class="rows">${items.map(x => x.items ? checklistRow(x, true) : `<div class="row">${ibox('pulse', MOD.tasks.c, 'sm')}<div class="main-col"><b>${esc(x.title)}</b><div class="sub">${T('Shared by')} ${esc(T(x.deptName || ''))}${x.date ? ' · ' + T(fmtShort(x.date)) : ''}</div></div>${pill((+x.progress || 0) >= 100 ? T('Done') : (+x.progress || 0) + '%', (+x.progress || 0) >= 100 ? 'good' : '')}</div>`).join('')}</div></div>`;
 }
 
 /* share with other departments: the head cannot read other departments, so names come from public.dept_names */
