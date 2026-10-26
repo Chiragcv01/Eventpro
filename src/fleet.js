@@ -469,6 +469,25 @@ A.fleetPay = () => {
     <p class="tiny muted">${T('The payment goes to the oldest unpaid trips first. To put it on one trip, open that trip.')}</p></div>`);
 };
 
+/* ---------- Payments page for transport businesses: every freight receipt, from trips and bills ---------- */
+function fleetReceipts() {
+  const out = [];
+  col('trips').forEach(t => (t.recv || []).forEach(r => out.push({ ...r, party: t.party, what: `${t.lr || t.no} · ${t.from} → ${t.to}`, go: `A.go('trip',{id:'${t.id}'})` })));
+  col('fbills').forEach(b => (b.recv || []).forEach(r => out.push({ ...r, party: b.party, what: b.no, go: `A.go('fbill',{id:'${b.id}'})` })));
+  col('payments').forEach(p => { const inv = getById('invoices', p.invoiceId); out.push({ ...p, party: inv?.client || '', what: inv?.no || '', note: p.ref || '', go: `A.receipt('${p.id}')` }); });
+  return out.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+}
+const _paymentsFleet = V.payments; V.payments = () => {
+  if (!transportOnly()) return _paymentsFleet();
+  const month = S.filters.rcMonth || todayLocal().slice(0, 7); const all = fleetReceipts(); const list = all.filter(r => (r.date || '').startsWith(month)); const t = todayLocal();
+  const due = partyList().filter(p => p.bal > 0); const edit = can('fleet', 2);
+  return pageHead('Payments received', 'Freight received from parties. A payment reduces the party’s khata.', edit ? `<button class="btn primary" onclick="A.fleetPay()">${ic('plus')} ${T('Payment received')}</button>` : '') +
+  `<div class="today-strip"><div><b>${inr(sum(all.filter(r => r.date === t), r => +r.amount || 0))}</b><span>${T('Received today')}</span></div><div><b>${inr(sum(list, r => +r.amount || 0))}</b><span>${T('This month')}</span></div><div><b>${inr(sum(due, p => p.bal))}</b><span>${T('To collect')}</span></div></div>
+  ${due.length ? `<div class="sec-h"><h2>${T('Who has to pay')}</h2></div><div class="card"><div class="rows">${due.slice(0, 6).map(p => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(p.name))}</div><button class="main-col linkish" style="min-width:150px" onclick="A.partySheet('${esc(p.key)}')"><b>${esc(p.name)}</b><div class="sub">${p.oldest ? `${T('oldest due')} ${dShortF(p.oldest.date)}` : ''}</div></button><div class="row-flex" style="gap:6px">${pill(`${T('Due')} ${inr(p.bal)}`, 'bad')}${edit ? `<button class="btn sm primary" onclick="A.partyPay('${esc(p.key)}')">${ic('rupee')} ${T('Received')}</button>` : ''}</div></div>`).join('')}</div>${due.length > 6 ? `<button class="btn ghost block" onclick="A.go('fleet',{tab:'parties'})">${T('All parties')} (${due.length})</button>` : ''}</div>` : ''}
+  <div class="sec-h"><h2>${T('Received')}</h2><input type="month" style="width:auto" value="${month}" onchange="A.setF('rcMonth',this.value)"></div>
+  <div class="card">${list.length ? `<div class="rows">${list.map(r => `<button class="row click rcpt-row" onclick="${r.go}">${ibox('rupee', '#0B9B68', 'sm')}<div class="main-col"><b>${esc(r.party || '—')}</b><div class="sub">${dShortF(r.date)} · ${esc(T(r.mode || ''))}${r.what ? ' · ' + esc(r.what) : ''}${r.note ? ' · ' + esc(r.note) : ''}</div></div><b class="num good-t">${inr(r.amount)}</b></button>`).join('')}</div>` : empty('Nothing received this month', 'Tap Payment received when a party pays. It goes to that party’s oldest unpaid trips first.', edit ? `<button class="btn primary" onclick="A.fleetPay()">${ic('rupee')} ${T('Payment received')}</button>` : '', 'rupee', '#0B9B68')}</div>`;
+};
+
 /* ---------- freight bills (the transporter's bill to a party) ---------- */
 const fbById = id => getById('fbills', id);
 const unbilled = key => col('trips').filter(t => pKey(t) === key && t.status !== 'cancelled' && !t.fbillId && !t.invoiceId && t.payType !== 'paid').sort(by('date'));

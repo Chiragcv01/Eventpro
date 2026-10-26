@@ -786,7 +786,7 @@ function shell(body) {
   const st = settings(); const items = navItems(); const cur = currentModule();
   const groups = [...new Set(items.map(m => m.group))];
   const alerts = computeAlerts(); const bellN = alerts.length + (typeof pendingForMe === 'function' ? pendingForMe().length : 0);
-  const pri = (isClinic() ? ['dashboard', 'appointments', 'patients'] : ['dashboard', ...(typeof isTransport === 'function' && isTransport() ? ['fleet'] : []), 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments']).filter(k => can(k));
+  const pri = (isClinic() ? ['dashboard', 'appointments', 'patients'] : ['dashboard', ...(typeof isTransport === 'function' && isTransport() ? ['fleet', ...(transportOnly() ? ['payments'] : [])] : []), 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments']).filter(k => can(k));
   const left = pri.slice(0, 2), right = pri.slice(2, 3);
   const roleLabel = S.org ? (S.roles[S.role]?.label || S.role) : '';
   const name = S.me?.name || S.user.name; const first = (name || '').split(' ')[0];

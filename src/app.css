@@ -904,3 +904,5 @@ span.hall-chip{cursor:default}
 .fb-pick{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:0 10px}
 .fb-pick label.row{cursor:pointer;gap:10px;align-items:center}
 .fb-pick input[type=checkbox]{width:20px;height:20px;flex:none}
+.upd-bar{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--ink);color:#fff;border-radius:14px;padding:10px 12px;box-shadow:var(--sh2,0 8px 24px rgba(0,0,0,.2));max-width:520px;margin:0 auto}
+.rcpt-row .main-col b{overflow-wrap:anywhere}

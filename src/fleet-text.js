@@ -374,4 +374,13 @@ Loading / hamali | लोडिंग / हमाली
 Detention / halting | रुकाई / हॉल्टिंग
 Other charges | बाकी चार्ज
 Freight bill {} | भाड़ा बिल {1}
+Payments received | पेमेंट मिले
+Freight received from parties. A payment reduces the party’s khata. | पार्टियों से मिला भाड़ा। पेमेंट से पार्टी का खाता कम होता है।
+Received today | आज मिला
+Who has to pay | किसे देना है
+All parties | सभी पार्टी
+Nothing received this month | इस महीने कुछ नहीं मिला
+Tap Payment received when a party pays. It goes to that party’s oldest unpaid trips first. | पार्टी पैसे दे तो "पेमेंट मिला" दबाएं। ये पहले उस पार्टी की सबसे पुरानी बाकी ट्रिप में जुड़ता है।
+A new version of the app is ready. | ऐप का नया वर्ज़न तैयार है।
+Update now | अभी अपडेट करें
 `);

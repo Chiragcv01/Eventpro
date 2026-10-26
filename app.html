@@ -929,6 +929,8 @@ span.hall-chip{cursor:default}
 .fb-pick{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:0 10px}
 .fb-pick label.row{cursor:pointer;gap:10px;align-items:center}
 .fb-pick input[type=checkbox]{width:20px;height:20px;flex:none}
+.upd-bar{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--ink);color:#fff;border-radius:14px;padding:10px 12px;box-shadow:var(--sh2,0 8px 24px rgba(0,0,0,.2));max-width:520px;margin:0 auto}
+.rcpt-row .main-col b{overflow-wrap:anywhere}
 
 </style>
 </head>
@@ -936,6 +938,7 @@ span.hall-chip{cursor:default}
 <div id="app"></div>
 <div id="modalRoot" hidden></div>
 <script>
+window.SM_BUILD = 'fd26f9d98ef7';
 /* ================= Language: English / हिंदी =================
    The screens are written in English. When Hindi is on, every text node,
    placeholder and tooltip is swapped from the dictionary below as it appears
@@ -3907,7 +3910,7 @@ function shell(body) {
   const st = settings(); const items = navItems(); const cur = currentModule();
   const groups = [...new Set(items.map(m => m.group))];
   const alerts = computeAlerts(); const bellN = alerts.length + (typeof pendingForMe === 'function' ? pendingForMe().length : 0);
-  const pri = (isClinic() ? ['dashboard', 'appointments', 'patients'] : ['dashboard', ...(typeof isTransport === 'function' && isTransport() ? ['fleet'] : []), 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments']).filter(k => can(k));
+  const pri = (isClinic() ? ['dashboard', 'appointments', 'patients'] : ['dashboard', ...(typeof isTransport === 'function' && isTransport() ? ['fleet', ...(transportOnly() ? ['payments'] : [])] : []), 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments']).filter(k => can(k));
   const left = pri.slice(0, 2), right = pri.slice(2, 3);
   const roleLabel = S.org ? (S.roles[S.role]?.label || S.role) : '';
   const name = S.me?.name || S.user.name; const first = (name || '').split(' ')[0];
@@ -6760,6 +6763,20 @@ async function liveRefresh() {
   try { const { data, members } = await S.adapter.loadOrg(S.org.orgId); S.data = data; S.members = members; S.patLoaded = {}; lastFullLoad = Date.now(); liveRender(); } catch (e) { }
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') liveRefresh(); });
+/* New version check: when the app comes back to the screen (and every 15 minutes) it reads /version.json.
+   A newer build reloads by itself when nothing is open; otherwise a bar offers 'Update now'. */
+let updShown = false;
+async function checkUpdate() {
+  if (!window.SM_BUILD || !S.adapter || S.adapter.mode === 'local' || !/^https?:$/.test(location.protocol)) return;
+  try {
+    const r = await fetch('/version.json?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return; const j = await r.json(); if (!j.build || j.build === window.SM_BUILD) return;
+    const el = document.activeElement; const busy = !$('#modalRoot').hidden || (el && /INPUT|TEXTAREA|SELECT/.test(el.tagName));
+    if (!busy) { location.reload(); return; }
+    if (!updShown) { updShown = true; const d = document.createElement('div'); d.className = 'upd-bar'; d.innerHTML = `<span>${T('A new version of the app is ready.')}</span><button class="btn sm primary" onclick="location.reload()">${T('Update now')}</button>`; document.body.appendChild(d); }
+  } catch (e) { }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUpdate(); });
+setInterval(checkUpdate, 15 * 60 * 1000); setTimeout(checkUpdate, 15000);
 
 /* ---------- easy home (owner / manager) ---------- */
 const evToday = () => { const t = todayLocal(); return col('events').filter(e => !['Cancelled', 'Closed'].includes(e.stage) && e.date && e.date <= t && eventEnd(e) >= t); };
@@ -8795,6 +8812,25 @@ A.fleetPay = () => {
   modal(`${sheetHead(T('Payment received'), T('Which party paid?'))}<div class="sheet-b stack-sm"><div class="search">${ic('search')}<input placeholder="${T('Search party')}" oninput="const q=this.value.toLowerCase();document.querySelectorAll('#payParties .row').forEach(r=>r.hidden=!r.dataset.n.includes(q))"></div>
     <div class="rows" id="payParties">${list.map(p => `<button class="row click" data-n="${esc(p.name.toLowerCase())}" onclick="A.closeModal();setTimeout(()=>A.partyPay('${esc(p.key)}'),40)"><div class="avatar">${esc(initials(p.name))}</div><div class="main-col"><b>${esc(p.name)}</b><div class="sub">${p.trips.filter(t => tripMoney(t).bal > 0).length} ${T('trips due')}${p.oldest ? ` · ${T('oldest due')} ${dShortF(p.oldest.date)}` : ''}</div></div>${pill(`${T('Due')} ${inr(p.bal)}`, 'bad')}</button>`).join('')}</div>
     <p class="tiny muted">${T('The payment goes to the oldest unpaid trips first. To put it on one trip, open that trip.')}</p></div>`);
+};
+
+/* ---------- Payments page for transport businesses: every freight receipt, from trips and bills ---------- */
+function fleetReceipts() {
+  const out = [];
+  col('trips').forEach(t => (t.recv || []).forEach(r => out.push({ ...r, party: t.party, what: `${t.lr || t.no} · ${t.from} → ${t.to}`, go: `A.go('trip',{id:'${t.id}'})` })));
+  col('fbills').forEach(b => (b.recv || []).forEach(r => out.push({ ...r, party: b.party, what: b.no, go: `A.go('fbill',{id:'${b.id}'})` })));
+  col('payments').forEach(p => { const inv = getById('invoices', p.invoiceId); out.push({ ...p, party: inv?.client || '', what: inv?.no || '', note: p.ref || '', go: `A.receipt('${p.id}')` }); });
+  return out.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+}
+const _paymentsFleet = V.payments; V.payments = () => {
+  if (!transportOnly()) return _paymentsFleet();
+  const month = S.filters.rcMonth || todayLocal().slice(0, 7); const all = fleetReceipts(); const list = all.filter(r => (r.date || '').startsWith(month)); const t = todayLocal();
+  const due = partyList().filter(p => p.bal > 0); const edit = can('fleet', 2);
+  return pageHead('Payments received', 'Freight received from parties. A payment reduces the party’s khata.', edit ? `<button class="btn primary" onclick="A.fleetPay()">${ic('plus')} ${T('Payment received')}</button>` : '') +
+  `<div class="today-strip"><div><b>${inr(sum(all.filter(r => r.date === t), r => +r.amount || 0))}</b><span>${T('Received today')}</span></div><div><b>${inr(sum(list, r => +r.amount || 0))}</b><span>${T('This month')}</span></div><div><b>${inr(sum(due, p => p.bal))}</b><span>${T('To collect')}</span></div></div>
+  ${due.length ? `<div class="sec-h"><h2>${T('Who has to pay')}</h2></div><div class="card"><div class="rows">${due.slice(0, 6).map(p => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(p.name))}</div><button class="main-col linkish" style="min-width:150px" onclick="A.partySheet('${esc(p.key)}')"><b>${esc(p.name)}</b><div class="sub">${p.oldest ? `${T('oldest due')} ${dShortF(p.oldest.date)}` : ''}</div></button><div class="row-flex" style="gap:6px">${pill(`${T('Due')} ${inr(p.bal)}`, 'bad')}${edit ? `<button class="btn sm primary" onclick="A.partyPay('${esc(p.key)}')">${ic('rupee')} ${T('Received')}</button>` : ''}</div></div>`).join('')}</div>${due.length > 6 ? `<button class="btn ghost block" onclick="A.go('fleet',{tab:'parties'})">${T('All parties')} (${due.length})</button>` : ''}</div>` : ''}
+  <div class="sec-h"><h2>${T('Received')}</h2><input type="month" style="width:auto" value="${month}" onchange="A.setF('rcMonth',this.value)"></div>
+  <div class="card">${list.length ? `<div class="rows">${list.map(r => `<button class="row click rcpt-row" onclick="${r.go}">${ibox('rupee', '#0B9B68', 'sm')}<div class="main-col"><b>${esc(r.party || '—')}</b><div class="sub">${dShortF(r.date)} · ${esc(T(r.mode || ''))}${r.what ? ' · ' + esc(r.what) : ''}${r.note ? ' · ' + esc(r.note) : ''}</div></div><b class="num good-t">${inr(r.amount)}</b></button>`).join('')}</div>` : empty('Nothing received this month', 'Tap Payment received when a party pays. It goes to that party’s oldest unpaid trips first.', edit ? `<button class="btn primary" onclick="A.fleetPay()">${ic('rupee')} ${T('Payment received')}</button>` : '', 'rupee', '#0B9B68')}</div>`;
 };
 
 /* ---------- freight bills (the transporter's bill to a party) ---------- */
@@ -12890,6 +12926,15 @@ Loading / hamali | लोडिंग / हमाली
 Detention / halting | रुकाई / हॉल्टिंग
 Other charges | बाकी चार्ज
 Freight bill {} | भाड़ा बिल {1}
+Payments received | पेमेंट मिले
+Freight received from parties. A payment reduces the party’s khata. | पार्टियों से मिला भाड़ा। पेमेंट से पार्टी का खाता कम होता है।
+Received today | आज मिला
+Who has to pay | किसे देना है
+All parties | सभी पार्टी
+Nothing received this month | इस महीने कुछ नहीं मिला
+Tap Payment received when a party pays. It goes to that party’s oldest unpaid trips first. | पार्टी पैसे दे तो "पेमेंट मिला" दबाएं। ये पहले उस पार्टी की सबसे पुरानी बाकी ट्रिप में जुड़ता है।
+A new version of the app is ready. | ऐप का नया वर्ज़न तैयार है।
+Update now | अभी अपडेट करें
 `);
 
 boot();

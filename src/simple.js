@@ -52,6 +52,20 @@ async function liveRefresh() {
   try { const { data, members } = await S.adapter.loadOrg(S.org.orgId); S.data = data; S.members = members; S.patLoaded = {}; lastFullLoad = Date.now(); liveRender(); } catch (e) { }
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') liveRefresh(); });
+/* New version check: when the app comes back to the screen (and every 15 minutes) it reads /version.json.
+   A newer build reloads by itself when nothing is open; otherwise a bar offers 'Update now'. */
+let updShown = false;
+async function checkUpdate() {
+  if (!window.SM_BUILD || !S.adapter || S.adapter.mode === 'local' || !/^https?:$/.test(location.protocol)) return;
+  try {
+    const r = await fetch('/version.json?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return; const j = await r.json(); if (!j.build || j.build === window.SM_BUILD) return;
+    const el = document.activeElement; const busy = !$('#modalRoot').hidden || (el && /INPUT|TEXTAREA|SELECT/.test(el.tagName));
+    if (!busy) { location.reload(); return; }
+    if (!updShown) { updShown = true; const d = document.createElement('div'); d.className = 'upd-bar'; d.innerHTML = `<span>${T('A new version of the app is ready.')}</span><button class="btn sm primary" onclick="location.reload()">${T('Update now')}</button>`; document.body.appendChild(d); }
+  } catch (e) { }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUpdate(); });
+setInterval(checkUpdate, 15 * 60 * 1000); setTimeout(checkUpdate, 15000);
 
 /* ---------- easy home (owner / manager) ---------- */
 const evToday = () => { const t = todayLocal(); return col('events').filter(e => !['Cancelled', 'Closed'].includes(e.stage) && e.date && e.date <= t && eventEnd(e) >= t); };

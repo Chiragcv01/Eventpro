@@ -4,7 +4,10 @@ src = root / 'src'
 head = (src / 'head.html').read_text()
 css = (src / 'app.css').read_text()
 js = '\n'.join((src / f).read_text() for f in ['i18n.js', 'core.js', 'alerts.js', 'help.js', 'auth.js', 'views-ops.js', 'views-money.js', 'views-admin.js', 'views-site.js', 'views-import.js', 'views-marketing.js', 'simple.js', 'leads.js', 'venue.js', 'depts.js', 'fleet.js', 'clinic.js', 'clinic-spec.js', 'clinic-biz.js', 'demo.js', 'clinic-text.js', 'clinic-spec-text.js', 'venue-text.js', 'fleet-text.js'])
-js += "\nboot();\n"
+import hashlib, json as _json
+build_id = hashlib.sha1(js.encode()).hexdigest()[:12]
+js = f"window.SM_BUILD = '{build_id}';\n" + js + "\nboot();\n"
+(root / 'version.json').write_text(_json.dumps({'build': build_id}) + '\n')
 body = f'<div id="app"></div>\n<div id="modalRoot" hidden></div>\n<script>\n{js}\n</script>\n'
 fragment = f'{head}<style>\n{css}\n</style>\n{body}'
 (root / 'dist').mkdir(exist_ok=True)
