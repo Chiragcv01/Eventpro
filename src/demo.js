@@ -3,7 +3,7 @@
    An allowed business gets "Demo data" (account menu, and a card on an empty home) to load or remove sample
    records for its kind: event (tent / caterer / planner / venue) or clinic. Every demo record has `demo: true`
    and an id starting 'dm_'; removing deletes only those, the business's own records are never touched. */
-const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'checklists', 'patients', 'readings', 'visits', 'appts', 'pmsgs'];
+const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'checklists', 'patients', 'readings', 'visits', 'appts', 'pmsgs', 'vehicles', 'drivers', 'trips', 'fleetx', 'advances'];
 const demoSet = () => S.platform?.demo || {};
 const demoOrgOn = id => !!demoSet().all || (demoSet().orgs || []).includes(id);
 const demoAllowed = () => !!S.org && (S.super || demoOrgOn(S.org.orgId));
@@ -81,8 +81,12 @@ function demoEvent() {
     [['Rajesh Sharma (bride’s uncle)', 0, 'in', 3], ['Kamla Devi', 1, 'in', 2], ['Pankaj Sharma', 2, 'in', 2], ['Mama ji family', 3, 'in', 4], ['Neha & Rohan', 6, 'expected', 2], ['Dadi ji', 5, 'expected', 2]].forEach(([guest, ri, status, adults]) =>
       add('stays', { id: dmId('sy'), eventId: E1.id, guest, phone: '', roomId: R[ri].id, from: dD(status === 'in' ? -1 : 0), to: dD(2), status, adults, notes: '', ...(status === 'in' ? { inAt: dAt(-1, '15:00') } : {}) }));
   }
+  if ((st.bizTypes || []).includes('transport')) fleetDemo(add);
   return out;
 }
+function demoTransport() { const out = {}; const add = (c, r) => { (out[c] = out[c] || []).push({ ...r, demo: true }); return r; }; fleetDemo(add, true);
+  [['Venue / Rent', 12000, -3, 'Bank transfer'], ['Misc', 1100, -8, 'UPI'], ['Food & Grocery', 700, -1, 'Cash']].forEach(([category, amount, n, mode]) => add('expenses', { id: dmId('x'), category, amount, date: dD(n), mode, note: '' }));
+  return out; }
 
 function demoClinic() {
   const out = {}; const add = (c, r) => { (out[c] = out[c] || []).push({ ...r, demo: true }); return r; };
@@ -122,7 +126,7 @@ A.demoLoad = async (quiet) => {
   if (!demoCanUse()) { toast('Demo data is not allowed for this business. Ask SabManage support.', 'bad'); return; }
   if (demoCount()) { toast('Demo data is already loaded', 'warn'); return; }
   try {
-    const data = isClinic() ? demoClinic() : demoEvent(); let n = 0; const t = Date.now();
+    const data = isClinic() ? demoClinic() : transportOnly() ? demoTransport() : demoEvent(); let n = 0; const t = Date.now();
     for (const [c, recs] of Object.entries(data)) {
       const rows = recs.map(r => ({ ...r, demoDay: todayLocal(), updatedAt: t, updatedById: S.user?.id || '', updatedBy: 'Demo' }));
       await S.adapter.putMany(S.org.orgId, c, rows);
@@ -160,7 +164,7 @@ function demoBanner() {
   if (!S.org || !demoCanUse()) return '';
   const n = demoCount();
   if (n) return `<div class="banner demo-on" style="margin-bottom:12px">${ic('sparkle')}<span><b>${T('Demo data is on')}</b> · ${T(demoStale() ? 'loaded on an earlier day. Move it to today so today’s work shows.' : 'sample records are shown for a demo.')}</span><div class="demo-acts">${demoStale() ? `<button class="btn sm primary" onclick="A.demoRefresh()">${T('Move to today')}</button>` : ''}<button class="btn sm" onclick="A.demoSheet()">${T('Remove')}</button></div></div>`;
-  const empty_ = isClinic() ? !col('patients').length : !col('events').length && !col('leads').length;
+  const empty_ = isClinic() ? !col('patients').length : transportOnly() ? !col('vehicles').length : !col('events').length && !col('leads').length;
   return empty_ || demoOrgOn(S.org.orgId) ? `<div class="card pad row-flex demo-card" style="margin-bottom:14px;flex-wrap:nowrap">${ibox('sparkle', '#9333EA')}<div class="grow" style="min-width:0"><b>${T('Show the app with demo data')}</b><div class="small muted">${T('Load sample records to give a demo. Remove them in one tap later.')}</div></div><button class="btn primary sm" onclick="A.demoLoad()">${T('Load')}</button></div>` : '';
 }
 const _dashDemo = V.dashboard; V.dashboard = () => demoBanner() + _dashDemo();

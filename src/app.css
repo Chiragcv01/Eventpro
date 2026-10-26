@@ -714,7 +714,7 @@ h3 .info-btn .ico,h2 .info-btn .ico{width:15px;height:15px}
 .dc .dn{font-weight:800;font-size:13px;align-self:flex-start}
 .dts{display:flex;flex-wrap:wrap;gap:3px}.dt{color:#fff;font-size:11px;font-weight:800;border-radius:6px;min-width:18px;height:18px;padding:0 4px;display:inline-grid;place-items:center}
 .dc.is-booked{background:color-mix(in srgb,#0B9B68 7%,transparent)}
-.funnel{display:flex;flex-direction:column;gap:8px;padding:0 16px 16px}.fr{display:grid;grid-template-columns:110px 1fr 40px 40px;gap:8px;align-items:center;font-size:13.5px}
+.funnel{display:flex;flex-direction:column;gap:8px;padding:0 16px 16px}.funnel .fr{display:grid;grid-template-columns:110px 1fr 40px 40px;gap:8px;align-items:center;font-size:13.5px}
 .fb{height:12px;border-radius:99px;background:var(--surface2);overflow:hidden}.fb i{display:block;height:100%;border-radius:99px}
 .hall-chips{display:flex;flex-wrap:wrap;gap:8px}
 .hall-chip{border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:8px 12px;font:600 14px var(--f-body);color:var(--ink2);display:inline-flex;gap:6px;align-items:center;cursor:pointer}
@@ -853,3 +853,41 @@ span.hall-chip{cursor:default}
 .att.on.good{background:#DCFCE7;border-color:#22C55E;color:#166534}.att.on.warn{background:#FEF3C7;border-color:#F59E0B;color:#92400E}.att.on.info{background:#DBEAFE;border-color:#3B82F6;color:#1E40AF}.att.on.bad{background:#FEE2E2;border-color:#EF4444;color:#991B1B}
 @media (max-width:640px){.teeth{overflow:visible}.jaw{flex-direction:column;gap:6px;min-width:0}.jaw .q,.jaw .q:first-child{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;padding:0;border:0}.jaw .q::before{content:attr(data-l);grid-column:1/-1;font-size:11.5px;color:var(--muted);font-weight:700}.tooth{width:100%;height:40px}.jaw-line{display:none}.jaw-line+.jaw{border-top:2px solid var(--line);padding-top:6px}}
 .sal-tbl th,.sal-tbl td{white-space:nowrap}.sal-tbl td:first-child,.sal-tbl th:first-child{white-space:normal;min-width:150px}
+
+/* transport / fleet (26 Oct 2026) */
+.plate{display:inline-block;font:800 14px/1 var(--f-mono);letter-spacing:.04em;background:#FFD43B;color:#111;border:2px solid #111;border-radius:6px;padding:4px 7px;white-space:nowrap}
+.veh-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.veh-card{padding:12px 14px;display:flex;flex-direction:column;gap:6px;border-left:5px solid var(--line)}
+.veh-card.trip{border-left-color:var(--accent)}.veh-card.free{border-left-color:var(--good)}.veh-card.repair{border-left-color:var(--bad)}.veh-card.planned{border-left-color:var(--primary)}
+.veh-route{display:flex;flex-direction:column;gap:2px;min-width:0}.veh-route b{font:700 16px/1.25 var(--f-display);overflow-wrap:anywhere}
+.veh-route .ico{width:14px;height:14px;vertical-align:-2px}
+.icon-btn.sm-ic{width:32px;height:32px}
+.trip-head .trip-route{font:800 clamp(20px,5vw,26px)/1.2 var(--f-display);margin:2px 0 0;overflow-wrap:anywhere}
+.trip-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-top:12px;position:relative}
+.trip-steps button{background:none;border:0;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:var(--muted);font:600 12px/1.15 var(--f-body);text-align:center}
+.trip-steps button:disabled{cursor:default}
+.trip-steps i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);border:2px solid var(--line)}
+.trip-steps i .ico{width:17px;height:17px}
+.trip-steps .on{color:var(--ink)}.trip-steps .on i{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.trip-steps .cur i{background:var(--good);color:#fff;box-shadow:0 0 0 4px var(--good-soft)}
+.money-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.money-grid div{background:var(--surface2);border-radius:12px;padding:8px 10px;min-width:0}
+.money-grid span{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.money-grid b{font:800 17px/1.2 var(--f-display);overflow-wrap:anywhere}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px 14px}
+.kv span{display:block;font-size:12px;color:var(--muted)}.kv b{font-weight:600;overflow-wrap:anywhere}
+.rows.tight .row{padding:8px 0}
+.timeline>div{display:grid;grid-template-columns:14px 1fr;column-gap:8px;align-items:start}
+.timeline>div i{width:10px;height:10px;border-radius:50%;background:var(--c,var(--muted));margin-top:6px;grid-row:span 2}
+.timeline>div b{font-weight:600}
+.trip-row{align-items:center}
+.trip-d{display:flex;flex-direction:column;align-items:center;min-width:52px;font-size:12px;color:var(--muted)}.trip-d b{font:700 13px var(--f-mono);color:var(--ink)}
+.trip-m{display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right}
+.cost-chips{gap:6px}
+.more-box{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.more-box summary{cursor:pointer;color:var(--brand);font-weight:600}
+.veh-tile{text-align:left;width:100%}
+.drv-trip .trip-route{font:800 20px/1.25 var(--f-display)}
+@media (max-width:560px){.trip-row .trip-d{display:none}.trip-steps span{font-size:10.5px}.trip-steps i{width:30px;height:30px}}
+
+.veh-tile{display:flex;flex-direction:column;align-items:stretch}.veh-tile .tri{width:100%}.veh-tile .tri b{font-size:16px;overflow-wrap:anywhere}

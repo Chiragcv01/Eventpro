@@ -101,7 +101,7 @@ const MARK_SVG = '<svg class="ico mark" viewBox="0 0 24 24" aria-hidden="true"><
 const ic = (n, cls = '') => `<svg class="ico ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[n] || ''}"/></svg>`;
 
 /* ================= Domain constants ================= */
-const BIZ_TYPES = [['tent', 'Tent House'], ['caterer', 'Caterer / Halwai'], ['event', 'Event Manager / Planner'], ['venue', 'Venue / Banquet / Resort']];
+const BIZ_TYPES = [['tent', 'Tent House'], ['caterer', 'Caterer / Halwai'], ['event', 'Event Manager / Planner'], ['venue', 'Venue / Banquet / Resort'], ['transport', 'Transport / Logistics']];
 /* 'event' businesses (tent / caterer / event manager) and 'clinic' (doctor) get different sections.
    A module without `kinds` is for event businesses only. */
 const MODULES = [
@@ -112,6 +112,7 @@ const MODULES = [
   { key: 'bookings', label: 'Bookings', icon: 'calendar', group: 'Daily' },
   { key: 'leads', label: 'Leads & Sales', short: 'Leads', icon: 'megaphone', group: 'Daily' },
   { key: 'venue', label: 'Venue & Rooms', short: 'Venue', icon: 'building', group: 'Daily', biz: ['venue'] },
+  { key: 'fleet', label: 'Transport', icon: 'truck', group: 'Daily', biz: ['transport'] },
   { key: 'tasks', label: 'Live Tracker', short: 'Live', icon: 'pulse', group: 'Daily' },
   { key: 'inventory', label: 'Inventory', icon: 'box', group: 'Operations', biz: ['tent', 'event', 'venue'] },
   { key: 'catering', label: 'Catering', icon: 'pot', group: 'Operations', biz: ['caterer', 'event', 'venue'] },
@@ -127,24 +128,24 @@ const MODULES = [
   { key: 'team', label: 'Team & Access', icon: 'shield', group: 'Business', kinds: ['event', 'clinic'] },
   { key: 'settings', label: 'Settings', icon: 'gear', group: 'Business', kinds: ['event', 'clinic'] }
 ];
-const MOD_COLOR = { leads: '#9333EA', venue: '#0F766E', appointments: '#7C3AED', patients: '#E11D48', medical: '#0891B2', dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
+const MOD_COLOR = { fleet: '#C2410C', leads: '#9333EA', venue: '#0F766E', appointments: '#7C3AED', patients: '#E11D48', medical: '#0891B2', dashboard: '#1F5EFF', bookings: '#7C3AED', tasks: '#0EA5E9', inventory: '#2563EB', catering: '#16A34A', vendors: '#D97706', staff: '#0D9488', tools: '#4F46E5', invoices: '#DB2777', payments: '#0B9B68', expenses: '#EA580C', reports: '#0891B2', reviews: '#EAB308', marketing: '#E11D74', team: '#475569', settings: '#64748B' };
 MODULES.forEach(m => { m.c = MOD_COLOR[m.key]; });
 const MOD = Object.fromEntries(MODULES.map(m => [m.key, m]));
 const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C026D3'], 'Sangeet & Mehendi': ['music', '#F59E0B'], 'Ring Ceremony': ['rings', '#8B5CF6'], 'Corporate Event': ['briefcase', '#2563EB'], 'Birthday / Anniversary': ['cake', '#F97316'], 'Religious / Jagran': ['diya', '#EA580C'], 'Exhibition': ['store', '#0891B2'], 'Other': ['calendar', '#64748B'] };
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', checklists: 'tasks', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
+const COLL_MODULE = { vehicles: 'fleet', drivers: 'fleet', trips: 'fleet', fleetx: 'fleet', leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', checklists: 'tasks', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
   owner: { label: 'Owner', perms: allPerms(3), locked: true },
-  manager: { label: 'Manager', perms: { leads: 3, venue: 3, dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
-  accountant: { label: 'Accountant', perms: { leads: 1, venue: 1, dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
-  supervisor: { label: 'Site Supervisor', perms: { leads: 0, venue: 2, dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
-  sales: { label: 'Sales Executive', perms: { leads: 2, venue: 1, dashboard: 1, bookings: 2, tasks: 1, inventory: 0, catering: 1, vendors: 0, staff: 0, tools: 0, invoices: 1, payments: 0, expenses: 0, reports: 0, reviews: 1, marketing: 2, team: 0, settings: 0 } },
-  head: { label: 'Department Head', perms: { leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } },
-  staff: { label: 'Crew / Staff', perms: { leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
+  manager: { label: 'Manager', perms: { fleet: 3, leads: 3, venue: 3, dashboard: 1, bookings: 3, tasks: 3, inventory: 3, catering: 3, vendors: 2, staff: 2, tools: 2, invoices: 2, payments: 2, expenses: 2, reports: 1, reviews: 2, marketing: 2, team: 1, settings: 1 } },
+  accountant: { label: 'Accountant', perms: { fleet: 2, leads: 1, venue: 1, dashboard: 1, bookings: 1, tasks: 0, inventory: 0, catering: 0, vendors: 2, staff: 1, tools: 0, invoices: 3, payments: 3, expenses: 3, reports: 1, reviews: 1, marketing: 0, team: 0, settings: 1 } },
+  supervisor: { label: 'Site Supervisor', perms: { fleet: 2, leads: 0, venue: 2, dashboard: 1, bookings: 2, tasks: 3, inventory: 2, catering: 1, vendors: 1, staff: 2, tools: 2, invoices: 0, payments: 0, expenses: 2, reports: 0, reviews: 1, marketing: 0, team: 0, settings: 0 } },
+  sales: { label: 'Sales Executive', perms: { fleet: 0, leads: 2, venue: 1, dashboard: 1, bookings: 2, tasks: 1, inventory: 0, catering: 1, vendors: 0, staff: 0, tools: 0, invoices: 1, payments: 0, expenses: 0, reports: 0, reviews: 1, marketing: 2, team: 0, settings: 0 } },
+  head: { label: 'Department Head', perms: { fleet: 0, leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } },
+  staff: { label: 'Crew / Staff', perms: { fleet: 2, leads: 0, venue: 1, dashboard: 1, bookings: 1, tasks: 2, inventory: 1, catering: 0, vendors: 0, staff: 0, tools: 0, invoices: 0, payments: 0, expenses: 0, reports: 0, reviews: 0, marketing: 0, team: 0, settings: 0 } }
 };
 const CLINIC_ROLES = {
   owner: { label: 'Doctor (Owner)', perms: allPerms(3), locked: true },
@@ -516,11 +517,13 @@ const cloudReady = () => !!(CFG.supabaseUrl && CFG.supabaseAnonKey);
 const kindModules = () => MODULES.filter(m => (m.kinds || ['event']).includes(orgKind()));
 const orgKind = () => (S.org?.kind === 'clinic' ? 'clinic' : 'event');
 const isClinic = () => !!S.org && orgKind() === 'clinic';
+const TRANSPORT_HIDE = ['bookings', 'leads', 'tasks', 'reviews', 'marketing', 'reports'];
 function moduleOn(key) {
   const m = MOD[key]; const st = settings();
   if (!(m?.kinds || ['event']).includes(orgKind())) return false;
   if (st.modules && st.modules[key] === false) return false;
   if (st.modules && st.modules[key] === true) return true;
+  if (TRANSPORT_HIDE.includes(key) && typeof transportOnly === 'function' && transportOnly()) return false;
   if (!m?.biz) return true;
   return m.biz.some(b => (st.bizTypes || []).includes(b));
 }
@@ -783,7 +786,7 @@ function shell(body) {
   const st = settings(); const items = navItems(); const cur = currentModule();
   const groups = [...new Set(items.map(m => m.group))];
   const alerts = computeAlerts(); const bellN = alerts.length + (typeof pendingForMe === 'function' ? pendingForMe().length : 0);
-  const pri = (isClinic() ? ['dashboard', 'appointments', 'patients'] : ['dashboard', 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments']).filter(k => can(k));
+  const pri = (isClinic() ? ['dashboard', 'appointments', 'patients'] : ['dashboard', ...(typeof isTransport === 'function' && isTransport() ? ['fleet'] : []), 'bookings', 'tasks', 'invoices', 'inventory', 'catering', 'payments']).filter(k => can(k));
   const left = pri.slice(0, 2), right = pri.slice(2, 3);
   const roleLabel = S.org ? (S.roles[S.role]?.label || S.role) : '';
   const name = S.me?.name || S.user.name; const first = (name || '').split(' ')[0];
@@ -901,7 +904,7 @@ function invCalc(inv, payments) {
   else { taxable = base; gst = base * r; total = base + gst; }
   total = Math.round(total);
   const pays = (payments || col('payments')).filter(p => p.invoiceId === inv.id);
-  const paid = sum(pays, p => p.amount);
+  const paid = sum(pays, p => p.amount) + (inv.tripIds?.length && typeof tripPaidFor === 'function' ? tripPaidFor(inv) : 0);
   return { sub, disc, taxable, gst, cgst: inv.interstate ? 0 : gst / 2, sgst: inv.interstate ? 0 : gst / 2, igst: inv.interstate ? gst : 0, total, paid, balance: total - paid, pays };
 }
 function invStatus(inv, c) {
