@@ -14,6 +14,8 @@ Object.assign(HELP, {
   'trip-money': [['Money', 'पैसा'], ['Freight minus what the party paid = balance. Trip cost = all expenses + vehicle hire. Profit = freight − trip cost.', 'भाड़ा में से पार्टी का दिया हुआ घटाएं = बाकी। ट्रिप खर्च = सभी खर्च + गाड़ी का भाड़ा। मुनाफ़ा = भाड़ा − ट्रिप खर्च।']],
   'trip-costs': [['Trip expenses', 'ट्रिप के खर्च'], ['Diesel (with litres for mileage), toll, loading, bhatta and more. Mark who paid: driver (from advance) or office.', 'डीज़ल (माइलेज के लिए लीटर के साथ), टोल, लोडिंग, भत्ता और बाकी। किसने दिया लिखें: ड्राइवर (एडवांस से) या ऑफ़िस।']],
   'trip-driver': [['Driver hisaab', 'ड्राइवर का हिसाब'], ['Advance given − expenses paid by the driver. If positive the driver returns it; if negative you pay the driver. Hisaab done closes it.', 'दिया गया एडवांस − ड्राइवर का किया खर्च। प्लस में हो तो ड्राइवर लौटाए; माइनस में हो तो आप ड्राइवर को दें। हिसाब पूरा दबाने से बंद हो जाता है।']],
+  'fl-track': [['Tracking', 'ट्रैकिंग'], ['Write where each vehicle is: type the place and press Save. The driver can also send it from the app with the phone’s location. A pasted Google Maps link becomes a map point. Running vehicles not updated for 6 hours are marked.', 'हर गाड़ी कहां है लिखें: जगह लिखकर सेव दबाएं। ड्राइवर ऐप से फ़ोन की लोकेशन के साथ भी भेज सकता है। गूगल मैप का लिंक डालें तो मैप पॉइंट बन जाता है। 6 घंटे से अपडेट न हुई चलती गाड़ियां अलग दिखती हैं।']],
+  'fl-bills': [['Freight bills', 'भाड़ा बिल'], ['The transporter’s bill to a party: LR no., date, vehicle, route, consignor/consignee, weight, rate, freight and other charges for many trips in one bill, with GST (reverse charge, 5% or 12%), advance received and balance. Change a trip and the bill updates by itself.', 'पार्टी को ट्रांसपोर्टर का बिल: कई ट्रिप एक बिल में — बिल्टी नंबर, तारीख़, गाड़ी, रास्ता, भेजने/पाने वाला, वज़न, रेट, भाड़ा और बाकी चार्ज, जीएसटी (रिवर्स चार्ज, 5% या 12%), मिला एडवांस और बाकी पैसा। ट्रिप बदलें तो बिल अपने आप बदल जाता है।']],
   vehicle: [['Vehicle', 'गाड़ी'], ['Papers, month’s trips, income, costs, profit and mileage, and vehicle expenses like service, tyres and EMI.', 'कागज़, महीने की ट्रिप, कमाई, खर्च, मुनाफ़ा और माइलेज, और गाड़ी के खर्च जैसे सर्विस, टायर और ईएमआई।']]
 });
 I18N.load(Object.keys(HELP).filter(k => /^(fleet|fl-|trip|vehicle)/.test(k))
@@ -300,4 +302,76 @@ To place * | कहां तक *
 EMI date | ईएमआई की तारीख़
 Call driver | ड्राइवर को कॉल
 {} km | {1} किमी
+Tracking | ट्रैकिंग
+Freight bills | भाड़ा बिल
+Freight bill | भाड़ा बिल
+Vehicle location | गाड़ी की लोकेशन
+Search vehicle, place, driver | गाड़ी, जगह, ड्राइवर खोजें
+{} running vehicles not updated for 6+ hours | {1} चलती गाड़ियां 6+ घंटे से अपडेट नहीं हुईं
+Map point | मैप पॉइंट
+Not written yet | अभी नहीं लिखा
+Where is it now? | अभी कहां है?
+Where is it now | अभी कहां है
+Where is it now * | अभी कहां है *
+History | हिस्ट्री
+Tell party | पार्टी को बताएं
+Write the place | जगह लिखें
+Location saved | लोकेशन सेव हो गई
+e.g. Transport Nagar yard, Kishangarh toll, unloading at Okhla | जैसे ट्रांसपोर्ट नगर यार्ड, किशनगढ़ टोल, ओखला में खाली हो रही
+You can also paste a Google Maps link the driver sent. | ड्राइवर का भेजा गूगल मैप लिंक भी डाल सकते हैं।
+Trip status | ट्रिप का स्टेटस
+Which vehicle? | कौन सी गाड़ी?
+Location history | लोकेशन हिस्ट्री
+Update location | लोकेशन अपडेट
+Which party paid? | किस पार्टी ने पैसे दिए?
+Search party | पार्टी खोजें
+{} trips due | {1} ट्रिप बाकी
+trips due | ट्रिप बाकी
+The payment goes to the oldest unpaid trips first. To put it on one trip, open that trip. | पेमेंट पहले सबसे पुरानी बाकी ट्रिप में जुड़ता है। किसी एक ट्रिप में डालना हो तो वो ट्रिप खोलें।
+No balance pending with any party | किसी पार्टी का पैसा बाकी नहीं
+Bills made | बने बिल
+Pending on bills | बिलों पर बाकी
+New freight bill | नया भाड़ा बिल
+Bill settings | बिल सेटिंग
+Trips not billed yet | जिन ट्रिप का बिल नहीं बना
+No freight bill here | यहां कोई भाड़ा बिल नहीं
+Make a bill for a party from its delivered trips: LR, vehicle, route, weight and freight in one bill. | पार्टी की डिलीवर हुई ट्रिप से बिल बनाएं: बिल्टी, गाड़ी, रास्ता, वज़न और भाड़ा एक बिल में।
+GST: reverse charge | जीएसटी: रिवर्स चार्ज
+GST 5% | जीएसटी 5%
+GST 12% | जीएसटी 12%
+Pick the party and its trips | पार्टी और उसकी ट्रिप चुनें
+Trips on this bill | इस बिल की ट्रिप
+Bill date | बिल की तारीख़
+Tick at least one trip | कम से कम एक ट्रिप चुनें
+Bill made | बिल बन गया
+Bill not found | बिल नहीं मिला
+Print / PDF | प्रिंट / पीडीएफ़
+Received on the bill | बिल पर मिला
+Part paid | थोड़ा मिला
+Edit freight bill | भाड़ा बिल बदलें
+To change rate, weight or charges, edit the trip; the bill updates by itself. | रेट, वज़न या चार्ज बदलने के लिए ट्रिप बदलें; बिल अपने आप बदल जाएगा।
+Delete this bill? | यह बिल हटाएं?
+Its trips stay and can be billed again. | इसकी ट्रिप रहेंगी और फिर से बिल हो सकती हैं।
+Bank details and GSTIN come from Settings. | बैंक की जानकारी और जीएसटीआईएन सेटिंग से आते हैं।
+Bill number starts with | बिल नंबर किससे शुरू हो
+PAN (printed on the bill) | पैन (बिल पर छपेगा)
+Extra line in terms | शर्तों में एक और लाइन
+e.g. Interest @18% after the due date. | जैसे तय तारीख़ के बाद 18% ब्याज।
+Freight bill for unbilled trips | बिना बिल वाली ट्रिप का भाड़ा बिल
+charges | चार्ज
+ton | टन
+GST paid by | जीएसटी कौन भरेगा
+Transporter | ट्रांसपोर्टर
+Freight basis | भाड़ा कैसे
+Fixed for the trip | पूरी ट्रिप का तय
+Per ton (rate × weight) | प्रति टन (रेट × वज़न)
+Rate ₹ per ton | रेट ₹ प्रति टन
+Other charges (added to the party’s bill) | बाकी चार्ज (पार्टी के बिल में जुड़ेंगे)
+Loading / hamali ₹ | लोडिंग / हमाली ₹
+Detention / halting ₹ | रुकाई / हॉल्टिंग ₹
+Other charges ₹ | बाकी चार्ज ₹
+Loading / hamali | लोडिंग / हमाली
+Detention / halting | रुकाई / हॉल्टिंग
+Other charges | बाकी चार्ज
+Freight bill {} | भाड़ा बिल {1}
 `);
