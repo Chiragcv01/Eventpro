@@ -374,7 +374,6 @@ Loading / hamali | लोडिंग / हमाली
 Detention / halting | रुकाई / हॉल्टिंग
 Other charges | बाकी चार्ज
 Freight bill {} | भाड़ा बिल {1}
-Payments received | पेमेंट मिले
 Freight received from parties. A payment reduces the party’s khata. | पार्टियों से मिला भाड़ा। पेमेंट से पार्टी का खाता कम होता है।
 Received today | आज मिला
 Who has to pay | किसे देना है
@@ -383,4 +382,40 @@ Nothing received this month | इस महीने कुछ नहीं म�
 Tap Payment received when a party pays. It goes to that party’s oldest unpaid trips first. | पार्टी पैसे दे तो "पेमेंट मिला" दबाएं। ये पहले उस पार्टी की सबसे पुरानी बाकी ट्रिप में जुड़ता है।
 A new version of the app is ready. | ऐप का नया वर्ज़न तैयार है।
 Update now | अभी अपडेट करें
+Edit trip / bilty | ट्रिप / बिल्टी बदलें
+New trip / bilty | नई ट्रिप / बिल्टी
+Vehicle no. | गाड़ी नंबर
+Vehicle no. * | गाड़ी नंबर *
+Distance (km) | दूरी (किमी)
+Per km (rate × distance) | प्रति किमी (रेट × दूरी)
+Rate ₹ | रेट ₹
+Rate ₹ per km | रेट ₹ प्रति किमी
+Freight (from the party) | भाड़ा (पार्टी से)
+Transport name (party) | ट्रांसपोर्ट का नाम (पार्टी)
+Transport name (party) * | ट्रांसपोर्ट का नाम (पार्टी) *
+Blank = own vehicle | खाली = अपनी गाड़ी
+Freight to owner (lorry hire) ₹ | मालिक को भाड़ा ₹
+Advance paid to owner ₹ | मालिक को दिया एडवांस ₹
+Balance to pay owner | मालिक को बाकी देना
+Your margin | आपका मार्जिन
+Goods, consignor, consignee, driver (optional) | माल, भेजने वाला, पाने वाला, ड्राइवर (चाहें तो)
+Write the transport name (party) | ट्रांसपोर्ट का नाम (पार्टी) लिखें
+Bilty | बिल्टी
+Freight to owner | मालिक को भाड़ा
+Advance / paid | एडवांस / दिया
+Vehicle owners (lorry hire to pay) | गाड़ी मालिक (भाड़ा देना है)
+Send hisaab | हिसाब भेजें
+Lorry hire | गाड़ी भाड़ा
+Bilty & invoices | बिल्टी और इनवॉइस
+Every trip has its bilty and invoice. Fill the trip once; print either in one tap. | हर ट्रिप की बिल्टी और इनवॉइस। ट्रिप एक बार भरें; कोई भी एक टैप में प्रिंट करें।
+Search LR, vehicle, party, place | बिल्टी, गाड़ी, पार्टी, जगह खोजें
+Freight bills (many trips) | भाड़ा बिल (कई ट्रिप)
+Old invoices | पुराने इनवॉइस
+Make a trip: vehicle no., date, from, to, distance, freight, advance and the transport name. The bilty and invoice come from it. | ट्रिप बनाएं: गाड़ी नंबर, तारीख़, कहां से, कहां तक, दूरी, भाड़ा, एडवांस और ट्रांसपोर्ट का नाम। बिल्टी और इनवॉइस इसी से बनते हैं।
+Invoice number starts with | इनवॉइस नंबर किससे शुरू हो
+GST on invoices | इनवॉइस पर जीएसटी
+Show vehicle owner part on the bilty | बिल्टी पर गाड़ी मालिक वाला हिस्सा दिखाएं
+Show vehicle owner part on the invoice | इनवॉइस पर गाड़ी मालिक वाला हिस्सा दिखाएं
+Advance ₹ | एडवांस ₹
+Vehicle owner | गाड़ी मालिक
 `);

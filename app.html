@@ -931,6 +931,13 @@ span.hall-chip{cursor:default}
 .fb-pick input[type=checkbox]{width:20px;height:20px;flex:none}
 .upd-bar{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--ink);color:#fff;border-radius:14px;padding:10px 12px;box-shadow:var(--sh2,0 8px 24px rgba(0,0,0,.2));max-width:520px;margin:0 auto}
 .rcpt-row .main-col b{overflow-wrap:anywhere}
+/* transport trip / bilty form laid out like the slip (27 Oct 2026) */
+.slip-box{border:1px solid var(--line);border-radius:14px;padding:10px 12px 12px;background:var(--surface)}
+.slip-box.party{border-color:#BFE7D6;background:#F5FCF9}
+.slip-box.owner{border-color:#FFD9B8;background:#FFF9F3}
+.slip-t{font:700 13px var(--f-body);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px}
+.slip-bal{display:block;font:800 19px/1.2 var(--f-display);padding:10px 2px}
+.bi-row{flex-wrap:wrap;gap:8px}.bi-row .main-col{min-width:180px}
 
 </style>
 </head>
@@ -938,7 +945,7 @@ span.hall-chip{cursor:default}
 <div id="app"></div>
 <div id="modalRoot" hidden></div>
 <script>
-window.SM_BUILD = 'fd26f9d98ef7';
+window.SM_BUILD = 'bcdbab8b0137';
 /* ================= Language: English / हिंदी =================
    The screens are written in English. When Hindi is on, every text node,
    placeholder and tooltip is swapped from the dictionary below as it appears
@@ -8465,9 +8472,9 @@ V.trip = () => {
   const dph = d?.phone ? String(d.phone).replace(/\D/g, '').slice(-10) : ''; const pph = String(t.partyPhone || '').replace(/\D/g, '').slice(-10);
   const flow = ['planned', 'loading', 'on_way', 'reached', 'done']; const at = flow.indexOf(t.status);
   return `<button class="back" onclick="A.go('fleet',{tab:'trips'})">${ic('back')} ${T('Trips')}</button>
-  <div class="card pad trip-head"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><div style="min-width:0"><div class="tiny muted">${esc(t.no || '')}${t.lr ? ' · ' + T('LR') + ' ' + esc(t.lr) : ''} · ${dShortF(t.date)}${t.time ? ' ' + esc(t.time) : ''}</div><h1 class="trip-route">${esc(t.from || '?')} → ${esc(t.to || '?')}${info('trip')}</h1><div class="row-flex" style="gap:6px;margin-top:6px">${v ? `<button class="linkish" onclick="A.go('vehicle',{id:'${v.id}'})">${plate(v.no)}</button>` : ''}${pill(T(l), tone)}${t.pod ? pill(T('POD received'), 'good') : ''}${t.invoiceId || t.fbillId ? pill(T('Billed'), 'primary') : ''}</div></div>${edit ? `<button class="icon-btn" aria-label="Edit trip" onclick="A.tripForm({id:'${t.id}'})">${ic('edit')}</button>` : ''}</div>
+  <div class="card pad trip-head"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><div style="min-width:0"><div class="tiny muted">${t.lr ? esc(/^[A-Za-z]/.test(t.lr) ? t.lr : 'LR ' + t.lr) + ' · ' : ''}${esc(t.no || '')} · ${dShortF(t.date)}${t.time ? ' ' + esc(t.time) : ''}${t.party ? ' · ' + esc(t.party) : ''}</div><h1 class="trip-route">${esc(t.from || '?')} → ${esc(t.to || '?')}${t.distance ? ` <span class="tiny muted">${num(t.distance)} km</span>` : ''}${info('trip')}</h1><div class="row-flex" style="gap:6px;margin-top:6px">${v ? `<button class="linkish" onclick="A.go('vehicle',{id:'${v.id}'})">${plate(v.no)}</button>` : ''}${pill(T(l), tone)}${t.pod ? pill(T('POD received'), 'good') : ''}${t.invoiceId || t.fbillId ? pill(T('Billed'), 'primary') : ''}</div></div>${edit ? `<button class="icon-btn" aria-label="Edit trip" onclick="A.tripForm({id:'${t.id}'})">${ic('edit')}</button>` : ''}</div>
     ${t.status !== 'cancelled' ? `<div class="trip-steps">${flow.map((s, i) => `<button class="${i <= at ? 'on' : ''} ${i === at ? 'cur' : ''}" ${edit ? `onclick="A.tripStatus('${t.id}','${s}')"` : 'disabled'}><i>${ic(TRIP_ST[s][2])}</i><span>${T(TRIP_ST[s][0])}</span></button>`).join('')}</div>` : ''}
-    <div class="row-flex" style="gap:6px;margin-top:10px">${edit && TRIP_LIVE.includes(t.status) ? `<button class="btn sm primary" onclick="A.tripStatus('${t.id}')">${ic('pin')} ${T('Location update')}</button>` : ''}<button class="btn sm" onclick="A.printBilty('${t.id}')">${ic('print')} ${T('Bilty / LR')}</button>${t.fbillId && getById('fbills', t.fbillId) ? `<button class="btn sm" onclick="A.go('fbill',{id:'${t.fbillId}'})">${ic('receipt')} ${T('Freight bill')} ${esc(getById('fbills', t.fbillId).no)}</button>` : t.invoiceId && getById('invoices', t.invoiceId) ? `<button class="btn sm" onclick="A.go('invoice',{id:'${t.invoiceId}'})">${ic('receipt')} ${T('Open bill')}</button>` : edit && t.status !== 'cancelled' ? `<button class="btn sm" onclick="A.fbillNew({key:'${esc(pKey(t))}',ids:['${t.id}']})">${ic('receipt')} ${T('Make freight bill')}</button>` : ''}${dph ? `<a class="btn sm" href="tel:${dph}">${ic('phone')} ${T('Driver')}</a>` : ''}${pph ? waBtn(tripMsg(t), pph, T('Party')) : ''}</div></div>
+    <div class="row-flex" style="gap:6px;margin-top:10px">${edit && TRIP_LIVE.includes(t.status) ? `<button class="btn sm primary" onclick="A.tripStatus('${t.id}')">${ic('pin')} ${T('Location update')}</button>` : ''}<button class="btn sm" onclick="A.printSlip('${t.id}','bilty')">${ic('print')} ${T('Bilty')}</button><button class="btn sm" onclick="A.printSlip('${t.id}','invoice')">${ic('receipt')} ${T('Invoice')}</button>${t.fbillId && getById('fbills', t.fbillId) ? `<button class="btn sm" onclick="A.go('fbill',{id:'${t.fbillId}'})">${ic('receipt')} ${T('Freight bill')} ${esc(getById('fbills', t.fbillId).no)}</button>` : t.invoiceId && getById('invoices', t.invoiceId) ? `<button class="btn sm" onclick="A.go('invoice',{id:'${t.invoiceId}'})">${ic('receipt')} ${T('Open bill')}</button>` : ''}${dph ? `<a class="btn sm" href="tel:${dph}">${ic('phone')} ${T('Driver')}</a>` : ''}${pph ? waBtn(tripMsg(t), pph, T('Party')) : ''}</div></div>
   <div class="grid g2" style="margin-top:14px">
     <div class="card pad stack-sm"><h3>${T('Money')}${info('trip-money')}</h3>
       <div class="money-grid"><div><span>${T('Freight')}${m.chg ? ' + ' + T('charges') : ''}</span><b>${inr(m.freight)}</b>${m.chg ? `<span>${inr(m.base)} + ${inr(m.chg)}</span>` : ''}</div><div><span>${T('Received')}</span><b class="good-t">${inr(m.recv)}</b></div><div><span>${T('Balance')}</span><b class="${m.bal ? 'bad-t' : ''}">${inr(m.bal)}</b></div><div><span>${T('Trip cost')}</span><b>${inr(m.cost)}</b></div><div><span>${T('Profit')}</span><b class="${m.profit >= 0 ? 'good-t' : 'bad-t'}">${inr(m.profit)}</b></div>${m.km ? `<div><span>${T('Km')}</span><b>${num(m.km)}${m.mileage ? ` · ${m.mileage} ${T('km/l')}` : ''}</b></div>` : ''}</div>
@@ -8480,7 +8487,7 @@ V.trip = () => {
     ${d || m.given ? `<div class="card pad stack-sm"><h3>${T('Driver hisaab')}${info('trip-driver')}</h3><div class="money-grid"><div><span>${T('Advance given')}</span><b>${inr(m.given)}</b></div><div><span>${T('Spent by driver')}</span><b>${inr(m.spent)}</b></div><div><span>${m.drv >= 0 ? T('Driver returns') : T('Pay driver')}</span><b class="${m.drv ? 'bad-t' : ''}">${inr(Math.abs(m.drv))}</b></div></div>
       ${(t.dAdv || []).length ? `<div class="rows tight">${t.dAdv.map(r => `<div class="row"><div class="main-col"><b>${inr(r.amount)}</b><div class="sub">${dShortF(r.date)} · ${esc(T(r.mode || ''))}</div></div>${edit ? `<button class="icon-btn" aria-label="Delete" onclick="A.tripDelLine('${t.id}','dAdv','${r.id}')">${ic('x')}</button>` : ''}</div>`).join('')}</div>` : ''}
       ${edit ? `<div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.drvAdvance('${t.id}')">${ic('rupee')} ${T('Give advance')}</button>${!t.settled && (m.given || m.spent) ? `<button class="btn sm primary" onclick="A.tripSettle('${t.id}')">${ic('check')} ${T('Hisaab done')}</button>` : t.settled ? pill(T('Settled'), 'good') : ''}</div>` : ''}</div>` : ''}
-    ${v?.own === 'market' || m.hire ? `<div class="card pad stack-sm"><h3>${T('Vehicle hire (market vehicle)')}</h3><div class="money-grid"><div><span>${T('Hire to pay')}</span><b>${inr(m.hire)}</b></div><div><span>${T('Paid')}</span><b>${inr(m.hirePaid)}</b></div><div><span>${T('Balance')}</span><b class="${m.hireBal ? 'bad-t' : ''}">${inr(m.hireBal)}</b></div></div>${edit ? `<button class="btn sm" onclick="A.hirePay('${t.id}')">${ic('rupee')} ${T('Pay vehicle owner')}</button>` : ''}</div>` : ''}
+    ${v?.own === 'market' || m.hire || t.ownerName ? `<div class="card pad stack-sm"><h3>${T('Vehicle owner')}${t.ownerName ? ' · ' + esc(t.ownerName) : ''}</h3><div class="money-grid"><div><span>${T('Freight to owner')}</span><b>${inr(m.hire)}</b></div><div><span>${T('Advance / paid')}</span><b>${inr(m.hirePaid)}</b></div><div><span>${T('Balance')}</span><b class="${m.hireBal ? 'bad-t' : ''}">${inr(m.hireBal)}</b></div></div>${edit ? `<button class="btn sm" onclick="A.hirePay('${t.id}')">${ic('rupee')} ${T('Pay vehicle owner')}</button>` : ''}</div>` : ''}
     <div class="card pad stack-sm"><h3>${T('Load & papers')}</h3><div class="kv">${[['Party', t.party], ['Party phone', t.partyPhone], ['Consignor', t.consignor?.name], ['Consignee', t.consignee?.name], ['Goods', t.goods], ['Packages', t.packages], ['Weight', t.weight ? t.weight + ' ' + T('tons') : ''], ['Value of goods', t.value ? inr(t.value) : ''], ['Goods invoice no.', t.goodsInv], ['E-way bill', t.eway], ['GST paid by', t.gstBy ? T(GST_BY.find(g => g[0] === t.gstBy)?.[1] || '') : ''], ['Driver', d?.name], ['Km start → end', t.kmStart ? `${t.kmStart} → ${t.kmEnd || '…'}` : '']].filter(x => x[1]).map(([k, val]) => `<div><span>${T(k)}</span><b>${esc(val)}</b></div>`).join('')}</div>
       ${edit ? `<label class="check"><input type="checkbox" ${t.pod ? 'checked' : ''} onchange="A.tripPod('${t.id}',this.checked)"> <span>${T('POD (signed bilty) received back')}</span></label>` : ''}${t.notes ? `<div class="small muted">${esc(t.notes)}</div>` : ''}</div>
     <div class="card pad stack-sm"><h3>${T('Timeline')}</h3><div class="timeline">${(t.log || []).slice().reverse().map(x => `<div><i style="--c:var(--${(TRIP_ST[x.st] || TRIP_ST.planned)[1] || 'muted'})"></i><b>${T((TRIP_ST[x.st] || [''])[0])}${x.place ? ' · ' + esc(x.place) : ''}</b><span class="tiny muted">${esc(String(x.at || '').replace('T', ' ').slice(0, 16))}${x.by ? ' · ' + esc(x.by) : ''}${x.lat ? ` · <a href="https://maps.google.com/?q=${x.lat},${x.lng}" target="_blank" rel="noopener">${T('Map')}</a>` : ''}</span></div>`).join('') || `<span class="small muted">${T('Nothing yet')}</span>`}</div></div>
@@ -8490,55 +8497,95 @@ const tripMsg = t => { const st = settings(); const v = vehById(t.vehicleId); co
   return `${I18N.lang === 'hi' ? 'नमस्ते' : 'Namaste'} ${t.party || ''} ji 🙏\n${st.bizName}: ${T('Trip')} ${t.from} → ${t.to}${t.lr ? ` (${T('LR')} ${t.lr})` : ''}\n${T('Vehicle')}: ${v?.no || ''}${d ? `\n${T('Driver')}: ${d.name} ${d.phone || ''}` : ''}\n${T('Status')}: ${T(l)}${lg?.place ? ' · ' + lg.place : ''}${lg?.lat ? `\nhttps://maps.google.com/?q=${lg.lat},${lg.lng}` : ''}`; };
 const payMsg = t => { const st = settings(); const m = tripMoney(t); return I18N.lang === 'hi' ? `नमस्ते ${t.party || ''} जी 🙏\n${st.bizName} से। ${t.from} → ${t.to} (${dShortF(t.date)}${t.lr ? ', बिल्टी ' + t.lr : ''}) का भाड़ा ${inr(m.freight)}, मिला ${inr(m.recv)}, बाकी ${inr(m.bal)}। कृपया भुगतान कर दें।${st.upi ? '\nUPI: ' + st.upi : ''}\n${st.phone || ''}` : `Namaste ${t.party || ''} ji 🙏\nFrom ${st.bizName}. Freight for ${t.from} → ${t.to} (${dShortF(t.date)}${t.lr ? ', LR ' + t.lr : ''}): ${inr(m.freight)}, received ${inr(m.recv)}, balance ${inr(m.bal)}. Kindly pay.${st.upi ? '\nUPI: ' + st.upi : ''}\n${st.phone || ''}`; };
 
-/* ---------- trip form ---------- */
+/* ---------- trip / bilty form: laid out like the transporter's own slip ----------
+   Vehicle no. · Date · From · To · Distance · Freight · Advance · Balance · Transport name (party)
+   then Vehicle owner: Freight (lorry hire) · Advance · Balance. Goods / consignor / consignee etc. are optional, folded. */
+const advSum = a => sum((a || []).filter(x => x.adv), x => +x.amount || 0);
+const normNo = x => String(x || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 A.tripForm = (preset = {}) => {
-  if (!col('vehicles').length) { toast('Add a vehicle first', 'warn'); A.vehForm(); return; }
   const t = preset.id ? tripById(preset.id) : { date: todayLocal(), time: '', status: 'planned', payType: 'tbb', no: nextTripNo(), lr: nextLr(), ...preset };
-  const parties = partyList(); const v0 = vehById(t.vehicleId);
-  modal(`<form class="form" onsubmit="A.saveTrip(event,'${t.id || ''}')" novalidate>${sheetHead(T(t.id ? 'Edit trip' : 'New trip'), `${t.no || ''}`)}<div class="sheet-b stack">
-    <div class="grid2" style="padding:0">${fieldHTML({ name: 'vehicleId', label: 'Vehicle', type: 'select', required: true, value: t.vehicleId || '', options: [['', '— ' + T('Choose') + ' —'], ...col('vehicles').slice().sort(by('no')).map(v => [v.id, `${String(v.no).toUpperCase()} · ${T(v.type || '')}${vehState(v)[0] === 'trip' && v.id !== t.vehicleId ? ' (' + T('on a trip') + ')' : ''}`])] }).replace('<select', `<select onchange="const d=this.form.driverId;const m=${esc(JSON.stringify(Object.fromEntries(col('vehicles').map(v => [v.id, v.driverId || '']))))};if(d&&!d.value)d.value=m[this.value]||''"`)}
-    ${fieldHTML({ name: 'driverId', label: 'Driver', type: 'select', value: t.driverId || v0?.driverId || '', options: [['', '—'], ...col('drivers').slice().sort(by('name')).map(d => [d.id, d.name])] })}
-    ${fieldHTML({ name: 'from', label: 'From place', required: true, value: t.from || '', placeholder: 'e.g. Jaipur' })}${fieldHTML({ name: 'to', label: 'To place', required: true, value: t.to || '', placeholder: 'e.g. Delhi' })}
-    ${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: t.date })}${fieldHTML({ name: 'time', label: 'Time', type: 'time', value: t.time || '' })}</div>
-    <div class="grid2" style="padding:0"><label class="field"><span>${T('Party (who pays)')} *</span><input name="party" list="partyList" required value="${esc(t.party || '')}" autocomplete="off" oninput="A.partyPick(this)"><datalist id="partyList">${parties.map(p => `<option value="${esc(p.name)}">${esc(p.phone)}</option>`).join('')}</datalist></label>${fieldHTML({ name: 'partyPhone', label: 'Party mobile', type: 'tel', value: t.partyPhone || '' })}
-    ${fieldHTML({ name: 'rateType', label: 'Freight basis', type: 'select', value: t.rateType || 'fixed', options: [['fixed', T('Fixed for the trip')], ['ton', T('Per ton (rate × weight)')]] }).replace('<select', '<select onchange="A.tripCalc(this.form)"')}${fieldHTML({ name: 'rate', label: 'Rate ₹ per ton', type: 'number', min: 0, value: t.rate ?? '' }).replace('<input', '<input oninput="A.tripCalc(this.form)"').replace('<label class="field ', `<label ${t.rateType === 'ton' ? '' : 'hidden'} class="field rate-f `)}
-    ${fieldHTML({ name: 'freight', label: 'Freight (bhaada) ₹', type: 'number', min: 0, value: t.freight ?? '' })}${fieldHTML({ name: 'payType', label: 'Freight', type: 'select', value: t.payType || 'tbb', options: PAY_TYPES.map(([k, l]) => [k, T(l)]) })}
-    ${t.id ? '' : `${fieldHTML({ name: 'adv', label: 'Advance received now ₹', type: 'number', min: 0 })}${fieldHTML({ name: 'dadv', label: 'Advance to driver now ₹', type: 'number', min: 0 })}`}</div>
-    <details class="more-box" ${t.goods || t.consignor?.name ? 'open' : ''}><summary>${T('Goods, consignor, consignee (for the bilty)')}</summary><div class="grid2" style="padding:8px 0 0">
-      ${fieldHTML({ name: 'lr', label: 'Bilty / LR no.', value: t.lr || '' })}${fieldHTML({ name: 'goods', label: 'Goods', value: t.goods || '', placeholder: 'e.g. Cement bags, furniture' })}
-      ${fieldHTML({ name: 'packages', label: 'Packages / bags', value: t.packages || '' })}${fieldHTML({ name: 'weight', label: 'Weight (tons)', type: 'number', step: '0.01', min: 0, value: t.weight ?? '' }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
-      ${fieldHTML({ name: 'value', label: 'Value of goods ₹', type: 'number', min: 0, value: t.value ?? '' })}${fieldHTML({ name: 'goodsInv', label: 'Goods invoice no.', value: t.goodsInv || '' })}
-      ${fieldHTML({ name: 'eway', label: 'E-way bill no.', value: t.eway || '' })}${fieldHTML({ name: 'gstBy', label: 'GST paid by', type: 'select', value: t.gstBy || 'consignor', options: GST_BY.map(([k, l]) => [k, T(l)]) })}
-      ${fieldHTML({ name: 'partyGstin', label: 'Party GSTIN', value: t.partyGstin || '' })}
+  const parties = partyList(); const v0 = vehById(t.vehicleId); const owners = ownerList();
+  const pAdv = t.id ? advSum(t.recv) : '', oAdv = t.id ? advSum(t.hirePaid) : '';
+  const vmap = Object.fromEntries(col('vehicles').map(v => [normNo(v.no), { d: v.driverId || '', on: v.ownerName || '', op: v.ownerPhone || '', own: v.own || 'own' }]));
+  const box = (cls, title, inner) => `<div class="slip-box ${cls}"><div class="slip-t">${title}</div><div class="grid2" style="padding:0">${inner}</div></div>`;
+  modal(`<form class="form trip-form" onsubmit="A.saveTrip(event,'${t.id || ''}')" novalidate data-vmap="${esc(JSON.stringify(vmap))}" data-recv-other="${t.id ? sumA(t.recv) - pAdv : 0}" data-paid-other="${t.id ? sumA(t.hirePaid) - oAdv : 0}">${sheetHead(T(t.id ? 'Edit trip / bilty' : 'New trip / bilty'), `${t.lr || ''}${t.no ? ' · ' + t.no : ''}`)}<div class="sheet-b stack">
+    ${box('', T('Trip'), `
+      <label class="field"><span>${T('Vehicle no.')} *</span><input name="vehNo" list="vehList" required value="${esc(v0 ? String(v0.no).toUpperCase() : (t.vehNo || ''))}" placeholder="RJ14 GB 5421" autocomplete="off" oninput="A.tripVeh(this)" style="text-transform:uppercase"><datalist id="vehList">${col('vehicles').slice().sort(by('no')).map(v => `<option value="${esc(String(v.no).toUpperCase())}">${esc(T(v.type || ''))}${vehState(v)[0] === 'trip' && v.id !== t.vehicleId ? ' · ' + T('on a trip') : ''}</option>`).join('')}</datalist></label>
+      ${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: t.date })}
+      ${fieldHTML({ name: 'from', label: 'From place', required: true, value: t.from || '', placeholder: 'e.g. Jaipur' })}${fieldHTML({ name: 'to', label: 'To place', required: true, value: t.to || '', placeholder: 'e.g. Delhi' })}
+      ${fieldHTML({ name: 'distance', label: 'Distance (km)', type: 'number', min: 0, value: t.distance ?? '', placeholder: 'e.g. 280' }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
+      ${fieldHTML({ name: 'rateType', label: 'Freight basis', type: 'select', value: t.rateType || 'fixed', options: [['fixed', T('Fixed for the trip')], ['km', T('Per km (rate × distance)')], ['ton', T('Per ton (rate × weight)')]] }).replace('<select', '<select onchange="A.tripCalc(this.form)"')}
+      ${fieldHTML({ name: 'rate', label: 'Rate ₹', type: 'number', min: 0, value: t.rate ?? '' }).replace('<input', '<input oninput="A.tripCalc(this.form)"').replace('<label class="field ', `<label ${['km', 'ton'].includes(t.rateType) ? '' : 'hidden'} class="field rate-f `)}`)}
+    ${box('party', T('Freight (from the party)'), `
+      ${fieldHTML({ name: 'freight', label: 'Freight (bhaada) ₹', type: 'number', min: 0, value: t.freight ?? '' }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
+      ${fieldHTML({ name: 'adv', label: 'Advance ₹', type: 'number', min: 0, value: pAdv }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
+      <div class="field"><span>${T('Balance')}</span><output class="slip-bal" name="pBal">—</output></div>
+      <label class="field"><span>${T('Transport name (party)')} *</span><input name="party" list="partyList" required value="${esc(t.party || '')}" autocomplete="off" oninput="A.partyPick(this)"><datalist id="partyList">${parties.map(p => `<option value="${esc(p.name)}">${esc(p.phone)}</option>`).join('')}</datalist></label>
+      ${fieldHTML({ name: 'partyPhone', label: 'Party mobile', type: 'tel', value: t.partyPhone || '' })}`)}
+    ${box('owner', T('Vehicle owner'), `
+      <label class="field"><span>${T('Owner name')}</span><input name="ownerName" list="ownerList" value="${esc(t.ownerName ?? v0?.ownerName ?? '')}" autocomplete="off" placeholder="${T('Blank = own vehicle')}" oninput="A.ownerPick(this)"><datalist id="ownerList">${owners.map(o => `<option value="${esc(o.name)}">${esc(o.phone)}</option>`).join('')}</datalist></label>
+      ${fieldHTML({ name: 'ownerPhone', label: 'Owner mobile', type: 'tel', value: t.ownerPhone ?? v0?.ownerPhone ?? '' })}
+      ${fieldHTML({ name: 'hire', label: 'Freight to owner (lorry hire) ₹', type: 'number', min: 0, value: t.hire ?? '' }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
+      ${fieldHTML({ name: 'oadv', label: 'Advance paid to owner ₹', type: 'number', min: 0, value: oAdv }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
+      <div class="field"><span>${T('Balance to pay owner')}</span><output class="slip-bal" name="oBal">—</output></div>
+      <div class="field"><span>${T('Your margin')}</span><output class="slip-bal good-t" name="margin">—</output></div>`)}
+    <details class="more-box" ${t.goods || t.consignor?.name || t.weight ? 'open' : ''}><summary>${T('Goods, consignor, consignee, driver (optional)')}</summary><div class="grid2" style="padding:8px 0 0">
+      ${fieldHTML({ name: 'lr', label: 'Bilty / LR no.', value: t.lr || '' })}${fieldHTML({ name: 'payType', label: 'Freight', type: 'select', value: t.payType || 'tbb', options: PAY_TYPES.map(([k, l]) => [k, T(l)]) })}
+      ${fieldHTML({ name: 'driverId', label: 'Driver', type: 'select', value: t.driverId || v0?.driverId || '', options: [['', '—'], ...col('drivers').slice().sort(by('name')).map(d => [d.id, d.name])] })}${fieldHTML({ name: 'time', label: 'Time', type: 'time', value: t.time || '' })}
+      ${fieldHTML({ name: 'goods', label: 'Goods', value: t.goods || '', placeholder: 'e.g. Cement bags, furniture' })}${fieldHTML({ name: 'packages', label: 'Packages / bags', value: t.packages || '' })}
+      ${fieldHTML({ name: 'weight', label: 'Weight (tons)', type: 'number', step: '0.01', min: 0, value: t.weight ?? '' }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}${fieldHTML({ name: 'value', label: 'Value of goods ₹', type: 'number', min: 0, value: t.value ?? '' })}
+      ${fieldHTML({ name: 'goodsInv', label: 'Goods invoice no.', value: t.goodsInv || '' })}${fieldHTML({ name: 'eway', label: 'E-way bill no.', value: t.eway || '' })}
+      ${fieldHTML({ name: 'gstBy', label: 'GST paid by', type: 'select', value: t.gstBy || 'consignor', options: GST_BY.map(([k, l]) => [k, T(l)]) })}${fieldHTML({ name: 'partyGstin', label: 'Party GSTIN', value: t.partyGstin || '' })}
       ${fieldHTML({ name: 'partyAddress', label: 'Party address', value: t.partyAddress || '', full: true })}
       ${fieldHTML({ name: 'cnor_name', label: 'Consignor (sender)', value: t.consignor?.name || '' })}${fieldHTML({ name: 'cnor_gstin', label: 'Consignor GSTIN', value: t.consignor?.gstin || '' })}
       ${fieldHTML({ name: 'cnor_address', label: 'Consignor address', value: t.consignor?.address || '', full: true })}
       ${fieldHTML({ name: 'cnee_name', label: 'Consignee (receiver)', value: t.consignee?.name || '' })}${fieldHTML({ name: 'cnee_gstin', label: 'Consignee GSTIN', value: t.consignee?.gstin || '' })}
-      ${fieldHTML({ name: 'cnee_address', label: 'Consignee address', value: t.consignee?.address || '', full: true })}${fieldHTML({ name: 'cnee_phone', label: 'Consignee phone', type: 'tel', value: t.consignee?.phone || '' })}</div></details>
-    <details class="more-box" ${chgSum(t) ? 'open' : ''}><summary>${T('Other charges (added to the party’s bill)')}</summary><div class="grid2" style="padding:8px 0 0">
-      ${TRIP_CHG.map(([k, l]) => fieldHTML({ name: 'chg_' + k, label: `${l} ₹`, type: 'number', min: 0, value: t.charges?.[k] ?? '' })).join('')}</div></details>
-    <details class="more-box" ${t.kmStart || t.hire ? 'open' : ''}><summary>${T('Km and hire')}</summary><div class="grid2" style="padding:8px 0 0">
+      ${fieldHTML({ name: 'cnee_address', label: 'Consignee address', value: t.consignee?.address || '', full: true })}${fieldHTML({ name: 'cnee_phone', label: 'Consignee phone', type: 'tel', value: t.consignee?.phone || '' })}
+      ${TRIP_CHG.map(([k, l]) => fieldHTML({ name: 'chg_' + k, label: `${l} ₹`, type: 'number', min: 0, value: t.charges?.[k] ?? '' })).join('')}
       ${fieldHTML({ name: 'kmStart', label: 'Km reading at start', type: 'number', min: 0, value: t.kmStart ?? (v0?.odo || '') })}${fieldHTML({ name: 'kmEnd', label: 'Km reading at end', type: 'number', min: 0, value: t.kmEnd ?? '' })}
-      ${fieldHTML({ name: 'hire', label: 'Hire to pay vehicle owner ₹ (market vehicle)', type: 'number', min: 0, value: t.hire ?? '' })}</div></details>
-    ${fieldHTML({ name: 'notes', label: 'Notes', type: 'textarea', rows: 2, value: t.notes || '' })}
+      ${t.id ? '' : fieldHTML({ name: 'dadv', label: 'Advance to driver now ₹', type: 'number', min: 0 })}
+      ${fieldHTML({ name: 'notes', label: 'Notes', type: 'textarea', rows: 2, value: t.notes || '', full: true })}</div></details>
   </div><footer class="sheet-f">${t.id && can('fleet', 3) ? `<button type="button" class="btn ghost danger" onclick="A.delTrip('${t.id}')">${ic('trash')}</button>` : ''}${t.id && t.status !== 'cancelled' ? `<button type="button" class="btn ghost" onclick="A.tripCancel('${t.id}')">${T('Cancel trip')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`, { wide: true });
+  setTimeout(() => { const f = $('#modalRoot form.trip-form'); if (f) A.tripCalc(f); }, 20);
 };
-A.tripCalc = f => { const ton = f.rateType.value === 'ton'; const r = f.querySelector('.rate-f'); if (r) r.hidden = !ton; if (ton && +f.rate.value && +f.weight.value) f.freight.value = Math.round(+f.rate.value * +f.weight.value); if (ton && !+f.weight.value) { const d = f.querySelector('details'); if (d) d.open = true; } };
+A.tripVeh = el => { const f = el.form; let m = {}; try { m = JSON.parse(f.dataset.vmap || '{}'); } catch (e) { } const x = m[normNo(el.value)]; if (!x) return; if (f.driverId && !f.driverId.value) f.driverId.value = x.d; if (!f.ownerName.value && x.on) f.ownerName.value = x.on; if (!f.ownerPhone.value && x.op) f.ownerPhone.value = x.op; };
+A.ownerPick = el => { const o = ownerList().find(x => x.name.toLowerCase() === el.value.trim().toLowerCase()); if (o && !el.form.ownerPhone.value) el.form.ownerPhone.value = o.phone || ''; };
+A.tripCalc = f => {
+  const rt = f.rateType.value; const r = f.querySelector('.rate-f'); if (r) { r.hidden = rt === 'fixed'; const sp = r.querySelector('span'); if (sp) sp.textContent = T(rt === 'km' ? 'Rate ₹ per km' : 'Rate ₹ per ton'); }
+  const base = rt === 'km' ? +f.distance.value : rt === 'ton' ? +f.weight.value : 0; if (rt !== 'fixed' && +f.rate.value && base) f.freight.value = Math.round(+f.rate.value * base);
+  if (rt === 'ton' && !+f.weight.value) { const d = f.querySelector('details'); if (d) d.open = true; }
+  const fr = +f.freight.value || 0, hire = +f.hire.value || 0; const recvOther = +f.dataset.recvOther || 0, paidOther = +f.dataset.paidOther || 0;
+  f.pBal.value = inr(Math.max(0, fr - (+f.adv.value || 0) - recvOther)); f.oBal.value = hire ? inr(Math.max(0, hire - (+f.oadv.value || 0) - paidOther)) : '—'; f.margin.value = hire && fr ? inr(fr - hire) : '—';
+};
 A.partyPick = el => { const p = partyList().find(x => x.name.toLowerCase() === el.value.trim().toLowerCase()); if (!p) return; const f = el.form; if (!f.partyPhone.value) f.partyPhone.value = p.phone || ''; if (!f.partyGstin.value) f.partyGstin.value = p.gstin || ''; if (!f.partyAddress.value) f.partyAddress.value = p.address || ''; };
+/* the vehicle number is typed; a new number becomes a vehicle (market vehicle when an owner is written) */
+async function vehicleFor(no, ownerName, ownerPhone) {
+  const n = normNo(no); let v = col('vehicles').find(x => normNo(x.no) === n);
+  if (!v) { v = { id: uid('vh_'), no: String(no).trim().toUpperCase().replace(/\s+/g, ' '), type: 'Truck', own: ownerName ? 'market' : 'own', ownerName: ownerName || '', ownerPhone: ownerPhone || '', docs: {}, driverId: '' }; await save('vehicles', v, `Added vehicle ${v.no}`); }
+  else if (ownerName && !v.ownerName && v.own !== 'own') { v = { ...v, ownerName, ownerPhone: ownerPhone || v.ownerPhone || '' }; await save('vehicles', v); }
+  return v;
+}
+const setAdv = (list, amount, date, extra) => { const rest = (list || []).filter(x => !x.adv); const cur = advSum(list); if (!(+amount > 0)) return rest; if (+amount === cur) return list || []; return [{ id: uid('ad_'), amount: +amount, date, mode: 'Cash', note: T('Advance'), adv: true, ...extra }, ...rest]; };
 A.saveTrip = (e, id) => {
   e.preventDefault(); const v = readForm(e.target);
   withBtn(e, async () => {
-    if (!v.vehicleId) throw new Error('Choose the vehicle'); if (!(v.from || '').trim() || !(v.to || '').trim()) throw new Error('Write from and to'); if (!(v.party || '').trim()) throw new Error('Write the party name');
+    if (!(v.vehNo || '').trim()) throw new Error('Write the vehicle number'); if (!(v.from || '').trim() || !(v.to || '').trim()) throw new Error('Write from and to'); if (!(v.party || '').trim()) throw new Error('Write the transport name (party)');
+    const ownerName = (v.ownerName || '').trim(), ownerPhone = (v.ownerPhone || '').trim();
+    const veh = await vehicleFor(v.vehNo, ownerName, ownerPhone);
     const base = id ? tripById(id) : { id: uid('tr_'), no: nextTripNo(), status: 'planned', recv: [], dAdv: [], costs: [], hirePaid: [], log: [{ at: nowIso(), st: 'planned', by: S.me?.name || S.user.name }], created: Date.now() };
-    const party = { name: (v.cnor_name || '').trim(), gstin: (v.cnor_gstin || '').trim(), address: (v.cnor_address || '').trim() };
-    const rec = { ...base, vehicleId: v.vehicleId, driverId: v.driverId || '', from: v.from.trim(), to: v.to.trim(), date: v.date || todayLocal(), time: v.time || '', party: v.party.trim(), partyPhone: (v.partyPhone || '').trim(), partyGstin: (v.partyGstin || '').trim().toUpperCase(), partyAddress: (v.partyAddress || '').trim(),
-      freight: v.rateType === 'ton' && +v.rate && +v.weight ? Math.round(+v.rate * +v.weight) : +v.freight || 0, payType: v.payType || 'tbb', lr: (v.lr || '').trim() || base.lr || nextLr(), goods: (v.goods || '').trim(), packages: (v.packages || '').trim(), weight: nOr(v.weight), value: nOr(v.value), goodsInv: (v.goodsInv || '').trim(), eway: (v.eway || '').trim(),
-      rateType: v.rateType || 'fixed', rate: nOr(v.rate), charges: Object.fromEntries(TRIP_CHG.map(([k]) => [k, nOr(v['chg_' + k])])), gstBy: v.gstBy || 'consignor',
-      consignor: party, consignee: { name: (v.cnee_name || '').trim(), gstin: (v.cnee_gstin || '').trim(), address: (v.cnee_address || '').trim(), phone: (v.cnee_phone || '').trim() }, kmStart: nOr(v.kmStart), kmEnd: nOr(v.kmEnd), hire: nOr(v.hire), notes: (v.notes || '').trim() };
-    if (!id && +v.adv) rec.recv = [{ id: uid('rc_'), amount: +v.adv, date: rec.date, mode: 'Cash', note: T('Advance') }];
-    if (!id && +v.dadv) rec.dAdv = [{ id: uid('da_'), amount: +v.dadv, date: rec.date, mode: 'Cash' }];
-    await save('trips', rec, `${id ? 'Updated' : 'New'} trip ${rec.no}: ${rec.from} → ${rec.to}`);
-    if (rec.kmEnd) { const vh = vehById(rec.vehicleId); if (vh && +rec.kmEnd > +(vh.odo || 0)) await save('vehicles', { ...vh, odo: +rec.kmEnd }); }
+    const date = v.date || todayLocal(); const rt = v.rateType || 'fixed'; const mult = rt === 'km' ? +v.distance : rt === 'ton' ? +v.weight : 0;
+    const rec = { ...base, vehicleId: veh.id, driverId: v.driverId || (id ? base.driverId : veh.driverId) || '', from: v.from.trim(), to: v.to.trim(), date, time: v.time || '', distance: nOr(v.distance),
+      party: v.party.trim(), partyPhone: (v.partyPhone || '').trim(), partyGstin: (v.partyGstin || '').trim().toUpperCase(), partyAddress: (v.partyAddress || '').trim(),
+      rateType: rt, rate: nOr(v.rate), freight: rt !== 'fixed' && +v.rate && mult ? Math.round(+v.rate * mult) : +v.freight || 0, payType: v.payType || 'tbb', lr: (v.lr || '').trim() || base.lr || nextLr(),
+      ownerName, ownerPhone, hire: nOr(v.hire),
+      goods: (v.goods || '').trim(), packages: (v.packages || '').trim(), weight: nOr(v.weight), value: nOr(v.value), goodsInv: (v.goodsInv || '').trim(), eway: (v.eway || '').trim(), gstBy: v.gstBy || 'consignor',
+      charges: Object.fromEntries(TRIP_CHG.map(([k]) => [k, nOr(v['chg_' + k])])),
+      consignor: { name: (v.cnor_name || '').trim(), gstin: (v.cnor_gstin || '').trim(), address: (v.cnor_address || '').trim() }, consignee: { name: (v.cnee_name || '').trim(), gstin: (v.cnee_gstin || '').trim(), address: (v.cnee_address || '').trim(), phone: (v.cnee_phone || '').trim() },
+      kmStart: nOr(v.kmStart), kmEnd: nOr(v.kmEnd), notes: (v.notes || '').trim() };
+    rec.recv = setAdv(base.recv, v.adv, date); rec.hirePaid = setAdv(base.hirePaid, v.oadv, date);
+    if (!id && +v.dadv) rec.dAdv = [{ id: uid('da_'), amount: +v.dadv, date, mode: 'Cash' }];
+    await save('trips', rec, `${id ? 'Updated' : 'New'} trip ${rec.lr}: ${rec.from} → ${rec.to}`);
+    if (rec.kmEnd && +rec.kmEnd > +(veh.odo || 0)) await save('vehicles', { ...vehById(veh.id), odo: +rec.kmEnd });
     A.closeModal(); toast(id ? 'Saved' : 'Trip made'); if (id) render(); else A.go('trip', { id: rec.id });
   });
 };
@@ -8656,7 +8703,7 @@ A.delVx = id => confirmBox('Delete this expense?', '', 'Delete', async () => { a
 function fleetParties() {
   const list = partyList(); const tot = sum(list, p => p.bal);
   return `<div class="toolbar"><b class="num">${T('Total to collect')} ${inr(tot)}</b></div>
-  <div class="card">${list.length ? `<div class="rows">${list.map(p => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(p.name))}</div><button class="main-col linkish" style="min-width:160px" onclick="A.partySheet('${esc(p.key)}')"><b>${esc(p.name)}</b><div class="sub">${p.trips.length} ${T('trips')} · ${T('Freight')} ${inr(p.freight)} · ${T('Received')} ${inr(p.recv)}${p.oldest ? ` · ${T('oldest due')} ${dShortF(p.oldest.date)}` : ''}</div></button><div class="row-flex" style="gap:6px">${p.bal ? pill(`${T('Due')} ${inr(p.bal)}`, 'bad') : pill(T('Clear'), 'good')}${p.bal && p.phone ? waBtn(partyStatement(p), p.phone, T('Remind')) : ''}${can('fleet', 2) && p.bal ? `<button class="btn sm primary" onclick="A.partyPay('${esc(p.key)}')">${ic('rupee')} ${T('Received')}</button>` : ''}</div></div>`).join('')}</div>` : empty('No party yet', 'Parties come from your trips.', '', 'users', MOD.fleet.c)}</div>`;
+  <div class="card">${list.length ? `<div class="rows">${list.map(p => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(p.name))}</div><button class="main-col linkish" style="min-width:160px" onclick="A.partySheet('${esc(p.key)}')"><b>${esc(p.name)}</b><div class="sub">${p.trips.length} ${T('trips')} · ${T('Freight')} ${inr(p.freight)} · ${T('Received')} ${inr(p.recv)}${p.oldest ? ` · ${T('oldest due')} ${dShortF(p.oldest.date)}` : ''}</div></button><div class="row-flex" style="gap:6px">${p.bal ? pill(`${T('Due')} ${inr(p.bal)}`, 'bad') : pill(T('Clear'), 'good')}${p.bal && p.phone ? waBtn(partyStatement(p), p.phone, T('Remind')) : ''}${can('fleet', 2) && p.bal ? `<button class="btn sm primary" onclick="A.partyPay('${esc(p.key)}')">${ic('rupee')} ${T('Received')}</button>` : ''}</div></div>`).join('')}</div>` : empty('No party yet', 'Parties come from your trips.', '', 'users', MOD.fleet.c)}</div>${ownersCard()}`;
 }
 function partyStatement(p) {
   const st = settings(); const due = p.trips.filter(t => tripMoney(t).bal > 0);
@@ -8716,7 +8763,7 @@ A.fleetCSV = month => { const q = x => `"${String(x ?? '').replace(/"/g, '""')}"
   downloadFile(`trips-${month}.csv`, '﻿Date,Trip,LR,Vehicle,Driver,Party,From,To,Goods,Tons,Status,Freight,Received,Balance,Cost,Profit,Km,Diesel L\n' + rows.join('\n'), 'text/csv'); logAct('Downloaded trips CSV'); };
 
 /* ---------- bilty (LR / consignment note) ---------- */
-A.printBilty = id => {
+A.printBiltyCopies = id => {
   const t = tripById(id); const st = settings(); const v = vehById(t.vehicleId); const d = drvById(t.driverId); const w = window.open('', '_blank'); if (!w) { toast('Allow pop-ups to print', 'bad'); return; }
   const cn = t.consignor?.name ? t.consignor : { name: t.party, gstin: t.partyGstin, address: t.partyAddress }; const ce = t.consignee || {};
   const pt = { paid: 'PAID', topay: 'TO PAY', tbb: 'TO BE BILLED' }[t.payType] || 'TO BE BILLED'; const m = tripMoney(t);
@@ -8750,8 +8797,10 @@ A.tripBillOld = ids => {
 
 /* freight already received on the trips of a bill counts as paid on the bill (capped at the bill total) */
 function tripPaidFor(inv) { const got = sum(inv.tripIds.map(tripById).filter(Boolean), t => sumA(t.recv)); const lines = sum(inv.lines || [], l => (+l.qty || 0) * (+l.rate || 0) * (+l.days || 1)); const r = inv.gstMode === 'excl' ? 1 + (+inv.gstRate || 0) / 100 : 1; return Math.min(got * r, Math.round(lines * r)); }
-A.fleetSettings = () => { const st = settings(); formModal({ title: 'Transport settings', fields: [{ name: 'lrPrefix', label: 'Bilty / LR number starts with', value: st.lrPrefix || 'LR', placeholder: 'LR' }, { name: 'biltyTerms', label: 'Terms printed on the bilty', type: 'textarea', full: true, value: st.biltyTerms || '', placeholder: BILTY_TERMS }],
-  onSubmit: async v => { await saveSettingsRec({ lrPrefix: (v.lrPrefix || 'LR').replace(/[^A-Za-z0-9/-]/g, '').slice(0, 8) || 'LR', biltyTerms: (v.biltyTerms || '').trim() }); toast('Saved'); render(); } }); };
+A.fleetSettings = () => { const st = settings(); formModal({ title: 'Transport settings', fields: [{ name: 'lrPrefix', label: 'Bilty / LR number starts with', value: st.lrPrefix || 'LR', placeholder: 'LR' }, { name: 'tinvPrefix', label: 'Invoice number starts with', value: st.tinvPrefix || 'INV' }, { name: 'transportGst', label: 'GST on invoices', type: 'select', value: st.transportGst || 'rcm', options: [['rcm', T('Reverse charge: party pays GST (GTA, 5%)')], ['5', T('5% GST charged by us (no input credit)')], ['12', T('12% GST charged by us')], ['none', T('No GST')]] },
+  { name: 'slipOwnerBilty', label: 'Show vehicle owner part on the bilty', type: 'checkbox', value: st.slipOwnerBilty !== false }, { name: 'slipOwnerInv', label: 'Show vehicle owner part on the invoice', type: 'checkbox', value: st.slipOwnerInv !== false },
+  { name: 'biltyTerms', label: 'Terms printed on the bilty', type: 'textarea', full: true, value: st.biltyTerms || '', placeholder: BILTY_TERMS }],
+  onSubmit: async v => { await saveSettingsRec({ lrPrefix: (v.lrPrefix || 'LR').replace(/[^A-Za-z0-9/-]/g, '').slice(0, 8) || 'LR', tinvPrefix: (v.tinvPrefix || 'INV').replace(/[^A-Za-z0-9-]/g, '').slice(0, 8) || 'INV', transportGst: v.transportGst, slipOwnerBilty: !!v.slipOwnerBilty, slipOwnerInv: !!v.slipOwnerInv, biltyTerms: (v.biltyTerms || '').trim() }); toast('Saved'); render(); } }); };
 const BILTY_TERMS = "Goods are carried at owner's risk. We are not responsible for leakage, breakage or damage by weather.";
 
 /* ---------- tracking: owner / driver writes where each vehicle is ---------- */
@@ -8896,7 +8945,7 @@ function fbillHTML(b) {
   <div class="fb-to"><div><div class="lb">Billed to</div><b>${esc(b.party)}</b><div>${esc(b.partyAddress || '')}</div>${b.partyGstin ? `<div>GSTIN ${esc(b.partyGstin)}</div>` : ''}${b.partyPhone ? `<div>Ph ${esc(b.partyPhone)}</div>` : ''}</div>
     <div><div class="lb">Service</div><div>Transport of goods by road (GTA)</div><div>Reverse charge: <b>${c.rcm ? 'Yes' : 'No'}</b></div>${c.rate ? `<div>Place of supply: ${esc(stateOf(b.partyGstin) || st.stateCode || '')}</div>` : ''}</div></div>
   <div class="fb-tw"><table class="fb-tbl"><thead><tr><th>#</th><th>LR No. / Date</th><th>Vehicle</th><th>From → To</th><th>Consignor / Consignee</th><th>Goods / Pkgs</th><th class="r">Weight</th><th class="r">Rate</th><th class="r">Freight</th><th class="r">Other ch.</th><th class="r">Amount</th></tr></thead><tbody>
-  ${c.trips.map((t, i) => { const m = c.ms[i]; return `<tr><td>${i + 1}</td><td><b>${esc(t.lr || t.no)}</b><br>${fmtShort(t.date)}</td><td>${esc(String(vehById(t.vehicleId)?.no || '').toUpperCase())}</td><td>${esc(t.from)} → ${esc(t.to)}</td><td>${esc(t.consignor?.name || t.party || '')}<br><span class="mu">${esc(t.consignee?.name || '')}</span></td><td>${esc(t.goods || '')}${t.packages ? `<br><span class="mu">${esc(t.packages)}</span>` : ''}</td><td class="r">${t.weight ? esc(String(t.weight)) + ' T' : ''}</td><td class="r">${t.rateType === 'ton' && t.rate ? inr(t.rate) + '/T' : 'Fixed'}</td><td class="r">${inr(m.base)}</td><td class="r">${m.chg ? inr(m.chg) : '—'}</td><td class="r"><b>${inr(m.freight)}</b></td></tr>`; }).join('')}
+  ${c.trips.map((t, i) => { const m = c.ms[i]; return `<tr><td>${i + 1}</td><td><b>${esc(t.lr || t.no)}</b><br>${fmtShort(t.date)}</td><td>${esc(String(vehById(t.vehicleId)?.no || '').toUpperCase())}</td><td>${esc(t.from)} → ${esc(t.to)}${t.distance ? `<br><span class="mu">${num(t.distance)} km</span>` : ''}</td><td>${esc(t.consignor?.name || t.party || '')}<br><span class="mu">${esc(t.consignee?.name || '')}</span></td><td>${esc(t.goods || '')}${t.packages ? `<br><span class="mu">${esc(t.packages)}</span>` : ''}</td><td class="r">${t.weight ? esc(String(t.weight)) + ' T' : ''}</td><td class="r">${t.rateType === 'ton' && t.rate ? inr(t.rate) + '/T' : t.rateType === 'km' && t.rate ? inr(t.rate) + '/km' : 'Fixed'}</td><td class="r">${inr(m.base)}</td><td class="r">${m.chg ? inr(m.chg) : '—'}</td><td class="r"><b>${inr(m.freight)}</b></td></tr>`; }).join('')}
   <tr class="fb-sum"><td colspan="6"><b>Total</b> · ${c.trips.length} trip(s)</td><td class="r">${sum(c.trips, t => +t.weight || 0) ? Math.round(sum(c.trips, t => +t.weight || 0) * 100) / 100 + ' T' : ''}</td><td></td><td class="r">${inr(c.freight)}</td><td class="r">${c.chg ? inr(c.chg) : '—'}</td><td class="r"><b>${inr(c.sub)}</b></td></tr></tbody></table></div>
   <div class="fb-bot"><div class="fb-l"><div><b>Amount in words:</b> ${esc(inWords(c.total))} Rupees only</div>
     ${c.rcm ? '<div class="fb-note">GST on this freight is payable by the service recipient under reverse charge (GTA service, SAC 996511, Notification 13/2017-CT(R)).</div>' : c.rate === 5 ? '<div class="fb-note">GST @5% charged by the GTA. Input tax credit on goods and services used for this service has not been taken.</div>' : c.rate === 12 ? '<div class="fb-note">GST @12% charged by the GTA (forward charge).</div>' : ''}
@@ -8928,6 +8977,80 @@ A.fbillDel = id => confirmBox('Delete this bill?', 'Its trips stay and can be bi
 A.fbSettings = () => { const st = settings(); formModal({ title: 'Bill settings', sub: 'Bank details and GSTIN come from Settings.', fields: [{ name: 'fbPrefix', label: 'Bill number starts with', value: st.fbPrefix || 'FB' }, { name: 'fbDueDays', label: 'Payment due in (days)', type: 'number', min: 0, value: st.fbDueDays ?? 15 }, { name: 'pan', label: 'PAN (printed on the bill)', value: st.pan || '' }, { name: 'fbTerms', label: 'Extra line in terms', full: true, value: st.fbTerms || '', placeholder: 'e.g. Interest @18% after the due date.' }],
   onSubmit: async v => { await saveSettingsRec({ fbPrefix: (v.fbPrefix || 'FB').replace(/[^A-Za-z0-9-]/g, '').slice(0, 8) || 'FB', fbDueDays: +v.fbDueDays || 0, pan: (v.pan || '').toUpperCase(), fbTerms: (v.fbTerms || '').trim() }); toast('Saved'); render(); } }); };
 
+/* ---------- vehicle owners (lorry hire to pay) ---------- */
+function ownerList() {
+  const m = new Map();
+  col('trips').filter(t => t.status !== 'cancelled' && (+t.hire || (t.ownerName || '').trim())).forEach(t => {
+    const v = vehById(t.vehicleId); const name = (t.ownerName || v?.ownerName || '').trim() || String(v?.no || '').toUpperCase(); const phone = t.ownerPhone || v?.ownerPhone || '';
+    const k = String(phone).replace(/\D/g, '').slice(-10) || name.toLowerCase(); const o = m.get(k) || { key: k, name, phone, trips: [] }; o.trips.push(t); m.set(k, o);
+  });
+  return [...m.values()].map(o => { o.trips.sort(by('date')); o.hire = sum(o.trips, t => +t.hire || 0); o.paid = sum(o.trips, t => sumA(t.hirePaid)); o.bal = Math.max(0, o.hire - o.paid); return o; }).sort((a, b) => b.bal - a.bal);
+}
+A.ownerPay = key => { const o = ownerList().find(x => x.key === key); if (!o) return; lineForm('Pay vehicle owner', `${o.name} · ${T('Balance')} ${inr(o.bal)}`, [{ name: 'note', label: 'Note', full: true }], async v => {
+  let left = +v.amount; for (const t of o.trips) { if (left <= 0) break; const fresh = tripById(t.id); const bal = Math.max(0, (+fresh.hire || 0) - sumA(fresh.hirePaid)); if (!bal) continue; const a = Math.min(bal, left); left -= a; await save('trips', { ...fresh, hirePaid: [...(fresh.hirePaid || []), { id: uid('hp_'), amount: a, date: v.date || todayLocal(), mode: v.mode, note: (v.note || '').trim() }] }); }
+  logAct(`Paid ${inr(v.amount)} to vehicle owner ${o.name}`); toast(left > 0 ? `${T('Saved')}. ${inr(left)} ${T('more than the balance, not used')}` : T('Saved')); render(); }); };
+const ownerStatement = o => { const st = settings(); const due = o.trips.filter(t => (+t.hire || 0) > sumA(t.hirePaid)); return `${I18N.lang === 'hi' ? 'नमस्ते' : 'Namaste'} ${o.name} ji 🙏\n${st.bizName} — ${T('Lorry hire')}\n${due.map(t => `• ${dShortF(t.date)} ${String(vehById(t.vehicleId)?.no || '').toUpperCase()} ${t.from}→${t.to}: ${T('Freight')} ${inr(t.hire)}, ${T('Advance')} ${inr(sumA(t.hirePaid))}, ${T('Balance')} ${inr(t.hire - sumA(t.hirePaid))}`).join('\n')}\n*${T('Total')}: ${inr(o.bal)}*`; };
+function ownersCard() {
+  const list = ownerList(); if (!list.length) return ''; const edit = can('fleet', 2);
+  return `<div class="sec-h"><h2>${T('Vehicle owners (lorry hire to pay)')}</h2><b class="num">${inr(sum(list, o => o.bal))}</b></div><div class="card"><div class="rows">${list.map(o => `<div class="row" style="flex-wrap:wrap"><div class="avatar" style="background:#FFF1E5;color:#B04A00">${esc(initials(o.name))}</div><div class="main-col" style="min-width:160px"><b>${esc(o.name)}</b><div class="sub">${o.trips.length} ${T('trips')} · ${T('Freight')} ${inr(o.hire)} · ${T('Paid')} ${inr(o.paid)}</div></div><div class="row-flex" style="gap:6px">${o.bal ? pill(`${T('To pay')} ${inr(o.bal)}`, 'warn') : pill(T('Clear'), 'good')}${o.bal && o.phone ? waBtn(ownerStatement(o), o.phone, T('Send hisaab')) : ''}${edit && o.bal ? `<button class="btn sm" onclick="A.ownerPay('${esc(o.key)}')">${ic('rupee')} ${T('Pay')}</button>` : ''}</div></div>`).join('')}</div></div>`;
+}
+
+/* ---------- bilty and invoice for one trip, in the transporter's own order ---------- */
+function nextTripInvNo() { const st = settings(); const fy = fyOf(); const n = col('trips').filter(t => String(t.invNo || '').includes('/' + fy + '/')).reduce((mx, t) => Math.max(mx, +String(t.invNo).split('/').pop() || 0), 0) + 1; return `${st.tinvPrefix || 'INV'}/${fy}/${String(n).padStart(3, '0')}`; }
+function slipHTML(t, kind) {
+  const st = settings(); const m = tripMoney(t); const v = vehById(t.vehicleId); const d = drvById(t.driverId); const inv = kind === 'invoice';
+  const showOwner = (inv ? st.slipOwnerInv : st.slipOwnerBilty) !== false && (t.ownerName || m.hire);
+  const g = inv ? String(st.transportGst || 'rcm') : 'none'; const rate = ['5', '12'].includes(g) ? +g : 0; const me = stateOf(st.gstin) || String(st.stateCode || ''), them = stateOf(t.partyGstin); const inter = !!(rate && me && them && me !== them);
+  const gst = Math.round(m.freight * rate / 100); const total = m.freight + gst; const bal = Math.max(0, total - m.recv);
+  const r = (k, val, cls = '') => val === '' || val == null ? '' : `<tr class="${cls}"><th>${k}</th><td>${val}</td></tr>`;
+  const rateTxt = t.rateType === 'km' && t.rate ? ` <span class="mu">(${inr(t.rate)}/km × ${num(t.distance || 0)} km)</span>` : t.rateType === 'ton' && t.rate ? ` <span class="mu">(${inr(t.rate)}/ton × ${t.weight || 0} ton)</span>` : '';
+  const extra = [['Goods', t.goods], ['Packages', t.packages], ['Weight', t.weight ? t.weight + ' ton' : ''], ['Consignor', t.consignor?.name], ['Consignee', [t.consignee?.name, t.consignee?.address].filter(Boolean).join(', ')], ['E-way bill', t.eway], ['Driver', d ? `${d.name}${d.phone ? ' · ' + d.phone : ''}` : '']].filter(x => x[1]);
+  return `<div class="sl">
+  <div class="sl-h"><div class="sl-me">${st.logo ? `<img src="${esc(st.logo)}" alt="">` : ''}<div><h2>${esc(st.bizName || '')}</h2><div>${esc([st.address, st.city].filter(Boolean).join(', '))}</div><div>${[st.phone && 'Ph ' + esc(st.phone), st.gstin && 'GSTIN ' + esc(st.gstin)].filter(Boolean).join(' · ')}</div></div></div>
+    <div class="sl-no"><h3>${inv ? (rate ? 'TAX INVOICE' : 'INVOICE') : 'BILTY'}</h3>${inv ? `<div>Invoice No. <b>${esc(t.invNo || '')}</b></div>` : ''}<div>${inv ? 'LR' : 'LR / Bilty'} No. <b>${esc(t.lr || t.no || '')}</b></div></div></div>
+  <table class="sl-t">
+    ${r('Vehicle No.', `<b class="big">${esc(String(v?.no || t.vehNo || '').toUpperCase())}</b>`)}
+    ${r('Date', fmtDate(t.date))}
+    ${r('From', esc(t.from || ''))}
+    ${r('To', esc(t.to || ''))}
+    ${r('Distance', t.distance ? num(t.distance) + ' km' : '')}
+    ${r('Freight', `<b>${inr(m.base)}</b>${rateTxt}`)}
+    ${TRIP_CHG.map(([k, l]) => +t.charges?.[k] ? r(esc(l), inr(t.charges[k])) : '').join('')}
+    ${rate ? (inter ? r(`IGST @ ${rate}%`, inr(gst)) : r(`CGST @ ${rate / 2}%`, inr(Math.floor(gst / 2))) + r(`SGST @ ${rate / 2}%`, inr(gst - Math.floor(gst / 2)))) + r('Total', `<b>${inr(total)}</b>`) : m.chg ? r('Total', `<b>${inr(total)}</b>`) : ''}
+    ${r('Advance', inr(m.recv))}
+    ${r('Balance', `<b class="big">${inr(bal)}</b>`, 'bal')}
+    ${r('Transport Name', `<b>${esc(t.party || '')}</b>${t.partyPhone ? ' · ' + esc(t.partyPhone) : ''}${t.partyGstin ? `<br><span class="mu">GSTIN ${esc(t.partyGstin)}</span>` : ''}${t.partyAddress ? `<br><span class="mu">${esc(t.partyAddress)}</span>` : ''}`)}
+  </table>
+  ${showOwner ? `<div class="sl-own"><div class="sl-ot">Vehicle Owner</div><table class="sl-t">${r('Owner', `<b>${esc(t.ownerName || v?.ownerName || '')}</b>${(t.ownerPhone || v?.ownerPhone) ? ' · ' + esc(t.ownerPhone || v?.ownerPhone) : ''}`)}${r('Freight', `<b>${inr(m.hire)}</b>`)}${r('Advance', inr(m.hirePaid))}${r('Balance', `<b class="big">${inr(m.hireBal)}</b>`, 'bal')}</table></div>` : ''}
+  ${extra.length ? `<table class="sl-x">${extra.map(([k, val]) => `<tr><th>${k}</th><td>${esc(String(val))}</td></tr>`).join('')}</table>` : ''}
+  ${inv ? `<div class="sl-f"><div><b>Amount in words:</b> ${esc(inWords(total))} Rupees only</div>${g === 'rcm' ? '<div class="mu">GST on this freight is payable by the service recipient under reverse charge (GTA, SAC 996511).</div>' : rate === 5 ? '<div class="mu">GST @5% charged by the GTA (no input tax credit taken). SAC 996511.</div>' : rate ? '<div class="mu">GST @12% charged by the GTA (forward charge). SAC 996511.</div>' : ''}${st.bank || st.account || st.upi ? `<div class="mu">Bank: ${esc([st.bank, st.account && 'A/c ' + st.account, st.ifsc && 'IFSC ' + st.ifsc, st.upi && 'UPI ' + st.upi].filter(Boolean).join(' · '))}</div>` : ''}</div>`
+    : `<div class="sl-f mu">${esc(st.biltyTerms || BILTY_TERMS)} Subject to ${esc(st.city || 'local')} jurisdiction.</div>`}
+  <div class="sl-sg"><span>${inv ? 'Receiver' : 'Driver / owner'} signature</span><span>${st.stamp ? `<img src="${esc(st.stamp)}" alt="">` : ''}For ${esc(st.bizName || '')}</span></div></div>`;
+}
+const SLIP_CSS = `body{font:14px/1.45 system-ui,-apple-system,'Segoe UI',sans-serif;color:#111;max-width:720px;margin:16px auto;padding:0 12px;background:#fff}.sl{border:2px solid #111;padding:14px}.sl-h{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:8px}.sl-me{display:flex;gap:10px;align-items:center}.sl-me img{height:50px}.sl h2{margin:0;font-size:21px}.sl-me div div{font-size:12px;color:#333}.sl-no{text-align:right;font-size:13px}.sl-no h3{margin:0 0 4px;font-size:18px;letter-spacing:.06em}.sl-t,.sl-x{width:100%;border-collapse:collapse}.sl-t th,.sl-t td{border-bottom:1px solid #ccc;padding:7px 8px;text-align:left;vertical-align:top}.sl-t th{width:38%;font-weight:600;color:#333;background:#f6f7f9}.sl-t .big{font-size:17px}.sl-t tr.bal td,.sl-t tr.bal th{border-bottom:2px solid #111}.sl-own{border:2px solid #111;margin-top:12px}.sl-ot{background:#111;color:#fff;font-weight:700;padding:5px 8px;letter-spacing:.04em}.sl-x{margin-top:10px;font-size:12.5px}.sl-x th,.sl-x td{border:1px solid #ccc;padding:4px 6px;text-align:left}.sl-x th{width:30%;background:#fafafa;font-weight:600}.sl-f{margin-top:10px;font-size:12.5px}.sl-f>div{margin-top:4px}.mu{color:#555;font-size:12px}.sl-sg{display:flex;justify-content:space-between;gap:20px;margin-top:34px;font-size:12px}.sl-sg span{border-top:1px solid #111;padding-top:3px;min-width:180px;text-align:center}.sl-sg img{display:block;max-height:54px;margin:-60px auto 6px}.acts{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}.acts a,.acts button{padding:10px 16px;border-radius:10px;border:1px solid #111;background:#fff;color:#111;font:600 14px system-ui;text-decoration:none;cursor:pointer}.acts a{background:#0B9B68;border-color:#0B9B68;color:#fff}@media print{.acts{display:none}body{margin:0}}`;
+const slipMsg = (t, kind) => { const st = settings(); const m = tripMoney(t); const v = vehById(t.vehicleId);
+  return `${st.bizName}\n${kind === 'invoice' ? 'Invoice ' + (t.invNo || '') + ' · ' : ''}LR ${t.lr || ''}\nVehicle No.: ${String(v?.no || '').toUpperCase()}\nDate: ${fmtDate(t.date)}\nFrom: ${t.from}\nTo: ${t.to}${t.distance ? `\nDistance: ${t.distance} km` : ''}\nFreight: ${inr(m.freight)}\nAdvance: ${inr(m.recv)}\nBalance: ${inr(m.bal)}\nTransport Name: ${t.party || ''}`; };
+A.printSlip = async (id, kind) => {
+  let t = tripById(id); const w = window.open('', '_blank'); if (!w) { toast('Allow pop-ups to print', 'bad'); return; }
+  if (kind === 'invoice' && !t.invNo && can('fleet', 2)) { try { t = { ...t, invNo: nextTripInvNo() }; await save('trips', t, `Invoice ${t.invNo} for trip ${t.lr}`); } catch (e) { } }
+  const ph = String(t.partyPhone || '').replace(/\D/g, '').slice(-10);
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${kind === 'invoice' ? 'Invoice ' + esc(t.invNo || '') : 'Bilty ' + esc(t.lr || '')}</title><style>${SLIP_CSS}</style></head><body>${slipHTML(t, kind)}<div class="acts"><button onclick="print()">Print / Save as PDF</button>${ph ? `<a href="${esc(waLink(slipMsg(t, kind), ph))}" target="_blank" rel="noopener">WhatsApp</a>` : ''}</div></body></html>`);
+  w.document.close(); setTimeout(() => { try { w.print(); } catch (e) { } }, 450); logAct(`Printed ${kind} for trip ${t.lr}`); render();
+};
+A.printBilty = id => A.printSlip(id, 'bilty');
+
+/* ---------- Invoices page for transport businesses: bilty and invoice per trip ---------- */
+const _invoicesFleet = V.invoices; V.invoices = () => {
+  if (!transportOnly() || S.filters.oldInv) return (S.filters.oldInv && transportOnly() ? `<button class="back" onclick="A.setF('oldInv','')">${ic('back')} ${T('Bilty & invoices')}</button>` : '') + _invoicesFleet();
+  const q = (S.filters.biQ || '').toLowerCase(); let list = col('trips').filter(t => t.status !== 'cancelled').sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(b.lr).localeCompare(String(a.lr)));
+  if (q) list = list.filter(t => [t.lr, t.invNo, t.party, t.from, t.to, vehById(t.vehicleId)?.no, t.ownerName].join(' ').toLowerCase().includes(q));
+  const old = col('invoices').length;
+  return pageHead('Bilty & invoices', 'Every trip has its bilty and invoice. Fill the trip once; print either in one tap.', can('fleet', 2) ? `<button class="btn primary" onclick="A.tripForm()">${ic('plus')} ${T('New trip / bilty')}</button>` : '') +
+  `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="${T('Search LR, vehicle, party, place')}" value="${esc(S.filters.biQ || '')}" onchange="A.setF('biQ',this.value)"></div><button class="btn sm" onclick="A.go('fleet',{tab:'bills'})">${ic('receipt')} ${T('Freight bills (many trips)')}</button>${old ? `<button class="btn sm ghost" onclick="A.setF('oldInv','1')">${T('Old invoices')} (${old})</button>` : ''}</div>
+  <div class="card">${list.length ? `<div class="rows">${list.slice(0, 200).map(t => { const m = tripMoney(t); const v = vehById(t.vehicleId); return `<div class="row bi-row"><button class="main-col linkish" onclick="A.go('trip',{id:'${t.id}'})"><b>${esc(t.lr || t.no)} · ${esc(t.from)} → ${esc(t.to)}</b><div class="sub">${dShortF(t.date)} · ${v ? esc(String(v.no).toUpperCase()) + ' · ' : ''}${esc(t.party || '')}${t.invNo ? ' · ' + esc(t.invNo) : ''}</div></button><div class="trip-m"><b class="num">${inr(m.freight)}</b>${m.bal ? `<span class="tiny bad-t">${T('Balance')} ${inr(m.bal)}</span>` : `<span class="tiny good-t">${T('Paid')}</span>`}</div><div class="row-flex" style="gap:6px"><button class="btn sm" onclick="A.printSlip('${t.id}','bilty')">${ic('print')} ${T('Bilty')}</button><button class="btn sm" onclick="A.printSlip('${t.id}','invoice')">${ic('receipt')} ${T('Invoice')}</button></div></div>`; }).join('')}</div>` : empty('No trip yet', 'Make a trip: vehicle no., date, from, to, distance, freight, advance and the transport name. The bilty and invoice come from it.', can('fleet', 2) ? `<button class="btn primary" onclick="A.tripForm()">${ic('plus')} ${T('New trip / bilty')}</button>` : '', 'receipt', '#DB2777')}</div>`;
+};
+const _newInvoiceFleet = A.newInvoice; A.newInvoice = (...a) => transportOnly() ? A.tripForm() : _newInvoiceFleet(...a);
+
 /* ---------- reminders, home, crew ---------- */
 EXTRA_ALERTS.push(() => {
   if (!isTransport() || !can('fleet')) return []; const out = [];
@@ -8937,8 +9060,8 @@ EXTRA_ALERTS.push(() => {
   return out;
 });
 const _createFleet = createActions; createActions = () => { const base = _createFleet(); if (!isTransport() || !can('fleet', 2)) return base;
-  const fl = [['New trip', 'truck', MOD.fleet.c, 'A.tripForm()'], ['Diesel / expense', 'fuel', '#EA580C', 'A.pickTripCost()'], ['Freight received', 'rupee', '#0B9B68', 'A.fleetPay()'], ['Freight bill', 'receipt', '#DB2777', 'A.fbillNew()'], ['Vehicle location', 'pin', '#7C3AED', 'A.pickVehLoc()'], ['Add vehicle', 'plus', '#2563EB', 'A.vehForm()']];
-  return [...fl, ...(transportOnly() ? base.filter(x => x[0] !== 'Payment received') : base)]; };
+  const fl = [['New trip / bilty', 'truck', MOD.fleet.c, 'A.tripForm()'], ['Diesel / expense', 'fuel', '#EA580C', 'A.pickTripCost()'], ['Freight received', 'rupee', '#0B9B68', 'A.fleetPay()'], ['Freight bill', 'receipt', '#DB2777', 'A.fbillNew()'], ['Vehicle location', 'pin', '#7C3AED', 'A.pickVehLoc()'], ['Add vehicle', 'plus', '#2563EB', 'A.vehForm()']];
+  return [...fl, ...(transportOnly() ? base.filter(x => !['Payment received', 'Quotation / bill'].includes(x[0])) : base)]; };
 const _crewHomeFleet = crewHome; crewHome = () => { const d = driverExtra(); if (!d || !transportOnly()) return d + _crewHomeFleet(); const st = settings();
   return `${pushCard()}${d}<div class="big-grid two" style="margin-top:14px">${canSendAlert() ? bigBtn('Alert my seniors', 'bell', '#E11D74', `A.alertForm('@seniors')`) : ''}${st.phone ? `<a class="big-btn" style="--c:#0B9B68" href="tel:${esc(String(st.phone).replace(/\s/g, ''))}">${ibox('phone', '#0B9B68', 'lg')}<b>${T('Call the owner')}</b></a>` : ''}</div>`; };
 const _dashFleet = V.dashboard; V.dashboard = () => (S.org && transportOnly() && can('fleet') && !(typeof isCrewUser === 'function' && isCrewUser()) ? `<div class="sec-h" style="margin-top:0"><h2>${T('Today')}${info('fl-today')}</h2></div>` + fleetToday({ due: sum(partyList(), p => p.bal) }) : _dashFleet());
@@ -8955,12 +9078,13 @@ function fleetDemo(add, full) {
   const M = add('vehicles', { id: dm('vh'), no: 'RJ09 GA 2210', type: 'Truck', make: 'Market vehicle', capacity: '10 ton', own: 'market', driverId: '', docs: {}, ownerName: 'Lakhan Transport', ownerPhone: '9829900550' });
   const P = [['Shree Cement Ltd', '9414000301', '08AABCS1234F1Z5', 'Beawar, Rajasthan'], ['Gupta Traders', '9414000302', '08AAKPG5678K1Z2', 'Kishanpole Bazar, Jaipur'], ['Om Furniture House', '9414000303', '', 'Sanganer, Jaipur'], ['Marudhar Agro', '9414000304', '08AAFFM9012Q1Z7', 'Jodhpur']];
   let no = 0, lr = 0; const pr = i => ({ party: P[i][0], partyPhone: P[i][1], partyGstin: P[i][2], partyAddress: P[i][3] });
-  const trip = o => { no++; lr++; const t = { id: dm('tr'), no: 'T-' + String(no).padStart(3, '0'), lr: 'LR-' + String(lr).padStart(3, '0'), time: '', payType: 'tbb', recv: [], dAdv: [], costs: [], hirePaid: [], log: [], notes: '', consignor: { name: '', gstin: '', address: '' }, consignee: { name: '', gstin: '', address: '', phone: '' }, ...o }; return add('trips', t); };
+  const DIST = { 'Beawar-Delhi': 420, 'Jaipur-Ahmedabad': 670, 'Jaipur-Kota': 250, 'Jodhpur-Jaipur': 335, 'Beawar-Gurugram': 380, 'Jaipur-Indore': 590, 'Sanganer-Ajmer': 140, 'Jaipur-Udaipur': 395 };
+  const trip = o => { no++; lr++; const att = o.vehicleId === V[3].id; const t = { id: dm('tr'), no: 'T-' + String(no).padStart(3, '0'), lr: 'LR-' + String(lr).padStart(3, '0'), time: '', payType: 'tbb', recv: [], dAdv: [], costs: [], hirePaid: [], log: [], notes: '', consignor: { name: '', gstin: '', address: '' }, consignee: { name: '', gstin: '', address: '', phone: '' }, distance: DIST[o.from + '-' + o.to] || '', ...(att ? { ownerName: 'Satpal Singh', ownerPhone: '9813000441', hire: Math.round((+o.freight || 0) * 0.85 / 500) * 500, hirePaid: [{ id: dm('hp'), amount: 10000, date: o.date, mode: 'Cash', note: 'Advance', adv: true }] } : {}), ...o }; return add('trips', t); };
   const c = (type, amount, n, by = 'driver', liters = '', place = '') => ({ id: dm('tc'), type, amount, date: dD(n), by, liters, place, note: '' });
   const lg = (st, n, t, place = '', ll) => ({ at: at(n, t), st, place, ...(ll ? { lat: ll[0], lng: ll[1] } : {}), by: 'Demo' });
   trip({ ...pr(0), vehicleId: V[0].id, driverId: D[0].id, from: 'Beawar', to: 'Delhi', date: dD(-1), time: '06:00', status: 'on_way', goods: 'Cement bags (OPC 53)', packages: '320 bags', weight: 16, value: 128000, goodsInv: 'SCL/4471', eway: '3311 2290 4471', freight: 38000, kmStart: 184520,
     consignor: { name: 'Shree Cement Ltd', gstin: '08AABCS1234F1Z5', address: 'Beawar, Rajasthan' }, consignee: { name: 'Delhi Build Mart', gstin: '07AAECD4410M1Z3', address: 'Okhla Phase 2, New Delhi', phone: '9810000771' },
-    recv: [{ id: dm('rc'), amount: 10000, date: dD(-1), mode: 'Bank transfer', note: 'Advance' }], dAdv: [{ id: dm('da'), amount: 15000, date: dD(-1), mode: 'Cash' }],
+    recv: [{ id: dm('rc'), amount: 10000, date: dD(-1), mode: 'Bank transfer', note: 'Advance', adv: true }], dAdv: [{ id: dm('da'), amount: 15000, date: dD(-1), mode: 'Cash' }],
     costs: [c('diesel', 9200, -1, 'driver', 98, 'Beawar pump'), c('toll', 1450, -1), c('bhatta', 400, 0), c('diesel', 4600, 0, 'driver', 49, 'Behror')],
     log: [lg('planned', -2, '18:00'), lg('loading', -1, '05:10', 'Shree Cement plant'), lg('on_way', -1, '07:00'), lg('on_way', 0, '09:40', 'Near Behror toll', [27.889, 76.287])] });
   trip({ ...pr(1), vehicleId: V[1].id, driverId: D[1].id, from: 'Jaipur', to: 'Ahmedabad', date: dD(-3), status: 'reached', goods: 'Kirana goods', packages: '540 cartons', weight: 24, value: 410000, eway: '3311 2290 5520', freight: 52000, payType: 'topay', kmStart: 311380,
@@ -8968,7 +9092,7 @@ function fleetDemo(add, full) {
     costs: [c('diesel', 16800, -3, 'driver', 178), c('toll', 2860, -3), c('police', 500, -2), c('bhatta', 800, -2), c('loading', 1500, -3, 'office')],
     log: [lg('planned', -4, '17:00'), lg('loading', -3, '06:00', 'Transport Nagar'), lg('on_way', -3, '09:00'), lg('reached', 0, '07:30', 'Kalupur market', [23.027, 72.6])] });
   trip({ ...pr(2), vehicleId: V[2].id, driverId: D[2].id, from: 'Sanganer', to: 'Ajmer', date: dD(1), time: '07:00', status: 'planned', goods: 'Furniture (wedding order)', packages: '42 pieces', weight: 2.5, freight: 7500, payType: 'paid', log: [lg('planned', 0, '11:00')] });
-  trip({ ...pr(3), vehicleId: M.id, driverId: '', from: 'Jodhpur', to: 'Jaipur', date: dD(-2), status: 'on_way', goods: 'Guar seed', packages: '250 bags', weight: 10, freight: 26000, hire: 21000, hirePaid: [{ id: dm('hp'), amount: 10000, date: dD(-2), mode: 'Cash' }],
+  trip({ ...pr(3), vehicleId: M.id, driverId: '', from: 'Jodhpur', to: 'Jaipur', date: dD(-2), status: 'on_way', goods: 'Guar seed', packages: '250 bags', weight: 10, freight: 26000, ownerName: 'Lakhan Transport', ownerPhone: '9829900550', recv: [{ id: dm('rc'), amount: 8000, date: dD(-2), mode: 'Cash', note: 'Advance', adv: true }], hire: 21000, hirePaid: [{ id: dm('hp'), amount: 10000, date: dD(-2), mode: 'Cash', note: 'Advance', adv: true }],
     log: [lg('planned', -3, '16:00'), lg('on_way', -2, '06:30', 'Jodhpur mandi')] });
   /* finished trips of the last two months, so the khata and the report have numbers */
   const routes = [['Beawar', 'Delhi', 0, 38000, 16, 0, 'Cement bags'], ['Jaipur', 'Ahmedabad', 1, 52000, 24, 1, 'Kirana goods'], ['Jaipur', 'Kota', 2, 6500, 3, 2, 'Furniture'], ['Jodhpur', 'Jaipur', 3, 31000, 20, 3, 'Guar seed'], ['Beawar', 'Gurugram', 0, 36000, 16, 0, 'Cement bags'], ['Jaipur', 'Indore', 1, 58000, 25, 1, 'Marble slabs']];
@@ -12926,7 +13050,6 @@ Loading / hamali | लोडिंग / हमाली
 Detention / halting | रुकाई / हॉल्टिंग
 Other charges | बाकी चार्ज
 Freight bill {} | भाड़ा बिल {1}
-Payments received | पेमेंट मिले
 Freight received from parties. A payment reduces the party’s khata. | पार्टियों से मिला भाड़ा। पेमेंट से पार्टी का खाता कम होता है।
 Received today | आज मिला
 Who has to pay | किसे देना है
@@ -12935,6 +13058,42 @@ Nothing received this month | इस महीने कुछ नहीं म�
 Tap Payment received when a party pays. It goes to that party’s oldest unpaid trips first. | पार्टी पैसे दे तो "पेमेंट मिला" दबाएं। ये पहले उस पार्टी की सबसे पुरानी बाकी ट्रिप में जुड़ता है।
 A new version of the app is ready. | ऐप का नया वर्ज़न तैयार है।
 Update now | अभी अपडेट करें
+Edit trip / bilty | ट्रिप / बिल्टी बदलें
+New trip / bilty | नई ट्रिप / बिल्टी
+Vehicle no. | गाड़ी नंबर
+Vehicle no. * | गाड़ी नंबर *
+Distance (km) | दूरी (किमी)
+Per km (rate × distance) | प्रति किमी (रेट × दूरी)
+Rate ₹ | रेट ₹
+Rate ₹ per km | रेट ₹ प्रति किमी
+Freight (from the party) | भाड़ा (पार्टी से)
+Transport name (party) | ट्रांसपोर्ट का नाम (पार्टी)
+Transport name (party) * | ट्रांसपोर्ट का नाम (पार्टी) *
+Blank = own vehicle | खाली = अपनी गाड़ी
+Freight to owner (lorry hire) ₹ | मालिक को भाड़ा ₹
+Advance paid to owner ₹ | मालिक को दिया एडवांस ₹
+Balance to pay owner | मालिक को बाकी देना
+Your margin | आपका मार्जिन
+Goods, consignor, consignee, driver (optional) | माल, भेजने वाला, पाने वाला, ड्राइवर (चाहें तो)
+Write the transport name (party) | ट्रांसपोर्ट का नाम (पार्टी) लिखें
+Bilty | बिल्टी
+Freight to owner | मालिक को भाड़ा
+Advance / paid | एडवांस / दिया
+Vehicle owners (lorry hire to pay) | गाड़ी मालिक (भाड़ा देना है)
+Send hisaab | हिसाब भेजें
+Lorry hire | गाड़ी भाड़ा
+Bilty & invoices | बिल्टी और इनवॉइस
+Every trip has its bilty and invoice. Fill the trip once; print either in one tap. | हर ट्रिप की बिल्टी और इनवॉइस। ट्रिप एक बार भरें; कोई भी एक टैप में प्रिंट करें।
+Search LR, vehicle, party, place | बिल्टी, गाड़ी, पार्टी, जगह खोजें
+Freight bills (many trips) | भाड़ा बिल (कई ट्रिप)
+Old invoices | पुराने इनवॉइस
+Make a trip: vehicle no., date, from, to, distance, freight, advance and the transport name. The bilty and invoice come from it. | ट्रिप बनाएं: गाड़ी नंबर, तारीख़, कहां से, कहां तक, दूरी, भाड़ा, एडवांस और ट्रांसपोर्ट का नाम। बिल्टी और इनवॉइस इसी से बनते हैं।
+Invoice number starts with | इनवॉइस नंबर किससे शुरू हो
+GST on invoices | इनवॉइस पर जीएसटी
+Show vehicle owner part on the bilty | बिल्टी पर गाड़ी मालिक वाला हिस्सा दिखाएं
+Show vehicle owner part on the invoice | इनवॉइस पर गाड़ी मालिक वाला हिस्सा दिखाएं
+Advance ₹ | एडवांस ₹
+Vehicle owner | गाड़ी मालिक
 `);
 
 boot();

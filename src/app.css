@@ -906,3 +906,10 @@ span.hall-chip{cursor:default}
 .fb-pick input[type=checkbox]{width:20px;height:20px;flex:none}
 .upd-bar{position:fixed;left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--ink);color:#fff;border-radius:14px;padding:10px 12px;box-shadow:var(--sh2,0 8px 24px rgba(0,0,0,.2));max-width:520px;margin:0 auto}
 .rcpt-row .main-col b{overflow-wrap:anywhere}
+/* transport trip / bilty form laid out like the slip (27 Oct 2026) */
+.slip-box{border:1px solid var(--line);border-radius:14px;padding:10px 12px 12px;background:var(--surface)}
+.slip-box.party{border-color:#BFE7D6;background:#F5FCF9}
+.slip-box.owner{border-color:#FFD9B8;background:#FFF9F3}
+.slip-t{font:700 13px var(--f-body);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px}
+.slip-bal{display:block;font:800 19px/1.2 var(--f-display);padding:10px 2px}
+.bi-row{flex-wrap:wrap;gap:8px}.bi-row .main-col{min-width:180px}
