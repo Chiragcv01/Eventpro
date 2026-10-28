@@ -12,7 +12,9 @@
 <meta name="theme-color" content="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mukta:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mukta:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mukta:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap"></noscript>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js">
 <script>
 /* Supabase project (public URL + anon key). Access is enforced by database rules (RLS). */
 window.EVENTPRO_CONFIG = {
@@ -939,13 +941,24 @@ span.hall-chip{cursor:default}
 .slip-bal{display:block;font:800 19px/1.2 var(--f-display);padding:10px 2px}
 .bi-row{flex-wrap:wrap;gap:8px}.bi-row .main-col{min-width:180px}
 
+/* first-load splash (built into app.html, replaced by the first render) */
+.boot-splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--bg,#F3F5FA);color:var(--ink,#121831);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;z-index:1}
+.boot-logo{width:76px;height:76px;border-radius:22px;background:#1F5EFF;display:grid;place-items:center;box-shadow:0 12px 30px rgba(31,94,255,.32);animation:bootPop .5s ease-out}
+.boot-splash b{font-size:22px;letter-spacing:.01em}
+.boot-splash span{font-size:14px;color:var(--muted,#6A7290)}
+.boot-bar{width:140px;height:4px;border-radius:4px;background:#E2E7F2;overflow:hidden}
+.boot-bar i{display:block;width:40%;height:100%;border-radius:4px;background:#1F5EFF;animation:bootSlide 1.1s ease-in-out infinite}
+@keyframes bootSlide{0%{transform:translateX(-110%)}100%{transform:translateX(260%)}}
+@keyframes bootPop{0%{transform:scale(.85);opacity:0}100%{transform:none;opacity:1}}
+
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><div class="boot-splash"><div class="boot-logo"><svg viewBox="0 0 24 24" width="42" height="42" aria-hidden="true"><g fill="#fff"><rect x="4" y="4" width="7" height="7" rx="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.8"/><rect x="4" y="13" width="7" height="7" rx="1.8"/></g><path d="M13.6 16.6l2 2 3.6-4.1" fill="none" stroke="#fff" stroke-width="2"/></svg></div><b>SabManage</b><div class="boot-bar"><i></i></div><span id="bootTxt">Loading…</span></div></div>
+<script>try{if(localStorage.getItem('ep_lang')==='hi')document.getElementById('bootTxt').textContent='खुल रहा है…'}catch(e){}</script>
 <div id="modalRoot" hidden></div>
 <script>
-window.SM_BUILD = 'bcdbab8b0137';
+window.SM_BUILD = '2932f736126c';
 /* ================= Language: English / हिंदी =================
    The screens are written in English. When Hindi is on, every text node,
    placeholder and tooltip is swapped from the dictionary below as it appears
@@ -3715,10 +3728,11 @@ function seg(key, opts, cur, fn) { return `<div class="seg" role="tablist">${opt
 function modal(html, { wide = false } = {}) {
   const root = $('#modalRoot');
   root.innerHTML = `<div class="scrim" onclick="if(event.target===this)A.closeModal()"><div class="sheet fade ${wide ? 'wide' : ''}" role="dialog" aria-modal="true">${html}</div></div>`;
-  root.hidden = false; afterRender();
+  root.hidden = false; afterRender(); hModalOpen();
   setTimeout(() => { const f = root.querySelector('[autofocus]') || root.querySelector('input:not([type=checkbox]),select,textarea'); if (f && window.innerWidth > 700) f.focus(); }, 60);
 }
-A.closeModal = () => { const r = $('#modalRoot'); r.hidden = true; r.innerHTML = ''; FORM_CB = null; };
+const closeModalRaw = () => { const r = $('#modalRoot'); r.hidden = true; r.innerHTML = ''; FORM_CB = null; };
+A.closeModal = () => { const open = !$('#modalRoot').hidden; closeModalRaw(); if (open) hModalClosed(); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modalRoot').hidden) A.closeModal(); });
 const sheetHead = (title, sub = '') => `<header class="sheet-h"><div><h3>${esc(title)}</h3>${sub ? `<p class="muted">${esc(sub)}</p>` : ''}</div><button type="button" class="icon-btn" onclick="A.closeModal()" aria-label="Close">${ic('x')}</button></header>`;
 
@@ -3868,8 +3882,34 @@ A.logout = async () => {
 A.go = (view, params = {}) => {
   if (view === 'admin' && !S.super) { toast('Super Admin access only', 'bad'); return; }
   if (MOD[view] && !can(view)) { toast('You do not have access to ' + MOD[view].label, 'bad'); return; }
+  const same = S.view === view && JSON.stringify(S.params || {}) === JSON.stringify(params || {});
   S.view = view; S.params = params; A.closeModal(); render(); window.scrollTo({ top: 0 });
+  if (!same) hNav();
 };
+/* ---- Phone back button: walks back through screens and closes open sheets, instead of closing the app.
+   Every screen change is a history entry; an open sheet adds one more. At the home screen the first back
+   shows 'Press back again to exit', the second one leaves the app. ---- */
+const H = { init: false, modal: false, ignore: 0, backT: null, pendingPush: false, armed: 0 };
+const hState = o => ({ sm: 1, v: S.view, p: S.params || {}, ...o });
+const hReady = () => H.init && !S.portal && !S.guest && !!S.user;
+function hInit() { if (H.init) return; H.init = true; try { history.replaceState({ sm: 1, v: S.view, p: S.params || {}, root: 1 }, ''); history.pushState(hState(), ''); } catch (e) { } }
+function hNav() { if (!hReady()) return; try { if (H.backT) { clearTimeout(H.backT); H.backT = null; history.replaceState(hState(), ''); } else history.pushState(hState(), ''); } catch (e) { } }
+function hModalOpen() { if (!hReady()) return; if (H.backT) { clearTimeout(H.backT); H.backT = null; H.modal = true; return; } if (H.modal) return; if (H.ignore) { H.pendingPush = true; return; } try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (e) { } }
+function hModalClosed() { if (!H.modal) return; H.modal = false; H.backT = setTimeout(() => { H.backT = null; H.ignore++; try { history.back(); } catch (e) { H.ignore--; } }, 0); }
+window.addEventListener('popstate', e => {
+  if (H.ignore) { H.ignore--; if (H.pendingPush) { H.pendingPush = false; if (!$('#modalRoot').hidden) { try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (x) { } } } return; }
+  if (!hReady()) return;
+  if (!$('#modalRoot').hidden) { H.modal = false; closeModalRaw(); if (e.state?.sm && !e.state.m) return; }
+  const st = e.state;
+  if (!st || !st.sm || st.root) {
+    const home = S.org ? 'dashboard' : S.super ? 'admin' : S.view;
+    if (S.view !== home) { S.view = home; S.params = {}; render(); window.scrollTo({ top: 0 }); try { history.pushState(hState(), ''); } catch (x) { } return; }
+    if (Date.now() - H.armed < 2500) { H.armed = 0; try { history.back(); } catch (x) { } return; }
+    H.armed = Date.now(); toast(T('Press back again to exit')); try { history.pushState(hState(), ''); } catch (x) { } return;
+  }
+  if (st.m) { try { history.back(); } catch (x) { } return; }
+  S.view = st.v; S.params = st.p || {}; render(); window.scrollTo({ top: 0 });
+});
 A.setP = (k, v) => { S.params[k] = v; render(); };
 A.setF = (k, v) => { S.filters[k] = v; render(); };
 
@@ -3886,7 +3926,7 @@ function render() {
   let body;
   try { body = V[view](); } catch (e) { console.error(e); body = `<div class="banner bad">${ic('alert')} Something went wrong on this screen: ${esc(e.message)}</div>`; }
   root.innerHTML = shell(body);
-  afterRender();
+  afterRender(); if (!H.init) hInit();
 }
 /* things that must run after the screen is drawn (e.g. load signed URLs of private photos / voice notes) */
 const AFTER_RENDER = [];
@@ -13094,6 +13134,7 @@ Show vehicle owner part on the bilty | बिल्टी पर गाड़ी
 Show vehicle owner part on the invoice | इनवॉइस पर गाड़ी मालिक वाला हिस्सा दिखाएं
 Advance ₹ | एडवांस ₹
 Vehicle owner | गाड़ी मालिक
+Press back again to exit | बाहर जाने के लिए फिर से बैक दबाएं
 `);
 
 boot();

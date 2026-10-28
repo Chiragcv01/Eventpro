@@ -418,4 +418,5 @@ Show vehicle owner part on the bilty | बिल्टी पर गाड़ी
 Show vehicle owner part on the invoice | इनवॉइस पर गाड़ी मालिक वाला हिस्सा दिखाएं
 Advance ₹ | एडवांस ₹
 Vehicle owner | गाड़ी मालिक
+Press back again to exit | बाहर जाने के लिए फिर से बैक दबाएं
 `);

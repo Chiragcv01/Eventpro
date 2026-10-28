@@ -584,10 +584,11 @@ function seg(key, opts, cur, fn) { return `<div class="seg" role="tablist">${opt
 function modal(html, { wide = false } = {}) {
   const root = $('#modalRoot');
   root.innerHTML = `<div class="scrim" onclick="if(event.target===this)A.closeModal()"><div class="sheet fade ${wide ? 'wide' : ''}" role="dialog" aria-modal="true">${html}</div></div>`;
-  root.hidden = false; afterRender();
+  root.hidden = false; afterRender(); hModalOpen();
   setTimeout(() => { const f = root.querySelector('[autofocus]') || root.querySelector('input:not([type=checkbox]),select,textarea'); if (f && window.innerWidth > 700) f.focus(); }, 60);
 }
-A.closeModal = () => { const r = $('#modalRoot'); r.hidden = true; r.innerHTML = ''; FORM_CB = null; };
+const closeModalRaw = () => { const r = $('#modalRoot'); r.hidden = true; r.innerHTML = ''; FORM_CB = null; };
+A.closeModal = () => { const open = !$('#modalRoot').hidden; closeModalRaw(); if (open) hModalClosed(); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modalRoot').hidden) A.closeModal(); });
 const sheetHead = (title, sub = '') => `<header class="sheet-h"><div><h3>${esc(title)}</h3>${sub ? `<p class="muted">${esc(sub)}</p>` : ''}</div><button type="button" class="icon-btn" onclick="A.closeModal()" aria-label="Close">${ic('x')}</button></header>`;
 
@@ -737,8 +738,34 @@ A.logout = async () => {
 A.go = (view, params = {}) => {
   if (view === 'admin' && !S.super) { toast('Super Admin access only', 'bad'); return; }
   if (MOD[view] && !can(view)) { toast('You do not have access to ' + MOD[view].label, 'bad'); return; }
+  const same = S.view === view && JSON.stringify(S.params || {}) === JSON.stringify(params || {});
   S.view = view; S.params = params; A.closeModal(); render(); window.scrollTo({ top: 0 });
+  if (!same) hNav();
 };
+/* ---- Phone back button: walks back through screens and closes open sheets, instead of closing the app.
+   Every screen change is a history entry; an open sheet adds one more. At the home screen the first back
+   shows 'Press back again to exit', the second one leaves the app. ---- */
+const H = { init: false, modal: false, ignore: 0, backT: null, pendingPush: false, armed: 0 };
+const hState = o => ({ sm: 1, v: S.view, p: S.params || {}, ...o });
+const hReady = () => H.init && !S.portal && !S.guest && !!S.user;
+function hInit() { if (H.init) return; H.init = true; try { history.replaceState({ sm: 1, v: S.view, p: S.params || {}, root: 1 }, ''); history.pushState(hState(), ''); } catch (e) { } }
+function hNav() { if (!hReady()) return; try { if (H.backT) { clearTimeout(H.backT); H.backT = null; history.replaceState(hState(), ''); } else history.pushState(hState(), ''); } catch (e) { } }
+function hModalOpen() { if (!hReady()) return; if (H.backT) { clearTimeout(H.backT); H.backT = null; H.modal = true; return; } if (H.modal) return; if (H.ignore) { H.pendingPush = true; return; } try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (e) { } }
+function hModalClosed() { if (!H.modal) return; H.modal = false; H.backT = setTimeout(() => { H.backT = null; H.ignore++; try { history.back(); } catch (e) { H.ignore--; } }, 0); }
+window.addEventListener('popstate', e => {
+  if (H.ignore) { H.ignore--; if (H.pendingPush) { H.pendingPush = false; if (!$('#modalRoot').hidden) { try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (x) { } } } return; }
+  if (!hReady()) return;
+  if (!$('#modalRoot').hidden) { H.modal = false; closeModalRaw(); if (e.state?.sm && !e.state.m) return; }
+  const st = e.state;
+  if (!st || !st.sm || st.root) {
+    const home = S.org ? 'dashboard' : S.super ? 'admin' : S.view;
+    if (S.view !== home) { S.view = home; S.params = {}; render(); window.scrollTo({ top: 0 }); try { history.pushState(hState(), ''); } catch (x) { } return; }
+    if (Date.now() - H.armed < 2500) { H.armed = 0; try { history.back(); } catch (x) { } return; }
+    H.armed = Date.now(); toast(T('Press back again to exit')); try { history.pushState(hState(), ''); } catch (x) { } return;
+  }
+  if (st.m) { try { history.back(); } catch (x) { } return; }
+  S.view = st.v; S.params = st.p || {}; render(); window.scrollTo({ top: 0 });
+});
 A.setP = (k, v) => { S.params[k] = v; render(); };
 A.setF = (k, v) => { S.filters[k] = v; render(); };
 
@@ -755,7 +782,7 @@ function render() {
   let body;
   try { body = V[view](); } catch (e) { console.error(e); body = `<div class="banner bad">${ic('alert')} Something went wrong on this screen: ${esc(e.message)}</div>`; }
   root.innerHTML = shell(body);
-  afterRender();
+  afterRender(); if (!H.init) hInit();
 }
 /* things that must run after the screen is drawn (e.g. load signed URLs of private photos / voice notes) */
 const AFTER_RENDER = [];

@@ -1,6 +1,7 @@
 /* SabManage service worker: fast repeat visits and a clear offline screen.
-   App data always comes live from the server; nothing private is cached. */
-const VERSION = 'ep-2026-10-27';
+   App data always comes live from the server; nothing private is cached (only the app code, icons and fonts). */
+const VERSION = 'ep-2026-10-28';
+const LIBS = 'sm-libs-1'; /* versioned third-party files (Supabase library, fonts): cache first, they never change */
 const SHELL = ['/offline.html', '/icon.svg', '/img/icons/icon-192.png', '/img/icons/icon-512.png', '/sounds/alert.mp3'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
@@ -8,8 +9,24 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   const req = e.request; if (req.method !== 'GET') return;
-  const url = new URL(req.url); if (url.origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) {
+    if (/^https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@[\d.]+\//.test(req.url) || /^https:\/\/fonts\.(googleapis|gstatic)\.com\//.test(req.url)) {
+      e.respondWith(caches.open(LIBS).then(async c => { const hit = await c.match(req); if (hit) return hit; const r = await fetch(req); if (r.ok || r.type === 'opaque') c.put(req, r.clone()); return r; }));
+    }
+    return;
+  }
   if (req.mode === 'navigate') {
+    /* the app page: fresh from the network, but if the network is slow (4 s) or down, open the last copy at once */
+    if (url.pathname === '/app' || url.pathname === '/app.html') {
+      e.respondWith(caches.open(VERSION).then(c => new Promise(resolve => {
+        let done = false; const finish = r => { if (!done && r) { done = true; resolve(r); } };
+        const net = fetch(req).then(r => { if (r.ok) c.put('/app', r.clone()); finish(r); return r; }).catch(async () => finish((await c.match('/app')) || (await c.match('/offline.html'))));
+        setTimeout(async () => { const hit = await c.match('/app'); if (hit) finish(hit); }, 4000);
+        net.catch(() => { });
+      })));
+      return;
+    }
     e.respondWith(fetch(req).catch(() => caches.match('/offline.html')));
     return;
   }
