@@ -100,13 +100,13 @@ A.cExpForm = id => {
 const feeDay = a => a.paidAt || a.date || '';
 function clinicReports() {
   const p = S.filters.period || 'month'; const [a, b] = periodRange(p); const t = todayLocal(); const inR = d => d && d >= a && d <= b;
-  const paid = col('appts').filter(x => x.paid && inR(feeDay(x))); const income = sum(paid, x => +x.fee || 0);
+  const paid = col('appts').filter(x => x.paid && inR(feeDay(x))); const income = sum(paid, x => +x.fee || 0) + sum(ptPaysAll().filter(x => inR(x.date || '')), x => +x.amount || 0);
   const visits = col('appts').filter(x => x.status === 'done' && inR(x.date)).length; const newPts = col('patients').filter(x => x.created && inR(todayLocal(new Date(x.created)))).length;
   const exp = sum(col('expenses').filter(x => inR(x.date)), x => +x.amount || 0);
   const mlist = []; { let m = (a === '0000-01-01' ? (col('appts').map(feeDay).filter(Boolean).sort()[0] || t) : a).slice(0, 7); const end = (b > t ? t : b).slice(0, 7); let guard = 0; while (m <= end && guard++ < 120) { mlist.push(m); const d = new Date(m + '-01T00:00'); m = todayLocal(new Date(d.getFullYear(), d.getMonth() + 1, 1)).slice(0, 7); } }
   const sal = sum(mlist, m => salaryCost(m)); const cost = exp + sal; const net = income - cost;
   const months = []; const base = new Date(t + 'T00:00'); for (let k = 5; k >= 0; k--) months.push(todayLocal(new Date(base.getFullYear(), base.getMonth() - k, 1)).slice(0, 7));
-  const minc = months.map(m => sum(col('appts').filter(x => x.paid && feeDay(x).startsWith(m)), x => +x.fee || 0));
+  const minc = months.map(m => sum(col('appts').filter(x => x.paid && feeDay(x).startsWith(m)), x => +x.fee || 0) + sum(ptPaysAll().filter(x => String(x.date || '').startsWith(m)), x => +x.amount || 0));
   const mcost = months.map(m => sum(col('expenses').filter(x => (x.date || '').startsWith(m)), x => +x.amount || 0) + salaryCost(m));
   const byMode = ['clinic', 'video', 'whatsapp'].map(k => [k, sum(paid.filter(x => (x.mode || 'clinic') === k), x => +x.fee || 0), paid.filter(x => (x.mode || 'clinic') === k).length]).filter(x => x[2]);
   const byCat = [...new Set(col('expenses').filter(x => inR(x.date)).map(x => x.category))].map(c => [c, sum(col('expenses').filter(x => inR(x.date) && x.category === c), x => +x.amount || 0)]).concat(sal ? [['Staff salary', sal]] : []).sort((x, y) => y[1] - x[1]);
@@ -119,7 +119,7 @@ function clinicReports() {
 }
 A.clinicCSV = () => {
   const p = S.filters.period || 'month'; const [a, b] = periodRange(p); const inR = d => d && d >= a && d <= b; const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const rows = [...col('appts').filter(x => x.paid && inR(feeDay(x))).map(x => [feeDay(x), 'Income', 'Fee ' + (x.mode || 'clinic'), x.patientName || '', x.payMode || '', +x.fee || 0]),
+  const rows = [...col('appts').filter(x => x.paid && inR(feeDay(x))).map(x => [feeDay(x), 'Income', 'Fee ' + (x.mode || 'clinic'), x.patientName || '', x.payMode || '', +x.fee || 0]), ...ptPaysAll().filter(x => inR(x.date || '')).map(x => [x.date, 'Income', 'Treatment', x.patientName || '', x.mode || '', +x.amount || 0]),
     ...col('expenses').filter(x => inR(x.date)).map(x => [x.date, 'Expense', x.category, x.note || '', x.mode || '', -(+x.amount || 0)])].sort((x, y) => String(x[0]).localeCompare(String(y[0])));
   downloadFile('clinic-income-expenses.csv', '﻿Date,Type,Head,Details,Mode,Amount\n' + rows.map(r => r.map(q).join(',')).join('\n'), 'text/csv'); logAct('Downloaded income & expenses');
 };

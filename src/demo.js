@@ -91,11 +91,11 @@ function demoTransport() { const out = {}; const add = (c, r) => { (out[c] = out
 function demoClinic() {
   const out = {}; const add = (c, r) => { (out[c] = out[c] || []).push({ ...r, demo: true }); return r; };
   const P = (o) => add('patients', { id: dmId('pt'), created: Date.now(), allergies: '', notes: '', ...o });
-  const P1 = P({ name: 'Ramesh Gupta', phone: '9829011111', age: 58, sex: 'Male', conditions: 'Diabetes, high BP', track: ['bp', 'sugar', 'weight'], allergies: 'Sulpha drugs', unread: 1, lastMsgAt: dAt(0, '08:40'), lastReadingAt: dAt(0, '08:30'), alertLevel: 'emergency', alertText: 'BP upper 186, BP lower 112', alertAt: dAt(0, '08:30') });
-  const P2 = P({ name: 'Sunita Sharma', phone: '9829011112', age: 45, sex: 'Female', conditions: 'Thyroid, weight loss', track: ['weight', 'pulse'], lastReadingAt: dAt(0, '07:15') });
-  const P3 = P({ name: 'Mohd. Salim', phone: '9829011113', age: 62, sex: 'Male', conditions: 'Heart patient', track: ['bp', 'pulse', 'spo2'], lastReadingAt: dAt(-1, '19:00') });
-  const P4 = P({ name: 'Neha Agarwal', phone: '9829011114', age: 29, sex: 'Female', conditions: 'Pregnancy check-up (6th month)', track: ['bp', 'weight'] });
-  const P5 = P({ name: 'Arjun Singh', phone: '9829011115', age: 8, sex: 'Male', conditions: 'Fever', track: ['temp'] });
+  const P1 = P({ name: 'Ramesh Gupta', phone: '9829011111', age: 58, sex: 'Male', conditions: 'Diabetes, high BP', medAlert: 'yes', medList: ['Diabetes', 'High BP'], meds: 'Metformin 500, Telmisartan 40', habits: ['Tobacco / gutka'], allergyYes: 'yes', address: 'Mansarovar, Jaipur', track: ['bp', 'sugar', 'weight'], allergies: 'Sulpha drugs', unread: 1, lastMsgAt: dAt(0, '08:40'), lastReadingAt: dAt(0, '08:30'), alertLevel: 'emergency', alertText: 'BP upper 186, BP lower 112', alertAt: dAt(0, '08:30') });
+  const P2 = P({ name: 'Sunita Sharma', phone: '9829011112', age: 45, sex: 'Female', conditions: 'Thyroid, weight loss', medAlert: 'yes', medList: ['Thyroid'], meds: 'Thyronorm 50', allergyYes: 'no', habits: [], address: 'Vaishali Nagar, Jaipur', track: ['weight', 'pulse'], lastReadingAt: dAt(0, '07:15') });
+  const P3 = P({ name: 'Mohd. Salim', phone: '9829011113', age: 62, sex: 'Male', conditions: 'Heart patient', medAlert: 'yes', medList: ['Heart problem', 'On blood thinner'], meds: 'Ecosprin 75', habits: ['Smoking'], habitsOk: { by: 'Doctor', at: dD(-12) }, allergyYes: 'no', track: ['bp', 'pulse', 'spo2'], lastReadingAt: dAt(-1, '19:00') });
+  const P4 = P({ name: 'Neha Agarwal', phone: '9829011114', age: 29, sex: 'Female', conditions: 'Pregnancy check-up (6th month)', medAlert: 'yes', medList: ['Pregnant'], allergyYes: 'no', habits: [], track: ['bp', 'weight'] });
+  const P5 = P({ name: 'Arjun Singh', phone: '9829011115', age: 8, sex: 'Male', conditions: '', medAlert: 'no', allergyYes: 'no', habits: [], track: ['temp'] });
   const rd = (p, n, t, v) => add('readings', { id: dmId('rd'), patientId: p.id, by: n % 2 ? 'patient' : 'clinic', at: dAt(-n, t), date: dD(-n), ...v });
   [[27, 152, 96, 182], [24, 150, 94, 176], [21, 146, 92, 168], [18, 144, 90, 160], [15, 142, 90, 154], [12, 140, 88, 150], [9, 144, 90, 158], [6, 150, 94, 170], [3, 158, 98, 188], [0, 186, 112, 236]].forEach(([n, sys, dia, sugar], i) => rd(P1, n, '08:30', { sys, dia, sugar, sugarType: 'fasting', weight: 84 - i * 0.3, ...(n === 0 ? { level: 'emergency', flags: ['BP upper 186', 'BP lower 112'] } : {}) }));
   [[28, 78.5, 82], [21, 77.6, 80], [14, 76.9, 78], [7, 76.1, 76], [0, 75.4, 74]].forEach(([n, weight, pulse]) => rd(P2, n, '07:15', { weight, pulse }));
@@ -119,6 +119,18 @@ function demoClinic() {
   add('advances', { id: dmId('ad'), staffId: SF[2].id, kind: 'advance', amount: 2000, date: dD(-2), note: 'Family function' });
   [['Rent', 18000, 0, 'Bank transfer'], ['Electricity & water', 3200, -4, 'UPI'], ['Medicines & consumables', 8500, -6, 'Cash'], ['Staff tea & food', 900, -1, 'Cash'], ['Marketing & ads', 1500, -9, 'UPI']].forEach(([category, amount, n, mode]) => add('expenses', { id: dmId('x'), category, amount, date: dD(n), mode, note: 'Demo', eventId: '' }));
   if (typeof specDemo === 'function') specDemo(add, [P1, P2, P3, P4, P5], dD);
+  /* case sheet: one visit in the new format, its bill and a payment, and a consent form waiting for signature */
+  const pp = id => out.patients.find(x => x.id === id); const dent = typeof isDent === 'function' && isDent();
+  if (dent) { const vid = dmId('vs');
+    add('visits', { id: vid, v2: true, patientId: P2.id, date: dD(-3), cc: 'Pain in lower right back tooth while eating', complaint: 'Pain in lower right back tooth while eating', since: '1 week', ccTeeth: ['46'], notes: 'Pain at night for 3 days. Explained RCT and cap; patient agreed.', exam: 'Deep caries 46, tender on percussion, calculus present', oral: 'average', diagnosis: 'Irreversible pulpitis 46, chronic gingivitis',
+      tx: [{ proc: 'RCT', teeth: ['46'], missing: [], support: [], mat: '', sitting: 'Started', note: '', amount: 4500 }, { proc: 'Scaling & polishing', teeth: [], missing: [], support: [], mat: '', sitting: '', note: '', amount: 800 }],
+      rx: [{ name: 'Amoxicillin 500 mg', dose: '1-1-1', when: 'After food', days: 5 }, { name: 'Ibuprofen 400 mg', dose: '1-0-1', when: 'After food', days: 3 }], advice: 'Do not chew on the treated side\nWarm salt-water rinse 3 times a day', followUp: dD(4), consult: 300, charge: 5600, payMode: 'UPI', files: [] });
+    Object.assign(pp(P2.id), { oral: 'average', lastVisit: dD(-3), charges: [{ id: 'ch_' + vid, visitId: vid, date: dD(-3), desc: 'RCT · 46 · Started; Scaling & polishing', amount: 5600 }], pays: [{ id: 'py_' + vid, visitId: vid, date: dD(-3), amount: 3000, mode: 'UPI', note: 'visit' }], ccNow: { text: 'Pain in upper left tooth since 2 days', since: '2–3 days', at: dAt(0, '10:05'), by: 'Pooja Verma' } });
+    add('visits', { id: dmId('cs'), patientId: P2.id, kind: 'consent', date: dD(0), title: 'Consent for root canal treatment (RCT)', lang: 'en', status: 'pending', via: 'here', createdBy: 'Doctor', text: 'I agree to root canal treatment of tooth 46. The doctor explained that RCT removes the infected nerve, may need 1 to 3 sittings, and that a cap (crown) is usually advised afterwards to protect the tooth. I understand that pain or swelling can occur between sittings, instruments can rarely break inside the canal, and in some cases the tooth may still need extraction later.' });
+  } else { const vid = dmId('vs');
+    add('visits', { id: vid, v2: true, patientId: P5.id, date: dD(-2), cc: 'Fever and cough for 2 days', complaint: 'Fever and cough for 2 days', since: '2–3 days', notes: 'Fever up to 101 F, eating less.', exam: 'Throat congested, chest clear', diagnosis: 'Viral fever, upper respiratory infection', tx: [], rx: [{ name: 'Paracetamol 250 mg syrup', dose: '1-1-1', when: 'After food', days: 3 }, { name: 'Cetirizine syrup', dose: '0-0-1', when: 'At night', days: 5 }], advice: 'Drink plenty of water\nCome back if fever does not go in 3 days', followUp: dD(1), consult: 400, charge: 400, files: [] });
+    Object.assign(pp(P5.id), { lastVisit: dD(-2), charges: [{ id: 'ch_' + vid, visitId: vid, date: dD(-2), desc: 'Consultation', amount: 400 }], pays: [] });
+  }
   return out;
 }
 
@@ -134,6 +146,7 @@ A.demoLoad = async (quiet) => {
     }
     if (S.patLoaded) S.patLoaded = {};
     if (isClinic() && typeof updateDues === 'function') for (const p of col('patients').filter(x => x.demo)) { try { await updateDues(p.id); } catch (e) { } }
+    if (isClinic() && typeof updateAccount === 'function') for (const p of col('patients').filter(x => x.demo)) { try { await updateAccount(p.id); } catch (e) { } }
     logAct(`Loaded demo data (${n} records)`); A.closeModal(); toast(quiet ? T('Demo dates moved to today') : `${T('Demo data loaded')}: ${n} ${T('records')}`); render();
   } catch (e) { toast(e.message, 'bad'); }
 };

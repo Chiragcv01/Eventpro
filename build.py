@@ -3,7 +3,7 @@ root = pathlib.Path(__file__).parent
 src = root / 'src'
 head = (src / 'head.html').read_text()
 css = (src / 'app.css').read_text()
-js = '\n'.join((src / f).read_text() for f in ['i18n.js', 'core.js', 'alerts.js', 'help.js', 'auth.js', 'views-ops.js', 'views-money.js', 'views-admin.js', 'views-site.js', 'views-import.js', 'views-marketing.js', 'simple.js', 'leads.js', 'venue.js', 'depts.js', 'fleet.js', 'clinic.js', 'clinic-spec.js', 'clinic-biz.js', 'demo.js', 'clinic-text.js', 'clinic-spec-text.js', 'venue-text.js', 'fleet-text.js'])
+js = '\n'.join((src / f).read_text() for f in ['i18n.js', 'core.js', 'alerts.js', 'help.js', 'auth.js', 'views-ops.js', 'views-money.js', 'views-admin.js', 'views-site.js', 'views-import.js', 'views-marketing.js', 'simple.js', 'leads.js', 'venue.js', 'depts.js', 'fleet.js', 'clinic.js', 'clinic-spec.js', 'clinic-biz.js', 'clinic-case.js', 'demo.js', 'clinic-text.js', 'clinic-spec-text.js', 'venue-text.js', 'fleet-text.js', 'clinic-case-text.js'])
 import hashlib, json as _json
 build_id = hashlib.sha1(js.encode()).hexdigest()[:12]
 js = f"window.SM_BUILD = '{build_id}';\n" + js + "\nboot();\n"
