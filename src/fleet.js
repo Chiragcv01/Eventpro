@@ -12,7 +12,8 @@
    trips also: rateType fixed|ton, rate, charges {hamali, detention, other} (billed to the party), gstBy consignor|consignee|transporter, fbillId
    vehicles also: loc {place, at, lat, lng, by} = last place the owner/driver wrote, locLog [ … ] (last 100)
    fbills   { id, no, date, dueDays, partyKey, party, partyPhone, partyGstin, partyAddress, tripIds, gst rcm|5|12|none, recv [{id, amount, date, mode, note}], notes }
-            transporter's freight bill: rows are read live from its trips; trip receipts count as received on the bill */
+            transporter's freight bill: rows are read live from its trips; trip receipts count as received on the bill
+   parties  { id, name, phone, phones, gstin, address, aliases, keys }   customer master; trips / fbills point to it with partyId (see findParty) */
 const isTransport = () => !!S.org && !isClinic() && bizHas('transport');
 const transportOnly = () => isTransport() && !(settings().bizTypes || []).some(t => ['tent', 'caterer', 'event', 'venue'].includes(t));
 const VEH_TYPES = ['Truck', 'Trailer', 'Container', 'Tanker', 'Tempo / mini truck', 'Pickup', 'Tractor', 'Bus', 'Tempo traveller', 'Car / taxi', 'Crane / JCB', 'Other'];
@@ -51,23 +52,77 @@ function docAlerts() {
   return out.sort((a, b) => a.n - b.n);
 }
 const docPill = (n, date) => n == null ? '' : pill(n < 0 ? `Expired ${-n}d ago` : n === 0 ? 'Expires today' : `${n} days left`, n < 0 ? 'bad' : n <= 15 ? 'warn' : '');
+/* ---------- parties: the customer master ----------
+   parties { id, name, phone, phones [other mobiles], gstin, address, aliases [other spellings], keys [old khata keys] }
+   A trip / bill points to its party by partyId. Old trips without partyId are matched by mobile, GSTIN or name
+   (capitals, spaces, dots, 'M/s' and '&'/'and' do not matter), so one party never gets two khatas. */
+const pNorm = s => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/\b(m\/s|messrs)\b\.?/g, ' ').replace(/[^a-z0-9ऀ-ॿ]/g, '');
+const ph10 = s => { const d = String(s || '').replace(/\D/g, ''); return d.length >= 10 ? d.slice(-10) : ''; };
+const legacyKey = t => String(t.partyPhone || '').replace(/\D/g, '').slice(-10) || String(t.party || '').trim().toLowerCase();
+let _pix = null;
+function partyIndex() {
+  if (_pix) return _pix; const ix = { id: new Map(), ph: new Map(), gst: new Map(), nm: new Map(), key: new Map() };
+  col('parties').forEach(p => { ix.id.set(p.id, p); [p.phone, ...(p.phones || [])].map(phone10).filter(Boolean).forEach(x => ix.ph.has(x) || ix.ph.set(x, p)); if (p.gstin) ix.gst.set(String(p.gstin).toUpperCase(), p); [p.name, ...(p.aliases || [])].map(pNorm).filter(Boolean).forEach(x => ix.nm.has(x) || ix.nm.set(x, p)); (p.keys || []).forEach(k => ix.key.set(k, p)); });
+  _pix = ix; setTimeout(() => { _pix = null; }, 0); return ix;
+}
+const partyCacheReset = () => { _pix = null; };
+/* o: a trip, a bill, or { party, partyPhone, partyGstin } typed in a form */
+function findParty(o, ix = partyIndex()) {
+  return (o.partyId && ix.id.get(o.partyId)) || (o.partyKey && (ix.id.get(o.partyKey) || ix.key.get(o.partyKey))) || ix.ph.get(ph10(o.partyPhone)) || (o.partyGstin && ix.gst.get(String(o.partyGstin).trim().toUpperCase())) || ix.nm.get(pNorm(o.party)) || null;
+}
+const pKey = t => findParty(t)?.id || legacyKey(t);
+const fbKey = b => findParty(b)?.id || b.partyKey;
+const partyRec = key => getById('parties', key);
 function partyList() {
   const m = new Map();
+  col('parties').forEach(r => m.set(r.id, { key: r.id, rec: r, name: r.name, phone: r.phone || '', gstin: r.gstin || '', address: r.address || '', trips: [] }));
   col('trips').filter(t => t.status !== 'cancelled' && (t.party || '').trim()).forEach(t => {
     const k = pKey(t); const p = m.get(k) || { key: k, name: t.party, phone: t.partyPhone || '', gstin: t.partyGstin || '', address: t.partyAddress || '', trips: [] };
-    p.trips.push(t); if (!p.gstin && t.partyGstin) p.gstin = t.partyGstin; if (!p.address && t.partyAddress) p.address = t.partyAddress; m.set(k, p);
+    p.trips.push(t); if (!p.phone && t.partyPhone) p.phone = t.partyPhone; if (!p.gstin && t.partyGstin) p.gstin = t.partyGstin; if (!p.address && t.partyAddress) p.address = t.partyAddress; m.set(k, p);
   });
-  return [...m.values()].map(p => { p.trips.sort(by('date')); p.bills = col('fbills').filter(b => b.partyKey === p.key); p.gst = sum(p.bills, b => fbillCalc(b).gst); p.freight = sum(p.trips, t => tripMoney(t).freight) + p.gst; p.recv = sum(p.trips, t => sumA(t.recv)) + sum(p.bills, b => sumA(b.recv)); p.bal = Math.max(0, p.freight - p.recv); p.oldest = p.trips.find(t => tripMoney(t).bal > 0); p.last = p.trips[p.trips.length - 1]; return p; }).sort((a, b) => b.bal - a.bal || String(b.last?.date).localeCompare(String(a.last?.date)));
+  const bills = col('fbills').map(b => [fbKey(b), b]);
+  return [...m.values()].map(p => { p.trips.sort(by('date')); p.bills = bills.filter(x => x[0] === p.key).map(x => x[1]); p.gst = sum(p.bills, b => fbillCalc(b).gst); p.freight = sum(p.trips, t => tripMoney(t).freight) + p.gst; p.recv = sum(p.trips, t => sumA(t.recv)) + sum(p.bills, b => sumA(b.recv)); p.bal = Math.max(0, p.freight - p.recv); p.oldest = p.trips.find(t => tripMoney(t).bal > 0); p.last = p.trips[p.trips.length - 1]; return p; })
+    .filter(p => p.trips.length || p.bills.length).sort((a, b) => b.bal - a.bal || String(b.last?.date || '').localeCompare(String(a.last?.date || '')));
 }
-const pKey = t => String(t.partyPhone || '').replace(/\D/g, '').slice(-10) || String(t.party || '').trim().toLowerCase();
 const partyOf = key => partyList().find(p => p.key === key);
+async function saveParty(r, msg) { const out = await save('parties', r, msg); partyCacheReset(); return out; }
+/* the party for a trip being saved: an existing one (by mobile, GSTIN or name) gets missing details filled in; else a new party */
+async function partyFor(name, phone, gstin, address) {
+  partyCacheReset(); let p = findParty({ party: name, partyPhone: phone, partyGstin: gstin });
+  if (!p) return saveParty({ id: uid('pt_'), name, phone: phone || '', phones: [], gstin: gstin || '', address: address || '', aliases: [], keys: [] }, `Added party ${name}`);
+  const up = { ...p }; let ch = false;
+  if (!up.phone && phone) { up.phone = phone; ch = true; } else if (ph10(phone) && ph10(phone) !== ph10(up.phone) && !(up.phones || []).map(phone10).includes(ph10(phone))) { up.phones = [...(up.phones || []), phone]; ch = true; }
+  if (!up.gstin && gstin) { up.gstin = gstin; ch = true; } if (!up.address && address) { up.address = address; ch = true; } if (up.demo) { delete up.demo; ch = true; }
+  if (pNorm(name) !== pNorm(up.name) && !(up.aliases || []).some(a => pNorm(a) === pNorm(name))) { up.aliases = [...(up.aliases || []), name]; ch = true; }
+  return ch ? saveParty(up) : p;
+}
+/* look-alike names: 'Sharma Roadways' / 'Sharma Roadway' / 'Sarma Roadways' */
+function editDist(a, b) { if (Math.abs(a.length - b.length) > 3) return 9; let prev = Array.from({ length: b.length + 1 }, (_, j) => j); for (let i = 1; i <= a.length; i++) { const cur = [i]; for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; } return prev[b.length]; }
+function looksAlike(a, b) { const x = pNorm(a), y = pNorm(b); if (!x || !y || x === y) return x === y && !!x; const n = Math.min(x.length, y.length); if (n < 4) return false; return editDist(x, y) <= (n >= 10 ? 2 : 1) || (n >= 6 && (x.startsWith(y) || y.startsWith(x))); }
+function similarParties(list = partyList()) { const out = []; for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) if (looksAlike(list[i].name, list[j].name)) out.push([list[i], list[j]]); return out.slice(0, 20); }
+/* first run after this update: trips and bills of the old kind become party records (same id on every phone, so no copies) */
+const hashKey = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+let _ptMig = false;
+async function ensureParties() {
+  if (_ptMig || !S.org || !can('fleet', 2)) return; _ptMig = true; partyCacheReset();
+  const ix = partyIndex(); const groups = new Map();
+  [...col('trips').filter(t => (t.party || '').trim()), ...col('fbills').filter(b => (b.party || '').trim())].forEach(t => {
+    if (findParty(t, ix)) return; const k = t.partyKey && !t.from ? t.partyKey : legacyKey(t); const nk = pNorm(t.party);
+    const g = [...groups.values()].find(x => x.keys.has(k) || (nk && x.norms.has(nk)) || (ph10(t.partyPhone) && x.phones.has(ph10(t.partyPhone)))) || { keys: new Set(), norms: new Set(), phones: new Set(), names: [], recs: [] };
+    g.keys.add(k); if (nk) g.norms.add(nk); if (ph10(t.partyPhone)) g.phones.add(ph10(t.partyPhone)); g.names.push(t.party.trim()); g.recs.push(t); groups.set([...g.keys][0], g);
+  });
+  const recs = [...new Set(groups.values())].map(g => { const last = g.recs.slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))[0]; const name = last.party.trim(); const f = k => (g.recs.find(r => r[k]) || {})[k] || '';
+    return { id: 'pt_' + hashKey(S.org.orgId + '|' + [...g.keys].sort()[0]), name, phone: f('partyPhone'), phones: [...g.phones].filter(x => x !== ph10(f('partyPhone'))), gstin: String(f('partyGstin')).toUpperCase(), address: f('partyAddress'), aliases: [...new Set(g.names.filter(n => pNorm(n) !== pNorm(name)))], keys: [...g.keys], ...(g.recs.every(r => r.demo) ? { demo: true } : {}) }; });
+  if (!recs.length) return;
+  try { await saveMany('parties', recs); partyCacheReset(); render(); } catch (e) { _ptMig = false; }
+}
 function nextTripNo() { const n = col('trips').reduce((mx, t) => Math.max(mx, +String(t.no || '').replace(/\D/g, '') || 0), 0) + 1; return 'T-' + String(n).padStart(3, '0'); }
 function nextLr() { const st = settings(); const n = col('trips').reduce((mx, t) => Math.max(mx, +String(t.lr || '').replace(/\D/g, '').slice(-5) || 0), 0) + 1; return `${st.lrPrefix || 'LR'}-${String(n).padStart(3, '0')}`; }
 
 /* ---------- main page ---------- */
 const FLEET_TABS = [['today', 'Today'], ['track', 'Tracking'], ['trips', 'Trips'], ['bills', 'Freight bills'], ['parties', 'Parties (khata)'], ['vehicles', 'Vehicles'], ['drivers', 'Drivers'], ['report', 'Report']];
 V.fleet = () => {
-  const tab = S.params.tab || 'today'; const edit = can('fleet', 2);
+  const tab = S.params.tab || 'today'; const edit = can('fleet', 2); if (edit && !_ptMig) setTimeout(ensureParties, 0);
   const due = sum(partyList(), p => p.bal); const docs = docAlerts().length;
   const head = pageHead('Transport', 'Every vehicle, trip, bilty, bill, advance and balance in one place.', (can('settings', 2) ? `<button class="icon-btn" aria-label="Transport settings" onclick="A.fleetSettings()">${ic('gear')}</button>` : '') + (edit ? `<button class="btn primary" onclick="A.tripForm()">${ic('plus')} ${T('New trip')}</button>` : ''));
   const tabs = `<div class="tabs">${FLEET_TABS.map(([k, l]) => `<button class="${tab === k ? 'on' : ''}" onclick="A.setP('tab','${k}')">${T(l)}${k === 'vehicles' && docs ? ` <span class="tabn">${docs}</span>` : ''}</button>`).join('')}${tabHelp('fl-' + tab)}</div>`;
@@ -156,7 +211,7 @@ A.tripForm = (preset = {}) => {
   const pAdv = t.id ? advSum(t.recv) : '', oAdv = t.id ? advSum(t.hirePaid) : '';
   const vmap = Object.fromEntries(col('vehicles').map(v => [normNo(v.no), { d: v.driverId || '', on: v.ownerName || '', op: v.ownerPhone || '', own: v.own || 'own' }]));
   const box = (cls, title, inner) => `<div class="slip-box ${cls}"><div class="slip-t">${title}</div><div class="grid2" style="padding:0">${inner}</div></div>`;
-  modal(`<form class="form trip-form" onsubmit="A.saveTrip(event,'${t.id || ''}')" novalidate data-vmap="${esc(JSON.stringify(vmap))}" data-recv-other="${t.id ? sumA(t.recv) - pAdv : 0}" data-paid-other="${t.id ? sumA(t.hirePaid) - oAdv : 0}">${sheetHead(T(t.id ? 'Edit trip / bilty' : 'New trip / bilty'), `${t.lr || ''}${t.no ? ' · ' + t.no : ''}`)}<div class="sheet-b stack">
+  modal(`<form class="form trip-form" onsubmit="A.saveTrip(event,'${t.id || ''}')" novalidate data-lr0="${esc(t.id ? '' : t.lr || '')}" data-vmap="${esc(JSON.stringify(vmap))}" data-recv-other="${t.id ? sumA(t.recv) - pAdv : 0}" data-paid-other="${t.id ? sumA(t.hirePaid) - oAdv : 0}">${sheetHead(T(t.id ? 'Edit trip / bilty' : 'New trip / bilty'), `${t.lr || ''}${t.no ? ' · ' + t.no : ''}`)}<div class="sheet-b stack">
     ${box('', T('Trip'), `
       <label class="field"><span>${T('Vehicle no.')} *</span><input name="vehNo" list="vehList" required value="${esc(v0 ? String(v0.no).toUpperCase() : (t.vehNo || ''))}" placeholder="RJ14 GB 5421" autocomplete="off" oninput="A.tripVeh(this)" style="text-transform:uppercase"><datalist id="vehList">${col('vehicles').slice().sort(by('no')).map(v => `<option value="${esc(String(v.no).toUpperCase())}">${esc(T(v.type || ''))}${vehState(v)[0] === 'trip' && v.id !== t.vehicleId ? ' · ' + T('on a trip') : ''}</option>`).join('')}</datalist></label>
       ${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: t.date })}
@@ -168,7 +223,7 @@ A.tripForm = (preset = {}) => {
       ${fieldHTML({ name: 'freight', label: 'Freight (bhaada) ₹', type: 'number', min: 0, value: t.freight ?? '' }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
       ${fieldHTML({ name: 'adv', label: 'Advance ₹', type: 'number', min: 0, value: pAdv }).replace('<input', '<input oninput="A.tripCalc(this.form)"')}
       <div class="field"><span>${T('Balance')}</span><output class="slip-bal" name="pBal">—</output></div>
-      <label class="field"><span>${T('Transport name (party)')} *</span><input name="party" list="partyList" required value="${esc(t.party || '')}" autocomplete="off" oninput="A.partyPick(this)"><datalist id="partyList">${parties.map(p => `<option value="${esc(p.name)}">${esc(p.phone)}</option>`).join('')}</datalist></label>
+      <label class="field"><span>${T('Transport name (party)')} *</span><input name="party" list="partyList" required value="${esc(t.party || '')}" autocomplete="off" oninput="A.partyPick(this)"><datalist id="partyList">${parties.map(p => `<option value="${esc(p.name)}">${esc(p.phone)}</option>`).join('')}</datalist><small class="pt-hint" hidden></small></label>
       ${fieldHTML({ name: 'partyPhone', label: 'Party mobile', type: 'tel', value: t.partyPhone || '' })}`)}
     ${box('owner', T('Vehicle owner'), `
       <label class="field"><span>${T('Owner name')}</span><input name="ownerName" list="ownerList" value="${esc(t.ownerName ?? v0?.ownerName ?? '')}" autocomplete="off" placeholder="${T('Blank = own vehicle')}" oninput="A.ownerPick(this)"><datalist id="ownerList">${owners.map(o => `<option value="${esc(o.name)}">${esc(o.phone)}</option>`).join('')}</datalist></label>
@@ -205,7 +260,13 @@ A.tripCalc = f => {
   const fr = +f.freight.value || 0, hire = +f.hire.value || 0; const recvOther = +f.dataset.recvOther || 0, paidOther = +f.dataset.paidOther || 0;
   f.pBal.value = inr(Math.max(0, fr - (+f.adv.value || 0) - recvOther)); f.oBal.value = hire ? inr(Math.max(0, hire - (+f.oadv.value || 0) - paidOther)) : '—'; f.margin.value = hire && fr ? inr(fr - hire) : '—';
 };
-A.partyPick = el => { const p = partyList().find(x => x.name.toLowerCase() === el.value.trim().toLowerCase()); if (!p) return; const f = el.form; if (!f.partyPhone.value) f.partyPhone.value = p.phone || ''; if (!f.partyGstin.value) f.partyGstin.value = p.gstin || ''; if (!f.partyAddress.value) f.partyAddress.value = p.address || ''; };
+A.partyPick = el => {
+  const val = el.value.trim(); const f = el.form; const hint = el.parentElement.querySelector('.pt-hint'); const list = partyList();
+  const p = val && (list.find(x => pNorm(x.name) === pNorm(val)) || list.find(x => x.rec && (x.rec.aliases || []).some(a => pNorm(a) === pNorm(val))));
+  if (hint) { const near = !p && val.length >= 4 ? list.filter(x => looksAlike(x.name, val)).slice(0, 3) : [];
+    hint.hidden = !p && !near.length;
+    hint.innerHTML = p ? `${ic('check')} ${T('Party in your list')}: <b>${esc(p.name)}</b>${p.trips.length ? ` · ${p.trips.length} ${T('trips')}` : ''}` : near.length ? `${T('Same party?')} ${near.map(x => `<button type="button" class="chip" onclick="const i=this.closest('label').querySelector('input');i.value=this.dataset.n;A.partyPick(i)" data-n="${esc(x.name)}">${esc(x.name)}</button>`).join(' ')}` : ''; }
+  if (!p) return; if (!f.partyPhone.value) f.partyPhone.value = p.phone || ''; if (!f.partyGstin.value) f.partyGstin.value = p.gstin || ''; if (!f.partyAddress.value) f.partyAddress.value = p.address || ''; };
 /* the vehicle number is typed; a new number becomes a vehicle (market vehicle when an owner is written) */
 async function vehicleFor(no, ownerName, ownerPhone) {
   const n = normNo(no); let v = col('vehicles').find(x => normNo(x.no) === n);
@@ -220,10 +281,11 @@ A.saveTrip = (e, id) => {
     if (!(v.vehNo || '').trim()) throw new Error('Write the vehicle number'); if (!(v.from || '').trim() || !(v.to || '').trim()) throw new Error('Write from and to'); if (!(v.party || '').trim()) throw new Error('Write the transport name (party)');
     const ownerName = (v.ownerName || '').trim(), ownerPhone = (v.ownerPhone || '').trim();
     const veh = await vehicleFor(v.vehNo, ownerName, ownerPhone);
+    const party = await partyFor(v.party.trim(), (v.partyPhone || '').trim(), (v.partyGstin || '').trim().toUpperCase(), (v.partyAddress || '').trim());
     const base = id ? tripById(id) : { id: uid('tr_'), no: nextTripNo(), status: 'planned', recv: [], dAdv: [], costs: [], hirePaid: [], log: [{ at: nowIso(), st: 'planned', by: S.me?.name || S.user.name }], created: Date.now() };
     const date = v.date || todayLocal(); const rt = v.rateType || 'fixed'; const mult = rt === 'km' ? +v.distance : rt === 'ton' ? +v.weight : 0;
     const rec = { ...base, vehicleId: veh.id, driverId: v.driverId || (id ? base.driverId : veh.driverId) || '', from: v.from.trim(), to: v.to.trim(), date, time: v.time || '', distance: nOr(v.distance),
-      party: v.party.trim(), partyPhone: (v.partyPhone || '').trim(), partyGstin: (v.partyGstin || '').trim().toUpperCase(), partyAddress: (v.partyAddress || '').trim(),
+      partyId: party.id, party: pNorm(v.party) === pNorm(party.name) ? party.name : v.party.trim(), partyPhone: (v.partyPhone || '').trim(), partyGstin: (v.partyGstin || '').trim().toUpperCase(), partyAddress: (v.partyAddress || '').trim(),
       rateType: rt, rate: nOr(v.rate), freight: rt !== 'fixed' && +v.rate && mult ? Math.round(+v.rate * mult) : +v.freight || 0, payType: v.payType || 'tbb', lr: (v.lr || '').trim() || base.lr || nextLr(),
       ownerName, ownerPhone, hire: nOr(v.hire),
       goods: (v.goods || '').trim(), packages: (v.packages || '').trim(), weight: nOr(v.weight), value: nOr(v.value), goodsInv: (v.goodsInv || '').trim(), eway: (v.eway || '').trim(), gstBy: v.gstBy || 'consignor',
@@ -232,7 +294,10 @@ A.saveTrip = (e, id) => {
       kmStart: nOr(v.kmStart), kmEnd: nOr(v.kmEnd), notes: (v.notes || '').trim() };
     rec.recv = setAdv(base.recv, v.adv, date); rec.hirePaid = setAdv(base.hirePaid, v.oadv, date);
     if (!id && +v.dadv) rec.dAdv = [{ id: uid('da_'), amount: +v.dadv, date, mode: 'Cash' }];
-    await save('trips', rec, `${id ? 'Updated' : 'New'} trip ${rec.lr}: ${rec.from} → ${rec.to}`);
+    const tmsg = r => `${id ? 'Updated' : 'New'} trip ${r.lr}: ${r.from} → ${r.to}`;
+    /* a new trip keeps the bilty no. the app suggested unless someone typed another; if another phone just used it, the next one is taken */
+    const auto = !id && noKey(rec.lr) === noKey(e.target.dataset.lr0);
+    const saved = auto ? await saveNumbered('trips', rec, 'lr', tmsg) : await save('trips', rec, tmsg(rec)); if (auto && saved.lr !== rec.lr) toast(`${T('Bilty / LR no.')} ${saved.lr}`, 'warn'); Object.assign(rec, saved);
     if (rec.kmEnd && +rec.kmEnd > +(veh.odo || 0)) await save('vehicles', { ...vehById(veh.id), odo: +rec.kmEnd });
     A.closeModal(); toast(id ? 'Saved' : 'Trip made'); if (id) render(); else A.go('trip', { id: rec.id });
   });
@@ -349,8 +414,10 @@ A.delVx = id => confirmBox('Delete this expense?', '', 'Delete', async () => { a
 
 /* ---------- parties (khata) ---------- */
 function fleetParties() {
-  const list = partyList(); const tot = sum(list, p => p.bal);
+  const list = partyList(); const tot = sum(list, p => p.bal); const sim = can('fleet', 3) ? similarParties(list) : [];
+  const big = (a, b) => (b.trips.length + b.bills.length > a.trips.length + a.bills.length ? [a, b] : [b, a]);
   return `<div class="toolbar"><b class="num">${T('Total to collect')} ${inr(tot)}</b></div>
+  ${sim.length ? `<div class="card pad stack-sm pt-sim"><b>${ic('users')} ${T('These look like the same party')}</b><div class="small muted">${T('Merge them so one party has one khata. Trips, bills and payments move together.')}</div><div class="rows tight">${sim.map(([a, b]) => { const [src, dst] = big(a, b); return `<div class="row" style="flex-wrap:wrap"><div class="main-col"><b>${esc(src.name)}</b> → <b>${esc(dst.name)}</b><div class="sub">${src.trips.length} + ${dst.trips.length} ${T('trips')}${src.phone && dst.phone && ph10(src.phone) !== ph10(dst.phone) ? ` · ${esc(src.phone)} / ${esc(dst.phone)}` : ''}</div></div><button class="btn sm" onclick="A.partyMergeAsk('${esc(src.key)}','${esc(dst.key)}')">${T('Merge')}</button></div>`; }).join('')}</div></div>` : ''}
   <div class="card">${list.length ? `<div class="rows">${list.map(p => `<div class="row" style="flex-wrap:wrap"><div class="avatar">${esc(initials(p.name))}</div><button class="main-col linkish" style="min-width:160px" onclick="A.partySheet('${esc(p.key)}')"><b>${esc(p.name)}</b><div class="sub">${p.trips.length} ${T('trips')} · ${T('Freight')} ${inr(p.freight)} · ${T('Received')} ${inr(p.recv)}${p.oldest ? ` · ${T('oldest due')} ${dShortF(p.oldest.date)}` : ''}</div></button><div class="row-flex" style="gap:6px">${p.bal ? pill(`${T('Due')} ${inr(p.bal)}`, 'bad') : pill(T('Clear'), 'good')}${p.bal && p.phone ? waBtn(partyStatement(p), p.phone, T('Remind')) : ''}${can('fleet', 2) && p.bal ? `<button class="btn sm primary" onclick="A.partyPay('${esc(p.key)}')">${ic('rupee')} ${T('Received')}</button>` : ''}</div></div>`).join('')}</div>` : empty('No party yet', 'Parties come from your trips.', '', 'users', MOD.fleet.c)}</div>${ownersCard()}`;
 }
 function partyStatement(p) {
@@ -362,8 +429,45 @@ A.partySheet = key => {
   modal(`${sheetHead(p.name, `${p.phone || ''}${p.gstin ? ' · ' + p.gstin : ''}`)}<div class="sheet-b stack-sm"><div class="money-grid"><div><span>${T('Freight')}</span><b>${inr(p.freight)}</b></div><div><span>${T('Received')}</span><b class="good-t">${inr(p.recv)}</b></div><div><span>${T('Balance')}</span><b class="${p.bal ? 'bad-t' : ''}">${inr(p.bal)}</b></div></div>
     <div class="rows">${p.trips.slice().reverse().map(t => { const m = tripMoney(t); return `<button class="row click" onclick="A.closeModal();A.go('trip',{id:'${t.id}'})"><div class="main-col"><b>${esc(t.from)} → ${esc(t.to)}</b><div class="sub">${dShortF(t.date)} · ${esc(t.no)}${t.lr ? ' · ' + esc(t.lr) : ''}</div></div><div class="trip-m"><b class="num">${inr(m.freight)}</b>${m.bal ? `<span class="tiny bad-t">${T('Due')} ${inr(m.bal)}</span>` : `<span class="tiny good-t">${T('Paid')}</span>`}</div></button>`; }).join('')}</div>
     ${p.bills.length ? `<div class="eyebrow">${T('Freight bills')}</div><div class="rows">${p.bills.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(b => fbillRow(b, true)).join('')}</div>` : ''}
-    <div class="row-flex" style="gap:6px">${can('fleet', 2) && unbilled(p.key).length ? `<button class="btn" onclick="A.closeModal();A.fbillNew({key:'${esc(p.key)}'})">${ic('receipt')} ${T('Freight bill for unbilled trips')} (${unbilled(p.key).length})</button>` : ''}${p.bal && p.phone ? waBtn(partyStatement(p), p.phone, T('Send statement')) : ''}</div></div>`);
+    <div class="row-flex" style="gap:6px">${can('fleet', 2) && unbilled(p.key).length ? `<button class="btn" onclick="A.closeModal();A.fbillNew({key:'${esc(p.key)}'})">${ic('receipt')} ${T('Freight bill for unbilled trips')} (${unbilled(p.key).length})</button>` : ''}${p.bal && p.phone ? waBtn(partyStatement(p), p.phone, T('Send statement')) : ''}${can('fleet', 2) ? `<button class="btn ghost" onclick="A.partyEdit('${esc(p.key)}')">${ic('edit')} ${T('Edit party')}</button>` : ''}${can('fleet', 3) && partyList().length > 1 ? `<button class="btn ghost" onclick="A.partyMerge('${esc(p.key)}')">${ic('users')} ${T('Merge into another party')}</button>` : ''}</div>
+    ${p.rec?.aliases?.length ? `<div class="tiny muted">${T('Also written as')}: ${p.rec.aliases.map(esc).join(', ')}</div>` : ''}</div>`);
 };
+/* a party seen only on old trips gets a record the first time it is edited or merged (same id on every phone) */
+function partyEnsure(key) {
+  const r = partyRec(key); if (r) return { ...r }; const p = partyOf(key) || {};
+  return { id: 'pt_' + hashKey(S.org.orgId + '|' + key), name: p.name || '', phone: p.phone || '', phones: [], gstin: String(p.gstin || '').toUpperCase(), address: p.address || '', aliases: [], keys: [key] };
+}
+const uniqBy = (a, f) => { const seen = new Set(); return a.filter(x => { const k = f(x); if (!k || seen.has(k)) return false; seen.add(k); return true; }); };
+A.partyEdit = key => { const p = partyOf(key); if (!p) return; formModal({ title: 'Edit party', sub: p.name, fields: [
+    { name: 'name', label: 'Party name', required: true, value: p.name }, { name: 'phone', label: 'Party mobile', type: 'tel', value: p.phone }, { name: 'gstin', label: 'Party GSTIN', value: p.gstin }, { name: 'address', label: 'Party address', value: p.address, full: true },
+    { type: 'html', full: true, html: `<small class="muted">${T('Old bilty and bills also show the new name.')}</small>` }],
+  onSubmit: async v => { const name = (v.name || '').trim(); if (!name) throw new Error('Write the party name');
+    const other = findParty({ party: name }); if (other && other.id !== (partyRec(key)?.id || '') && pNorm(other.name) === pNorm(name) && other.id !== key) throw new Error(`${T('Another party already has this name')}: ${other.name}. ${T('Use Merge instead.')}`);
+    const r = partyEnsure(key); const old = r.name;
+    const up = { ...r, name, phone: (v.phone || '').trim(), gstin: (v.gstin || '').trim().toUpperCase(), address: (v.address || '').trim(), aliases: uniqBy([...(r.aliases || []), ...(pNorm(old) !== pNorm(name) ? [old] : [])].filter(a => pNorm(a) !== pNorm(name)), pNorm) };
+    await saveParty(up, `Edited party ${name}`);
+    const ts = p.trips.map(t => tripById(t.id)).filter(t => t && (t.partyId !== up.id || t.party !== name)).map(t => ({ ...t, partyId: up.id, party: name, ...(up.gstin && !t.partyGstin ? { partyGstin: up.gstin } : {}) }));
+    const bs = p.bills.map(b => getById('fbills', b.id)).filter(Boolean).map(b => ({ ...b, partyKey: up.id, partyId: up.id, party: name }));
+    if (ts.length) await saveMany('trips', ts); if (bs.length) await saveMany('fbills', bs); partyCacheReset(); A.closeModal(); toast('Saved'); render(); } }); };
+A.partyMerge = key => { const p = partyOf(key); if (!p) return; const others = partyList().filter(x => x.key !== key).sort((a, b) => (looksAlike(b.name, p.name) - looksAlike(a.name, p.name)) || a.name.localeCompare(b.name));
+  modal(`${sheetHead(T('Merge into another party'), `${p.name} · ${T('Pick the party to keep')}`)}<div class="sheet-b stack-sm"><div class="search">${ic('search')}<input placeholder="${T('Search party')}" oninput="const q=this.value.toLowerCase();document.querySelectorAll('#mergeTo .row').forEach(r=>r.hidden=!r.dataset.n.includes(q))"></div>
+    <div class="rows" id="mergeTo">${others.map(x => `<button class="row click" data-n="${esc(x.name.toLowerCase())}" onclick="A.partyMergeAsk('${esc(key)}','${esc(x.key)}')"><div class="avatar">${esc(initials(x.name))}</div><div class="main-col"><b>${esc(x.name)}</b><div class="sub">${x.trips.length} ${T('trips')}${x.phone ? ' · ' + esc(x.phone) : ''}</div></div>${looksAlike(x.name, p.name) ? pill(T('Same party?'), 'warn') : ''}</button>`).join('')}</div></div>`);
+};
+A.partyMergeAsk = (src, dst) => { const a = partyOf(src), b = partyOf(dst); if (!a || !b) return;
+  confirmBox(`${T('Merge')} ${a.name} → ${b.name}?`, `${a.trips.length} ${T('trips')}, ${a.bills.length} ${T('bills')} ${T('and their payments move to')} ${b.name}. ${a.name} ${T('is kept as another spelling, so new trips with it also go to')} ${b.name}.`, 'Merge', async () => { await mergeParties(src, dst); A.closeModal(); toast(T('Merged')); render(); }); };
+async function mergeParties(srcKey, dstKey) {
+  const src = partyOf(srcKey), dst = partyOf(dstKey); if (!src || !dst || srcKey === dstKey) return; const s0 = partyRec(srcKey); const d = partyEnsure(dstKey);
+  const up = { ...d, phone: d.phone || src.phone || '', gstin: d.gstin || String(src.gstin || '').toUpperCase(), address: d.address || src.address || '',
+    aliases: uniqBy([...(d.aliases || []), src.name, ...(s0?.aliases || [])], pNorm).filter(a => pNorm(a) !== pNorm(d.name)),
+    phones: uniqBy([...(d.phones || []), src.phone, ...(s0 ? [s0.phone, ...(s0.phones || [])] : [])].filter(x => ph10(x) && ph10(x) !== ph10(d.phone || src.phone)), phone10),
+    keys: [...new Set([...(d.keys || []), ...(s0?.keys || []), ...(s0 ? [] : [srcKey])])] };
+  if (!src.trips.every(t => t.demo)) delete up.demo;
+  await saveParty(up);
+  const ts = col('trips').filter(t => pKey(t) === srcKey || (s0 && t.partyId === s0.id)).map(t => ({ ...t, partyId: up.id, party: up.name }));
+  const bs = col('fbills').filter(b => fbKey(b) === srcKey || (s0 && b.partyId === s0.id)).map(b => ({ ...b, partyKey: up.id, partyId: up.id, party: up.name }));
+  if (ts.length) await saveMany('trips', ts); if (bs.length) await saveMany('fbills', bs);
+  if (s0) await removeRec('parties', s0.id); partyCacheReset(); logAct(`Merged party ${src.name} into ${up.name}`);
+}
 /* a lump payment goes to the oldest unpaid trips first */
 A.partyPay = key => { const p = partyOf(key); lineForm('Payment received', `${p.name} · ${T('Due')} ${inr(p.bal)}`, [{ name: 'note', label: 'Note', full: true }], async v => {
   let left = +v.amount; for (const t of p.trips) { if (left <= 0) break; const bal = tripMoney(tripById(t.id)).bal; if (!bal) continue; const a = Math.min(bal, left); left -= a; const fresh = tripById(t.id); await save('trips', { ...fresh, recv: [...(fresh.recv || []), { id: uid('rc_'), amount: a, date: v.date || todayLocal(), mode: v.mode, note: (v.note || '').trim() }] }); }
@@ -570,8 +674,8 @@ A.fbillNew = (o = {}) => {
 };
 A.fbillSave = (e, key) => { e.preventDefault(); const v = readForm(e.target); withBtn(e, async () => {
   const ids = v.tids || []; if (!ids.length) throw new Error('Tick at least one trip'); const p = partyOf(key); const t0 = tripById(ids[0]);
-  const b = { id: uid('fb_'), no: nextFbNo(), date: v.date || todayLocal(), dueDays: +v.dueDays || 0, partyKey: key, party: p?.name || t0.party, partyPhone: p?.phone || t0.partyPhone || '', partyGstin: (v.partyGstin || '').toUpperCase(), partyAddress: v.partyAddress || '', tripIds: ids, gst: v.gst, recv: [], notes: '', created: Date.now() };
-  await save('fbills', b, `Freight bill ${b.no} for ${b.party}`); for (const id of ids) await save('trips', { ...tripById(id), fbillId: b.id, ...(v.partyGstin ? { partyGstin: b.partyGstin } : {}) });
+  const pr = partyRec(key); let b = { id: uid('fb_'), no: nextFbNo(), date: v.date || todayLocal(), dueDays: +v.dueDays || 0, partyKey: key, ...(pr ? { partyId: pr.id } : {}), party: p?.name || t0.party, partyPhone: p?.phone || t0.partyPhone || '', partyGstin: (v.partyGstin || '').toUpperCase(), partyAddress: v.partyAddress || '', tripIds: ids, gst: v.gst, recv: [], notes: '', created: Date.now() };
+  b = await saveNumbered('fbills', b, 'no', r => `Freight bill ${r.no} for ${r.party}`); for (const id of ids) await save('trips', { ...tripById(id), fbillId: b.id, ...(v.partyGstin ? { partyGstin: b.partyGstin } : {}) });
   await saveSettingsRec({ transportGst: v.gst }); A.closeModal(); toast(T('Bill made')); A.go('fbill', { id: b.id }); }); };
 V.fbill = () => {
   const b = fbById(S.params.id); if (!b) return `<button class="back" onclick="A.go('fleet',{tab:'bills'})">${ic('back')} ${T('Freight bills')}</button>` + empty('Bill not found', '');
@@ -611,7 +715,7 @@ A.fbillPay = id => { const b = fbById(id); const c = fbillCalc(b); lineForm('Pay
   if (left > 0) { const fb = fbById(id); await save('fbills', { ...fb, recv: [...(fb.recv || []), { id: uid('rc_'), amount: left, date: v.date || todayLocal(), mode: v.mode, note: (v.note || '').trim() }] }); }
   logAct(`Received ${inr(v.amount)} on freight bill ${b.no}`); toast(T('Saved')); render(); }); };
 A.fbDelRecv = (id, rid) => confirmBox('Delete this entry?', '', 'Delete', async () => { const b = fbById(id); await save('fbills', { ...b, recv: (b.recv || []).filter(r => r.id !== rid) }); render(); });
-A.fbillEdit = id => { const b = fbById(id); const extra = unbilled(b.partyKey);
+A.fbillEdit = id => { const b = fbById(id); const extra = unbilled(fbKey(b));
   formModal({ title: 'Edit freight bill', sub: b.no, wide: true, fields: [{ name: 'date', label: 'Bill date', type: 'date', value: b.date }, { name: 'dueDays', label: 'Payment due in (days)', type: 'number', min: 0, value: b.dueDays },
     { name: 'gst', label: 'GST', type: 'select', full: true, value: b.gst, options: [['rcm', T('Reverse charge: party pays GST (GTA, 5%)')], ['5', T('5% GST charged by us (no input credit)')], ['12', T('12% GST charged by us')], ['none', T('No GST')]] },
     { name: 'partyGstin', label: 'Party GSTIN', value: b.partyGstin }, { name: 'partyAddress', label: 'Party address', value: b.partyAddress },
@@ -680,7 +784,7 @@ const slipMsg = (t, kind) => { const st = settings(); const m = tripMoney(t); co
   return `${st.bizName}\n${kind === 'invoice' ? 'Invoice ' + (t.invNo || '') + ' · ' : ''}LR ${t.lr || ''}\nVehicle No.: ${String(v?.no || '').toUpperCase()}\nDate: ${fmtDate(t.date)}\nFrom: ${t.from}\nTo: ${t.to}${t.distance ? `\nDistance: ${t.distance} km` : ''}\nFreight: ${inr(m.freight)}\nAdvance: ${inr(m.recv)}\nBalance: ${inr(m.bal)}\nTransport Name: ${t.party || ''}`; };
 A.printSlip = async (id, kind) => {
   let t = tripById(id); const w = window.open('', '_blank'); if (!w) { toast('Allow pop-ups to print', 'bad'); return; }
-  if (kind === 'invoice' && !t.invNo && can('fleet', 2)) { try { t = { ...t, invNo: nextTripInvNo() }; await save('trips', t, `Invoice ${t.invNo} for trip ${t.lr}`); } catch (e) { } }
+  if (kind === 'invoice' && !t.invNo && can('fleet', 2)) { try { t = await saveNumbered('trips', { ...t, invNo: nextTripInvNo() }, 'invNo', r => `Invoice ${r.invNo} for trip ${r.lr}`); } catch (e) { } }
   const ph = String(t.partyPhone || '').replace(/\D/g, '').slice(-10);
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${kind === 'invoice' ? 'Invoice ' + esc(t.invNo || '') : 'Bilty ' + esc(t.lr || '')}</title><style>${SLIP_CSS}</style></head><body>${slipHTML(t, kind)}<div class="acts"><button onclick="print()">Print / Save as PDF</button>${ph ? `<a href="${esc(waLink(slipMsg(t, kind), ph))}" target="_blank" rel="noopener">WhatsApp</a>` : ''}</div></body></html>`);
   w.document.close(); setTimeout(() => { try { w.print(); } catch (e) { } }, 450); logAct(`Printed ${kind} for trip ${t.lr}`); render();

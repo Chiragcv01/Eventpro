@@ -135,7 +135,7 @@ const EV_STYLE = { 'Wedding': ['rings', '#E11D74'], 'Reception': ['sparkle', '#C
 const evStyle = e => EV_STYLE[e?.type] || EV_STYLE.Other;
 const INV_STYLE = { 'Tents & Shamiana': ['tent', '#2563EB'], 'Furniture': ['chair', '#7C3AED'], 'Lighting & Sound': ['bulb', '#F59E0B'], 'Power & DG': ['bolt', '#EA580C'], 'Catering Utensils': ['utensils', '#16A34A'], 'Decor & Flooring': ['sparkle', '#DB2777'], 'Other': ['box', '#64748B'] };
 const EXP_STYLE = { 'Diesel / Fuel': ['fuel', '#EA580C'], 'Transport': ['truck', '#2563EB'], 'Extra Labour': ['users', '#0D9488'], 'Food & Grocery': ['cart', '#16A34A'], 'Venue / Rent': ['building', '#7C3AED'], 'Repair & Damage': ['wrench', '#E0344B'], 'Misc': ['dots', '#64748B'] };
-const COLL_MODULE = { fbills: 'fleet', vehicles: 'fleet', drivers: 'fleet', trips: 'fleet', fleetx: 'fleet', leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', checklists: 'tasks', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
+const COLL_MODULE = { parties: 'fleet', fbills: 'fleet', vehicles: 'fleet', drivers: 'fleet', trips: 'fleet', fleetx: 'fleet', leads: 'leads', spaces: 'venue', rooms: 'venue', stays: 'venue', depts: 'venue', checklists: 'tasks', events: 'bookings', inventory: 'inventory', dishes: 'catering', mandi: 'catering', invoices: 'invoices', counters: 'invoices', payments: 'payments', vendors: 'vendors', pos: 'vendors', staff: 'staff', attendance: 'staff', advances: 'staff', payouts: 'staff', tasks: 'tasks', expenses: 'expenses', reviews: 'reviews', settings: 'settings', activity: 'team', patients: 'patients', readings: 'patients', pmsgs: 'patients', visits: 'medical', appts: 'appointments' };
 const LEVELS = [[0, 'No access'], [1, 'View'], [2, 'Edit'], [3, 'Full']];
 const allPerms = l => Object.fromEntries(MODULES.map(m => [m.key, l]));
 const ROLE_DEFAULTS = {
@@ -371,7 +371,7 @@ const CloudDB = {
     this.sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey);
     this.sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') setTimeout(() => A.newPasswordModal(), 300); });
   },
-  err(e) { return new Error(e?.message || String(e)); },
+  err(e) { const x = new Error(e?.message || String(e)); if (e?.code) x.code = e.code; return x; },
   async signUp({ email, password, name, phone }) {
     const { data, error } = await this.sb.auth.signUp({ email, password, options: { data: { name, phone }, emailRedirectTo: location.origin + location.pathname } });
     if (error) throw this.err(error);
@@ -533,14 +533,43 @@ function lvl(mod) { if (S.super) return 3; let v = S.role === 'owner' ? 3 : Numb
 function can(mod, l = 1) { return !!S.org && moduleOn(mod) && lvl(mod) >= l; }
 function need(mod, l = 2) { if (lvl(mod) < l) throw new Error(S.org && orgState(S.org) === 'expired' ? 'Your plan has ended. Renew to use the app again.' : 'Your role does not have permission for this. Ask the owner to update access.'); }
 
+/* document numbers that must not repeat inside one business (the database refuses a repeat too: records_uniq_* indexes).
+   Demo records do not count; a cancelled trip frees its bilty number. */
+const UNIQ_NOS = { invoices: [['no', 'Invoice no.']], fbills: [['no', 'Bill no.']], trips: [['lr', 'Bilty / LR no.'], ['invNo', 'Invoice no.']] };
+const noKey = x => String(x || '').trim().toUpperCase();
+const noFree = (coll, f, r) => !(coll === 'trips' && f === 'lr' && r.status === 'cancelled');
+function dupNo(coll, rec, prev) {
+  if (rec.demo) return null;
+  for (const [f, label] of UNIQ_NOS[coll] || []) {
+    const k = noKey(rec[f]); if (!k || !noFree(coll, f, rec) || (prev && noKey(prev[f]) === k && noFree(coll, f, prev))) continue;
+    if (col(coll).some(x => x.id !== rec.id && !x.demo && noKey(x[f]) === k && noFree(coll, f, x))) return [f, label];
+  }
+  return null;
+}
+function dupError(coll, f, rec) { const label = ((UNIQ_NOS[coll] || []).find(x => x[0] === f) || [])[1] || 'Number'; const e = new Error(`${T(label)} ${rec[f]}: ${T('this number is already used. Write a different number.')}`); e.code = 'dup'; e.field = f; return e; }
 async function save(coll, rec, msg) {
   need(COLL_MODULE[coll] || 'settings', 2);
+  const arr = col(coll); const i = arr.findIndex(x => x.id === rec.id); const prev = i >= 0 ? arr[i] : null;
+  const d = dupNo(coll, rec, prev !== rec ? prev : null); if (d) throw dupError(coll, d[0], rec);
   rec.updatedAt = Date.now(); rec.updatedBy = S.me?.name || S.user?.name; rec.updatedById = S.user?.id;
-  const arr = col(coll); const i = arr.findIndex(x => x.id === rec.id);
   if (i >= 0) arr[i] = rec; else arr.unshift(rec);
-  await S.adapter.put(S.org.orgId, coll, rec);
+  try { await S.adapter.put(S.org.orgId, coll, rec); }
+  catch (e) { /* not saved: put the old copy back so the screen shows what is really stored */
+    const j = arr.findIndex(x => x.id === rec.id); if (prev && j >= 0) arr[j] = prev; else if (!prev && j >= 0) arr.splice(j, 1);
+    if (e.code === '23505' || /records_uniq/.test(e.message || '')) throw dupError(coll, /records_uniq_lr/.test(e.message) ? 'lr' : /records_uniq_trip_inv/.test(e.message) ? 'invNo' : 'no', rec);
+    throw e;
+  }
   if (msg) logAct(msg);
   return rec;
+}
+/* 'INV/2026-27/007' -> 'INV/2026-27/008', 'LR-012' -> 'LR-013' */
+const bumpNo = s => { const m = String(s || '').match(/^(.*?)(\d+)(\D*)$/); return m ? m[1] + String(+m[2] + 1).padStart(m[2].length, '0') + m[3] : String(s || '') + '-2'; };
+/* saves a record whose number the app made; if another phone took that number a moment ago, the next free number is used */
+async function saveNumbered(coll, rec, f, msg) {
+  for (let k = 0; ; k++) {
+    try { return await save(coll, rec, typeof msg === 'function' ? msg(rec) : msg); }
+    catch (e) { if (e.code !== 'dup' || e.field !== f || k >= 30) throw e; rec = { ...rec, [f]: bumpNo(rec[f]) }; }
+  }
 }
 async function saveMany(coll, recs, msg) {
   need(COLL_MODULE[coll] || 'settings', 2);

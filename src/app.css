@@ -946,3 +946,9 @@ span.hall-chip{cursor:default}
 .consent-agree{background:var(--good-soft);border-radius:12px;padding:10px 12px}
 .portal-forms{border:2px solid #D97706}
 .rx-l{margin:2px 0 0;padding-left:20px}.rx-l li{margin:2px 0}
+/* transport parties: name hint under the party field, look-alike merge card */
+.pt-hint{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px;font-size:12.5px;color:var(--ink2)}
+.pt-hint .ico{width:14px;height:14px;color:var(--good)}
+.pt-hint .chip{padding:3px 10px;font-size:12.5px}
+.pt-sim{margin-bottom:12px;border-color:var(--warn);background:var(--warn-soft)}
+.pt-sim>b{display:flex;align-items:center;gap:6px}

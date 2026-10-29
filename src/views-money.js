@@ -6,8 +6,9 @@ async function createInvoiceFor(e, type, lines) {
   const cnt = getById('counters', 'main') || { id: 'main', inv: 0, qt: 0 }; const k = type === 'invoice' ? 'inv' : 'qt'; cnt[k] = (+cnt[k] || 0) + 1;
   const no = `${type === 'invoice' ? st.invPrefix : st.qtPrefix}/${fyOf()}/${String(cnt[k]).padStart(3, '0')}`;
   await save('counters', cnt);
-  const inv = { id: uid('v_'), no, type, eventId: e?.id || '', client: e?.client || '', phone: e?.phone || '', email: e?.email || '', address: '', clientGstin: '', date: todayLocal(), dueDate: addDays(todayLocal(), +st.dueDays || 7), gstMode: 'excl', gstRate: +st.gstRate || 18, interstate: false, discount: 0, lines: lines || [], notes: '' };
-  await save('invoices', inv, `Created ${type} ${no}${e ? ' for ' + e.title : ''}`); return inv;
+  let inv = { id: uid('v_'), no, type, eventId: e?.id || '', client: e?.client || '', phone: e?.phone || '', email: e?.email || '', address: '', clientGstin: '', date: todayLocal(), dueDate: addDays(todayLocal(), +st.dueDays || 7), gstMode: 'excl', gstRate: +st.gstRate || 18, interstate: false, discount: 0, lines: lines || [], notes: '' };
+  inv = await saveNumbered('invoices', inv, 'no', r => `Created ${type} ${r.no}${e ? ' for ' + e.title : ''}`);
+  const used = +String(inv.no).split('/').pop() || 0; if (used > cnt[k]) { cnt[k] = used; await save('counters', cnt); } return inv;
 }
 A.newInvoice = evId => {
   const evs = col('events').filter(e => e.stage !== 'Cancelled').sort(by('date'));

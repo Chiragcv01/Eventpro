@@ -3,7 +3,7 @@
    An allowed business gets "Demo data" (account menu, and a card on an empty home) to load or remove sample
    records for its kind: event (tent / caterer / planner / venue) or clinic. Every demo record has `demo: true`
    and an id starting 'dm_'; removing deletes only those, the business's own records are never touched. */
-const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'checklists', 'patients', 'readings', 'visits', 'appts', 'pmsgs', 'vehicles', 'drivers', 'trips', 'fleetx', 'fbills', 'advances'];
+const DEMO_COLLS = ['events', 'inventory', 'staff', 'attendance', 'tasks', 'invoices', 'payments', 'expenses', 'vendors', 'reviews', 'leads', 'spaces', 'rooms', 'stays', 'depts', 'checklists', 'patients', 'readings', 'visits', 'appts', 'pmsgs', 'vehicles', 'drivers', 'trips', 'fleetx', 'fbills', 'parties', 'advances'];
 const demoSet = () => S.platform?.demo || {};
 const demoOrgOn = id => !!demoSet().all || (demoSet().orgs || []).includes(id);
 const demoAllowed = () => !!S.org && (S.super || demoOrgOn(S.org.orgId));

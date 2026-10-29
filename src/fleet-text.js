@@ -419,4 +419,25 @@ Show vehicle owner part on the invoice | इनवॉइस पर गाड़�
 Advance ₹ | एडवांस ₹
 Vehicle owner | गाड़ी मालिक
 Press back again to exit | बाहर जाने के लिए फिर से बैक दबाएं
+this number is already used. Write a different number. | यह नंबर पहले से इस्तेमाल हो चुका है। दूसरा नंबर लिखें।
+Bill no. | बिल नंबर
+Invoice no. | इनवॉइस नंबर
+Party in your list | आपकी लिस्ट में पार्टी
+Same party? | यही पार्टी है?
+These look like the same party | ये एक ही पार्टी लगती हैं
+Merge them so one party has one khata. Trips, bills and payments move together. | इन्हें मिला दें ताकि एक पार्टी का एक ही खाता रहे। ट्रिप, बिल और पेमेंट साथ में चले जाएंगे।
+Merge | मिलाएं
+Merge into another party | दूसरी पार्टी में मिलाएं
+Pick the party to keep | जो पार्टी रखनी है उसे चुनें
+Edit party | पार्टी बदलें
+Party name | पार्टी का नाम
+Old bilty and bills also show the new name. | पुरानी बिल्टी और बिलों पर भी नया नाम दिखेगा।
+Another party already has this name | इस नाम की एक और पार्टी पहले से है
+Use Merge instead. | इसकी जगह 'मिलाएं' इस्तेमाल करें।
+Write the party name | पार्टी का नाम लिखें
+Also written as | ऐसे भी लिखा गया
+bills | बिल
+and their payments move to | और उनके पेमेंट इसमें चले जाएंगे:
+is kept as another spelling, so new trips with it also go to | दूसरी स्पेलिंग के रूप में रखा जाएगा, इसलिए इस नाम की नई ट्रिप भी इसमें जाएंगी:
+Merged | मिला दिया
 `);
