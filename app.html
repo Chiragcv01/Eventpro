@@ -968,7 +968,6 @@ span.hall-chip{cursor:default}
 .case-tl{display:flex;flex-direction:column;gap:10px}.tl-h{display:flex;gap:10px;align-items:flex-start}.tl-b{margin-top:6px;display:flex;flex-direction:column;gap:4px}
 .vb .eyebrow{display:block;margin-top:4px}.rx-t{border-collapse:collapse;width:100%}.rx-t td{border-bottom:1px solid var(--line2);padding:4px 6px;font-size:14px}.tx-list{margin:2px 0 0;padding-left:18px}.tx-list .num{margin-left:6px}
 .tl-c{display:flex;gap:10px;align-items:center}
-.sigpad{display:flex;flex-direction:column;gap:6px}.sigpad canvas{width:100%;aspect-ratio:3/1;border:2px dashed #94A3B8;border-radius:12px;background:#fff;touch-action:none;cursor:crosshair}
 .consent-text{white-space:pre-wrap;max-height:42vh;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface2);font-size:15px;line-height:1.65}
 .consent-agree{background:var(--good-soft);border-radius:12px;padding:10px 12px}
 .portal-forms{border:2px solid #D97706}
@@ -980,6 +979,44 @@ span.hall-chip{cursor:default}
 .pt-sim{margin-bottom:12px;border-color:var(--warn);background:var(--warn-soft)}
 .pt-sim>b{display:flex;align-items:center;gap:6px}
 
+/* visit form, simple version (31 Oct 2026) */
+.vf-b{gap:10px}.vf-b .vf-sec{gap:7px;padding:10px 12px}
+.vf-l{font:700 12.5px var(--f-body);text-transform:uppercase;letter-spacing:.05em;color:#C2185B}
+.vf-b textarea{min-height:0;padding:9px 11px;font-size:15px}
+.vf-warn{display:flex;gap:6px;align-items:center;background:var(--bad-soft);color:var(--bad);border-radius:12px;padding:8px 12px;font-weight:700;font-size:14px}.vf-warn .ico{width:17px;height:17px;flex:none}
+.vf-in{display:flex;flex-direction:column;gap:4px}.vf-in>span{font-size:12.5px;color:var(--muted);font-weight:600}
+.chips.tight{gap:5px}.chips.tight .chip-radio span{padding:5px 11px;font-size:13px}.chips.tight .chip{padding:5px 11px;font-size:13px}.chips.tight .chip.on{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
+.tx-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.tx-tiles .tx-tile.more{display:none}.tx-tiles.all .tx-tile.more{display:block}
+.tx-tile{border:1.5px solid #F9C4D6;background:#FFF4F8;color:#9D174D;border-radius:12px;padding:11px 4px;font:700 14px/1.15 var(--f-body);cursor:pointer;min-height:46px}
+.tx-tile:active{transform:scale(.97)}.tx-tile.ghost{background:var(--surface2);border-color:var(--line);color:var(--ink2)}
+.tx-cont{align-self:flex-start;background:var(--info-soft);border-color:var(--info);color:var(--info)}
+.tx-cards{display:flex;flex-direction:column;gap:8px}.tx-cards:empty{display:none}
+.tx-card{border:1.5px solid #F9C4D6;border-radius:14px;padding:9px 10px;display:flex;flex-direction:column;gap:7px;background:var(--surface)}
+.tx-card .tx-top b{font-size:15.5px}.tx-rs{color:var(--muted);font-weight:700}.tx-card input[name$="_amt"]{width:92px;flex:none;padding:7px 9px}
+.tx-o{display:flex;flex-direction:column;gap:3px}.tx-o>span{font-size:12px;color:var(--muted);font-weight:600}
+.tp-mid{height:1px;background:var(--line);margin:3px 0}
+.tp.br .tp-r button.mis{background:#E0344B;border-color:#E0344B;color:#fff;text-decoration:line-through}.tp.br .tp-r button.sup{background:#0891B2;border-color:#0891B2;color:#fff}
+.tp.br.sup-mode .tp-r button:not(.mis){box-shadow:0 0 0 2px #0891B255}
+.br-sum{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:3px}.br-sum span{min-width:30px;text-align:center;border-radius:7px;padding:3px 5px;font:700 13px var(--f-body);color:#fff}
+.br-sum .u-mis{background:#E0344B}.br-sum .u-sup{background:#0891B2}.br-sum b{margin-left:6px;font-size:13.5px}
+.rx-rows{display:flex;flex-direction:column;gap:6px}.rx-rows:empty{display:none}.rx-row.flash{outline:2px solid var(--brand)}
+.rx-days{display:flex;align-items:center;gap:4px;flex:none}.rx-days input{width:60px}.rx-days span{font-size:13px;color:var(--muted)}
+.vf-more{padding:2px 0}
+.vf-bill{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}.vf-bill>div,.vf-bill>label{display:flex;flex-direction:column;gap:2px}.vf-bill span{font-size:12px;color:var(--muted);font-weight:600}.vf-bill b{font:800 20px/1.2 var(--f-display)}
+.vf-sign{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.vf-sign img{height:44px;border:1px solid var(--line);border-radius:8px;background:#fff}
+/* signature */
+.sig-box{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.sig-tap{width:100%;min-height:120px;border:2px dashed #94A3B8;border-radius:14px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:var(--ink2);font:700 15px var(--f-body);padding:10px}
+.sig-tap img{max-width:100%;max-height:110px}.sig-again{font-size:12.5px;color:var(--brand)}.sig-ph .ico,.sig-again .ico{width:18px;height:18px;vertical-align:-3px}
+body.sig-on{overflow:hidden}
+.sig-full{position:fixed;inset:0;z-index:9999;background:#fff;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
+.sig-bar{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}.sig-bar b{font:800 18px var(--f-display)}
+.sig-area{flex:1;position:relative;touch-action:none}.sig-area canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.sig-line{position:absolute;left:24px;right:24px;top:66%;border-bottom:2px solid #CBD5E1;pointer-events:none}.sig-line span{position:absolute;left:0;bottom:2px;color:#94A3B8;font-size:20px}
+.vf-b .chips.qk,.vf-b .rx-tiles,.vf-since .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+.vf-b .chips.qk::-webkit-scrollbar,.vf-b .rx-tiles::-webkit-scrollbar,.vf-since .chips::-webkit-scrollbar{display:none}
+.vf-b .chips.qk>*,.vf-b .rx-tiles>*,.vf-since .chips>*{flex:none;white-space:nowrap}
+
 </style>
 </head>
 <body>
@@ -987,7 +1024,7 @@ span.hall-chip{cursor:default}
 <script>try{if(localStorage.getItem('ep_lang')==='hi')document.getElementById('bootTxt').textContent='खुल रहा है…'}catch(e){}</script>
 <div id="modalRoot" hidden></div>
 <script>
-window.SM_BUILD = 'bb4b09d25062';
+window.SM_BUILD = '297562e44ffb';
 /* ================= Language: English / हिंदी =================
    The screens are written in English. When Hindi is on, every text node,
    placeholder and tooltip is swapped from the dictionary below as it appears
@@ -3957,6 +3994,7 @@ function hNav() { if (!hReady()) return; try { if (H.backT) { clearTimeout(H.bac
 function hModalOpen() { if (!hReady()) return; if (H.backT) { clearTimeout(H.backT); H.backT = null; H.modal = true; return; } if (H.modal) return; if (H.ignore) { H.pendingPush = true; return; } try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (e) { } }
 function hModalClosed() { if (!H.modal) return; H.modal = false; H.backT = setTimeout(() => { H.backT = null; H.ignore++; try { history.back(); } catch (e) { H.ignore--; } }, 0); }
 window.addEventListener('popstate', e => {
+  if (window.popHook && window.popHook(e)) return; /* a full-screen layer (signature pad) handles back itself */
   if (H.ignore) { H.ignore--; if (H.pendingPush) { H.pendingPush = false; if (!$('#modalRoot').hidden) { try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (x) { } } } return; }
   if (!hReady()) return;
   if (!$('#modalRoot').hidden) { H.modal = false; closeModalRaw(); if (e.state?.sm && !e.state.m) return; }
@@ -11000,7 +11038,7 @@ const DX_DENT = ['Dental caries', 'Irreversible pulpitis', 'Periapical abscess',
 const DX_GEN = ['Viral fever', 'Upper respiratory infection', 'Acute gastroenteritis', 'Hypertension', 'Type 2 diabetes', 'Acidity / gastritis', 'Migraine', 'Allergy'];
 /* dentist treatments: [name, usual fee, tooth chart status, kind: teeth | bridge | none] */
 const TX_DENT = [['Check-up / consultation', 300, '', 'none'], ['X-ray (IOPA)', 200, '', 'teeth'], ['OPG X-ray', 600, '', 'none'], ['Scaling & polishing', 800, '', 'none'], ['Filling (GIC)', 800, 'filled', 'teeth'], ['Filling (composite)', 1200, 'filled', 'teeth'],
-  ['RCT', 4500, 'rct', 'teeth'], ['RCT with cap', 9500, 'crown', 'teeth'], ['Cap / crown', 5000, 'crown', 'teeth'], ['Bridge', 15000, 'bridge', 'bridge'], ['Extraction', 800, 'missing', 'teeth'], ['Wisdom tooth surgery', 3500, 'missing', 'teeth'],
+  ['RCT', 4500, 'rct', 'teeth'], ['RCT with cap', 9500, 'crown', 'teeth'], ['Cap / crown', 5000, 'crown', 'teeth'], ['Bridge', 5000, 'bridge', 'bridge'], ['Extraction', 800, 'missing', 'teeth'], ['Wisdom tooth surgery', 3500, 'missing', 'teeth'],
   ['Implant', 25000, 'implant', 'teeth'], ['Denture (partial)', 6000, '', 'teeth'], ['Denture (complete)', 15000, '', 'none'], ['Pulpectomy (child)', 2000, 'rct', 'teeth'], ['Braces / adjustment', 1000, '', 'none'], ['Teeth whitening', 6000, '', 'none'], ['Other', '', '', 'teeth']];
 const TX_GEN = [['Consultation', '', '', 'none'], ['Dressing', '', '', 'none'], ['Injection', '', '', 'none'], ['IV drip', '', '', 'none'], ['Nebulisation', '', '', 'none'], ['ECG', '', '', 'none'], ['Plaster', '', '', 'none'], ['Minor procedure', '', '', 'none'], ['Physiotherapy session', '', '', 'none'], ['Other', '', '', 'none']];
 const txDefs = () => isDent() ? TX_DENT : TX_GEN;
@@ -11013,7 +11051,7 @@ const RX_DOSE = ['1-0-1', '1-1-1', '1-0-0', '0-0-1', '0-1-0', 'SOS'];
 const RX_WHEN = ['After food', 'Before food', 'At night', 'When needed'];
 const ADV_DENT = ['Do not eat for 1 hour', 'Soft, cold food for 24 hours', 'Warm salt-water rinse 3 times a day', 'Do not spit or use a straw for 24 hours', 'Do not chew on the treated side', 'Brush twice a day', 'Avoid very hot or cold food', 'Come back if pain or swelling increases'];
 const ADV_GEN = ['Drink plenty of water', 'Rest for 2 days', 'Light home food', 'Steam inhalation twice a day', 'Check BP / sugar at home', 'Come back if fever does not go in 3 days'];
-const VF_SECS = [['cc', 'Complaint'], ['notes', 'Doctor’s notes'], ['exam', 'Examination'], ['dx', 'Diagnosis'], ['tx', 'Treatment done'], ['rx', 'Medicines (Rx)'], ['adv', 'Advice'], ['files', 'Reports / photos'], ['bill', 'Charges']];
+const VF_SECS = [ /* older code paths only */['cc', 'Complaint'], ['notes', 'Doctor’s notes'], ['exam', 'Examination'], ['dx', 'Diagnosis'], ['tx', 'Treatment done'], ['rx', 'Medicines (Rx)'], ['adv', 'Advice'], ['files', 'Reports / photos'], ['bill', 'Charges']];
 const splitT = s => String(s || '').split(/[ ,]+/).map(x => x.trim()).filter(Boolean);
 const teethTxt = a => (Array.isArray(a) ? a : splitT(a)).join(', ');
 function txText(t) {
@@ -11021,7 +11059,7 @@ function txText(t) {
   if (t.proc === 'Bridge') { const m = splitT(t.missing), s = splitT(t.support); return `Bridge${m.length ? ` · ${m.join(', ')} missing` : ''}${s.length ? ` · support ${s.join(', ')}` : ''}${m.length + s.length ? ` (${m.length + s.length} units)` : ''}${t.mat ? ' · ' + t.mat : ''}`; }
   const tt = teethTxt(t.teeth); return `${t.proc}${tt ? ' · ' + (isDentTx(t) ? tt : tt) : ''}${t.mat ? ' · ' + t.mat : ''}${t.sitting ? ' · ' + t.sitting : ''}`;
 }
-const sinceTxt = (x, forPrint) => forPrint ? 'since ' + x : I18N.lang === 'hi' ? T(x) + ' से' : 'since ' + x;
+const sinceTxt = x => 'since ' + x; /* the Hindi pattern 'since {}' makes it '… से' */
 const isDentTx = t => !!TX_DENT.find(x => x[0] === t.proc);
 /* the same text for the screen, in the app language */
 function txUI(t) {
@@ -11123,88 +11161,152 @@ function billsTab(p) {
 }
 const dShortC = d => d ? T(fmtShort(String(d).slice(0, 10))) : '';
 
-/* ---------- the visit form (case paper) ---------- */
-function txRow(i, t = {}) {
-  const defs = txDefs(); const names = defs.map(d => d[0]); if (t.proc && !names.includes(t.proc)) names.push(t.proc);
-  const d = txDef(t.proc) || []; const kind = d[3] || 'none'; const dent = isDent(); const cap = /cap|crown|bridge|implant/i.test(t.proc || ''); const rct = /RCT|Pulpectomy/.test(t.proc || '');
-  return `<div class="tx-row" data-i="${i}"><div class="tx-top"><select name="tx_${i}_proc" onchange="A.txProc(this)" aria-label="Treatment"><option value="">${T('— Choose treatment —')}</option>${names.map(n => `<option value="${esc(n)}" ${t.proc === n ? 'selected' : ''}>${esc(T(n))}</option>`).join('')}</select>
-      <input name="tx_${i}_amt" type="number" min="0" inputmode="numeric" placeholder="₹" value="${t.amount ?? ''}" oninput="A.vfTotal(this.form)" aria-label="Amount"><button type="button" class="icon-btn" aria-label="Remove" onclick="const f=this.form;this.closest('.tx-row').remove();A.vfTotal(f)">${ic('x')}</button></div>
-    ${dent ? `<div class="tx-teeth" ${kind === 'teeth' ? '' : 'hidden'}><span class="tiny muted">${T('Tooth / teeth')}</span>${teethPick(`tx_${i}_teeth`, t.teeth)}</div>
-      <div class="tx-bridge" ${kind === 'bridge' ? '' : 'hidden'}><span class="tiny muted">${T('Missing tooth (replaced by the bridge)')}</span>${teethPick(`tx_${i}_missing`, t.missing)}<span class="tiny muted">${T('Support teeth (cap on them)')}</span>${teethPick(`tx_${i}_support`, t.support)}</div>
-      <div class="tx-opts"><label class="tx-cap" ${cap ? '' : 'hidden'}><span class="tiny muted">${T('Cap material')}</span><select name="tx_${i}_mat"><option value="">—</option>${CAP_MAT.map(m => `<option value="${esc(m)}" ${t.mat === m ? 'selected' : ''}>${esc(T(m))}</option>`).join('')}</select></label>
-      <label class="tx-rct" ${rct ? '' : 'hidden'}><span class="tiny muted">${T('Sitting')}</span><select name="tx_${i}_sitting"><option value="">—</option>${RCT_ST.map(m => `<option value="${esc(m)}" ${t.sitting === m ? 'selected' : ''}>${esc(T(m))}</option>`).join('')}</select></label></div>` : ''}
-    <input name="tx_${i}_note" placeholder="${T('Note (optional)')}" value="${esc(t.note || '')}"></div>`;
+/* ---------- the visit form (case paper) ----------
+   One screen, top to bottom: complaint · examination · diagnosis · treatment tiles · medicine tiles · charges.
+   Notes, advice, reports and next visit open from small chips. A treatment tile adds a card with the tooth chart
+   (dentist); Bridge = tap the missing tooth, the teeth on both sides become the support (cap) teeth by themselves.
+   Fees: usual fee × teeth (bridge: per unit × units) until the doctor types an amount. */
+const TX_TILES_DENT = [['RCT', 'RCT'], ['RCT with cap', 'RCT + Cap'], ['Cap / crown', 'Cap'], ['Bridge', 'Bridge'], ['Filling (composite)', 'Filling'], ['Extraction', 'Extraction'], ['Scaling & polishing', 'Scaling'], ['X-ray (IOPA)', 'X-ray'], ['Implant', 'Implant']];
+const ARCHES = [[18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28], [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38], [55, 54, 53, 52, 51, 61, 62, 63, 64, 65], [85, 84, 83, 82, 81, 71, 72, 73, 74, 75]].map(a => a.map(String));
+/* support teeth = the tooth just before and just after every gap of missing teeth, in the same jaw */
+function autoSupport(missing) {
+  const m = new Set(missing.map(String)); const out = new Set();
+  ARCHES.forEach(a => a.forEach((n, i) => { if (!m.has(n)) return; [a[i - 1], a[i + 1]].forEach(x => { if (x && !m.has(x)) out.add(x); }); }));
+  return [...out];
 }
-A.txProc = sel => { const row = sel.closest('.tx-row'); const n = sel.value; const d = txDef(n) || []; const kind = d[3] || 'none';
-  const q = c => row.querySelector(c); if (q('.tx-teeth')) q('.tx-teeth').hidden = kind !== 'teeth'; if (q('.tx-bridge')) q('.tx-bridge').hidden = kind !== 'bridge'; if (q('.tx-cap')) q('.tx-cap').hidden = !/cap|crown|bridge|implant/i.test(n); if (q('.tx-rct')) q('.tx-rct').hidden = !/RCT|Pulpectomy/.test(n);
-  const amt = row.querySelector('input[name$="_amt"]'); const price = (settings().txPrices || {})[n] ?? d[1]; if (amt && !amt.value && price) amt.value = price; A.vfTotal(sel.form); };
-A.txAdd = btn => { const f = btn.form; const i = +(f.dataset.txn || 0); f.dataset.txn = i + 1; btn.insertAdjacentHTML('beforebegin', txRow(i)); };
+const archSort = list => { const order = ARCHES.flat(); return [...list].map(String).sort((x, y) => order.indexOf(x) - order.indexOf(y)); };
+const txUnitPrice = proc => { const st = settings().txPrices || {}; if (proc === 'Bridge') return st['Bridge/unit'] ?? 5000; return st[proc] ?? (txDef(proc) || [])[1] ?? ''; };
+const chipRadios = (name, list, sel, lab) => `<div class="chips tight">${list.map(x => `<label class="chip-radio"><input type="radio" name="${name}" value="${esc(x)}" ${sel === x ? 'checked' : ''}><span>${esc(T(lab ? lab(x) : x))}</span></label>`).join('')}</div>`;
+function bridgeGrid(i, missing, support) {
+  const m = new Set(splitT(missing)), s = new Set(splitT(support)); const child = [...m, ...s].some(n => +n >= 51);
+  const g = rows => rows.map(r => `<div class="tp-r">${r.map(n => `<button type="button" data-n="${n}" class="${m.has(String(n)) ? 'mis' : s.has(String(n)) ? 'sup' : ''}" onclick="A.brTap(this)">${n}</button>`).join('')}</div>`).join('');
+  return `<div class="tp br" data-mode="mis"><input type="hidden" name="tx_${i}_missing" value="${esc([...m].join(', '))}"><input type="hidden" name="tx_${i}_support" value="${esc([...s].join(', '))}">
+    <div class="tp-g" ${child ? 'hidden' : ''}>${g(TEETH_ADULT.slice(0, 2))}<div class="tp-mid"></div>${g(TEETH_ADULT.slice(2))}</div><div class="tp-g" ${child ? '' : 'hidden'}>${g(TEETH_CHILD.slice(0, 2))}<div class="tp-mid"></div>${g(TEETH_CHILD.slice(2))}</div>
+    <div class="br-sum"></div>
+    <div class="row-flex" style="gap:10px"><button type="button" class="linkbtn tiny br-mode" onclick="A.brMode(this)">${T('Change support teeth')}</button><button type="button" class="linkbtn tiny" onclick="A.tpSwap(this)">${child ? T('Adult teeth') : T('Child teeth')}</button></div></div>`;
+}
+function brSync(box, auto) {
+  const card = box.closest('.tx-card'); const mis = [...box.querySelectorAll('.tp-r button.mis')].map(b => b.dataset.n);
+  if (auto) { const sup = new Set(autoSupport(mis)); box.querySelectorAll('.tp-r button').forEach(b => { if (!b.classList.contains('mis')) b.classList.toggle('sup', sup.has(b.dataset.n)); }); }
+  const sup = [...box.querySelectorAll('.tp-r button.sup')].map(b => b.dataset.n);
+  box.querySelector('input[name$="_missing"]').value = mis.join(', '); box.querySelector('input[name$="_support"]').value = sup.join(', ');
+  const units = archSort([...mis, ...sup]); box.querySelector('.br-sum').innerHTML = units.length ? `${units.map(n => `<span class="${mis.includes(n) ? 'u-mis' : 'u-sup'}">${n}</span>`).join('')}<b>${units.length} ${T('units')}</b>` : `<span class="tiny muted">${T('Tap the missing tooth')}</span>`;
+  txFee(card, units.length);
+}
+A.brTap = b => { const box = b.closest('.tp'); if (box.dataset.mode === 'sup') { if (!b.classList.contains('mis')) b.classList.toggle('sup'); box.dataset.manual = '1'; brSync(box, false); return; }
+  b.classList.toggle('mis'); if (b.classList.contains('mis')) b.classList.remove('sup'); brSync(box, !box.dataset.manual); };
+A.brMode = b => { const box = b.closest('.tp'); const sup = box.dataset.mode !== 'sup'; box.dataset.mode = sup ? 'sup' : 'mis'; b.textContent = T(sup ? 'Done' : 'Change support teeth'); box.classList.toggle('sup-mode', sup); };
+/* fee = unit price × count, until the doctor types an amount */
+function txFee(card, count) { if (!card) return; const amt = card.querySelector('input[name$="_amt"]'); if (!amt || amt.dataset.manual) return; const u = +card.dataset.unit || 0; amt.value = u ? u * Math.max(1, count || 0) : ''; A.vfTotal(card.closest('form')); }
+const tpCount = card => card.querySelector('.tp:not(.br)') ? [...card.querySelectorAll('.tp:not(.br) .tp-r button.on')].length : 1;
+function txRow(i, t = {}, extra = {}) {
+  const proc = t.proc || ''; const d = txDef(proc) || []; const kind = d[3] || 'none'; const dent = isDent(); const cap = /cap|crown|bridge|implant/i.test(proc); const rct = /RCT|Pulpectomy/.test(proc);
+  const tile = (TX_TILES_DENT.find(x => x[0] === proc) || [])[1] || proc; const manual = t.amount !== undefined && t.amount !== '' ? 'data-manual="1"' : '';
+  return `<div class="tx-card" data-i="${i}" data-unit="${esc(String(extra.unit ?? txUnitPrice(proc) ?? ''))}"><input type="hidden" name="tx_${i}_proc" value="${esc(proc)}">
+    <div class="tx-top"><b class="grow">${esc(T(tile))}${extra.cont ? ` <span class="pill info">${T('continues')}</span>` : ''}</b><span class="tx-rs">₹</span><input name="tx_${i}_amt" type="number" min="0" inputmode="numeric" value="${t.amount ?? ''}" ${manual} oninput="this.dataset.manual='1';A.vfTotal(this.form)" aria-label="Amount"><button type="button" class="icon-btn" aria-label="Remove" onclick="const f=this.form;this.closest('.tx-card').remove();A.vfTotal(f)">${ic('x')}</button></div>
+    ${dent && kind === 'teeth' ? teethPick(`tx_${i}_teeth`, t.teeth) : ''}
+    ${dent && kind === 'bridge' ? bridgeGrid(i, t.missing, t.support) : ''}
+    ${dent && cap ? `<div class="tx-o"><span>${T('Cap')}</span>${chipRadios(`tx_${i}_mat`, CAP_MAT, t.mat || '', x => ({ 'Metal-ceramic (PFM)': 'PFM' })[x] || x)}</div>` : ''}
+    ${rct ? `<div class="tx-o"><span>${T('Sitting')}</span>${chipRadios(`tx_${i}_sitting`, RCT_ST, t.sitting || 'Started', x => ({ 'Sitting 2': '2nd', 'Sitting 3': '3rd', Started: '1st', Completed: 'Done' })[x] || x)}</div>` : ''}
+    ${proc === 'Other' || t.note ? `<input name="tx_${i}_note" placeholder="${T(proc === 'Other' ? 'Which treatment?' : 'Note')}" value="${esc(t.note || '')}">` : ''}</div>`;
+}
+A.txTile = (b, proc, preset) => {
+  const f = b.form; const i = +(f.dataset.txn || 0); f.dataset.txn = i + 1; const box = f.querySelector('.tx-cards');
+  const cc = splitT(f.ccTeeth?.value); const d = txDef(proc) || []; const t = { proc, ...(preset || {}) };
+  if (!preset && d[3] === 'teeth' && cc.length) t.teeth = cc;   /* the tooth the patient showed */
+  box.insertAdjacentHTML('beforeend', txRow(i, t, preset ? { cont: 1 } : {})); const card = box.lastElementChild;
+  if (card.querySelector('.br')) brSync(card.querySelector('.br'), true); else if (!preset) txFee(card, tpCount(card)); A.vfTotal(f);
+  if (preset) b.remove(); else card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+};
+A.txMore = b => { b.closest('.tx-tiles').classList.add('all'); b.remove(); };
+A.tpTog = b => { b.classList.toggle('on'); const box = b.closest('.tp'); box.querySelector('input[type=hidden]').value = [...box.querySelectorAll('.tp-r button.on')].map(x => x.textContent).join(', '); const card = b.closest('.tx-card'); if (card) txFee(card, tpCount(card)); };
+/* an RCT not finished in an earlier visit: one tap adds the next sitting (no fee again) */
+function openRct(pid) {
+  const last = {}; pVisits(pid).filter(v => v.v2).slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).forEach(v => (v.tx || []).forEach(t => { if (/RCT|Pulpectomy/.test(t.proc)) (t.teeth || []).forEach(n => { last[n] = t; }); }));
+  const g = {}; Object.entries(last).forEach(([n, t]) => { if (t.sitting === 'Completed') return; const nx = RCT_ST[Math.min(RCT_ST.length - 1, RCT_ST.indexOf(t.sitting || 'Started') + 1)]; const k = t.proc + '|' + nx; (g[k] = g[k] || { proc: t.proc, sitting: nx, teeth: [], mat: t.mat || '' }).teeth.push(n); });
+  return Object.values(g);
+}
 function rxRow(i, r = {}) {
   return `<div class="rx-row"><div class="tx-top"><input name="rx_${i}_name" list="rxList" placeholder="${T('Medicine name')}" value="${esc(r.name || '')}" aria-label="Medicine"><button type="button" class="icon-btn" aria-label="Remove" onclick="this.closest('.rx-row').remove()">${ic('x')}</button></div>
-    <div class="rx-opts"><select name="rx_${i}_dose" aria-label="Dose">${RX_DOSE.map(x => `<option value="${x}" ${(r.dose || '1-0-1') === x ? 'selected' : ''}>${x === 'SOS' ? T('When needed') : x}</option>`).join('')}</select><select name="rx_${i}_when" aria-label="When">${RX_WHEN.map(x => `<option value="${x}" ${(r.when || 'After food') === x ? 'selected' : ''}>${esc(T(x))}</option>`).join('')}</select><input name="rx_${i}_days" type="number" min="0" inputmode="numeric" placeholder="${T('Days')}" value="${r.days ?? ''}" aria-label="Days"></div></div>`;
+    <div class="rx-opts"><select name="rx_${i}_dose" aria-label="Dose">${RX_DOSE.map(x => `<option value="${x}" ${(r.dose || '1-0-1') === x ? 'selected' : ''}>${x === 'SOS' ? T('When needed') : x}</option>`).join('')}</select><select name="rx_${i}_when" aria-label="When">${RX_WHEN.map(x => `<option value="${x}" ${(r.when || 'After food') === x ? 'selected' : ''}>${esc(T(x))}</option>`).join('')}</select><label class="rx-days"><input name="rx_${i}_days" type="number" min="0" inputmode="numeric" value="${r.days ?? ''}" aria-label="Days"><span>${T('days')}</span></label></div></div>`;
 }
-A.rxAdd = btn => { const f = btn.form; const i = +(f.dataset.rxn || 0); f.dataset.rxn = i + 1; btn.insertAdjacentHTML('beforebegin', rxRow(i)); };
-A.vfSec = (inp) => { const f = inp.form; const sec = f.querySelector(`.vf-sec[data-sec="${inp.value}"]`); if (!sec) return; sec.hidden = !inp.checked;
-  if (inp.checked && inp.value === 'tx' && !sec.querySelector('.tx-row')) A.txAdd(sec.querySelector('.tx-add')); if (inp.checked && inp.value === 'rx' && !sec.querySelector('.rx-row')) A.rxAdd(sec.querySelector('.rx-add'));
-  if (inp.checked) setTimeout(() => sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 30); A.vfTotal(f); };
-A.vfTotal = f => { if (!f) return; const txOn = !f.querySelector('.vf-sec[data-sec="tx"]')?.hidden; const tx = txOn ? [...f.querySelectorAll('.tx-row input[name$="_amt"]')].reduce((s, i) => s + (+i.value || 0), 0) : 0; const fee = +(f.consult?.value || 0); const out = f.querySelector('.vf-tot'); if (out) out.textContent = inr(tx + fee); const pd = f.querySelector('.vf-due'); if (pd) pd.textContent = inr(Math.max(0, tx + fee - (+(f.paidNow?.value || 0)))); };
+/* usual dose for a tapped medicine; the doctor's last use wins (settings.rxDose) */
+const RX_USUAL = [[/Amoxicillin \+|Clavulanic/i, '1-0-1', 'After food', 5], [/Amoxicillin|Metronidazole/i, '1-1-1', 'After food', 5], [/Azithromycin/i, '1-0-0', 'After food', 3], [/Pantoprazole|Omeprazole/i, '1-0-0', 'Before food', 5], [/Cetirizine/i, '0-0-1', 'At night', 5], [/Ondansetron/i, 'SOS', 'When needed', 3], [/Ketorolac/i, 'SOS', 'When needed', 3], [/Ibuprofen|Aceclofenac|Paracetamol/i, '1-0-1', 'After food', 3], [/mouthwash|gargle|toothpaste/i, '1-0-1', 'After food', 7], [/Vitamin D3/i, '1-0-0', 'After food', 8]];
+function rxDefault(name) { const own = (settings().rxDose || {})[name]; if (own) return { name, ...own }; const u = RX_USUAL.find(x => x[0].test(name)); return u ? { name, dose: u[1], when: u[2], days: u[3] } : { name, dose: '1-0-1', when: 'After food', days: 5 }; }
+A.rxAdd = (btn, name) => { const f = btn.form; const box = f.querySelector('.rx-rows');
+  if (name) { const ex = [...box.querySelectorAll('input[name$="_name"]')].find(x => x.value === name); if (ex) { ex.closest('.rx-row').classList.add('flash'); setTimeout(() => ex.closest('.rx-row')?.classList.remove('flash'), 600); return; } }
+  const i = +(f.dataset.rxn || 0); f.dataset.rxn = i + 1; box.insertAdjacentHTML('beforeend', rxRow(i, name ? rxDefault(name) : {}));
+  if (!name) box.lastElementChild.querySelector('input').focus(); if (name) btn.classList.add('on'); };
+A.vfSec = (b, k) => { const f = b.form; const sec = f.querySelector(`.vf-sec[data-sec="${k}"]`); if (!sec) return; sec.hidden = false; b.remove(); setTimeout(() => { sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); sec.querySelector('textarea,input:not([type=hidden])')?.focus(); }, 30); };
+A.vfTotal = f => { if (!f) return; const tx = [...f.querySelectorAll('.tx-card input[name$="_amt"]')].reduce((s, i) => s + (+i.value || 0), 0); const fee = +(f.consult?.value || 0); const out = f.querySelector('.vf-tot'); if (out) out.textContent = inr(tx + fee); const pd = f.querySelector('.vf-due'); if (pd) pd.textContent = inr(Math.max(0, tx + fee - (+(f.paidNow?.value || 0)))); };
 A.visitForm = (pid, id, preset) => {
   const p = patientById(pid); if (!p) return; const v = id ? getById('visits', id) : { date: todayLocal(), files: [], ...(preset || {}) }; const dent = isDent(); const st = settings();
   const old = id && !v.v2; if (!id && p.ccNow?.text && !v.cc) { v.cc = p.ccNow.text; v.since = p.ccNow.since; }
   const ccTxt = v.cc ?? v.complaint ?? ''; const dxTxt = v.diagnosis || ''; const advTxt = old ? '' : (v.advice || '');
   const todayFee = !id && pAppts(pid).some(a => a.date === v.date && +a.fee > 0 && a.status !== 'cancelled');
   const paidNow = id ? sum((p.pays || []).filter(x => x.visitId === id), x => +x.amount || 0) : '';
-  const on = new Set(id ? VF_SECS.map(s => s[0]).filter(k => ({ cc: ccTxt || v.since || (v.ccTeeth || []).length, notes: v.notes, exam: v.exam || v.oral, dx: dxTxt, tx: (v.tx || []).length, rx: (v.rx || []).length || (old && v.advice), adv: advTxt, files: (v.files || []).length, bill: v.charge || paidNow }[k])) : ['cc', 'exam', 'dx', 'bill']);
+  const more = [['notes', 'Notes', v.notes], ['adv', 'Advice', advTxt], ['files', 'X-ray / photo', (v.files || []).length], ['next', 'Next visit', v.followUp]];
   PEND.visit = [];
-  const sec = (k, html) => `<section class="vf-sec" data-sec="${k}" ${on.has(k) ? '' : 'hidden'}><h4>${T(VF_SECS.find(s => s[0] === k)[1])}</h4>${html}</section>`;
-  const rxNames = [...new Set([...(dent ? RX_DENT : RX_GEN), ...(st.rxUsed || [])])];
-  modal(`<form class="form vf" onsubmit="A.saveVisit(event,'${pid}','${id || ''}')" novalidate data-txn="${(v.tx || []).length}" data-rxn="${(v.rx || []).length}">${sheetHead(id ? 'Edit visit' : 'New visit', `${p.name}${p.age ? ' · ' + p.age + ' ' + T('yrs') : ''}${medAlertOn(p) && (p.medList || []).length ? ' · ⚠ ' + p.medList.join(', ') : ''}${p.allergies ? ' · ' + T('Allergy') + ': ' + p.allergies : ''}`)}<div class="sheet-b stack">
-    <div class="grid2" style="padding:0">${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: v.date })}${fieldHTML({ name: 'followUp', label: 'Next visit (optional)', type: 'date', value: v.followUp || '' })}</div>
-    <div class="field"><span>${T('What happened in this visit? Tap to add')}</span><div class="chips vf-tog">${VF_SECS.map(([k, l]) => `<label class="chip-check"><input type="checkbox" value="${k}" ${on.has(k) ? 'checked' : ''} onchange="A.vfSec(this)"><span>${T(l)}</span></label>`).join('')}</div></div>
-    ${sec('cc', `${fieldHTML({ name: 'cc', label: 'Chief complaint (in the patient’s words)', type: 'textarea', rows: 2, value: ccTxt, placeholder: 'e.g. Pain in lower right back tooth while eating' })}${addChips('cc', dent ? CC_DENT : CC_GEN)}
-      <div class="field"><span>${T('Since when')}</span><div class="chips">${SINCE.map(x => `<label class="chip-radio"><input type="radio" name="since" value="${esc(x)}" ${v.since === x ? 'checked' : ''}><span>${T(x)}</span></label>`).join('')}</div></div>
-      ${dent ? `<details class="more-box" ${(v.ccTeeth || []).length ? 'open' : ''}><summary>${T('Which tooth / area (if the patient shows)')}</summary>${teethPick('ccTeeth', v.ccTeeth)}</details>` : ''}`)}
-    ${sec('notes', fieldHTML({ name: 'notes', label: 'Doctor’s notes (in your words)', type: 'textarea', rows: 3, value: v.notes || '', placeholder: 'History, what you explained to the patient…' }))}
-    ${sec('exam', `${fieldHTML({ name: 'exam', label: 'On examination', type: 'textarea', rows: 2, value: v.exam || '' })}${addChips('exam', dent ? EXAM_DENT : EXAM_GEN)}
-      ${dent ? `<div class="field"><span>${T('Oral health')}</span><div class="chips">${ORAL.map(([k, l, c]) => `<label class="chip-radio oral"><input type="radio" name="oral" value="${k}" ${v.oral === k ? 'checked' : ''}><span style="--c:${c}">${T(l)}</span></label>`).join('')}</div></div>` : ''}`)}
-    ${sec('dx', `${fieldHTML({ name: 'diagnosis', label: 'Diagnosis', type: 'textarea', rows: 2, value: dxTxt })}${addChips('diagnosis', dent ? DX_DENT : DX_GEN)}`)}
-    ${sec('tx', `${(v.tx || []).map((t, i) => txRow(i, t)).join('')}<button type="button" class="btn sm tx-add" onclick="A.txAdd(this)">${ic('plus')} ${T('Add treatment')}</button>`)}
-    ${sec('rx', `<datalist id="rxList">${rxNames.map(n => `<option value="${esc(n)}">`).join('')}</datalist>${(v.rx || []).map((r, i) => rxRow(i, r)).join('')}${old && v.advice ? fieldHTML({ name: 'oldRx', label: 'Medicines (written earlier)', type: 'textarea', rows: 3, value: v.advice }) : ''}<button type="button" class="btn sm rx-add" onclick="A.rxAdd(this)">${ic('plus')} ${T('Add medicine')}</button>`)}
-    ${sec('adv', `${fieldHTML({ name: 'advice', label: 'Advice to the patient', type: 'textarea', rows: 3, value: advTxt })}${addChips('advice', dent ? ADV_DENT : ADV_GEN)}`)}
-    ${sec('files', `${(v.files || []).length ? `<div class="files-row">${v.files.map(f => fileChip(f)).join('')}</div>` : ''}<div class="field"><span>${T('Add photos, X-rays or reports')}</span>${attachBar('visit', true)}</div>`)}
-    ${sec('bill', `<div class="grid2" style="padding:0">${fieldHTML({ name: 'consult', label: todayFee ? 'Extra fee ₹ (appointment fee is already in the bill)' : 'Consultation fee ₹', type: 'number', min: 0, value: id ? (v.consult ?? '') : (todayFee ? '' : (st.feeClinic || '')) }).replace('<input', '<input oninput="A.vfTotal(this.form)"')}
-      ${fieldHTML({ name: 'paidNow', label: 'Received now ₹', type: 'number', min: 0, value: paidNow }).replace('<input', '<input oninput="A.vfTotal(this.form)"')}${fieldHTML({ name: 'payMode', label: 'Mode', type: 'select', options: PAY_MODES, value: v.payMode || 'Cash' })}</div>
-      <div class="money-grid"><div><span>${T('Total for this visit')}</span><b class="vf-tot">₹0</b></div><div><span>${T('Due for this visit')}</span><b class="vf-due bad-t">₹0</b></div></div>`)}
-  </div><footer class="sheet-f">${id && lvl('medical') >= 3 ? `<button type="button" class="btn ghost danger" onclick="A.delVisit('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save visit')}</button></footer></form>`, { wide: true });
-  setTimeout(() => A.vfTotal($('#modalRoot form.vf')), 30);
+  const sec = (k, html, hide) => `<section class="vf-sec" data-sec="${k}" ${hide ? 'hidden' : ''}>${html}</section>`;
+  const rxNames = [...new Set([...(st.rxUsed || []), ...(dent ? RX_DENT : RX_GEN)])]; const rxUsedNow = new Set((v.rx || []).map(r => r.name));
+  const cont = id ? [] : openRct(pid); const tiles = dent ? TX_TILES_DENT : TX_GEN.map(x => [x[0], x[0]]); const rest = dent ? TX_DENT.filter(x => !TX_TILES_DENT.some(y => y[0] === x[0])).map(x => [x[0], x[0]]) : [];
+  const lab = (t, extra = '') => `<div class="vf-l">${T(t)}${extra}</div>`;
+  modal(`<form class="form vf" onsubmit="A.saveVisit(event,'${pid}','${id || ''}')" novalidate data-txn="${(v.tx || []).length}" data-rxn="${(v.rx || []).length}">${sheetHead(p.name, `${[p.age ? p.age + ' ' + T('yrs') : '', p.sex ? T(p.sex) : ''].filter(Boolean).join(' · ')}`)}<div class="sheet-b stack vf-b">
+    ${medAlertOn(p) && ((p.medList || []).length || p.conditions) || p.allergies ? `<div class="vf-warn">${ic('alert')} ${[medAlertOn(p) ? [...new Set([...(p.medList || []).map(x => T(x)), ...String(p.conditions || '').split(',').map(x => x.trim())].filter(Boolean))].join(', ') : '', p.allergies ? T('Allergy') + ': ' + esc(p.allergies) : ''].filter(Boolean).join(' · ')}</div>` : ''}
+    ${sec('cc', `${lab('C/C — Chief complaint')}<textarea name="cc" rows="2" placeholder="${T('In the patient’s words')}">${esc(ccTxt)}</textarea>${addChips('cc', dent ? CC_DENT : CC_GEN)}
+      <div class="vf-since">${chipRadios('since', SINCE, v.since || '')}</div>
+      ${dent ? `<details class="more-box" ${(v.ccTeeth || []).length ? 'open' : ''}><summary>${T('Tooth')}${(v.ccTeeth || []).length ? ': ' + esc(teethTxt(v.ccTeeth)) : ''}</summary>${teethPick('ccTeeth', v.ccTeeth)}</details>` : ''}`)}
+    ${sec('exam', `${lab('On examination')}${addChips('exam', dent ? EXAM_DENT : EXAM_GEN)}<textarea name="exam" rows="1">${esc(v.exam || '')}</textarea>
+      ${dent ? `<div class="vf-in"><span>${T('Oral health')}</span><div class="chips tight">${ORAL.map(([k, l, c]) => `<label class="chip-radio oral"><input type="radio" name="oral" value="${k}" ${v.oral === k ? 'checked' : ''}><span style="--c:${c}">${T(l)}</span></label>`).join('')}</div></div>` : ''}`)}
+    ${sec('dx', `${lab('Diagnosis')}${addChips('diagnosis', dent ? DX_DENT : DX_GEN)}<textarea name="diagnosis" rows="1">${esc(dxTxt)}</textarea>`)}
+    ${sec('tx', `${lab('Treatment')}${cont.map(c => `<button type="button" class="btn sm tx-cont" onclick='A.txTile(this,${JSON.stringify(c.proc)},${JSON.stringify({ teeth: c.teeth, sitting: c.sitting, mat: c.mat, amount: 0 })})'>${ic('plus')} ${esc(T(c.proc))} · ${esc(c.teeth.join(', '))} · ${esc(T(c.sitting))}</button>`).join('')}
+      <div class="tx-tiles">${tiles.map(([n, l]) => `<button type="button" class="tx-tile" onclick="A.txTile(this,'${esc(n)}')">${esc(T(l))}</button>`).join('')}${rest.map(([n, l]) => `<button type="button" class="tx-tile more" onclick="A.txTile(this,'${esc(n)}')">${esc(T(l))}</button>`).join('')}${rest.length ? `<button type="button" class="tx-tile ghost" onclick="A.txMore(this)">${T('More')} …</button>` : ''}</div>
+      <div class="tx-cards">${(v.tx || []).map((t, i) => txRow(i, t)).join('')}</div>`)}
+    ${sec('rx', `${lab('Medicines (Rx)')}<datalist id="rxList">${rxNames.map(n => `<option value="${esc(n)}">`).join('')}</datalist><div class="chips tight rx-tiles">${rxNames.slice(0, 12).map(n => `<button type="button" class="chip ${rxUsedNow.has(n) ? 'on' : ''}" onclick="A.rxAdd(this,${esc(JSON.stringify(n))})">${esc(n)}</button>`).join('')}<button type="button" class="chip" onclick="A.rxAdd(this)">${ic('plus')} ${T('Other')}</button></div>
+      <div class="rx-rows">${(v.rx || []).map((r, i) => rxRow(i, r)).join('')}</div>${old && v.advice ? fieldHTML({ name: 'oldRx', label: 'Medicines (written earlier)', type: 'textarea', rows: 3, value: v.advice }) : ''}`)}
+    ${sec('notes', `${lab('Notes')}<textarea name="notes" rows="3">${esc(v.notes || '')}</textarea>`, !v.notes)}
+    ${sec('adv', `${lab('Advice')}${addChips('advice', dent ? ADV_DENT : ADV_GEN)}<textarea name="advice" rows="2">${esc(advTxt)}</textarea>`, !advTxt)}
+    ${sec('files', `${lab('X-ray / photo')}${(v.files || []).length ? `<div class="files-row">${v.files.map(f => fileChip(f)).join('')}</div>` : ''}${attachBar('visit', true)}`, !(v.files || []).length)}
+    ${sec('next', `${lab('Next visit')}<div class="chips tight">${[[1, 'Tomorrow'], [3, '3 days'], [7, '1 week'], [15, '15 days'], [30, '1 month']].map(([n, l]) => `<button type="button" class="chip" onclick="this.form.followUp.value=addDays(todayLocal(),${n});this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===this))">${T(l)}</button>`).join('')}</div><input type="date" name="followUp" value="${esc(v.followUp || '')}">`, !v.followUp)}
+    <div class="chips tight vf-more">${more.filter(m => !m[2]).map(([k, l]) => `<button type="button" class="chip" onclick="A.vfSec(this,'${k}')">${ic('plus')} ${T(l)}</button>`).join('')}</div>
+    ${sec('bill', `<div class="vf-bill"><div><span>${T('Total')}</span><b class="vf-tot">₹0</b></div><label><span>${T(todayFee ? 'Extra fee ₹' : 'Fee ₹')}</span><input name="consult" type="number" min="0" inputmode="numeric" value="${id ? (v.consult ?? '') : (todayFee ? '' : (st.feeClinic || ''))}" oninput="A.vfTotal(this.form)"></label><label><span>${T('Received ₹')}</span><input name="paidNow" type="number" min="0" inputmode="numeric" value="${paidNow}" oninput="A.vfTotal(this.form)"></label><div><span>${T('Due')}</span><b class="vf-due bad-t">₹0</b></div></div>
+      ${chipRadios('payMode', ['Cash', 'UPI', 'Card'], v.payMode || 'Cash')}
+      <input type="hidden" name="sign" id="vfSign" value=""><div class="vf-sign" data-for="vfSign">${v.signImg ? `<img src="${esc(v.signImg)}" alt="${T('Patient signature')}">` : ''}<button type="button" class="btn sm" onclick="A.sigOpen('vfSign','${esc(p.name)}')">${ic('edit')} ${T(v.signImg ? 'Sign again' : 'Patient signature')}</button></div>`)}
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: v.date })}</div>
+  </div><footer class="sheet-f">${id && lvl('medical') >= 3 ? `<button type="button" class="btn ghost danger" onclick="A.delVisit('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`, { wide: true });
+  setTimeout(() => { const f = $('#modalRoot form.vf'); if (!f) return; f.querySelectorAll('.tx-card .br').forEach(b => brSync(b, false)); A.vfTotal(f); }, 30);
 };
 A.saveVisit = (e, pid, id) => {
-  e.preventDefault(); const f = e.target; const v = readForm(f); const on = new Set([...f.querySelectorAll('.vf-tog input:checked')].map(x => x.value)); const dent = isDent();
+  e.preventDefault(); const f = e.target; const v = readForm(f); const dent = isDent();
   withBtn(e, async () => {
     const base = id ? getById('visits', id) : { id: uid('vs_'), patientId: pid, files: [], created: Date.now() };
     const files = await uploadPending('visit', `m/${S.org.orgId}/${pid}`);
-    const tx = on.has('tx') ? [...f.querySelectorAll('.tx-row')].map(r => { const i = r.dataset.i; const g = n => (f.querySelector(`[name="tx_${i}_${n}"]`)?.value || '').trim(); const proc = g('proc'); if (!proc) return null; const kind = (txDef(proc) || [])[3] || 'none';
-      return { proc, amount: nOr(g('amt')), teeth: dent && kind === 'teeth' ? splitT(g('teeth')) : [], missing: dent && kind === 'bridge' ? splitT(g('missing')) : [], support: dent && kind === 'bridge' ? splitT(g('support')) : [], mat: /cap|crown|bridge|implant/i.test(proc) ? g('mat') : '', sitting: /RCT|Pulpectomy/.test(proc) ? g('sitting') : '', note: g('note') }; }).filter(Boolean) : [];
-    const rx = on.has('rx') ? [...f.querySelectorAll('.rx-row')].map(r => { const nm = r.querySelector('input[name$="_name"]'); const i = nm.name.split('_')[1]; const g = n => (f.querySelector(`[name="rx_${i}_${n}"]`)?.value || '').trim(); return g('name') ? { name: g('name'), dose: g('dose'), when: g('when'), days: nOr(g('days')) } : null; }).filter(Boolean) : [];
-    const consult = on.has('bill') ? +v.consult || 0 : 0; const charge = consult + sum(tx, t => +t.amount || 0);
+    const tx = [...f.querySelectorAll('.tx-card')].map(r => { const i = r.dataset.i; const g = n => String(v[`tx_${i}_${n}`] ?? '').trim(); const proc = g('proc'); if (!proc) return null; const kind = (txDef(proc) || [])[3] || 'none';
+      return { proc, amount: nOr(g('amt')), teeth: dent && kind === 'teeth' ? splitT(g('teeth')) : [], missing: dent && kind === 'bridge' ? archSort(splitT(g('missing'))) : [], support: dent && kind === 'bridge' ? archSort(splitT(g('support'))) : [], mat: /cap|crown|bridge|implant/i.test(proc) ? g('mat') : '', sitting: /RCT|Pulpectomy/.test(proc) ? g('sitting') : '', note: g('note') }; }).filter(Boolean);
+    const bad = tx.find(t => dent && ((txDef(t.proc) || [])[3] === 'teeth' && !t.teeth.length && !['X-ray (IOPA)', 'Other', 'Denture (partial)'].includes(t.proc) || t.proc === 'Bridge' && !t.missing.length));
+    if (bad) throw new Error(`${T(bad.proc)}: ${T(bad.proc === 'Bridge' ? 'tap the missing tooth' : 'tap the tooth')}`);
+    const rx = [...f.querySelectorAll('.rx-row')].map(r => { const nm = r.querySelector('input[name$="_name"]'); const i = nm.name.split('_')[1]; const g = n => String(v[`rx_${i}_${n}`] ?? '').trim(); return g('name') ? { name: g('name'), dose: g('dose'), when: g('when'), days: nOr(g('days')) } : null; }).filter(Boolean);
+    const consult = +v.consult || 0; const charge = consult + sum(tx, t => +t.amount || 0);
     const rec = { ...base, v2: true, date: v.date || todayLocal(), followUp: v.followUp || '',
-      cc: on.has('cc') ? (v.cc || '').trim() : '', since: on.has('cc') ? v.since || '' : '', ccTeeth: on.has('cc') && dent ? splitT(v.ccTeeth) : [],
-      notes: on.has('notes') ? (v.notes || '').trim() : '', exam: on.has('exam') ? (v.exam || '').trim() : '', oral: on.has('exam') ? v.oral || '' : '', diagnosis: on.has('dx') ? (v.diagnosis || '').trim() : '',
-      tx, rx, advice: on.has('adv') ? (v.advice || '').trim() : '', oldRx: on.has('rx') ? (v.oldRx || '').trim() : '', consult, charge, payMode: v.payMode || '', files: [...(base.files || []), ...files] };
+      cc: (v.cc || '').trim(), since: v.since || '', ccTeeth: dent ? splitT(v.ccTeeth) : [],
+      notes: (v.notes || '').trim(), exam: (v.exam || '').trim(), oral: v.oral || '', diagnosis: (v.diagnosis || '').trim(),
+      tx, rx, advice: (v.advice || '').trim(), oldRx: (v.oldRx || '').trim(), consult, charge, payMode: v.payMode || '', files: [...(base.files || []), ...files],
+      ...(v.sign ? { signImg: v.sign, signedAt: nowAt() } : {}) };
     rec.complaint = rec.cc; /* older screens read 'complaint' */
     if (!rec.cc && !rec.notes && !rec.exam && !rec.diagnosis && !tx.length && !rx.length && !rec.advice && !rec.oldRx && !rec.files.length && !charge) throw new Error('Write something or add a file');
     await save('visits', rec, `${id ? 'Updated' : 'Saved'} visit of ${patientById(pid)?.name}`);
     /* bill line + payment for this visit, profile bits, dental chart */
     const p = patientById(pid); const desc = tx.length ? tx.map(t => txUI(t)).join('; ') : T('Consultation'); const cid = 'ch_' + rec.id;
     let charges = (p.charges || []).filter(c => c.id !== cid); if (charge > 0) charges.push({ id: cid, visitId: rec.id, date: rec.date, desc, amount: charge });
-    const paidNow = on.has('bill') ? +v.paidNow || 0 : 0; let pays = (p.pays || []).filter(x => x.visitId !== rec.id); if (paidNow > 0) pays.push({ id: 'py_' + rec.id, visitId: rec.id, date: rec.date, amount: paidNow, mode: v.payMode || 'Cash', note: T('visit'), by: S.me?.name || S.user?.name || '' });
+    const paidNow = +v.paidNow || 0; let pays = (p.pays || []).filter(x => x.visitId !== rec.id); if (paidNow > 0) pays.push({ id: 'py_' + rec.id, visitId: rec.id, date: rec.date, amount: paidNow, mode: v.payMode || 'Cash', note: T('visit'), by: S.me?.name || S.user?.name || '' });
     await save('patients', { ...p, charges, pays, lastVisit: rec.date > (p.lastVisit || '') ? rec.date : p.lastVisit, ...(rec.oral ? { oral: rec.oral } : {}), ...(p.ccNow && !id ? { ccNow: null } : {}) });
     await updateAccount(pid);
     if (dent && typeof dentalRec === 'function' && tx.length) { try { const r = dentalRec(pid); const teeth = { ...(r.teeth || {}) }; let ch = false;
-      tx.forEach(t => { const stt = (txDef(t.proc) || [])[2]; if (!stt) return; if (t.proc === 'Bridge') { [...t.missing, ...t.support].forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: 'bridge' }; ch = true; }); } else t.teeth.forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: stt }; ch = true; }); });
+      tx.forEach(t => { const stt = (txDef(t.proc) || [])[2]; if (!stt) return; if (t.proc === 'Bridge') { t.missing.forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: 'bridge' }; ch = true; }); t.support.forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: 'crown' }; ch = true; }); } else t.teeth.forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: t.sitting && t.sitting !== 'Completed' && stt === 'crown' ? 'rct' : stt }; ch = true; }); });
       if (ch) await saveSpec({ ...r, teeth }, ''); } catch (err) { } }
-    if (can('settings', 2)) { try { const st = settings(); const prices = { ...(st.txPrices || {}) }; let chg = false; tx.forEach(t => { if (+t.amount && prices[t.proc] !== +t.amount) { prices[t.proc] = +t.amount; chg = true; } });
-      const used = [...new Set([...rx.map(r => r.name), ...(st.rxUsed || [])])].slice(0, 60); if (chg || used.length !== (st.rxUsed || []).length) await saveSettingsRec({ txPrices: prices, rxUsed: used }); } catch (err) { } }
+    if (can('settings', 2)) { try { const st = settings(); const prices = { ...(st.txPrices || {}) }; let chg = false;
+      tx.forEach(t => { if (!(+t.amount)) return; const n = t.proc === 'Bridge' ? t.missing.length + t.support.length : Math.max(1, t.teeth.length); const k = t.proc === 'Bridge' ? 'Bridge/unit' : t.proc; const u = Math.round(+t.amount / Math.max(1, n)); if (prices[k] !== u) { prices[k] = u; chg = true; } });
+      const used = [...new Set([...rx.map(r => r.name), ...(st.rxUsed || [])])].slice(0, 60); const dose = { ...(st.rxDose || {}) }; rx.forEach(r => { const d = { dose: r.dose, when: r.when, days: r.days }; if (JSON.stringify(dose[r.name]) !== JSON.stringify(d)) { dose[r.name] = d; chg = true; } }); if (chg || used.join() !== (st.rxUsed || []).join()) await saveSettingsRec({ txPrices: prices, rxUsed: used, rxDose: dose }); } catch (err) { } }
     A.closeModal(); toast(T('Visit saved')); if (S.view === 'patient' && S.params.id === pid) { S.params.tab = 'records'; render(); } else A.go('patient', { id: pid, tab: 'records' });
   });
 };
@@ -11214,13 +11316,13 @@ A.delVisit = id => confirmBox('Delete this visit?', 'Its charge and payment are 
 function visitBody(v, forPrint) {
   const L = (lab, html) => html ? `<div class="vb"><span class="eyebrow">${forPrint ? lab : T(lab)}</span><div>${html}</div></div>` : '';
   const t = x => forPrint ? x : T(x);
-  const cc = (v.cc ?? v.complaint) ? `${esc(v.cc ?? v.complaint)}${v.since ? ` <span class="muted">· ${esc(sinceTxt(v.since, forPrint))}</span>` : ''}${(v.ccTeeth || []).length ? ` <span class="muted">· ${t('tooth')} ${esc(teethTxt(v.ccTeeth))}</span>` : ''}` : '';
+  const cc = (v.cc ?? v.complaint) ? `<span translate="no">${esc(v.cc ?? v.complaint)}</span>${v.since ? ` <span class="muted">· ${esc(sinceTxt(v.since, forPrint))}</span>` : ''}${(v.ccTeeth || []).length ? ` <span class="muted">· ${t('tooth')} ${esc(teethTxt(v.ccTeeth))}</span>` : ''}` : '';
   const oral = ORAL.find(o => o[0] === v.oral);
   const rxT = (v.rx || []).length ? `<ol class="rx-l">${v.rx.map(r => `<li><b>${esc(r.name)}</b><span class="muted"> · <span class="nowrap">${esc(r.dose || '')}</span> · ${esc(t(r.when || ''))}${r.days ? ' · ' + esc(String(r.days)) + ' ' + t('days') : ''}</span></li>`).join('')}</ol>` : '';
   return `${L('Chief complaint', cc)}${L('Doctor’s notes', v.notes ? `<span class="pre">${esc(v.notes)}</span>` : '')}${L('On examination', [v.exam ? esc(v.exam) : '', oral ? `${t('Oral health')}: <b style="color:${oral[2]}">${t(oral[1])}</b>` : ''].filter(Boolean).join(' · '))}
     ${L('Diagnosis', esc(v.diagnosis || ''))}${L('Treatment done', (v.tx || []).length ? `<ul class="tx-list">${v.tx.map(x => `<li>${esc(forPrint ? txText(x) : txUI(x))}${x.note ? ` <span class="muted">(${esc(x.note)})</span>` : ''}${x.amount ? ` <b class="num">${inr(x.amount)}</b>` : ''}</li>`).join('')}</ul>` : '')}
     ${L('Medicines (Rx)', rxT + ((v.oldRx || (!v.v2 && v.advice)) ? `<span class="pre">${esc(v.oldRx || v.advice)}</span>` : ''))}${L('Advice', v.v2 && v.advice ? `<span class="pre">${esc(v.advice)}</span>` : '')}
-    ${v.followUp ? `<div class="tiny">${ic('calendar')} ${t('Next visit')} ${fmtDate(v.followUp)}</div>` : ''}${v.charge ? `<div class="tiny">${t('Charge')}: <b>${inr(v.charge)}</b></div>` : ''}`;
+    ${v.followUp ? `<div class="tiny">${ic('calendar')} ${t('Next visit')} ${fmtDate(v.followUp)}</div>` : ''}${v.charge ? `<div class="tiny">${t('Charge')}: <b>${inr(v.charge)}</b></div>` : ''}${v.signImg ? `<div class="tiny vb-sign"><img src="${esc(v.signImg)}" alt="" style="height:38px;vertical-align:middle;background:#fff;border:1px solid #ddd;border-radius:6px"> ${t('Patient signature')}</div>` : ''}`;
 }
 function caseTab(p) {
   const vs = pVisits(p.id); const cons = col('visits').filter(x => x.patientId === p.id && x.kind === 'consent'); const a = accountOf(p); const f = S.filters.caseF || 'all'; const edit = can('medical', 2);
@@ -11233,7 +11335,7 @@ function caseTab(p) {
       <div><span class="eyebrow">${T('Habits')}</span><b>${habitsTxt || T('None')}</b>${habitsTxt ? `<div class="tiny ${p.habitsOk ? 'good-t' : 'warn-t'}">${p.habitsOk ? `${T('Confirmed by')} ${esc(p.habitsOk.by || '')}` : T('Not confirmed by the doctor yet')}${!p.habitsOk && isDoc() ? ` <button class="linkbtn" onclick="A.habitsOk('${p.id}')">${T('Confirm')}</button>` : ''}</div>` : ''}</div>
       ${isDent() && p.oral ? `<div><span class="eyebrow">${T('Oral health')}</span><b>${oralPill(p.oral)}</b></div>` : ''}
       <div><span class="eyebrow">${T('Bill')}</span><b>${inr(a.charged)}</b><div class="tiny ${a.due ? 'bad-t' : 'good-t'}">${a.due ? `${T('Due')} ${inr(a.due)}` : T('No dues')}</div></div></div>
-    ${p.ccNow?.text ? `<div class="banner" style="margin-top:10px">${ic('mic')}<span class="grow"><b>${T('Complaint noted today')}:</b> ${esc(p.ccNow.text)}${p.ccNow.since ? ` · ${esc(sinceTxt(p.ccNow.since))}` : ''} <span class="tiny muted">${esc(p.ccNow.by || '')}</span></span></div>` : ''}
+    ${p.ccNow?.text ? `<div class="banner" style="margin-top:10px">${ic('mic')}<span class="grow"><b>${T('Complaint noted today')}:</b> <span translate="no">${esc(p.ccNow.text)}</span>${p.ccNow.since ? ` · ${esc(sinceTxt(p.ccNow.since))}` : ''} <span class="tiny muted">${esc(p.ccNow.by || '')}</span></span></div>` : ''}
     <div class="row-flex" style="gap:6px;margin-top:10px">${edit ? `<button class="btn primary" onclick="A.visitForm('${p.id}')">${ic('plus')} ${T('New visit')}</button><button class="btn" onclick="A.consentNew('${p.id}')">${ic('file')} ${T('Consent form')}</button>` : ''}<button class="btn" onclick="A.printCase('${p.id}')">${ic('print')} ${T('Print case sheet')}</button></div></div>
   <div class="toolbar" style="margin-top:12px">${seg('caseF', [['all', 'Everything'], ['visits', 'Visits'], ['consents', 'Consents'], ['pays', 'Payments']], f, 'A.setF')}</div>
   ${items.length ? `<div class="case-tl">${items.map(it => it.k === 'visit' ? `<div class="card pad tl-v"><div class="tl-h">${datebox(it.v.date, MOD.medical.c)}<div class="grow" style="min-width:0"><b>${esc((it.v.tx || []).map(t => T(t.proc)).join(', ') || it.v.diagnosis || it.v.cc || it.v.complaint || T('Visit'))}</b><div class="tiny muted">${esc(it.v.updatedBy || '')}</div></div>
@@ -11352,27 +11454,53 @@ A.consentSend = async id => { const c = getById('visits', id); const p = patient
   const ph = String(p.phone || '').replace(/\D/g, '').slice(-10); const msg = c.lang === 'hi' ? `नमस्ते ${p.name} जी 🙏\n${settings().bizName} की ओर से "${c.title}" फ़ॉर्म। कृपया पढ़ें, सहमति दें और हस्ताक्षर करें:\n${portalUrl(p.linkToken)}` : `Namaste ${p.name} ji 🙏\nPlease read and sign "${c.title}" from ${settings().bizName}:\n${portalUrl(p.linkToken)}`;
   if (ph) window.open(waLink(msg, ph), '_blank', 'noopener'); else A.copy(msg); toast(T('Sent to the patient link')); };
 /* signature: draw with a finger, or upload a photo of the signature */
-const sigPadHTML = id => `<div class="sigpad"><canvas id="${id}" width="600" height="200" aria-label="Signature box"></canvas><div class="row-flex" style="gap:6px"><span class="tiny muted grow">${T('Sign inside the box with a finger')}</span><button type="button" class="btn sm ghost" onclick="A.sigClear('${id}')">${T('Clear')}</button><label class="btn sm ghost">${ic('camera')} ${T('Upload photo')}<input type="file" accept="image/*" hidden onchange="A.sigUpload('${id}',this)"></label></div></div>`;
-function sigInit(id) {
-  const c = document.getElementById(id); if (!c) return; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.lineWidth = 3; x.lineCap = 'round'; x.lineJoin = 'round'; x.strokeStyle = '#0E1A33'; c.style.touchAction = 'none';
-  let down = false, last = null; const pt = e => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * c.width / r.width, (e.clientY - r.top) * c.height / r.height]; };
-  c.onpointerdown = e => { down = true; last = pt(e); try { c.setPointerCapture(e.pointerId); } catch (er) { } e.preventDefault(); };
-  c.onpointermove = e => { if (!down) return; const q = pt(e); x.beginPath(); x.moveTo(last[0], last[1]); x.lineTo(q[0], q[1]); x.stroke(); last = q; if (!c.dataset.ink) { c.dataset.ink = '1'; c.dispatchEvent(new Event('ink', { bubbles: true })); } };
-  c.onpointerup = c.onpointercancel = () => { down = false; };
+/* ---------- signature: a full-screen white pad, sign with a finger (or a photo of the signature) ---------- */
+const sigBox = (id, who) => `<div class="sig-box" data-sig-for="${id}"><input type="hidden" id="${id}" value=""><button type="button" class="sig-tap" onclick="A.sigOpen('${id}',${esc(JSON.stringify(who || ''))})"><span class="sig-ph">${ic('edit')} ${T('Tap here and sign with your finger')}</span></button>
+  <label class="linkbtn tiny">${ic('camera')} ${T('or upload a photo of the signature')}<input type="file" accept="image/*" hidden onchange="A.sigUpload('${id}',this)"></label></div>`;
+function sigSet(id, url) {
+  const inp = document.getElementById(id); if (!inp) return; inp.value = url || '';
+  const box = document.querySelector(`[data-sig-for="${id}"]`); const tap = box?.querySelector('.sig-tap');
+  if (tap) tap.innerHTML = url ? `<img src="${url}" alt="${T('Signature')}"><span class="sig-again">${ic('edit')} ${T('Sign again')}</span>` : `<span class="sig-ph">${ic('edit')} ${T('Tap here and sign with your finger')}</span>`;
+  const vf = document.querySelector(`.vf-sign[data-for="${id}"]`); if (vf) { vf.querySelector('img')?.remove(); if (url) vf.insertAdjacentHTML('afterbegin', `<img src="${url}" alt="">`); }
+  inp.dispatchEvent(new Event('ink', { bubbles: true }));
 }
-A.sigClear = id => { const c = document.getElementById(id); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); delete c.dataset.ink; delete c.dataset.photo; c.dispatchEvent(new Event('ink', { bubbles: true })); };
-A.sigUpload = (id, input) => { const file = input.files?.[0]; if (!file) return; const c = document.getElementById(id); const url = URL.createObjectURL(file); const img = new Image();
-  img.onload = () => { const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); const k = Math.min(c.width / img.width, c.height / img.height); const w = img.width * k, h = img.height * k; x.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h); URL.revokeObjectURL(url); c.dataset.ink = '1'; c.dataset.photo = '1'; c.dispatchEvent(new Event('ink', { bubbles: true })); }; img.src = url; };
-const sigData = id => { const c = document.getElementById(id); return c && c.dataset.ink ? (c.dataset.photo ? c.toDataURL('image/jpeg', 0.75) : c.toDataURL('image/png')) : ''; };
-const signReady = f => { const ok = f.agree?.checked && document.getElementById('sigC')?.dataset.ink && (f.signName?.value || '').trim().length > 1; const b = f.querySelector('button[type=submit]'); if (b) b.disabled = !ok; };
+const SIG = { open: null, swallow: 0 };
+window.popHook = e => { if (SIG.swallow) { SIG.swallow--; return true; } if (SIG.open) { SIG.open(false, true); return true; } return false; };
+A.sigOpen = (id, who) => {
+  if (SIG.open) return; const o = document.createElement('div'); o.className = 'sig-full';
+  o.innerHTML = `<div class="sig-bar"><div class="grow" style="min-width:0"><b>${T('Sign here')}</b>${who ? `<div class="tiny muted">${esc(who)}</div>` : ''}</div><button type="button" class="btn sm ghost" data-a="clear">${T('Clear')}</button><button type="button" class="btn sm primary" data-a="done" disabled>${ic('check')} ${T('Done')}</button><button type="button" class="icon-btn" data-a="close" aria-label="Close">${ic('x')}</button></div><div class="sig-area"><canvas></canvas><div class="sig-line"><span>✕</span></div></div>`;
+  document.body.appendChild(o); document.body.classList.add('sig-on');
+  const area = o.querySelector('.sig-area'), c = o.querySelector('canvas'), done = o.querySelector('[data-a=done]'); const dpr = Math.min(3, window.devicePixelRatio || 1);
+  const r0 = area.getBoundingClientRect(); c.width = Math.round(r0.width * dpr); c.height = Math.round(r0.height * dpr); const x = c.getContext('2d');
+  x.lineCap = 'round'; x.lineJoin = 'round'; x.strokeStyle = '#0E1A33'; x.lineWidth = 2.6 * dpr; let ink = false, pts = [], box = [1e9, 1e9, -1, -1];
+  const pt = e => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * dpr, (e.clientY - r.top) * dpr]; };
+  const grow = ([a, b]) => { box = [Math.min(box[0], a), Math.min(box[1], b), Math.max(box[2], a), Math.max(box[3], b)]; };
+  c.addEventListener('pointerdown', e => { e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch (er) { } pts = [pt(e)]; grow(pts[0]); x.beginPath(); x.arc(pts[0][0], pts[0][1], x.lineWidth / 2, 0, 7); x.fillStyle = '#0E1A33'; x.fill(); });
+  c.addEventListener('pointermove', e => { if (!pts.length) return; e.preventDefault(); const q = pt(e); grow(q); const p = pts[pts.length - 1]; const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+    x.beginPath(); x.moveTo(pts.length > 1 ? (pts[pts.length - 2][0] + p[0]) / 2 : p[0], pts.length > 1 ? (pts[pts.length - 2][1] + p[1]) / 2 : p[1]); x.quadraticCurveTo(p[0], p[1], m[0], m[1]); x.stroke(); pts.push(q);
+    if (!ink) { ink = true; done.disabled = false; } });
+  const up = () => { pts = []; }; c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up); c.addEventListener('pointerleave', up);
+  const finish = (keep, fromBack) => {
+    if (keep && ink) { const pad = 14 * dpr; const sx = Math.max(0, box[0] - pad), sy = Math.max(0, box[1] - pad), sw = Math.min(c.width, box[2] + pad) - sx, sh = Math.min(c.height, box[3] + pad) - sy;
+      const k = Math.min(1, 900 / sw, 320 / sh); const out = document.createElement('canvas'); out.width = Math.max(1, Math.round(sw * k)); out.height = Math.max(1, Math.round(sh * k)); const ox = out.getContext('2d'); ox.fillStyle = '#fff'; ox.fillRect(0, 0, out.width, out.height); ox.drawImage(c, sx, sy, sw, sh, 0, 0, out.width, out.height);
+      sigSet(id, out.toDataURL('image/png')); }
+    o.remove(); document.body.classList.remove('sig-on'); SIG.open = null; if (!fromBack) { SIG.swallow++; try { history.back(); } catch (er) { SIG.swallow--; } } };
+  SIG.open = finish; try { history.pushState({ sig: 1 }, ''); } catch (er) { }
+  o.querySelector('[data-a=clear]').onclick = () => { x.clearRect(0, 0, c.width, c.height); ink = false; done.disabled = true; box = [1e9, 1e9, -1, -1]; };
+  done.onclick = () => finish(true); o.querySelector('[data-a=close]').onclick = () => finish(false);
+};
+A.sigUpload = (id, input) => { const file = input.files?.[0]; if (!file) return; const url = URL.createObjectURL(file); const img = new Image();
+  img.onload = () => { const k = Math.min(1, 900 / img.width, 400 / img.height); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); sigSet(id, c.toDataURL('image/jpeg', 0.75)); }; img.src = url; };
+const sigData = id => document.getElementById(id)?.value || '';
+const signReady = f => { const ok = f.agree?.checked && sigData('sigC') && (f.signName?.value || '').trim().length > 1; const b = f.querySelector('button[type=submit]'); if (b) b.disabled = !ok; };
 function consentSheet(c, nameVal, onsubmit, sub) {
   modal(`<form class="form" onsubmit="${onsubmit}" novalidate oninput="signReady(this)" onchange="signReady(this)">${sheetHead(c.title, sub || '')}<div class="sheet-b stack">
     <div class="consent-text" translate="no">${esc(c.text)}</div>
     <div class="grid2" style="padding:0">${fieldHTML({ name: 'signName', label: 'Name of the person signing', value: nameVal || '' })}<div class="field"><span>${T('Signing as')}</span><div class="chips">${[['patient', 'Patient'], ['guardian', 'Parent / guardian']].map(([k, l]) => `<label class="chip-radio"><input type="radio" name="signBy" value="${k}" ${k === 'patient' ? 'checked' : ''}><span>${T(l)}</span></label>`).join('')}</div></div></div>
     <label class="check consent-agree"><input type="checkbox" name="agree"> <span>${T('I have read this form (or it was read to me) and I understand it. I agree.')}</span></label>
-    <div class="field"><span>${T('Signature')}</span>${sigPadHTML('sigC')}</div>
+    <div class="field"><span>${T('Signature')}</span>${sigBox('sigC', nameVal)}</div>
   </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit" disabled>${ic('check')} ${T('Final submit')}</button></footer></form>`, { wide: true });
-  setTimeout(() => { sigInit('sigC'); const f = $('#modalRoot form'); document.getElementById('sigC')?.addEventListener('ink', () => signReady(f)); }, 40);
+  setTimeout(() => { const f = $('#modalRoot form'); document.getElementById('sigC')?.addEventListener('ink', () => signReady(f)); }, 40);
 }
 A.consentSign = id => { const c = getById('visits', id); const p = patientById(c.patientId); consentSheet(c, p.name, `A.consentSave(event,'${id}')`, `${p.name} · ${T('Hand the phone to the patient')}`); };
 A.consentSave = (e, id) => { e.preventDefault(); const f = e.target; const v = readForm(f); const img = sigData('sigC'); if (!v.agree || !img) { toast('Tick “I agree” and sign', 'bad'); return; }
@@ -14028,6 +14156,35 @@ After paying, send the screenshot in Messages so the clinic can mark it paid. | 
 Forms I have signed | मेरे साइन किए फ़ॉर्म
 Thank you. The form is signed. | धन्यवाद। फ़ॉर्म साइन हो गया।
 Signature box | हस्ताक्षर का डिब्बा
+C/C — Chief complaint | मुख्य शिकायत
+In the patient’s words | मरीज़ के शब्दों में
+RCT + Cap | आरसीटी + कैप
+Cap | कैप
+Filling | फ़िलिंग
+Scaling | स्केलिंग
+X-ray | एक्स-रे
+X-ray / photo | एक्स-रे / फ़ोटो
+PFM | पीएफ़एम
+1st | पहली
+2nd | दूसरी
+3rd | तीसरी
+continues | जारी
+Change support teeth | सपोर्ट वाले दांत बदलें
+Tap the missing tooth | जो दांत नहीं है उस पर टैप करें
+tap the missing tooth | जो दांत नहीं है उस पर टैप करें
+tap the tooth | दांत पर टैप करें
+Which treatment? | कौन-सा इलाज?
+Extra fee ₹ | अतिरिक्त फ़ीस ₹
+Received ₹ | मिले ₹
+3 days | 3 दिन
+15 days | 15 दिन
+Patient signature | मरीज़ के हस्ताक्षर
+Sign again | फिर से हस्ताक्षर करें
+Sign here | यहां हस्ताक्षर करें
+Tap here and sign with your finger | यहां टैप करें और उंगली से हस्ताक्षर करें
+or upload a photo of the signature | या हस्ताक्षर की फ़ोटो अपलोड करें
+Dose | खुराक
+Medicine | दवा
 `);
 
 boot();

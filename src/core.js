@@ -784,6 +784,7 @@ function hNav() { if (!hReady()) return; try { if (H.backT) { clearTimeout(H.bac
 function hModalOpen() { if (!hReady()) return; if (H.backT) { clearTimeout(H.backT); H.backT = null; H.modal = true; return; } if (H.modal) return; if (H.ignore) { H.pendingPush = true; return; } try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (e) { } }
 function hModalClosed() { if (!H.modal) return; H.modal = false; H.backT = setTimeout(() => { H.backT = null; H.ignore++; try { history.back(); } catch (e) { H.ignore--; } }, 0); }
 window.addEventListener('popstate', e => {
+  if (window.popHook && window.popHook(e)) return; /* a full-screen layer (signature pad) handles back itself */
   if (H.ignore) { H.ignore--; if (H.pendingPush) { H.pendingPush = false; if (!$('#modalRoot').hidden) { try { history.pushState(hState({ m: 1 }), ''); H.modal = true; } catch (x) { } } } return; }
   if (!hReady()) return;
   if (!$('#modalRoot').hidden) { H.modal = false; closeModalRaw(); if (e.state?.sm && !e.state.m) return; }

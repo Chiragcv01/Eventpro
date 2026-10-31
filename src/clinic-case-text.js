@@ -259,4 +259,33 @@ After paying, send the screenshot in Messages so the clinic can mark it paid. | 
 Forms I have signed | मेरे साइन किए फ़ॉर्म
 Thank you. The form is signed. | धन्यवाद। फ़ॉर्म साइन हो गया।
 Signature box | हस्ताक्षर का डिब्बा
+C/C — Chief complaint | मुख्य शिकायत
+In the patient’s words | मरीज़ के शब्दों में
+RCT + Cap | आरसीटी + कैप
+Cap | कैप
+Filling | फ़िलिंग
+Scaling | स्केलिंग
+X-ray | एक्स-रे
+X-ray / photo | एक्स-रे / फ़ोटो
+PFM | पीएफ़एम
+1st | पहली
+2nd | दूसरी
+3rd | तीसरी
+continues | जारी
+Change support teeth | सपोर्ट वाले दांत बदलें
+Tap the missing tooth | जो दांत नहीं है उस पर टैप करें
+tap the missing tooth | जो दांत नहीं है उस पर टैप करें
+tap the tooth | दांत पर टैप करें
+Which treatment? | कौन-सा इलाज?
+Extra fee ₹ | अतिरिक्त फ़ीस ₹
+Received ₹ | मिले ₹
+3 days | 3 दिन
+15 days | 15 दिन
+Patient signature | मरीज़ के हस्ताक्षर
+Sign again | फिर से हस्ताक्षर करें
+Sign here | यहां हस्ताक्षर करें
+Tap here and sign with your finger | यहां टैप करें और उंगली से हस्ताक्षर करें
+or upload a photo of the signature | या हस्ताक्षर की फ़ोटो अपलोड करें
+Dose | खुराक
+Medicine | दवा
 `);
