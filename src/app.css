@@ -1005,3 +1005,7 @@ body.sig-on{overflow:hidden}
 .ctl-x{min-width:0}.ctl-x b{font-size:14.5px;overflow-wrap:anywhere}.ctl-s{font-size:13px;color:var(--ink2);white-space:pre-line;overflow-wrap:anywhere}
 .pt-tx{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.pt-tx span{font-size:12px;background:#FFF4F8;color:#9D174D;border-radius:7px;padding:2px 7px;font-weight:600}.pt-tx span.hit{background:#9D174D;color:#fff}.pt-tx small{font-weight:500;opacity:.8}
 .vf-bill>.vf-save{flex-direction:row;justify-content:flex-start}
+.sal-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.sal-pay{text-align:right;flex:none}.sal-pay span{display:block;font-size:12px;color:var(--muted)}.sal-pay b{font:800 22px/1.1 var(--f-display)}
+.sal-att{display:flex;flex-wrap:wrap;gap:5px}.sal-ls{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line2);padding-top:6px}
+.sal-l{display:flex;justify-content:space-between;font-size:14px}.sal-l span{color:var(--ink2)}

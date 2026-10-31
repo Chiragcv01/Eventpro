@@ -1032,6 +1032,10 @@ body.sig-on{overflow:hidden}
 .ctl-x{min-width:0}.ctl-x b{font-size:14.5px;overflow-wrap:anywhere}.ctl-s{font-size:13px;color:var(--ink2);white-space:pre-line;overflow-wrap:anywhere}
 .pt-tx{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.pt-tx span{font-size:12px;background:#FFF4F8;color:#9D174D;border-radius:7px;padding:2px 7px;font-weight:600}.pt-tx span.hit{background:#9D174D;color:#fff}.pt-tx small{font-weight:500;opacity:.8}
 .vf-bill>.vf-save{flex-direction:row;justify-content:flex-start}
+.sal-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.sal-pay{text-align:right;flex:none}.sal-pay span{display:block;font-size:12px;color:var(--muted)}.sal-pay b{font:800 22px/1.1 var(--f-display)}
+.sal-att{display:flex;flex-wrap:wrap;gap:5px}.sal-ls{display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line2);padding-top:6px}
+.sal-l{display:flex;justify-content:space-between;font-size:14px}.sal-l span{color:var(--ink2)}
 
 </style>
 </head>
@@ -1040,7 +1044,7 @@ body.sig-on{overflow:hidden}
 <script>try{if(localStorage.getItem('ep_lang')==='hi')document.getElementById('bootTxt').textContent='खुल रहा है…'}catch(e){}</script>
 <div id="modalRoot" hidden></div>
 <script>
-window.SM_BUILD = '6a1651b49683';
+window.SM_BUILD = '691ef3d9b555';
 /* ================= Language: English / हिंदी =================
    The screens are written in English. When Hindi is on, every text node,
    placeholder and tooltip is swapped from the dictionary below as it appears
@@ -10834,17 +10838,29 @@ const CLINIC_EXP = ['Rent', 'Electricity & water', 'Medicines & consumables', 'L
 const CEXP_STYLE = { 'Rent': ['building', '#7C3AED'], 'Electricity & water': ['bolt', '#F59E0B'], 'Medicines & consumables': ['drop', '#E11D48'], 'Lab tests (outside)': ['file', '#0891B2'], 'Equipment & repair': ['wrench', '#64748B'], 'Staff tea & food': ['pot', '#16A34A'], 'Marketing & ads': ['megaphone', '#9333EA'], 'Phone, internet & software': ['globe', '#2563EB'], 'Cleaning & laundry': ['sparkle', '#0D9488'], 'Misc': ['dots', '#94A3B8'], 'Staff salary': ['users', '#0D9488'] };
 const ATT_ST = [['P', 'Present', 'good'], ['H', 'Half day', 'warn'], ['L', 'Leave', 'info'], ['A', 'Absent', 'bad']];
 const dim = m => new Date(+m.slice(0, 4), +m.slice(5, 7), 0).getDate();
-function salaryOf(s, month) {
+/* Monthly salary for one person and month.
+   - Start = joining date, but a day marked (or an advance given) before it counts: the person was already working.
+   - Absent, half day and leave above the free ones are cut at salary ÷ days in the month.
+   - Days not marked: paid (default) or cut (settings.salaryUnmarked = 'cut'; the weekly off day stays paid); only days up to today count.
+   - An advance bigger than the salary is not lost: the rest is cut next month (carry). */
+const prevMonth = m => { const d = new Date(+m.slice(0, 4), +m.slice(5, 7) - 2, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; };
+function staffStart(s) { const own = [...col('attendance').filter(a => a.staffId === s.id).map(a => a.date), ...col('advances').filter(a => a.staffId === s.id).map(a => a.date)].filter(Boolean).sort()[0] || '';
+  return [s.joinDate || '', own].filter(Boolean).sort()[0] || ''; }
+function salaryOf(s, month, depth = 0) {
   const att = col('attendance').filter(a => a.staffId === s.id && (a.date || '').startsWith(month)); const c = k => att.filter(a => a.status === k).length;
-  const days = dim(month); let base = +s.salary || 0;
-  if (s.joinDate && s.joinDate.slice(0, 7) === month) base = Math.round(base * (days - (+s.joinDate.slice(8, 10) - 1)) / days);
-  if (s.joinDate && s.joinDate.slice(0, 7) > month) base = 0;
-  const perDay = (+s.salary || 0) / days; const free = s.leaves === '' || s.leaves == null ? 2 : +s.leaves;
-  const r = { P: c('P'), H: c('H'), L: c('L'), A: c('A') }; r.paidL = Math.min(r.L, free); r.cutDays = r.A + r.H * 0.5 + Math.max(0, r.L - free);
-  r.base = base; r.cut = Math.round(perDay * r.cutDays);
+  const days = dim(month); const start = staffStart(s); const st = settings(); const t = todayLocal();
+  const r = { P: c('P'), H: c('H'), L: c('L'), A: c('A'), unmarked: 0, unCut: 0, carryIn: 0, carryOut: 0 };
+  let from = 1; if (start && start.slice(0, 7) === month) from = +start.slice(8, 10); const before = start && start.slice(0, 7) > month;
+  const salary = +s.salary || 0; const perDay = salary / days; r.base = before ? 0 : Math.round(salary * (days - from + 1) / days);
+  const upto = month === t.slice(0, 7) ? +t.slice(8, 10) : month > t.slice(0, 7) ? 0 : days; const off = st.weeklyOff ?? 0; const marked = new Set(att.map(a => a.date));
+  if (!before) for (let d = from; d <= upto; d++) { const ds = `${month}-${String(d).padStart(2, '0')}`; if (marked.has(ds)) continue; r.unmarked++; if (st.salaryUnmarked === 'cut' && new Date(ds + 'T00:00').getDay() !== +off) r.unCut++; }
+  const free = s.leaves === '' || s.leaves == null ? 2 : +s.leaves; r.paidL = Math.min(r.L, free);
+  r.cutDays = r.A + r.H * 0.5 + Math.max(0, r.L - free) + r.unCut; r.cut = Math.min(r.base, Math.round(perDay * r.cutDays));
   const money = col('advances').filter(a => a.staffId === s.id && (a.date || '').startsWith(month));
-  r.adv = sum(money.filter(x => smKind(x) === 'advance'), x => x.amount); r.bonus = sum(money.filter(x => smKind(x) === 'bonus'), x => x.amount);
-  r.net = Math.max(0, r.base - r.cut + r.bonus - r.adv); r.cost = Math.max(0, r.base - r.cut + r.bonus); return r;
+  r.adv = sum(money.filter(x => smKind(x) === 'advance'), x => +x.amount || 0); r.bonus = sum(money.filter(x => smKind(x) === 'bonus'), x => +x.amount || 0);
+  if (depth < 24 && start && prevMonth(month) >= start.slice(0, 7)) r.carryIn = salaryOf(s, prevMonth(month), depth + 1).carryOut;
+  const gross = r.base - r.cut + r.bonus, owe = r.adv + r.carryIn;
+  r.net = Math.max(0, gross - owe); r.carryOut = Math.max(0, owe - gross); r.cost = Math.max(0, gross); return r;
 }
 /* the running month counts salary only up to today, so mid-month profit is not shown as a big loss */
 const salaryCost = month => { const t = todayLocal(); const k = month === t.slice(0, 7) ? +t.slice(8, 10) / dim(month) : month > t.slice(0, 7) ? 0 : 1; return Math.round(sum(col('staff'), s => salaryOf(s, month).cost) * k); };
@@ -10865,10 +10881,15 @@ function clinicStaff() {
   if (tab === 'salary' && seeMoney) {
     const month = S.filters.payMonth || todayLocal().slice(0, 7); const rows = staff.map(s => ({ s, r: salaryOf(s, month), paid: getById('payouts', month + '_' + s.id) }));
     return head + tabs + `<div class="toolbar"><input type="month" style="width:auto" value="${month}" onchange="A.setF('payMonth',this.value)"><b class="num">${T('Total')} ${inr(sum(rows, x => x.r.net))}</b></div>
-    <div class="card"><div class="tbl-wrap"><table class="tbl sal-tbl"><thead><tr><th>${T('Staff')}</th><th class="r">${T('Present')}</th><th class="r">${T('Half')}</th><th class="r">${T('Leave')}</th><th class="r">${T('Absent')}</th><th class="r">${T('Salary')}</th><th class="r">${T('Cut')}</th><th class="r">${T('Bonus')}</th><th class="r">${T('Advance')}</th><th class="r">${T('To pay')}</th><th></th></tr></thead><tbody>
-    ${rows.map(({ s, r, paid }) => `<tr><td><b>${esc(s.name)}</b><div class="tiny muted">${esc(T(s.role || ''))} · ${inr(s.salary)}/${T('month')}</div></td><td class="r">${r.P}</td><td class="r">${r.H}</td><td class="r">${r.L}${r.L ? ` <span class="tiny muted">(${r.paidL} ${T('paid')})</span>` : ''}</td><td class="r">${r.A}</td><td class="r">${inr(r.base)}</td><td class="r" style="color:var(--bad)">${r.cut ? '− ' + inr(r.cut) : '—'}</td><td class="r">${r.bonus ? '+ ' + inr(r.bonus) : '—'}</td><td class="r" style="color:var(--bad)">${r.adv ? '− ' + inr(r.adv) : '—'}</td><td class="r"><b>${inr(r.net)}</b></td>
-      <td class="r"><div class="row-flex" style="gap:6px;justify-content:flex-end;flex-wrap:nowrap">${paid ? pill(T('Paid') + ' ' + dShort(paid.date), 'good') : edit ? `<button class="btn sm primary" onclick="A.payout('${s.id}','${month}',${r.net})">${T('Mark paid')}</button>` : ''}${s.phone ? waBtn(slipText(s, r, month), s.phone, T('Slip'), 'btn sm wa') : ''}</div></td></tr>`).join('')}
-    </tbody></table></div></div><p class="tiny muted" style="margin-top:8px">${T('To pay = salary − cut for absent / half days / extra leave + bonus − advance. A person who joined this month gets salary from the joining day.')}</p>`;
+    <div class="sal-cards">${rows.map(({ s, r, paid }) => { const L = (l, v, cls = '') => v ? `<div class="sal-l ${cls}"><span>${l}</span><b>${v}</b></div>` : '';
+      return `<div class="card pad stack-sm sal-c"><div class="row-flex" style="justify-content:space-between;flex-wrap:nowrap;gap:8px"><div style="min-width:0"><b>${esc(s.name)}</b><div class="tiny muted">${esc(T(s.role || ''))} · ${inr(s.salary)}/${T('month')}</div></div><div class="sal-pay"><span>${T('To pay')}</span><b>${inr(r.net)}</b></div></div>
+        <div class="sal-att">${pill(`${r.P} ${T('Present')}`, 'good')}${r.H ? pill(`${r.H} ${T('Half day')}`, 'warn') : ''}${r.L ? pill(`${r.L} ${T('Leave')} (${r.paidL} ${T('paid')})`, 'info') : ''}${r.A ? pill(`${r.A} ${T('Absent')}`, 'bad') : ''}${r.unmarked ? pill(`${r.unmarked} ${T('not marked')}`, r.unCut ? 'bad' : '') : ''}</div>
+        <div class="sal-ls">${L(T('Salary'), inr(r.base))}${L(T('Cut'), r.cut ? '− ' + inr(r.cut) : '', 'bad-t')}${L(T('Bonus'), r.bonus ? '+ ' + inr(r.bonus) : '', 'good-t')}${L(T('Advance'), r.adv ? '− ' + inr(r.adv) : '', 'bad-t')}${L(T('Advance from last month'), r.carryIn ? '− ' + inr(r.carryIn) : '', 'bad-t')}</div>
+        ${r.carryOut ? `<div class="tiny warn-t">${T('Advance left')} ${inr(r.carryOut)} · ${T('cut next month')}</div>` : ''}
+        <div class="row-flex" style="gap:6px">${paid && +paid.amount >= r.net ? pill(`${T('Paid')} ${inr(paid.amount)} · ${dShort(paid.date)}`, 'good') : paid ? `${pill(`${T('Paid')} ${inr(paid.amount)}`, 'warn')}${edit && r.net > +paid.amount ? `<button class="btn sm primary" onclick="A.payout('${s.id}','${month}',${r.net})">${T('Mark paid')} ${inr(r.net)}</button>` : ''}` : edit && r.net ? `<button class="btn sm primary" onclick="A.payout('${s.id}','${month}',${r.net})">${T('Mark paid')}</button>` : ''}${paid && edit ? `<button class="btn sm ghost" onclick="A.payoutUndo('${month}_${s.id}')">${T('Undo')}</button>` : ''}${s.phone ? waBtn(slipText(s, r, month), s.phone, T('Slip'), 'btn sm wa') : ''}</div></div>`; }).join('')}</div>
+    ${edit ? `<div class="card pad row-flex sal-rule" style="margin-top:10px;gap:10px"><span class="small"><b>${T('Days not marked')}</b></span><div class="chips">${[['paid', 'Count as present'], ['cut', 'Cut from salary']].map(([k, l]) => `<button class="chip ${(settings().salaryUnmarked || 'paid') === k ? 'on' : ''}" onclick="A.salRule({salaryUnmarked:'${k}'})">${T(l)}</button>`).join('')}</div>
+      ${settings().salaryUnmarked === 'cut' ? `<span class="small"><b>${T('Weekly off')}</b></span><select style="width:auto" onchange="A.salRule({weeklyOff:+this.value})">${['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'None'].map((d, i) => `<option value="${i === 7 ? 9 : i}" ${(settings().weeklyOff ?? 0) === (i === 7 ? 9 : i) ? 'selected' : ''}>${T(d)}</option>`).join('')}</select>` : ''}</div>` : ''}
+    <p class="tiny muted" style="margin-top:8px">${T('To pay = salary − cut for absent / half days / extra leave + bonus − advance. A person who joined this month gets salary from the joining day.')}</p>`;
   }
   if (tab === 'money' && seeMoney) {
     const month = S.filters.cmMonth || todayLocal().slice(0, 7); const list = col('advances').filter(x => (x.date || '').startsWith(month)).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
@@ -10881,13 +10902,13 @@ function clinicStaff() {
       <div class="row-flex small" style="justify-content:space-between"><span class="muted">${seeMoney ? inr(s.salary) + '/' + T('month') + ' · ' : ''}${r.P} ${T('days present this month')}</span>${linked ? pill(T('App login'), 'primary') : ''}</div>
       <div class="row-flex">${s.phone ? `<a class="btn sm" href="tel:${esc(String(s.phone).replace(/\D/g, '').slice(-10))}">${ic('phone')}</a>${waBtn('', s.phone, 'WhatsApp')}` : ''}${edit ? `<button class="btn sm ghost" onclick="A.cStaffForm('${s.id}')">${ic('edit')} ${T('Edit')}</button>` : ''}</div></div>`; }).join('')}</div>`;
 }
-const slipText = (s, r, month) => { const m = new Date(month + '-01T00:00').toLocaleDateString(I18N.lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' }); return `${settings().bizName} · ${T('Salary slip')} ${m}\n${s.name} (${T(s.role || '')})\n${T('Present')} ${r.P} · ${T('Half day')} ${r.H} · ${T('Leave')} ${r.L} · ${T('Absent')} ${r.A}\n${T('Salary')}: ${inr(r.base)}${r.cut ? `\n${T('Cut')}: − ${inr(r.cut)}` : ''}${r.bonus ? `\n${T('Bonus')}: + ${inr(r.bonus)}` : ''}${r.adv ? `\n${T('Advance')}: − ${inr(r.adv)}` : ''}\n*${T('To pay')}: ${inr(r.net)}*`; };
+const slipText = (s, r, month) => { const m = new Date(month + '-01T00:00').toLocaleDateString(I18N.lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'long', year: 'numeric' }); return `${settings().bizName} · ${T('Salary slip')} ${m}\n${s.name} (${T(s.role || '')})\n${T('Present')} ${r.P} · ${T('Half day')} ${r.H} · ${T('Leave')} ${r.L} · ${T('Absent')} ${r.A}\n${T('Salary')}: ${inr(r.base)}${r.cut ? `\n${T('Cut')}: − ${inr(r.cut)}` : ''}${r.bonus ? `\n${T('Bonus')}: + ${inr(r.bonus)}` : ''}${r.adv ? `\n${T('Advance')}: − ${inr(r.adv)}` : ''}${r.carryIn ? `\n${T('Advance from last month')}: − ${inr(r.carryIn)}` : ''}\n*${T('To pay')}: ${inr(r.net)}*${r.carryOut ? `\n${T('Advance left')} ${inr(r.carryOut)} · ${T('cut next month')}` : ''}`; };
 A.cStaffForm = id => {
-  const s = id ? getById('staff', id) : { role: 'Receptionist', leaves: 2, joinDate: todayLocal() };
+  const s = id ? getById('staff', id) : { role: 'Receptionist', leaves: 2, joinDate: '' };
   formModal({ title: id ? 'Edit staff' : 'Add staff', fields: [
     { name: 'name', label: 'Name', required: true, value: s.name }, { name: 'phone', label: 'Mobile', type: 'tel', value: s.phone },
     { name: 'role', label: 'Work', type: 'select', options: CLINIC_STAFF_ROLES.map(r => [r, T(r)]), value: s.role }, { name: 'salary', label: 'Monthly salary ₹', type: 'number', min: 0, required: true, value: s.salary },
-    { name: 'leaves', label: 'Free leaves per month', type: 'number', min: 0, max: 31, value: s.leaves ?? 2, hint: 'Leaves up to this number are paid' }, { name: 'joinDate', label: 'Joining date', type: 'date', value: s.joinDate }],
+    { name: 'leaves', label: 'Free leaves per month', type: 'number', min: 0, max: 31, value: s.leaves ?? 2, hint: 'Leaves up to this number are paid' }, { name: 'joinDate', label: 'Joining date', type: 'date', value: s.joinDate, hint: 'Leave blank if already working' }],
     left: id && can('staff', 3) ? `<button type="button" class="btn danger" onclick="A.delStaff('${id}')">${ic('trash')}</button>` : '',
     onSubmit: async v => { await save('staff', Object.assign(id ? s : { id: uid('st_') }, v, { salary: +v.salary || 0, leaves: v.leaves === '' ? 2 : +v.leaves, payType: 'month' }), `${id ? 'Updated' : 'Added'} staff ${v.name}`); render(); } });
 };
@@ -11023,6 +11044,9 @@ V.expenses = () => isClinic() ? clinicExpenses() : _vExp();
 V.reports = () => isClinic() ? clinicReports() : _vRep();
 V.marketing = () => isClinic() ? clinicMarketing() : _vMk();
 const _enquiryLink = enquiryLink; enquiryLink = () => isClinic() ? waLink('Namaste, I want an appointment', settings().phone) : _enquiryLink();
+
+A.salRule = async o => { try { await saveSettingsRec(o); render(); } catch (e) { toast(e.message, 'bad'); } };
+A.payoutUndo = id => confirmBox('Undo paid?', '', 'Undo', async () => { await removeRec('payouts', id, 'Undid a salary payment mark'); A.closeModal(); render(); });
 
 /* ================= Clinic case sheet (29 Oct 2026) =================
    The doctor's case paper, step by step, and only the parts a patient needs:
@@ -13114,6 +13138,25 @@ General Surgeon | जनरल सर्जन
 {} Half day | {} आधा दिन
 {} Present | {} हाज़िर
 {} Absent | {} गैरहाज़िर
+not marked | मार्क नहीं
+last month | पिछले महीने का
+Advance left | एडवांस बाकी
+cut next month | अगले महीने कटेगा
+Advance from last month | पिछले महीने का एडवांस
+Days not marked | जिन दिनों हाज़िरी नहीं लगी
+Count as present | हाज़िर मानें
+Cut from salary | सैलरी से काटें
+Weekly off | हफ़्ते की छुट्टी
+Sunday | रविवार
+Monday | सोमवार
+Tuesday | मंगलवार
+Wednesday | बुधवार
+Thursday | गुरुवार
+Friday | शुक्रवार
+Saturday | शनिवार
+Undo paid? | भुगतान हटाएं?
+Undo | हटाएं
+Leave blank if already working | पहले से काम कर रहे हैं तो खाली छोड़ें
 `);
 
 /* ================= Leads & venue: ⓘ help + Hindi (Devanagari) ================= */

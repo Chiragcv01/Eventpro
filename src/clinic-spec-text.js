@@ -601,4 +601,23 @@ General Surgeon | जनरल सर्जन
 {} Half day | {} आधा दिन
 {} Present | {} हाज़िर
 {} Absent | {} गैरहाज़िर
+not marked | मार्क नहीं
+last month | पिछले महीने का
+Advance left | एडवांस बाकी
+cut next month | अगले महीने कटेगा
+Advance from last month | पिछले महीने का एडवांस
+Days not marked | जिन दिनों हाज़िरी नहीं लगी
+Count as present | हाज़िर मानें
+Cut from salary | सैलरी से काटें
+Weekly off | हफ़्ते की छुट्टी
+Sunday | रविवार
+Monday | सोमवार
+Tuesday | मंगलवार
+Wednesday | बुधवार
+Thursday | गुरुवार
+Friday | शुक्रवार
+Saturday | शनिवार
+Undo paid? | भुगतान हटाएं?
+Undo | हटाएं
+Leave blank if already working | पहले से काम कर रहे हैं तो खाली छोड़ें
 `);
