@@ -30,9 +30,10 @@ const DX_GEN = ['Viral fever', 'Upper respiratory infection', 'Acute gastroenter
 /* dentist treatments: [name, usual fee, tooth chart status, kind: teeth | bridge | none] */
 const TX_DENT = [['Check-up / consultation', 300, '', 'none'], ['X-ray (IOPA)', 200, '', 'teeth'], ['OPG X-ray', 600, '', 'none'], ['Scaling & polishing', 800, '', 'none'], ['Filling (GIC)', 800, 'filled', 'teeth'], ['Filling (composite)', 1200, 'filled', 'teeth'],
   ['RCT', 4500, 'rct', 'teeth'], ['RCT with cap', 9500, 'crown', 'teeth'], ['Cap / crown', 5000, 'crown', 'teeth'], ['Bridge', 5000, 'bridge', 'bridge'], ['Extraction', 800, 'missing', 'teeth'], ['Wisdom tooth surgery', 3500, 'missing', 'teeth'],
-  ['Implant', 25000, 'implant', 'teeth'], ['Denture (partial)', 6000, '', 'teeth'], ['Denture (complete)', 15000, '', 'none'], ['Pulpectomy (child)', 2000, 'rct', 'teeth'], ['Braces / adjustment', 1000, '', 'none'], ['Teeth whitening', 6000, '', 'none'], ['Other', '', '', 'teeth']];
-const TX_GEN = [['Consultation', '', '', 'none'], ['Dressing', '', '', 'none'], ['Injection', '', '', 'none'], ['IV drip', '', '', 'none'], ['Nebulisation', '', '', 'none'], ['ECG', '', '', 'none'], ['Plaster', '', '', 'none'], ['Minor procedure', '', '', 'none'], ['Physiotherapy session', '', '', 'none'], ['Other', '', '', 'none']];
-const txDefs = () => isDent() ? TX_DENT : TX_GEN;
+  ['Implant', 25000, 'implant', 'teeth'], ['Denture (partial)', 6000, '', 'teeth'], ['Denture (complete)', 15000, '', 'none'], ['Pulpectomy (child)', 2000, 'rct', 'teeth'], ['Braces / adjustment', 1000, '', 'none'], ['Teeth whitening', 6000, '', 'none'], ['Re-RCT', 6000, 'rct', 'teeth'], ['Cap re-fix', 500, 'crown', 'teeth'], ['Additional doctor fee', 500, '', 'none'], ['Other', '', '', 'teeth']];
+const TX_GEN = [['Consultation', '', '', 'none'], ['Dressing', '', '', 'none'], ['Injection', '', '', 'none'], ['IV drip', '', '', 'none'], ['Nebulisation', '', '', 'none'], ['ECG', '', '', 'none'], ['Plaster', '', '', 'none'], ['Minor procedure', '', '', 'none'], ['Physiotherapy session', '', '', 'none'], ['Additional doctor fee', '', '', 'none'], ['Other', '', '', 'none']];
+const txCustom = () => (settings().txCustom || []).filter(c => c.name).map(c => [c.name, c.price === '' ? '' : +c.price || 0, '', c.kind === 'teeth' ? 'teeth' : 'none']);
+const txDefs = () => { const b = isDent() ? TX_DENT : TX_GEN; return [...b.filter(x => x[0] !== 'Other'), ...txCustom(), ...b.filter(x => x[0] === 'Other')]; };
 const txDef = n => txDefs().find(x => x[0] === n) || TX_DENT.find(x => x[0] === n);
 const CAP_MAT = ['Metal-ceramic (PFM)', 'Zirconia', 'E-max', 'Metal', 'Temporary'];
 const RCT_ST = ['Started', 'Sitting 2', 'Sitting 3', 'Completed'];
@@ -95,6 +96,7 @@ A.patientForm = (id, then) => {
       <div class="pf-all" ${allY === 'yes' ? '' : 'hidden'}>${fieldHTML({ name: 'allergies', label: 'Allergic to', value: p.allergies, placeholder: 'e.g. Penicillin, sulpha, latex' })}</div></div>
     <div class="pf-box"><div class="field"><span>${T('Habits')}</span>${checkChips('habits', habits, p.habits)}</div>
       ${isDoc() ? `<label class="check"><input type="checkbox" name="habitsOk" ${p.habitsOk ? 'checked' : ''}> <span>${T('I asked the patient and confirm these habits')}</span></label>` : `<small class="muted">${T('The doctor will confirm these with the patient.')}</small>`}</div>
+    <div class="grid2" style="padding:0">${fieldHTML({ name: 'discPct', label: 'Regular discount % (optional)', type: 'number', min: 0, max: 100, value: p.discPct || '' })}</div>
     ${fieldHTML({ name: 'notes', label: 'Private note', type: 'textarea', rows: 2, value: p.notes })}
   </div><footer class="sheet-f">${id && lvl('patients') >= 3 ? `<button type="button" class="btn ghost danger" onclick="A.delPatient('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} Save</button></footer></form>`);
 };
@@ -105,7 +107,7 @@ A.savePatient = (e, id, then) => {
     const habits = v.habits || []; const sameHabits = JSON.stringify(habits) === JSON.stringify(base.habits || []);
     const rec = { ...base, name: v.name.trim(), phone: (v.phone || '').replace(/[^\d+ ]/g, '').trim(), age: v.age === '' ? '' : +v.age, sex: v.sex || '', address: (v.address || '').trim(),
       medAlert: med, medList: med === 'yes' ? (v.medList || []) : [], conditions: med === 'yes' ? (v.conditions || '') : '', meds: med === 'yes' ? (v.meds || '') : '', track: med === 'yes' && (v.track || []).length ? v.track : (base.track || ['bp']),
-      allergyYes: v.allergyYes || 'no', allergies: v.allergyYes === 'yes' ? (v.allergies || '') : '', habits, notes: v.notes || '',
+      allergyYes: v.allergyYes || 'no', allergies: v.allergyYes === 'yes' ? (v.allergies || '') : '', habits, notes: v.notes || '', discPct: v.discPct === '' ? '' : Math.min(100, Math.max(0, +v.discPct || 0)),
       habitsOk: isDoc() ? (v.habitsOk ? { by: S.me?.name || S.user?.name || '', at: todayLocal() } : null) : (sameHabits ? base.habitsOk || null : null) };
     await save('patients', rec, id ? `Updated patient ${rec.name}` : `Added patient ${rec.name}`); A.closeModal(); toast('Saved');
     if (then === 'reading') return A.readingForm(rec.id); if (then === 'appt') return A.apptForm({ patientId: rec.id });
@@ -126,7 +128,7 @@ A.saveCcNote = async (e, pid, clear) => { if (e) e.preventDefault(); const v = e
 /* ---------- money: charges, payments, account (also shown on the patient link) ---------- */
 function accountOf(p) {
   const ap = pAppts(p.id).filter(a => +a.fee > 0 && ['booked', 'done'].includes(a.status));
-  const lines = [...(p.charges || []).map(c => ({ date: c.date, desc: c.desc, amount: +c.amount || 0 })), ...ap.map(a => ({ date: a.date, desc: T(MODE_L[a.mode] || 'Consultation') + ' · ' + T('fee'), amount: +a.fee }))].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const lines = [...(p.charges || []).map(c => ({ date: c.date, desc: c.desc, amount: +c.amount || 0, ...(c.saved ? { saved: c.saved, pct: c.pct } : {}) })), ...ap.map(a => ({ date: a.date, desc: T(MODE_L[a.mode] || 'Consultation') + ' · ' + T('fee'), amount: +a.fee }))].sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const pays = [...(p.pays || []).map(x => ({ date: x.date, amount: +x.amount || 0, mode: x.mode || '', note: x.note || '' })), ...ap.filter(a => a.paid).map(a => ({ date: a.paidAt || a.date, amount: +a.fee, mode: a.payMode || '', note: T('fee') }))].sort((a, b) => String(b.date).localeCompare(String(a.date)));
   const charged = sum(lines, x => x.amount), paid = sum(pays, x => x.amount); return { charged, paid, due: Math.max(0, charged - paid), lines: lines.slice(0, 30), pays: pays.slice(0, 30) };
 }
@@ -146,7 +148,7 @@ function billsTab(p) {
   return `<div class="card pad stack-sm"><div class="money-grid"><div><span>${T('Total bill')}</span><b>${inr(a.charged)}</b></div><div><span>${T('Paid')}</span><b class="good-t">${inr(a.paid)}</b></div><div><span>${T('Due')}</span><b class="${a.due ? 'bad-t' : ''}">${inr(a.due)}</b></div></div>
     <div class="row-flex" style="gap:6px">${can('patients', 2) ? `<button class="btn sm primary" onclick="A.ptPay('${p.id}')">${ic('rupee')} ${T('Payment received')}</button>` : ''}${a.due && ph ? waBtn(billMsg(p, a), ph, T('Send bill')) : ''}${can('appointments', 2) ? `<button class="btn sm" onclick="A.apptForm({patientId:'${p.id}'})">${ic('plus')} Appointment</button>` : ''}</div>
     <p class="tiny muted">${T('The patient sees the same total, paid and due on their link.')}</p></div>
-  <div class="split" style="margin-top:12px"><div class="card"><div class="card-h"><h3>${T('Charges')}</h3></div>${a.lines.length ? `<div class="rows">${a.lines.map(l => `<div class="row"><div class="main-col"><b>${esc(l.desc)}</b><div class="sub">${dShortC(l.date)}</div></div><b class="num">${inr(l.amount)}</b></div>`).join('')}</div>` : `<p class="pad small muted">${T('Nothing charged yet')}</p>`}</div>
+  <div class="split" style="margin-top:12px"><div class="card"><div class="card-h"><h3>${T('Charges')}</h3></div>${a.lines.length ? `<div class="rows">${a.lines.map(l => `<div class="row"><div class="main-col"><b>${esc(l.desc)}</b><div class="sub">${dShortC(l.date)}${l.saved ? ` · <span class="good-t">${T('Discount')} ${l.pct}% (${inr(l.saved)})</span>` : ''}</div></div><b class="num">${inr(l.amount)}</b></div>`).join('')}</div>` : `<p class="pad small muted">${T('Nothing charged yet')}</p>`}</div>
     <div class="card"><div class="card-h"><h3>${T('Payments')}</h3></div>${a.pays.length ? `<div class="rows">${[...(p.pays || []).map(x => ({ ...x, own: 1 })), ...appts.filter(x => x.paid && +x.fee).map(x => ({ date: x.paidAt || x.date, amount: x.fee, mode: x.payMode, note: T('fee') }))].sort((x, y) => String(y.date).localeCompare(String(x.date))).slice(0, 30).map(x => `<div class="row"><div class="main-col"><b class="good-t">${inr(x.amount)}</b><div class="sub">${dShortC(x.date)} · ${esc(T(x.mode || ''))}${x.note ? ' · ' + esc(x.note) : ''}</div></div>${x.own && lvl('patients') >= 3 ? `<button class="icon-btn" aria-label="Delete" onclick="A.ptPayDel('${p.id}','${x.id}')">${ic('x')}</button>` : ''}</div>`).join('')}</div>` : `<p class="pad small muted">${T('No payment yet')}</p>`}</div></div>
   <div class="sec-h"><h2>${T('Appointments')}</h2></div><div class="card">${appts.length ? `<div class="rows">${appts.map(apptRow).join('')}</div>` : empty('No appointments yet', '', '', 'calendar', MOD.appointments.c)}</div>`;
 }
@@ -188,13 +190,18 @@ A.brTap = b => { const box = b.closest('.tp'); if (box.dataset.mode === 'sup') {
   b.classList.toggle('mis'); if (b.classList.contains('mis')) b.classList.remove('sup'); brSync(box, !box.dataset.manual); };
 A.brMode = b => { const box = b.closest('.tp'); const sup = box.dataset.mode !== 'sup'; box.dataset.mode = sup ? 'sup' : 'mis'; b.textContent = T(sup ? 'Done' : 'Change support teeth'); box.classList.toggle('sup-mode', sup); };
 /* fee = unit price × count, until the doctor types an amount */
-function txFee(card, count) { if (!card) return; const amt = card.querySelector('input[name$="_amt"]'); if (!amt || amt.dataset.manual) return; const u = +card.dataset.unit || 0; amt.value = u ? u * Math.max(1, count || 0) : ''; A.vfTotal(card.closest('form')); }
+function txFee(card, count) { if (!card) return; const amt = card.querySelector('input[name$="_amt"]'); if (!amt) return; const u = +card.dataset.unit || 0; const list = u ? u * Math.max(1, count || 0) : 0; card.dataset.list = list || '';
+  if (!amt.dataset.manual) amt.value = list || ''; txDisc(card); A.vfTotal(card.closest('form')); }
+/* under each treatment: list price, and the discount (or extra) when the doctor changes the amount for this patient */
+const pctOf = (part, whole) => whole ? Math.round(part / whole * 100) : 0;
+function txDisc(card) { const out = card?.querySelector('.tx-disc'); if (!out) return; const list = +card.dataset.list || 0, amt = +(card.querySelector('input[name$="_amt"]')?.value || 0);
+  out.innerHTML = list && amt < list ? `${T('List')} ${inr(list)} · <b class="good-t">${T('Discount')} ${pctOf(list - amt, list)}% (${inr(list - amt)})</b>` : list && amt > list ? `${T('List')} ${inr(list)} · <b class="warn-t">${inr(amt - list)} ${T('more')}</b>` : ''; }
 const tpCount = card => card.querySelector('.tp:not(.br)') ? [...card.querySelectorAll('.tp:not(.br) .tp-r button.on')].length : 1;
 function txRow(i, t = {}, extra = {}) {
   const proc = t.proc || ''; const d = txDef(proc) || []; const kind = d[3] || 'none'; const dent = isDent(); const cap = /cap|crown|bridge|implant/i.test(proc); const rct = /RCT|Pulpectomy/.test(proc);
   const tile = (TX_TILES_DENT.find(x => x[0] === proc) || [])[1] || proc; const manual = t.amount !== undefined && t.amount !== '' ? 'data-manual="1"' : '';
-  return `<div class="tx-card" data-i="${i}" data-unit="${esc(String(extra.unit ?? txUnitPrice(proc) ?? ''))}"><input type="hidden" name="tx_${i}_proc" value="${esc(proc)}">
-    <div class="tx-top"><b class="grow">${esc(T(tile))}${extra.cont ? ` <span class="pill info">${T('continues')}</span>` : ''}</b><span class="tx-rs">₹</span><input name="tx_${i}_amt" type="number" min="0" inputmode="numeric" value="${t.amount ?? ''}" ${manual} oninput="this.dataset.manual='1';A.vfTotal(this.form)" aria-label="Amount"><button type="button" class="icon-btn" aria-label="Remove" onclick="const f=this.form;this.closest('.tx-card').remove();A.vfTotal(f)">${ic('x')}</button></div>
+  return `<div class="tx-card" data-i="${i}" data-unit="${esc(String(extra.unit ?? txUnitPrice(proc) ?? ''))}" data-list="${t.list ?? ''}"><input type="hidden" name="tx_${i}_proc" value="${esc(proc)}">
+    <div class="tx-top"><b class="grow">${esc(T(tile))}${extra.cont ? ` <span class="pill info">${T('continues')}</span>` : ''}</b><span class="tx-rs">₹</span><input name="tx_${i}_amt" type="number" min="0" inputmode="numeric" value="${t.amount ?? ''}" ${manual} oninput="this.dataset.manual='1';txDisc(this.closest('.tx-card'));A.vfTotal(this.form)" aria-label="Amount"><button type="button" class="icon-btn" aria-label="Remove" onclick="const f=this.form;this.closest('.tx-card').remove();A.vfTotal(f)">${ic('x')}</button></div><div class="tx-disc tiny"></div>
     ${dent && kind === 'teeth' ? teethPick(`tx_${i}_teeth`, t.teeth) : ''}
     ${dent && kind === 'bridge' ? bridgeGrid(i, t.missing, t.support) : ''}
     ${dent && cap ? `<div class="tx-o"><span>${T('Cap')}</span>${chipRadios(`tx_${i}_mat`, CAP_MAT, t.mat || '', x => ({ 'Metal-ceramic (PFM)': 'PFM' })[x] || x)}</div>` : ''}
@@ -205,7 +212,7 @@ A.txTile = (b, proc, preset) => {
   const f = b.form; const i = +(f.dataset.txn || 0); f.dataset.txn = i + 1; const box = f.querySelector('.tx-cards');
   const cc = splitT(f.ccTeeth?.value); const d = txDef(proc) || []; const t = { proc, ...(preset || {}) };
   if (!preset && d[3] === 'teeth' && cc.length) t.teeth = cc;   /* the tooth the patient showed */
-  box.insertAdjacentHTML('beforeend', txRow(i, t, preset ? { cont: 1 } : {})); const card = box.lastElementChild;
+  box.insertAdjacentHTML('beforeend', txRow(i, t, preset ? { cont: 1, unit: 0 } : {})); const card = box.lastElementChild;
   if (card.querySelector('.br')) brSync(card.querySelector('.br'), true); else if (!preset) txFee(card, tpCount(card)); A.vfTotal(f);
   if (preset) b.remove(); else card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 };
@@ -229,7 +236,33 @@ A.rxAdd = (btn, name) => { const f = btn.form; const box = f.querySelector('.rx-
   const i = +(f.dataset.rxn || 0); f.dataset.rxn = i + 1; box.insertAdjacentHTML('beforeend', rxRow(i, name ? rxDefault(name) : {}));
   if (!name) box.lastElementChild.querySelector('input').focus(); if (name) btn.classList.add('on'); };
 A.vfSec = (b, k) => { const f = b.form; const sec = f.querySelector(`.vf-sec[data-sec="${k}"]`); if (!sec) return; sec.hidden = false; b.remove(); setTimeout(() => { sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); sec.querySelector('textarea,input:not([type=hidden])')?.focus(); }, 30); };
-A.vfTotal = f => { if (!f) return; const tx = [...f.querySelectorAll('.tx-card input[name$="_amt"]')].reduce((s, i) => s + (+i.value || 0), 0); const fee = +(f.consult?.value || 0); const out = f.querySelector('.vf-tot'); if (out) out.textContent = inr(tx + fee); const pd = f.querySelector('.vf-due'); if (pd) pd.textContent = inr(Math.max(0, tx + fee - (+(f.paidNow?.value || 0)))); };
+/* money of the visit: subtotal, discount (% or ₹), total; 'saved' = list prices − total */
+function vfMoney(f) {
+  const cards = [...f.querySelectorAll('.tx-card')]; const tx = sum(cards, c => +(c.querySelector('input[name$="_amt"]')?.value || 0)); const txList = sum(cards, c => +c.dataset.list || +(c.querySelector('input[name$="_amt"]')?.value || 0));
+  const fee = +(f.consult?.value || 0); const feeList = fee ? Math.max(fee, +f.consult.dataset.list || 0) : 0; const sub = tx + fee;
+  const dt = f.querySelector('input[name=discT]:checked')?.value || 'pct'; const dv = +(f.discV?.value || 0); const dAmt = Math.min(sub, Math.max(0, dt === 'pct' ? Math.round(sub * dv / 100) : dv));
+  const total = sub - dAmt; const list = txList + feeList; const saved = Math.max(0, list - total);
+  return { sub, dt, dv, dAmt, total, list, saved, pct: pctOf(saved, list), paid: +(f.paidNow?.value || 0) };
+}
+A.vfTotal = f => { if (!f) return; const m = vfMoney(f); const q = c => f.querySelector(c);
+  if (q('.vf-sub')) q('.vf-sub').textContent = inr(m.sub); if (q('.vf-tot')) q('.vf-tot').textContent = inr(m.total); if (q('.vf-due')) q('.vf-due').textContent = inr(Math.max(0, m.total - m.paid));
+  if (q('.vf-save')) { q('.vf-save').hidden = !m.saved; q('.vf-save').innerHTML = `${ic('check')} ${T('Discount')} ${m.pct}% · ${inr(m.saved)}`; } };
+A.vfDisc = (b, n) => { const f = b.form; f.querySelector('input[name=discT][value=pct]').checked = true; f.discV.value = n || ''; f.querySelectorAll('.vf-dq .chip').forEach(c => c.classList.toggle('on', c === b)); A.vfTotal(f); };
+/* treatments done for a patient: here (from visits, kept on the patient as txSum) and at other clinics (pastTx) */
+function txSumOf(pid) { return pVisits(pid).filter(v => v.v2 && (v.tx || []).length).flatMap(v => v.tx.filter(t => t.proc).map(t => ({ d: v.date, p: t.proc, t: t.proc === 'Bridge' ? archSort([...(t.missing || []), ...(t.support || [])]).join(', ') : teethTxt(t.teeth || []), v: v.id, a: +t.amount || 0, s: t.sitting || '' }))).sort((a, b) => String(b.d).localeCompare(String(a.d))); }
+const txHistory = p => [...(p.txSum || []), ...(p.pastTx || []).map(x => ({ ...x, w: 'outside' }))].sort((a, b) => String(b.d || '').localeCompare(String(a.d || '')));
+async function updateTxSum(pid) { const p = patientById(pid); if (!p) return; const t = txSumOf(pid); if (JSON.stringify(t) === JSON.stringify(p.txSum || [])) return; try { await save('patients', { ...patientById(pid), txSum: t }); } catch (e) { } }
+const txLine = x => `${T(x.p)}${x.t ? ' ' + x.t : ''}`;
+const OUT_TX = ['RCT', 'Cap / crown', 'Filling (composite)', 'Bridge', 'Implant', 'Extraction', 'Denture (partial)', 'Braces / adjustment'];
+A.oldTx = b => { const f = b.form; const box = b.closest('.vf-old'); const inp = box.querySelector('input[name=ccOld]'); let list = []; try { list = JSON.parse(inp.value || '[]'); } catch (e) { }
+  const o = JSON.parse(b.dataset.o); const k = JSON.stringify([o.p, o.t, o.d, o.w]); const on = !b.classList.contains('on'); b.classList.toggle('on', on);
+  list = list.filter(x => JSON.stringify([x.p, x.t, x.d, x.w]) !== k); if (on) list.push(o); inp.value = JSON.stringify(list);
+  if (on) { const ta = f.cc; const add = `${T('Problem in old')} ${txLine(o)} (${o.w === 'outside' ? T('done at another clinic') : T('done here') + ' ' + dShortC(o.d)})`; if (!ta.value.includes(add)) ta.value = (ta.value.trim() ? ta.value.trim() + '. ' : '') + add;
+    splitT(o.t).forEach(n => { const tb = [...f.querySelectorAll('[data-sec=cc] .tp-r button')].find(x => x.textContent === n && !x.classList.contains('on')); if (tb) A.tpTog(tb); }); } };
+A.oldOut = b => { b.closest('.vf-old').querySelector('.old-out').hidden = false; b.remove(); };
+A.oldOutPick = (b, proc) => { const f = b.form; const teeth = splitT(f.ccTeeth?.value).join(', '); const o = { p: proc, t: teeth, w: 'outside', d: '' };
+  const chips = b.closest('.vf-old').querySelector('.old-list'); chips.insertAdjacentHTML('beforeend', `<button type="button" class="chip" data-o="${esc(JSON.stringify(o))}" onclick="A.oldTx(this)">${esc(txLine(o))} · ${T('other clinic')}</button>`); A.oldTx(chips.lastElementChild);
+  if (!teeth && isDent()) { const d = f.querySelector('[data-sec=cc] details'); if (d) d.open = true; toast(T('Tap the tooth too'), 'warn'); } };
 A.visitForm = (pid, id, preset) => {
   const p = patientById(pid); if (!p) return; const v = id ? getById('visits', id) : { date: todayLocal(), files: [], ...(preset || {}) }; const dent = isDent(); const st = settings();
   const old = id && !v.v2; if (!id && p.ccNow?.text && !v.cc) { v.cc = p.ccNow.text; v.since = p.ccNow.since; }
@@ -240,12 +273,16 @@ A.visitForm = (pid, id, preset) => {
   PEND.visit = [];
   const sec = (k, html, hide) => `<section class="vf-sec" data-sec="${k}" ${hide ? 'hidden' : ''}>${html}</section>`;
   const rxNames = [...new Set([...(st.rxUsed || []), ...(dent ? RX_DENT : RX_GEN)])]; const rxUsedNow = new Set((v.rx || []).map(r => r.name));
-  const cont = id ? [] : openRct(pid); const tiles = dent ? TX_TILES_DENT : TX_GEN.map(x => [x[0], x[0]]); const rest = dent ? TX_DENT.filter(x => !TX_TILES_DENT.some(y => y[0] === x[0])).map(x => [x[0], x[0]]) : [];
+  const cont = id ? [] : openRct(pid); const tiles = dent ? TX_TILES_DENT : txDefs().map(x => [x[0], x[0]]); const rest = dent ? txDefs().filter(x => !TX_TILES_DENT.some(y => y[0] === x[0])).map(x => [x[0], x[0]]) : [];
+  const past = txHistory(p).filter(x => x.v !== id).slice(0, 10); const ccOld = v.ccOld || []; const isOn = o => ccOld.some(x => x.p === o.p && x.t === o.t && (x.d || '') === (o.d || '') && (x.w || '') === (o.w || ''));
+  const disc = id ? (v.disc || {}) : (+p.discPct ? { t: 'pct', v: +p.discPct } : {}); const feeList = todayFee ? '' : (st.feeClinic || '');
   const lab = (t, extra = '') => `<div class="vf-l">${T(t)}${extra}</div>`;
   modal(`<form class="form vf" onsubmit="A.saveVisit(event,'${pid}','${id || ''}')" novalidate data-txn="${(v.tx || []).length}" data-rxn="${(v.rx || []).length}">${sheetHead(p.name, `${[p.age ? p.age + ' ' + T('yrs') : '', p.sex ? T(p.sex) : ''].filter(Boolean).join(' · ')}`)}<div class="sheet-b stack vf-b">
     ${medAlertOn(p) && ((p.medList || []).length || p.conditions) || p.allergies ? `<div class="vf-warn">${ic('alert')} ${[medAlertOn(p) ? [...new Set([...(p.medList || []).map(x => T(x)), ...String(p.conditions || '').split(',').map(x => x.trim())].filter(Boolean))].join(', ') : '', p.allergies ? T('Allergy') + ': ' + esc(p.allergies) : ''].filter(Boolean).join(' · ')}</div>` : ''}
     ${sec('cc', `${lab('C/C — Chief complaint')}<textarea name="cc" rows="2" placeholder="${T('In the patient’s words')}">${esc(ccTxt)}</textarea>${addChips('cc', dent ? CC_DENT : CC_GEN)}
       <div class="vf-since">${chipRadios('since', SINCE, v.since || '')}</div>
+      <div class="vf-in vf-old"><span>${T('Problem in an old treatment?')}</span><div class="chips tight old-list">${[...past.map(x => ({ p: x.p, t: x.t, d: x.d || '', w: x.w || 'here' })), ...ccOld.filter(o => !past.some(x => x.p === o.p && x.t === o.t && (x.d || '') === (o.d || '')))].map(o => `<button type="button" class="chip ${isOn(o) ? 'on' : ''}" data-o="${esc(JSON.stringify(o))}" onclick="A.oldTx(this)">${esc(txLine(o))} · ${o.w === 'outside' ? T('other clinic') : dShortC(o.d)}</button>`).join('')}${dent ? `<button type="button" class="chip" onclick="A.oldOut(this)">${ic('plus')} ${T('Done at another clinic')}</button>` : ''}</div>
+        ${dent ? `<div class="old-out chips tight" hidden>${OUT_TX.map(n => `<button type="button" class="chip" onclick="A.oldOutPick(this,'${esc(n)}')">${esc(T(n))}</button>`).join('')}</div>` : ''}<input type="hidden" name="ccOld" value="${esc(JSON.stringify(ccOld))}"></div>
       ${dent ? `<details class="more-box" ${(v.ccTeeth || []).length ? 'open' : ''}><summary>${T('Tooth')}${(v.ccTeeth || []).length ? ': ' + esc(teethTxt(v.ccTeeth)) : ''}</summary>${teethPick('ccTeeth', v.ccTeeth)}</details>` : ''}`)}
     ${sec('exam', `${lab('On examination')}${addChips('exam', dent ? EXAM_DENT : EXAM_GEN)}<textarea name="exam" rows="1">${esc(v.exam || '')}</textarea>
       ${dent ? `<div class="vf-in"><span>${T('Oral health')}</span><div class="chips tight">${ORAL.map(([k, l, c]) => `<label class="chip-radio oral"><input type="radio" name="oral" value="${k}" ${v.oral === k ? 'checked' : ''}><span style="--c:${c}">${T(l)}</span></label>`).join('')}</div></div>` : ''}`)}
@@ -260,12 +297,15 @@ A.visitForm = (pid, id, preset) => {
     ${sec('files', `${lab('X-ray / photo')}${(v.files || []).length ? `<div class="files-row">${v.files.map(f => fileChip(f)).join('')}</div>` : ''}${attachBar('visit', true)}`, !(v.files || []).length)}
     ${sec('next', `${lab('Next visit')}<div class="chips tight">${[[1, 'Tomorrow'], [3, '3 days'], [7, '1 week'], [15, '15 days'], [30, '1 month']].map(([n, l]) => `<button type="button" class="chip" onclick="this.form.followUp.value=addDays(todayLocal(),${n});this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===this))">${T(l)}</button>`).join('')}</div><input type="date" name="followUp" value="${esc(v.followUp || '')}">`, !v.followUp)}
     <div class="chips tight vf-more">${more.filter(m => !m[2]).map(([k, l]) => `<button type="button" class="chip" onclick="A.vfSec(this,'${k}')">${ic('plus')} ${T(l)}</button>`).join('')}</div>
-    ${sec('bill', `<div class="vf-bill"><div><span>${T('Total')}</span><b class="vf-tot">₹0</b></div><label><span>${T(todayFee ? 'Extra fee ₹' : 'Fee ₹')}</span><input name="consult" type="number" min="0" inputmode="numeric" value="${id ? (v.consult ?? '') : (todayFee ? '' : (st.feeClinic || ''))}" oninput="A.vfTotal(this.form)"></label><label><span>${T('Received ₹')}</span><input name="paidNow" type="number" min="0" inputmode="numeric" value="${paidNow}" oninput="A.vfTotal(this.form)"></label><div><span>${T('Due')}</span><b class="vf-due bad-t">₹0</b></div></div>
+    ${sec('bill', `<div class="vf-bill"><label><span>${T(todayFee ? 'Extra fee ₹' : 'Fee ₹')}</span><input name="consult" type="number" min="0" inputmode="numeric" data-list="${id ? (v.consultList ?? '') : feeList}" value="${id ? (v.consult ?? '') : feeList}" oninput="A.vfTotal(this.form)"></label><div><span>${T('Subtotal')}</span><b class="vf-sub">₹0</b></div></div>
+      <div class="vf-in"><span>${T('Discount')}</span><div class="vf-disc"><div class="chips tight vf-dq">${[0, 5, 10, 15, 20].map(n => `<button type="button" class="chip ${disc.t !== 'amt' && (+disc.v || 0) === n ? 'on' : ''}" onclick="A.vfDisc(this,${n})">${n ? n + '%' : T('None')}</button>`).join('')}</div>
+        <div class="vf-dv"><input name="discV" type="number" min="0" inputmode="numeric" value="${disc.v || ''}" oninput="this.form.querySelectorAll('.vf-dq .chip').forEach(c=>c.classList.remove('on'));A.vfTotal(this.form)" aria-label="Discount">${chipRadios('discT', ['pct', 'amt'], disc.t === 'amt' ? 'amt' : 'pct', x => x === 'pct' ? '%' : '₹')}</div></div></div>
+      <div class="vf-bill"><div><span>${T('Total')}</span><b class="vf-tot">₹0</b></div><label><span>${T('Received ₹')}</span><input name="paidNow" type="number" min="0" inputmode="numeric" value="${paidNow}" oninput="A.vfTotal(this.form)"></label><div><span>${T('Due')}</span><b class="vf-due bad-t">₹0</b></div><div class="vf-save good-t" hidden></div></div>
       ${chipRadios('payMode', ['Cash', 'UPI', 'Card'], v.payMode || 'Cash')}
       <input type="hidden" name="sign" id="vfSign" value=""><div class="vf-sign" data-for="vfSign">${v.signImg ? `<img src="${esc(v.signImg)}" alt="${T('Patient signature')}">` : ''}<button type="button" class="btn sm" onclick="A.sigOpen('vfSign','${esc(p.name)}')">${ic('edit')} ${T(v.signImg ? 'Sign again' : 'Patient signature')}</button></div>`)}
     <div class="grid2" style="padding:0">${fieldHTML({ name: 'date', label: 'Date', type: 'date', value: v.date })}</div>
   </div><footer class="sheet-f">${id && lvl('medical') >= 3 ? `<button type="button" class="btn ghost danger" onclick="A.delVisit('${id}')">${ic('trash')}</button>` : ''}<span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`, { wide: true });
-  setTimeout(() => { const f = $('#modalRoot form.vf'); if (!f) return; f.querySelectorAll('.tx-card .br').forEach(b => brSync(b, false)); A.vfTotal(f); }, 30);
+  setTimeout(() => { const f = $('#modalRoot form.vf'); if (!f) return; f.querySelectorAll('.tx-card .br').forEach(b => brSync(b, false)); f.querySelectorAll('.tx-card').forEach(txDisc); f.addEventListener('change', e => { if (e.target.name === 'discT') A.vfTotal(f); }); A.vfTotal(f); }, 30);
 };
 A.saveVisit = (e, pid, id) => {
   e.preventDefault(); const f = e.target; const v = readForm(f); const dent = isDent();
@@ -273,35 +313,35 @@ A.saveVisit = (e, pid, id) => {
     const base = id ? getById('visits', id) : { id: uid('vs_'), patientId: pid, files: [], created: Date.now() };
     const files = await uploadPending('visit', `m/${S.org.orgId}/${pid}`);
     const tx = [...f.querySelectorAll('.tx-card')].map(r => { const i = r.dataset.i; const g = n => String(v[`tx_${i}_${n}`] ?? '').trim(); const proc = g('proc'); if (!proc) return null; const kind = (txDef(proc) || [])[3] || 'none';
-      return { proc, amount: nOr(g('amt')), teeth: dent && kind === 'teeth' ? splitT(g('teeth')) : [], missing: dent && kind === 'bridge' ? archSort(splitT(g('missing'))) : [], support: dent && kind === 'bridge' ? archSort(splitT(g('support'))) : [], mat: /cap|crown|bridge|implant/i.test(proc) ? g('mat') : '', sitting: /RCT|Pulpectomy/.test(proc) ? g('sitting') : '', note: g('note') }; }).filter(Boolean);
+      return { proc, amount: nOr(g('amt')), list: +r.dataset.list || '', teeth: dent && kind === 'teeth' ? splitT(g('teeth')) : [], missing: dent && kind === 'bridge' ? archSort(splitT(g('missing'))) : [], support: dent && kind === 'bridge' ? archSort(splitT(g('support'))) : [], mat: /cap|crown|bridge|implant/i.test(proc) ? g('mat') : '', sitting: /RCT|Pulpectomy/.test(proc) ? g('sitting') : '', note: g('note') }; }).filter(Boolean);
     const bad = tx.find(t => dent && ((txDef(t.proc) || [])[3] === 'teeth' && !t.teeth.length && !['X-ray (IOPA)', 'Other', 'Denture (partial)'].includes(t.proc) || t.proc === 'Bridge' && !t.missing.length));
     if (bad) throw new Error(`${T(bad.proc)}: ${T(bad.proc === 'Bridge' ? 'tap the missing tooth' : 'tap the tooth')}`);
     const rx = [...f.querySelectorAll('.rx-row')].map(r => { const nm = r.querySelector('input[name$="_name"]'); const i = nm.name.split('_')[1]; const g = n => String(v[`rx_${i}_${n}`] ?? '').trim(); return g('name') ? { name: g('name'), dose: g('dose'), when: g('when'), days: nOr(g('days')) } : null; }).filter(Boolean);
-    const consult = +v.consult || 0; const charge = consult + sum(tx, t => +t.amount || 0);
+    const m = vfMoney(f); const consult = +v.consult || 0; const charge = m.total; let ccOld = []; try { ccOld = JSON.parse(v.ccOld || '[]'); } catch (er) { }
     const rec = { ...base, v2: true, date: v.date || todayLocal(), followUp: v.followUp || '',
       cc: (v.cc || '').trim(), since: v.since || '', ccTeeth: dent ? splitT(v.ccTeeth) : [],
       notes: (v.notes || '').trim(), exam: (v.exam || '').trim(), oral: v.oral || '', diagnosis: (v.diagnosis || '').trim(),
-      tx, rx, advice: (v.advice || '').trim(), oldRx: (v.oldRx || '').trim(), consult, charge, payMode: v.payMode || '', files: [...(base.files || []), ...files],
+      tx, rx, advice: (v.advice || '').trim(), oldRx: (v.oldRx || '').trim(), consult, consultList: consult ? Math.max(consult, +f.consult.dataset.list || 0) : 0, sub: m.sub, disc: m.dAmt ? { t: m.dt, v: m.dv, amt: m.dAmt } : null, listTotal: m.list, saved: m.saved, ccOld, charge, payMode: v.payMode || '', files: [...(base.files || []), ...files],
       ...(v.sign ? { signImg: v.sign, signedAt: nowAt() } : {}) };
     rec.complaint = rec.cc; /* older screens read 'complaint' */
     if (!rec.cc && !rec.notes && !rec.exam && !rec.diagnosis && !tx.length && !rx.length && !rec.advice && !rec.oldRx && !rec.files.length && !charge) throw new Error('Write something or add a file');
     await save('visits', rec, `${id ? 'Updated' : 'Saved'} visit of ${patientById(pid)?.name}`);
     /* bill line + payment for this visit, profile bits, dental chart */
     const p = patientById(pid); const desc = tx.length ? tx.map(t => txUI(t)).join('; ') : T('Consultation'); const cid = 'ch_' + rec.id;
-    let charges = (p.charges || []).filter(c => c.id !== cid); if (charge > 0) charges.push({ id: cid, visitId: rec.id, date: rec.date, desc, amount: charge });
+    let charges = (p.charges || []).filter(c => c.id !== cid); if (charge > 0 || m.saved) charges.push({ id: cid, visitId: rec.id, date: rec.date, desc, amount: charge, ...(m.saved ? { list: m.list, saved: m.saved, pct: m.pct } : {}) });
+    const outside = ccOld.filter(o => o.w === 'outside'); const pastTx = [...(p.pastTx || [])]; outside.forEach(o => { if (!pastTx.some(x => x.p === o.p && x.t === o.t)) pastTx.push({ p: o.p, t: o.t, d: '', added: rec.date, note: '' }); });
     const paidNow = +v.paidNow || 0; let pays = (p.pays || []).filter(x => x.visitId !== rec.id); if (paidNow > 0) pays.push({ id: 'py_' + rec.id, visitId: rec.id, date: rec.date, amount: paidNow, mode: v.payMode || 'Cash', note: T('visit'), by: S.me?.name || S.user?.name || '' });
-    await save('patients', { ...p, charges, pays, lastVisit: rec.date > (p.lastVisit || '') ? rec.date : p.lastVisit, ...(rec.oral ? { oral: rec.oral } : {}), ...(p.ccNow && !id ? { ccNow: null } : {}) });
+    await save('patients', { ...p, charges, pays, pastTx, txSum: txSumOf(pid), lastVisit: rec.date > (p.lastVisit || '') ? rec.date : p.lastVisit, ...(rec.oral ? { oral: rec.oral } : {}), ...(p.ccNow && !id ? { ccNow: null } : {}) });
     await updateAccount(pid);
     if (dent && typeof dentalRec === 'function' && tx.length) { try { const r = dentalRec(pid); const teeth = { ...(r.teeth || {}) }; let ch = false;
       tx.forEach(t => { const stt = (txDef(t.proc) || [])[2]; if (!stt) return; if (t.proc === 'Bridge') { t.missing.forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: 'bridge' }; ch = true; }); t.support.forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: 'crown' }; ch = true; }); } else t.teeth.forEach(n => { teeth[n] = { ...(teeth[n] || {}), st: t.sitting && t.sitting !== 'Completed' && stt === 'crown' ? 'rct' : stt }; ch = true; }); });
       if (ch) await saveSpec({ ...r, teeth }, ''); } catch (err) { } }
     if (can('settings', 2)) { try { const st = settings(); const prices = { ...(st.txPrices || {}) }; let chg = false;
-      tx.forEach(t => { if (!(+t.amount)) return; const n = t.proc === 'Bridge' ? t.missing.length + t.support.length : Math.max(1, t.teeth.length); const k = t.proc === 'Bridge' ? 'Bridge/unit' : t.proc; const u = Math.round(+t.amount / Math.max(1, n)); if (prices[k] !== u) { prices[k] = u; chg = true; } });
       const used = [...new Set([...rx.map(r => r.name), ...(st.rxUsed || [])])].slice(0, 60); const dose = { ...(st.rxDose || {}) }; rx.forEach(r => { const d = { dose: r.dose, when: r.when, days: r.days }; if (JSON.stringify(dose[r.name]) !== JSON.stringify(d)) { dose[r.name] = d; chg = true; } }); if (chg || used.join() !== (st.rxUsed || []).join()) await saveSettingsRec({ txPrices: prices, rxUsed: used, rxDose: dose }); } catch (err) { } }
     A.closeModal(); toast(T('Visit saved')); if (S.view === 'patient' && S.params.id === pid) { S.params.tab = 'records'; render(); } else A.go('patient', { id: pid, tab: 'records' });
   });
 };
-A.delVisit = id => confirmBox('Delete this visit?', 'Its charge and payment are removed from the bill too.', 'Delete', async () => { const v = getById('visits', id); await removeRec('visits', id, 'Deleted a visit'); const p = patientById(v?.patientId); if (p) { await save('patients', { ...p, charges: (p.charges || []).filter(c => c.visitId !== id), pays: (p.pays || []).filter(x => x.visitId !== id) }); await updateAccount(p.id); } A.closeModal(); render(); });
+A.delVisit = id => confirmBox('Delete this visit?', 'Its charge and payment are removed from the bill too.', 'Delete', async () => { const v = getById('visits', id); await removeRec('visits', id, 'Deleted a visit'); const p = patientById(v?.patientId); if (p) { await save('patients', { ...p, txSum: txSumOf(p.id), charges: (p.charges || []).filter(c => c.visitId !== id), pays: (p.pays || []).filter(x => x.visitId !== id) }); await updateAccount(p.id); } A.closeModal(); render(); });
 
 /* ---------- timeline (case history) ---------- */
 function visitBody(v, forPrint) {
@@ -310,16 +350,19 @@ function visitBody(v, forPrint) {
   const cc = (v.cc ?? v.complaint) ? `<span translate="no">${esc(v.cc ?? v.complaint)}</span>${v.since ? ` <span class="muted">· ${esc(sinceTxt(v.since, forPrint))}</span>` : ''}${(v.ccTeeth || []).length ? ` <span class="muted">· ${t('tooth')} ${esc(teethTxt(v.ccTeeth))}</span>` : ''}` : '';
   const oral = ORAL.find(o => o[0] === v.oral);
   const rxT = (v.rx || []).length ? `<ol class="rx-l">${v.rx.map(r => `<li><b>${esc(r.name)}</b><span class="muted"> · <span class="nowrap">${esc(r.dose || '')}</span> · ${esc(t(r.when || ''))}${r.days ? ' · ' + esc(String(r.days)) + ' ' + t('days') : ''}</span></li>`).join('')}</ol>` : '';
-  return `${L('Chief complaint', cc)}${L('Doctor’s notes', v.notes ? `<span class="pre">${esc(v.notes)}</span>` : '')}${L('On examination', [v.exam ? esc(v.exam) : '', oral ? `${t('Oral health')}: <b style="color:${oral[2]}">${t(oral[1])}</b>` : ''].filter(Boolean).join(' · '))}
-    ${L('Diagnosis', esc(v.diagnosis || ''))}${L('Treatment done', (v.tx || []).length ? `<ul class="tx-list">${v.tx.map(x => `<li>${esc(forPrint ? txText(x) : txUI(x))}${x.note ? ` <span class="muted">(${esc(x.note)})</span>` : ''}${x.amount ? ` <b class="num">${inr(x.amount)}</b>` : ''}</li>`).join('')}</ul>` : '')}
+  const old = (v.ccOld || []).map(o => `${esc(forPrint ? `${o.p}${o.t ? ' ' + o.t : ''}` : txLine(o))} <span class="muted">(${o.w === 'outside' ? t('done at another clinic') : t('done here') + ' ' + (forPrint ? fmtShort(o.d) : dShortC(o.d))})</span>`).join(', ');
+  const dTxt = v.saved ? `${t('Discount')} ${pctOf(v.saved, v.listTotal)}% · ${inr(v.saved)} <span class="muted">(${t('List')} ${inr(v.listTotal)} → ${inr(v.charge)})</span>` : '';
+  return `${L('Chief complaint', cc)}${L('Problem in old treatment', old)}${L('Doctor’s notes', v.notes ? `<span class="pre">${esc(v.notes)}</span>` : '')}${L('On examination', [v.exam ? esc(v.exam) : '', oral ? `${t('Oral health')}: <b style="color:${oral[2]}">${t(oral[1])}</b>` : ''].filter(Boolean).join(' · '))}
+    ${L('Diagnosis', esc(v.diagnosis || ''))}${L('Treatment done', (v.tx || []).length ? `<ul class="tx-list">${v.tx.map(x => `<li>${esc(forPrint ? txText(x) : txUI(x))}${x.note ? ` <span class="muted">(${esc(x.note)})</span>` : ''}${x.amount !== '' && x.amount !== undefined ? ` <b class="num">${inr(x.amount)}</b>` : ''}${x.list && +x.amount < +x.list ? ` <span class="muted"><s>${inr(x.list)}</s></span>` : ''}</li>`).join('')}</ul>` : '')}
     ${L('Medicines (Rx)', rxT + ((v.oldRx || (!v.v2 && v.advice)) ? `<span class="pre">${esc(v.oldRx || v.advice)}</span>` : ''))}${L('Advice', v.v2 && v.advice ? `<span class="pre">${esc(v.advice)}</span>` : '')}
-    ${v.followUp ? `<div class="tiny">${ic('calendar')} ${t('Next visit')} ${fmtDate(v.followUp)}</div>` : ''}${v.charge ? `<div class="tiny">${t('Charge')}: <b>${inr(v.charge)}</b></div>` : ''}${v.signImg ? `<div class="tiny vb-sign"><img src="${esc(v.signImg)}" alt="" style="height:38px;vertical-align:middle;background:#fff;border:1px solid #ddd;border-radius:6px"> ${t('Patient signature')}</div>` : ''}`;
+    ${v.followUp ? `<div class="tiny">${ic('calendar')} ${t('Next visit')} ${fmtDate(v.followUp)}</div>` : ''}${v.charge || v.saved ? `<div class="tiny">${t('Charge')}: <b>${inr(v.charge)}</b>${dTxt ? ` · <span class="good-t">${dTxt}</span>` : ''}</div>` : ''}${v.signImg ? `<div class="tiny vb-sign"><img src="${esc(v.signImg)}" alt="" style="height:38px;vertical-align:middle;background:#fff;border:1px solid #ddd;border-radius:6px"> ${t('Patient signature')}</div>` : ''}`;
 }
 function caseTab(p) {
-  const vs = pVisits(p.id); const cons = col('visits').filter(x => x.patientId === p.id && x.kind === 'consent'); const a = accountOf(p); const f = S.filters.caseF || 'all'; const edit = can('medical', 2);
+  const vs = pVisits(p.id); const cons = col('visits').filter(x => x.patientId === p.id && x.kind === 'consent'); const a = accountOf(p); const f = S.filters.caseF || 'tl'; const edit = can('medical', 2);
   const items = [...(f === 'all' || f === 'visits' ? vs.map(v => ({ d: v.date, k: 'visit', v })) : []), ...(f === 'all' || f === 'consents' ? cons.map(c => ({ d: (c.signedAt || c.date || '').slice(0, 10), k: 'consent', v: c })) : []),
     ...(f === 'all' || f === 'pays' ? (p.pays || []).map(x => ({ d: x.date, k: 'pay', v: x })) : [])].sort((x, y) => String(y.d).localeCompare(String(x.d)) || (y.k === 'visit') - (x.k === 'visit'));
   const habitsTxt = (p.habits || []).length ? (p.habits || []).map(h => T(h)).join(', ') : '';
+  if (can('patients', 2) && JSON.stringify(txSumOf(p.id)) !== JSON.stringify(p.txSum || [])) setTimeout(() => updateTxSum(p.id), 300);
   return `<div class="card pad case-top"><div class="case-facts">
       <div><span class="eyebrow">${T('Medical alert')}</span><b class="${medAlertOn(p) ? 'bad-t' : ''}">${medAlertOn(p) ? `${T('Yes')}${(p.medList || []).length ? ' · ' + p.medList.map(x => T(x)).join(', ') : ''}${p.conditions ? ' · ' + esc(p.conditions) : ''}` : T('No')}</b>${p.meds ? `<div class="tiny muted">${T('Takes')}: ${esc(p.meds)}</div>` : ''}</div>
       <div><span class="eyebrow">${T('Allergy')}</span><b class="${p.allergies ? 'bad-t' : ''}">${p.allergies ? esc(p.allergies) : T('None')}</b></div>
@@ -328,8 +371,9 @@ function caseTab(p) {
       <div><span class="eyebrow">${T('Bill')}</span><b>${inr(a.charged)}</b><div class="tiny ${a.due ? 'bad-t' : 'good-t'}">${a.due ? `${T('Due')} ${inr(a.due)}` : T('No dues')}</div></div></div>
     ${p.ccNow?.text ? `<div class="banner" style="margin-top:10px">${ic('mic')}<span class="grow"><b>${T('Complaint noted today')}:</b> <span translate="no">${esc(p.ccNow.text)}</span>${p.ccNow.since ? ` · ${esc(sinceTxt(p.ccNow.since))}` : ''} <span class="tiny muted">${esc(p.ccNow.by || '')}</span></span></div>` : ''}
     <div class="row-flex" style="gap:6px;margin-top:10px">${edit ? `<button class="btn primary" onclick="A.visitForm('${p.id}')">${ic('plus')} ${T('New visit')}</button><button class="btn" onclick="A.consentNew('${p.id}')">${ic('file')} ${T('Consent form')}</button>` : ''}<button class="btn" onclick="A.printCase('${p.id}')">${ic('print')} ${T('Print case sheet')}</button></div></div>
-  <div class="toolbar" style="margin-top:12px">${seg('caseF', [['all', 'Everything'], ['visits', 'Visits'], ['consents', 'Consents'], ['pays', 'Payments']], f, 'A.setF')}</div>
-  ${items.length ? `<div class="case-tl">${items.map(it => it.k === 'visit' ? `<div class="card pad tl-v"><div class="tl-h">${datebox(it.v.date, MOD.medical.c)}<div class="grow" style="min-width:0"><b>${esc((it.v.tx || []).map(t => T(t.proc)).join(', ') || it.v.diagnosis || it.v.cc || it.v.complaint || T('Visit'))}</b><div class="tiny muted">${esc(it.v.updatedBy || '')}</div></div>
+  ${treatCard(p)}
+  <div class="toolbar" style="margin-top:12px">${seg('caseF', [['tl', 'Timeline'], ['all', 'Everything'], ['visits', 'Visits'], ['consents', 'Consents'], ['pays', 'Payments']], f, 'A.setF')}</div>
+  ${f === 'tl' ? timelineHTML(p) : items.length ? `<div class="case-tl">${items.map(it => it.k === 'visit' ? `<div class="card pad tl-v"><div class="tl-h">${datebox(it.v.date, MOD.medical.c)}<div class="grow" style="min-width:0"><b>${esc((it.v.tx || []).map(t => T(t.proc)).join(', ') || it.v.diagnosis || it.v.cc || it.v.complaint || T('Visit'))}</b><div class="tiny muted">${esc(it.v.updatedBy || '')}</div></div>
         <div class="row-flex" style="gap:4px">${(it.v.rx || []).length || it.v.advice || it.v.diagnosis ? `<button class="icon-btn" aria-label="Print prescription" onclick="A.printVisit('${it.v.id}')">${ic('print')}</button>` : ''}${edit ? `<button class="icon-btn" aria-label="Edit" onclick="A.visitForm('${p.id}','${it.v.id}')">${ic('edit')}</button>` : ''}</div></div>
         <div class="tl-b">${visitBody(it.v)}${(it.v.files || []).length ? `<div class="files-row">${it.v.files.map(x => fileChip(x, 'clinic')).join('')}</div>` : ''}</div></div>`
       : it.k === 'consent' ? `<div class="card pad tl-c">${ibox('file', it.v.status === 'signed' ? '#0B9B68' : '#D97706', 'sm')}<div class="grow" style="min-width:0"><b>${esc(it.v.title)}</b><div class="tiny muted">${it.v.status === 'signed' ? `${T('Signed by')} ${esc(it.v.signName || '')} · ${atText(it.v.signedAt)}${it.v.signVia === 'link' ? ' · ' + T('on the patient link') : ''}` : `${T('Waiting for signature')} · ${T(it.v.via === 'link' ? 'sent to the patient link' : 'to sign here')}`}</div></div>
@@ -337,6 +381,86 @@ function caseTab(p) {
       : `<div class="card pad tl-c">${ibox('rupee', '#0B9B68', 'sm')}<div class="grow"><b class="good-t">${T('Paid')} ${inr(it.v.amount)}</b><div class="tiny muted">${dShortC(it.v.date)} · ${esc(T(it.v.mode || ''))}${it.v.note ? ' · ' + esc(it.v.note) : ''}</div></div></div>`).join('')}</div>`
     : `<div class="card">${empty('Nothing here yet', 'Tap “New visit”. Note the complaint, what you found, the diagnosis, the treatment and medicines. Everything stays here, date-wise.', edit ? `<button class="btn primary" onclick="A.visitForm('${p.id}')">${ic('plus')} ${T('New visit')}</button>` : '', 'file', MOD.medical.c)}</div>`}`;
 }
+
+/* ---------- price list: every fee and treatment price, the doctor's own treatments ---------- */
+const plOwn = (c = {}) => `<div class="pl-own"><input name="on_name" placeholder="${T('Treatment name')}" value="${esc(c.name || '')}"><input name="on_price" type="number" min="0" inputmode="numeric" placeholder="₹" value="${c.price ?? ''}"><select name="on_kind">${[['none', 'Once'], ['teeth', 'Per tooth']].map(([k, l]) => `<option value="${k}" ${c.kind === k ? 'selected' : ''}>${T(l)}</option>`).join('')}</select><button type="button" class="icon-btn" aria-label="Remove" onclick="this.parentElement.remove()">${ic('x')}</button></div>`;
+A.priceList = () => {
+  const st = settings(); const pr = st.txPrices || {}; const defs = (isDent() ? TX_DENT : TX_GEN).filter(x => x[0] !== 'Other'); const per = k => k === 'teeth' ? T('per tooth') : k === 'bridge' ? T('per unit') : '';
+  const key = n => n === 'Bridge' ? 'Bridge/unit' : n; const row = (k, label, val, unit) => `<label class="pl-row"><span>${esc(label)}${unit ? ` <small>${unit}</small>` : ''}</span><input type="number" min="0" inputmode="numeric" data-k="${esc(k)}" value="${val ?? ''}"></label>`;
+  modal(`<form class="form" onsubmit="A.savePriceList(event)" novalidate>${sheetHead(T('Fees & treatment prices'), st.bizName || '')}<div class="sheet-b stack-sm">
+    ${row('__feeClinic', T('Consultation fee'), st.feeClinic, '')}${row('__feeVideo', T('Video / WhatsApp call fee'), st.feeVideo, '')}
+    ${defs.map(d => row(key(d[0]), T(d[0]), pr[key(d[0])] ?? d[1], per(d[3]))).join('')}
+    <div class="vf-l" style="margin-top:8px">${T('Your own treatments')}</div><div class="pl-owns">${(st.txCustom || []).map(plOwn).join('')}</div>
+    <button type="button" class="btn sm" onclick="this.previousElementSibling.insertAdjacentHTML('beforeend',plOwn())">${ic('plus')} ${T('Add treatment')}</button>
+  </div><footer class="sheet-f"><span class="grow"></span><button class="btn primary" type="submit">${ic('check')} ${T('Save')}</button></footer></form>`, { wide: true });
+};
+A.savePriceList = e => { e.preventDefault(); const f = e.target; withBtn(e, async () => {
+  const prices = { ...(settings().txPrices || {}) }; const extra = {};
+  f.querySelectorAll('input[data-k]').forEach(i => { const k = i.dataset.k; const val = i.value === '' ? '' : Math.max(0, +i.value || 0); if (k.startsWith('__')) extra[k.slice(2)] = val; else if (val === '') delete prices[k]; else prices[k] = val; });
+  const own = [...f.querySelectorAll('.pl-own')].map(r => ({ name: r.querySelector('[name=on_name]').value.trim(), price: r.querySelector('[name=on_price]').value === '' ? '' : +r.querySelector('[name=on_price]').value || 0, kind: r.querySelector('[name=on_kind]').value })).filter(x => x.name);
+  await saveSettingsRec({ ...extra, txPrices: prices, txCustom: own }); logAct('Updated fees & treatment prices'); A.closeModal(); toast(T('Saved')); render(); }); };
+
+/* ---------- treatments done (here and at other clinics) ---------- */
+function treatCard(p) {
+  const h = txHistory(p); const edit = can('medical', 2);
+  const r = x => `<div class="tr-r"><span class="tr-d">${x.w === 'outside' ? T('Other clinic') + (x.when ? ' · ' + esc(x.when) : '') : dShortC(x.d)}</span><b class="grow">${esc(txLine(x))}${x.s ? ` <span class="muted tiny">${esc(T(x.s))}</span>` : ''}</b>${x.a ? `<span class="num tiny">${inr(x.a)}</span>` : ''}${x.w === 'outside' && edit ? `<button class="icon-btn sm" aria-label="Remove" onclick="A.pastTxDel('${p.id}',${esc(JSON.stringify(JSON.stringify([x.p, x.t, x.added || ''])))})">${ic('x')}</button>` : ''}</div>`;
+  return `<div class="card pad stack-sm tr-card"><div class="row-flex" style="justify-content:space-between;gap:6px"><b>${T('Treatments done')} (${h.length})</b><div class="row-flex" style="gap:6px">${edit ? `<button class="btn sm ghost" onclick="A.pastTxForm('${p.id}')">${ic('plus')} ${T('Done at another clinic')}</button>` : ''}${can('settings', 2) ? `<button class="btn sm ghost" onclick="A.priceList()">₹ ${T('Prices')}</button>` : ''}</div></div>
+    ${h.length ? `<div class="tr-list">${h.slice(0, 6).map(r).join('')}</div>${h.length > 6 ? `<details><summary class="small">${T('See all')} (${h.length})</summary><div class="tr-list">${h.slice(6).map(r).join('')}</div></details>` : ''}` : `<span class="small muted">${T('No treatment yet')}</span>`}</div>`;
+}
+A.pastTxForm = pid => { const dent = isDent();
+  formModal({ title: 'Done at another clinic', sub: patientById(pid)?.name, fields: [{ name: 'proc', label: 'Treatment', type: 'select', options: [...(dent ? OUT_TX : TX_GEN.map(x => x[0]).filter(x => x !== 'Other')), 'Other'].map(x => [x, T(x)]) },
+    ...(dent ? [{ type: 'html', full: true, html: `<div class="field"><span>${T('Tooth')}</span>${teethPick('teeth', [])}</div>` }] : []), { name: 'when', label: 'When (about)', placeholder: 'e.g. 2 years ago' }, { name: 'note', label: 'Note', full: true }],
+    onSubmit: async v => { const p = patientById(pid); const o = { p: v.proc === 'Other' && v.note ? v.note.trim() : v.proc, t: splitT(v.teeth).join(', '), d: '', when: (v.when || '').trim(), note: (v.note || '').trim(), added: todayLocal() };
+      await save('patients', { ...p, pastTx: [...(p.pastTx || []), o] }, `Old treatment noted for ${p.name}`); toast(T('Saved')); render(); } }); };
+A.pastTxDel = (pid, k) => confirmBox('Remove this?', '', 'Remove', async () => { const p = patientById(pid); await save('patients', { ...p, pastTx: (p.pastTx || []).filter(x => JSON.stringify([x.p, x.t, x.added || '']) !== k) }); A.closeModal(); render(); });
+
+/* ---------- timeline: everything with date and time ---------- */
+const msAt = ms => { const d = new Date(ms); return todayLocal(d) + 'T' + d.toTimeString().slice(0, 5); };
+function caseEvents(p, forPrint) {
+  const t = x => forPrint ? x : T(x); const ev = []; const add = (at, title, sub, c, by) => { if (at) ev.push({ at: String(at), title, sub: sub || '', c, by: by || '' }); };
+  const vAt = v => v.created && todayLocal(new Date(v.created)) === v.date ? msAt(v.created) : v.date; const tl = x => forPrint ? `${x.p}${x.t ? ' ' + x.t : ''}` : txLine(x);
+  pVisits(p.id).forEach(v => { const at = vAt(v);
+    add(at, (v.tx || []).map(x => forPrint ? txText(x) : txUI(x)).join(' · ') || v.diagnosis || v.cc || v.complaint || t('Visit'), [v.cc || v.complaint ? `${t('Complaint')}: ${v.cc || v.complaint}` : '', (v.ccOld || []).length && !String(v.cc || '').includes(t('Problem in old')) ? `${t('Problem in old treatment')}: ${v.ccOld.map(tl).join(', ')}` : '', v.diagnosis ? `${t('Diagnosis')}: ${v.diagnosis}` : '', v.charge || v.saved ? `${t('Charge')}: ${inr(v.charge)}${v.saved ? ` · ${t('Discount')} ${pctOf(v.saved, v.listTotal)}% (${inr(v.saved)})` : ''}` : ''].filter(Boolean).join('\n'), '#C2185B', v.updatedBy);
+    if ((v.rx || []).length) add(at, t('Medicines given'), v.rx.map(r => `${r.name} ${r.dose || ''}${r.days ? ' × ' + r.days + ' ' + t('days') : ''}`).join(', '), '#0891B2');
+    if (v.v2 && v.advice) add(at, t('Advice given'), v.advice, '#16A34A');
+    if (v.signImg) add(v.signedAt || at, t('Patient signed'), '', '#475569');
+    if (v.followUp) add(at, t('Next visit fixed'), forPrint ? fmtDate(v.followUp) : T(fmtDate(v.followUp)), '#7C3AED'); });
+  col('visits').filter(x => x.patientId === p.id && x.kind === 'consent').forEach(c => {
+    add(c.created ? msAt(c.created) : c.date, `${t('Consent form made')}: ${c.title}`, c.via === 'link' ? t('Sent on the patient link') : t('To sign here'), '#D97706', c.createdBy);
+    if (c.status === 'signed') add(c.signedAt, `${t('Consent signed')}: ${c.title}`, `${c.signName || ''}${c.signBy === 'guardian' ? ' (' + t('Parent / guardian') + ')' : ''} · ${c.signVia === 'link' ? t('on the patient link') : t('here')}${c.witness ? ' · ' + t('witness') + ' ' + c.witness : ''}`, '#0B9B68'); });
+  (p.pays || []).forEach(x => add(x.date, `${t('Paid')} ${inr(x.amount)}`, [t(x.mode || ''), x.note].filter(Boolean).join(' · '), '#0B9B68', x.by));
+  pAppts(p.id).filter(a => a.date >= todayLocal() && a.status !== 'cancelled').forEach(a => add(a.date + (a.time ? 'T' + a.time : ''), `${t('Appointment')}${a.status === 'cancelled' ? ' · ' + t('Cancelled') : ''}${+a.fee ? ' · ' + inr(a.fee) + (a.paid ? ' ' + t('paid') : '') : ''}`, a.reason || '', '#7C3AED'));
+  (p.pastTx || []).forEach(x => add(x.added, `${t('Old treatment (other clinic)')}: ${tl(x)}`, [x.when, x.note].filter(Boolean).join(' · '), '#94A3B8'));
+  if (p.created) add(typeof p.created === 'number' ? msAt(p.created) : p.created, t('Patient added'), '', '#64748B');
+  return ev.sort((a, b) => b.at.localeCompare(a.at));
+}
+function timelineHTML(p) {
+  const ev = caseEvents(p); if (!ev.length) return `<div class="card">${empty('Nothing here yet', '', '', 'file', MOD.medical.c)}</div>`; let day = '';
+  const all = S.filters.tlAll; const shown = all ? ev : ev.slice(0, 40);
+  return `<div class="card pad ctl">${shown.map(e => { const [d, tm] = e.at.split('T'); const head = d !== day ? `<div class="ctl-day">${T(fmtDate(d))}</div>` : ''; day = d;
+    return `${head}<div class="ctl-e"><span class="ctl-t">${tm ? tm.slice(0, 5) : ''}</span><i style="--c:${e.c}"></i><div class="ctl-x" translate="no"><b>${esc(e.title)}</b>${e.sub ? `<div class="ctl-s">${esc(e.sub)}</div>` : ''}${e.by ? `<div class="tiny muted">${esc(e.by)}</div>` : ''}</div></div>`; }).join('')}${ev.length > shown.length ? `<button class="btn sm ghost" style="margin-top:8px" onclick="A.setF('tlAll',1)">${T('See all')} (${ev.length})</button>` : ''}</div>`;
+}
+
+/* ---------- patients list: search by treatment too, treatments under the name ---------- */
+const ptTxText = p => (p.txSum || []).concat(p.pastTx || []).map(x => `${x.p} ${T(x.p)} ${x.t || ''}`).join(' ').toLowerCase();
+function patientRow2(p, q) {
+  const h = txHistory(p); const hit = q ? h.filter(x => `${x.p} ${T(x.p)} ${x.t || ''}`.toLowerCase().includes(q)) : []; const show = (hit.length ? hit : h).slice(0, 4);
+  return `<button class="row click" onclick="A.go('patient',{id:'${p.id}'${+p.unread > 0 ? ",tab:'messages'" : ''}})"><div class="avatar" style="background:#FFE4EA;color:#9F1239">${esc(initials(p.name))}</div><div class="main-col"><b>${esc(p.name)}</b>${p.ccNow?.text ? ` <span class="pill info">${T('Complaint noted')}</span>` : ''}${(p.account?.due || 0) > 0 ? ` <span class="pill bad">${T('Due')} ${inr(p.account.due)}</span>` : ''}
+    <div class="sub">${[ageSex(p), p.phone ? esc(p.phone) : '', p.conditions ? esc(p.conditions) : ''].filter(Boolean).join(' · ')}</div>
+    ${show.length ? `<div class="pt-tx">${show.map(x => `<span class="${hit.includes(x) ? 'hit' : ''}">${esc(txLine(x))} <small>${x.w === 'outside' ? T('other clinic') : dShortC(x.d)}</small></span>`).join('')}${h.length > show.length ? `<span>+${h.length - show.length}</span>` : ''}</div>` : ''}</div>${+p.unread ? `<span class="tabn">${p.unread}</span>` : ''}${ic('chev', 'go')}</button>`;
+}
+V.patients = () => {
+  const q = (S.filters.patQ || '').toLowerCase().trim(); const f = S.filters.patF || 'All';
+  let list = col('patients').slice().sort((a, b) => String(b.lastVisit || b.lastMsgAt || b.lastReadingAt || b.created || '').localeCompare(String(a.lastVisit || a.lastMsgAt || a.lastReadingAt || a.created || '')));
+  if (q) list = list.filter(p => [p.name, p.phone, p.conditions].join(' ').toLowerCase().includes(q) || ptTxText(p).includes(q));
+  if (f === 'New messages') list = list.filter(p => +p.unread > 0);
+  if (f === 'On the patient link') list = list.filter(p => p.linkToken);
+  if (f === 'Due') list = list.filter(p => (p.account?.due || 0) > 0);
+  return pageHead('Patients', `${col('patients').length} ${T('patients')}`, can('patients', 2) ? `<button class="btn primary" onclick="A.patientForm()">${ic('plus')} ${T('New patient')}</button>` : '') +
+  `<div class="toolbar"><div class="search">${ic('search')}<input placeholder="${T('Search name, mobile or treatment (e.g. RCT, 46)')}" value="${esc(S.filters.patQ || '')}" oninput="clearTimeout(window._pq);window._pq=setTimeout(()=>A.setF('patQ',this.value),350)"></div></div>
+  <div class="chips" style="margin-bottom:14px">${['All', 'Due', 'New messages', 'On the patient link'].map(c => `<button class="chip ${f === c ? 'on' : ''}" onclick="A.setF('patF','${c}')">${T(c)}</button>`).join('')}</div>
+  <div class="card">${list.length ? `<div class="rows">${list.map(p => patientRow2(p, q)).join('')}</div>` : empty(q ? 'No patient found' : 'No patients yet', '', can('patients', 2) && !q ? `<button class="btn primary" onclick="A.patientForm()">${ic('plus')} ${T('New patient')}</button>` : '', 'heart', MOD.patients.c)}</div>`;
+};
 
 /* ---------- patient page ---------- */
 V.patient = () => {
@@ -394,6 +518,8 @@ A.printCase = pid => {
     <tr><th>Allergy</th><td>${esc(p.allergies || 'None')}</td></tr><tr><th>Habits</th><td>${esc((p.habits || []).join(', ') || 'None')}${(p.habits || []).length ? (p.habitsOk ? ` <span class="muted">(confirmed by ${esc(p.habitsOk.by || 'doctor')})</span>` : ' <span class="muted">(not confirmed)</span>') : ''}</td></tr>
     ${p.oral ? `<tr><th>Oral health</th><td>${esc((ORAL.find(o => o[0] === p.oral) || [])[1] || '')}</td></tr>` : ''}<tr><th>First visit</th><td>${vs[0] ? fmtDate(vs[0].date) : '—'}</td></tr></tbody></table>
   <h2>Visits and treatment</h2>${vs.map(v => `<div class="visit"><b>${fmtDate(v.date)}</b><span class="muted"> · ${esc(v.updatedBy || '')}</span>${visitBody(v, true)}</div>`).join('') || '<p class="muted">No visits</p>'}
+  ${txHistory(p).length ? `<h2>Treatments done</h2><table class="kv"><tbody>${txHistory(p).map(x => `<tr><th>${x.w === 'outside' ? 'Other clinic' + (x.when ? ' · ' + esc(x.when) : '') : fmtDate(x.d)}</th><td>${esc(x.p)}${x.t ? ' · ' + esc(x.t) : ''}${x.s ? ' · ' + esc(x.s) : ''}${x.a ? ' · ' + inr(x.a) : ''}</td></tr>`).join('')}</tbody></table>` : ''}
+  <h2>Timeline</h2><table class="kv"><tbody>${caseEvents(p, true).map(e => `<tr><th>${fmtDate(e.at.slice(0, 10))}${e.at.length > 10 ? ' ' + e.at.slice(11, 16) : ''}</th><td><b>${esc(e.title)}</b>${e.sub ? `<div class="muted pre">${esc(e.sub)}</div>` : ''}</td></tr>`).join('')}</tbody></table>
   ${cons.length ? `<h2>Consent forms</h2><table class="kv"><tbody>${cons.map(c => `<tr><th>${esc(c.title)}</th><td>Signed by ${esc(c.signName || '')} on ${atText(c.signedAt)}</td></tr>`).join('')}</tbody></table>` : ''}
   <h2>Bill</h2><table class="kv"><tbody><tr><th>Total</th><td>${inr(a.charged)}</td></tr><tr><th>Paid</th><td>${inr(a.paid)}</td></tr><tr><th>Due</th><td><b>${inr(a.due)}</b></td></tr></tbody></table>
   <p class="muted" style="margin-top:14px">I confirm that the details above are correct and that the treatment was explained to me.</p>
@@ -506,7 +632,7 @@ function portalCaseCards() {
   const P = S.portal; const a = P.patient?.account; const cons = P.consents || []; const pend = cons.filter(c => c.status !== 'signed'); const c = P.clinic || {}; let out = '';
   if (pend.length) out += `<div class="card pad stack-sm portal-forms" style="margin-bottom:14px"><b>${ic('file')} ${T('Form to read and sign')}</b><div class="rows">${pend.map(x => `<button class="row click" onclick="A.portalConsentOpen('${x.id}')"><div class="main-col"><b>${esc(x.title)}</b><div class="sub">${T('Tap to read, agree and sign')}</div></div>${ic('chev')}</button>`).join('')}</div></div>`;
   if (a && (a.charged || a.paid)) out += `<div class="card pad stack-sm" style="margin-bottom:14px"><b>${ic('rupee')} ${T('My bill')}</b><div class="money-grid"><div><span>${T('Total bill')}</span><b>${inr(a.charged)}</b></div><div><span>${T('Paid')}</span><b class="good-t">${inr(a.paid)}</b></div><div><span>${T('Due')}</span><b class="${a.due ? 'bad-t' : ''}">${inr(a.due)}</b></div></div>
-    <details><summary class="small">${T('See details')}</summary><div class="rows tight">${(a.lines || []).map(l => `<div class="row"><div class="main-col"><b>${esc(l.desc)}</b><div class="sub">${dShortC(l.date)}</div></div><b class="num">${inr(l.amount)}</b></div>`).join('')}${(a.pays || []).map(x => `<div class="row"><div class="main-col"><b class="good-t">${T('Paid')}</b><div class="sub">${dShortC(x.date)} · ${esc(T(x.mode || ''))}</div></div><b class="num good-t">${inr(x.amount)}</b></div>`).join('')}</div></details>
+    <details><summary class="small">${T('See details')}</summary><div class="rows tight">${(a.lines || []).map(l => `<div class="row"><div class="main-col"><b>${esc(l.desc)}</b><div class="sub">${dShortC(l.date)}${l.saved ? ` · <span class="good-t">${T('Discount')} ${l.pct}% (${inr(l.saved)})</span>` : ''}</div></div><b class="num">${inr(l.amount)}</b></div>`).join('')}${(a.pays || []).map(x => `<div class="row"><div class="main-col"><b class="good-t">${T('Paid')}</b><div class="sub">${dShortC(x.date)} · ${esc(T(x.mode || ''))}</div></div><b class="num good-t">${inr(x.amount)}</b></div>`).join('')}</div></details>
     ${a.due && c.upi ? `<a class="btn primary block" href="${esc(`upi://pay?pa=${encodeURIComponent(c.upi)}&pn=${encodeURIComponent(c.bizName || 'Clinic')}&am=${(+a.due).toFixed(2)}&cu=INR&tn=${encodeURIComponent('Bill ' + (P.patient?.name || ''))}`)}">${ic('rupee')} ${T('Pay with any UPI app')} ${inr(a.due)}</a><p class="tiny muted">${T('After paying, send the screenshot in Messages so the clinic can mark it paid.')}</p>` : ''}</div>`;
   const signed = cons.filter(x => x.status === 'signed'); if (signed.length) out += `<details class="card pad" style="margin-bottom:14px"><summary class="small"><b>${T('Forms I have signed')}</b> (${signed.length})</summary><div class="rows tight">${signed.map(x => `<div class="row"><div class="main-col"><b>${esc(x.title)}</b><div class="sub">${atText(x.signedAt)}</div></div></div>`).join('')}</div></details>`;
   return out;

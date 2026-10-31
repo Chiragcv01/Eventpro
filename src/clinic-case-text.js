@@ -288,4 +288,49 @@ Tap here and sign with your finger | यहां टैप करें और 
 or upload a photo of the signature | या हस्ताक्षर की फ़ोटो अपलोड करें
 Dose | खुराक
 Medicine | दवा
+more | ज़्यादा
+Problem in an old treatment? | पुराने इलाज में दिक्कत?
+Problem in old | पुराने इलाज में दिक्कत:
+Problem in old treatment | पुराने इलाज में दिक्कत
+done here | यहां हुआ
+done at another clinic | दूसरे क्लिनिक में हुआ
+Done at another clinic | दूसरे क्लिनिक में हुआ
+other clinic | दूसरा क्लिनिक
+Other clinic | दूसरा क्लिनिक
+Tap the tooth too | दांत पर भी टैप करें
+Re-RCT | दोबारा आरसीटी
+Cap re-fix | कैप फिर से लगाना
+Additional doctor fee | अतिरिक्त डॉक्टर फ़ीस
+Fees & treatment prices | फ़ीस और इलाज के दाम
+Consultation, X-ray, every treatment and your own treatments | कंसल्टेशन, एक्स-रे, हर इलाज और आपके अपने इलाज
+Consultation fee | कंसल्टेशन फ़ीस
+Video / WhatsApp call fee | वीडियो / व्हाट्सऐप कॉल फ़ीस
+per tooth | प्रति दांत
+per unit | प्रति यूनिट
+Your own treatments | आपके अपने इलाज
+Treatment name | इलाज का नाम
+Once | एक बार
+Per tooth | प्रति दांत
+Treatments done | हुए इलाज
+Prices | दाम
+No treatment yet | अभी कोई इलाज नहीं
+When (about) | कब (लगभग)
+e.g. 2 years ago | जैसे 2 साल पहले
+Remove this? | इसे हटाएं?
+Patient added | मरीज़ जोड़ा गया
+Medicines given | दवाइयां दीं
+Advice given | सलाह दी
+Patient signed | मरीज़ ने हस्ताक्षर किए
+Next visit fixed | अगली विज़िट तय
+Consent form made | सहमति फ़ॉर्म बना
+Consent signed | सहमति पर हस्ताक्षर
+Sent on the patient link | मरीज़ के लिंक पर भेजा
+To sign here | यहीं साइन के लिए
+here | यहीं
+witness | गवाह
+Old treatment (other clinic) | पुराना इलाज (दूसरा क्लिनिक)
+Everything | सब कुछ
+Regular discount % (optional) | हमेशा की छूट % (ज़रूरी नहीं)
+Search name, mobile or treatment (e.g. RCT, 46) | नाम, मोबाइल या इलाज खोजें (जैसे आरसीटी, 46)
+No patient found | कोई मरीज़ नहीं मिला
 `);

@@ -989,3 +989,19 @@ body.sig-on{overflow:hidden}
 .vf-b .chips.qk,.vf-b .rx-tiles,.vf-since .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
 .vf-b .chips.qk::-webkit-scrollbar,.vf-b .rx-tiles::-webkit-scrollbar,.vf-since .chips::-webkit-scrollbar{display:none}
 .vf-b .chips.qk>*,.vf-b .rx-tiles>*,.vf-since .chips>*{flex:none;white-space:nowrap}
+/* discounts, price list, treatments, timeline (31 Oct 2026) */
+.tx-disc:empty{display:none}.tx-disc{margin-top:-2px}
+.vf-disc{display:flex;flex-direction:column;gap:6px}.vf-dv{display:flex;gap:8px;align-items:center}.vf-dv input{width:110px}
+.vf-save{grid-column:1/-1;font-weight:700;font-size:14px;display:flex;gap:6px;align-items:center}.vf-save .ico{width:16px;height:16px}
+.vf-old .chip.on{background:#FEF3C7;border-color:#D97706;color:#92400E}
+.pl-row{display:flex;align-items:center;gap:10px;justify-content:space-between;border-bottom:1px solid var(--line2);padding:6px 0}.pl-row span{font-weight:600;font-size:14.5px}.pl-row small{color:var(--muted);font-weight:500}.pl-row input{width:110px;flex:none;text-align:right}
+.pl-owns{display:flex;flex-direction:column;gap:6px}.pl-own{display:flex;gap:6px;align-items:center}.pl-own [name=on_name]{flex:1;min-width:0}.pl-own [name=on_price]{width:90px}.pl-own select{width:auto}
+.tr-card{margin-top:12px}.tr-list{display:flex;flex-direction:column}.tr-r{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line2)}.tr-r:last-child{border-bottom:0}
+.tr-d{flex:none;width:86px;font-size:12.5px;color:var(--muted)}.tr-r b{font-size:14.5px;min-width:0}
+.ctl{display:flex;flex-direction:column}.ctl-day{font:700 12.5px var(--f-body);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:10px 0 4px}.ctl-day:first-child{margin-top:0}
+.ctl-e{display:grid;grid-template-columns:44px 14px 1fr;gap:8px;align-items:start;padding:5px 0;position:relative}
+.ctl-t{font:600 12.5px var(--f-body);color:var(--muted);padding-top:1px;text-align:right}
+.ctl-e i{width:11px;height:11px;border-radius:50%;background:var(--c);margin-top:4px;box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 18%,transparent)}
+.ctl-x{min-width:0}.ctl-x b{font-size:14.5px;overflow-wrap:anywhere}.ctl-s{font-size:13px;color:var(--ink2);white-space:pre-line;overflow-wrap:anywhere}
+.pt-tx{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.pt-tx span{font-size:12px;background:#FFF4F8;color:#9D174D;border-radius:7px;padding:2px 7px;font-weight:600}.pt-tx span.hit{background:#9D174D;color:#fff}.pt-tx small{font-weight:500;opacity:.8}
+.vf-bill>.vf-save{flex-direction:row;justify-content:flex-start}

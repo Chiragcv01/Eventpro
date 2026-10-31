@@ -1,6 +1,6 @@
 /* SabManage service worker: fast repeat visits and a clear offline screen.
    App data always comes live from the server; nothing private is cached (only the app code, icons and fonts). */
-const VERSION = 'ep-2026-10-31';
+const VERSION = 'ep-2026-10-31b';
 const LIBS = 'sm-libs-1'; /* versioned third-party files (Supabase library, fonts): cache first, they never change */
 const SHELL = ['/offline.html', '/icon.svg', '/img/icons/icon-192.png', '/img/icons/icon-512.png', '/sounds/alert.mp3'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
